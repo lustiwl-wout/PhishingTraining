@@ -47,3 +47,38 @@ CREATE TABLE IF NOT EXISTS quiz_answers (
 );
 
 CREATE INDEX IF NOT EXISTS idx_quiz_answers_attempt ON quiz_answers(attempt_id);
+
+-- Outlook-achtige e-mailsimulator: rijkere berichten met knopbare links,
+-- herkenbare afzenders en een expliciete uitleg achteraf.
+CREATE TABLE IF NOT EXISTS inbox_messages (
+  id              SERIAL PRIMARY KEY,
+  sender_name     TEXT        NOT NULL,
+  sender_address  TEXT        NOT NULL,
+  sender_note     TEXT,
+  received_label  TEXT        NOT NULL DEFAULT 'vandaag',
+  subject         TEXT        NOT NULL,
+  preview         TEXT,
+  body            TEXT        NOT NULL,
+  links           JSONB       NOT NULL DEFAULT '[]'::jsonb,
+  attachments     JSONB       NOT NULL DEFAULT '[]'::jsonb,
+  is_phishing     BOOLEAN     NOT NULL,
+  red_flags       JSONB       NOT NULL DEFAULT '[]'::jsonb,
+  green_flags     JSONB       NOT NULL DEFAULT '[]'::jsonb,
+  explanation     TEXT        NOT NULL,
+  sort_order      INTEGER     NOT NULL DEFAULT 0,
+  active          BOOLEAN     NOT NULL DEFAULT TRUE,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS inbox_judgments (
+  id              SERIAL PRIMARY KEY,
+  session_id      TEXT        NOT NULL,
+  message_id      INTEGER     NOT NULL REFERENCES inbox_messages(id),
+  verdict         TEXT        NOT NULL CHECK (verdict IN ('trust', 'phish')),
+  is_correct      BOOLEAN     NOT NULL,
+  clicked_link    BOOLEAN     NOT NULL DEFAULT FALSE,
+  revealed_sender BOOLEAN     NOT NULL DEFAULT FALSE,
+  answered_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_inbox_judgments_session ON inbox_judgments(session_id);

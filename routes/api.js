@@ -110,6 +110,75 @@ router.post('/attempts/:id/finish', async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
+// ======== INBOX-SIMULATOR ========
+
+// GET /api/inbox — lijst berichten zonder spoilers
+router.get('/inbox', async (_req, res, next) => {
+  try {
+    const { rows } = await db.query(
+      `SELECT id, sender_name, sender_address, received_label, subject, preview
+       FROM inbox_messages
+       WHERE active = TRUE
+       ORDER BY sort_order, id`
+    );
+    res.json(rows);
+  } catch (err) { next(err); }
+});
+
+// GET /api/inbox/:id — volledig bericht, MAAR zonder uitslag/uitleg/rode vlaggen
+router.get('/inbox/:id', async (req, res, next) => {
+  try {
+    const id = parseInt(req.params.id, 10);
+    if (!Number.isInteger(id)) return res.status(400).json({ error: 'ongeldig id' });
+    const { rows } = await db.query(
+      `SELECT id, sender_name, sender_address, received_label, subject, body, links, attachments
+       FROM inbox_messages WHERE id = $1 AND active = TRUE`,
+      [id]
+    );
+    if (rows.length === 0) return res.status(404).json({ error: 'niet gevonden' });
+    res.json(rows[0]);
+  } catch (err) { next(err); }
+});
+
+// POST /api/inbox/:id/judge  { session_id, verdict, clicked_link?, revealed_sender? }
+router.post('/inbox/:id/judge', async (req, res, next) => {
+  try {
+    const id = parseInt(req.params.id, 10);
+    if (!Number.isInteger(id)) return res.status(400).json({ error: 'ongeldig id' });
+
+    const { session_id, verdict, clicked_link = false, revealed_sender = false } = req.body || {};
+    if (!isUuidLike(session_id)) return res.status(400).json({ error: 'ongeldig session_id' });
+    if (verdict !== 'trust' && verdict !== 'phish') {
+      return res.status(400).json({ error: 'verdict moet "trust" of "phish" zijn' });
+    }
+
+    const { rows } = await db.query(
+      `SELECT is_phishing, red_flags, green_flags, explanation, sender_note
+       FROM inbox_messages WHERE id = $1 AND active = TRUE`,
+      [id]
+    );
+    if (rows.length === 0) return res.status(404).json({ error: 'niet gevonden' });
+
+    const msg = rows[0];
+    const isCorrect = verdict === (msg.is_phishing ? 'phish' : 'trust');
+
+    await db.query(
+      `INSERT INTO inbox_judgments (session_id, message_id, verdict, is_correct, clicked_link, revealed_sender)
+       VALUES ($1, $2, $3, $4, $5, $6)`,
+      [session_id, id, verdict, isCorrect, !!clicked_link, !!revealed_sender]
+    );
+
+    res.json({
+      correct: isCorrect,
+      is_phishing: msg.is_phishing,
+      red_flags: msg.red_flags,
+      green_flags: msg.green_flags,
+      explanation: msg.explanation,
+      sender_note: msg.sender_note,
+    });
+  } catch (err) { next(err); }
+});
+
 // GET /api/stats — geanonimiseerde geaggregeerde statistieken
 router.get('/stats', async (_req, res, next) => {
   try {

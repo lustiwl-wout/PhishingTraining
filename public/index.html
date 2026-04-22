@@ -27,7 +27,7 @@
       <li data-step="welkom" class="active"><span class="step-num">1</span><span class="step-label">Welkom</span></li>
       <li data-step="leren"><span class="step-num">2</span><span class="step-label">Leren</span></li>
       <li data-step="voorbeelden"><span class="step-num">3</span><span class="step-label">Voorbeelden</span></li>
-      <li data-step="quiz"><span class="step-num">4</span><span class="step-label">Quiz</span></li>
+      <li data-step="simulator"><span class="step-num">4</span><span class="step-label">Simulator</span></li>
       <li data-step="hulp"><span class="step-num">5</span><span class="step-label">Hulp</span></li>
     </ol>
   </nav>
@@ -153,26 +153,108 @@
 
       <div class="actions">
         <button class="btn btn-secondary" data-go="leren">← Terug</button>
-        <button class="btn btn-primary big-btn" data-go="quiz">Doe de quiz →</button>
+        <button class="btn btn-primary big-btn" data-go="simulator">Open de simulator →</button>
       </div>
     </section>
 
-    <!-- 4. QUIZ -->
-    <section id="quiz" class="page" aria-labelledby="quiz-titel">
-      <h1 id="quiz-titel">Oefenen: is dit veilig of phishing?</h1>
-      <p class="lead">U krijgt een paar berichten te zien. Kies steeds wat u denkt dat het is.</p>
+    <!-- 4. SIMULATOR (Outlook-stijl) -->
+    <section id="simulator" class="page page-wide" aria-labelledby="sim-titel">
+      <h1 id="sim-titel" class="sr-only">E‑mailsimulator</h1>
 
-      <div id="quiz-progress" class="quiz-progress" aria-live="polite"></div>
-
-      <div id="quiz-card" class="card quiz-card"><!-- gevuld door JS --></div>
-
-      <div id="quiz-feedback" class="feedback" hidden aria-live="polite"></div>
-
-      <div id="quiz-actions" class="actions">
-        <button id="quiz-next" class="btn btn-primary big-btn" hidden>Volgende →</button>
+      <div class="sim-intro">
+        <p class="lead">
+          Dit is een oefen‑postvak. Open elk bericht, kijk goed, en kies daarna of u het <strong>vertrouwt</strong> of als <strong>phishing meldt</strong>.
+          Geen knop werkt écht — u kunt niets stukmaken.
+        </p>
+        <p id="sim-progress" class="sim-progress" aria-live="polite"></p>
       </div>
 
-      <div id="quiz-result" class="card result-card" hidden></div>
+      <div class="outlook" role="application" aria-label="Oefen‑Outlook">
+        <!-- Top balk -->
+        <div class="ol-topbar">
+          <button class="ol-iconbtn" aria-label="Apps">⠿</button>
+          <div class="ol-brand">Outlook</div>
+          <div class="ol-search"><span class="ol-search-icon">🔍</span><input type="text" placeholder="Zoeken" aria-label="Zoeken" disabled></div>
+          <div class="ol-topright">
+            <button class="ol-iconbtn" aria-label="Meldingen">🔔</button>
+            <button class="ol-iconbtn" aria-label="Instellingen">⚙️</button>
+            <span class="ol-avatar" aria-hidden="true">MV</span>
+          </div>
+        </div>
+
+        <!-- Ribbon -->
+        <div class="ol-ribbon">
+          <button class="ol-new-btn" disabled>✉️ Nieuw bericht</button>
+          <span class="ol-tab">Bestand</span>
+          <span class="ol-tab active">Start</span>
+          <span class="ol-tab">Weergave</span>
+          <span class="ol-tab">Help</span>
+        </div>
+
+        <div class="ol-main">
+          <!-- App-iconen (decoratief) -->
+          <aside class="ol-iconnav" aria-hidden="true">
+            <div class="ol-appicon active">📧</div>
+            <div class="ol-appicon">📅</div>
+            <div class="ol-appicon">👥</div>
+            <div class="ol-appicon">✅</div>
+          </aside>
+
+          <!-- Mappen -->
+          <aside class="ol-folders" aria-label="Mappen">
+            <div class="ol-folder-group">
+              <div class="ol-folder-header">Favorieten</div>
+              <ul>
+                <li class="active"><span>📥 Postvak IN</span><span class="ol-count" id="ol-unread-count">0</span></li>
+                <li><span>📤 Verzonden items</span></li>
+                <li><span>🗑️ Verwijderde items</span></li>
+              </ul>
+            </div>
+            <div class="ol-folder-group">
+              <div class="ol-folder-header">mevrouw.devries@voorbeeld.nl</div>
+              <ul>
+                <li><span>📥 Postvak IN</span><span class="ol-count" id="ol-unread-count-2">0</span></li>
+                <li><span>📝 Concepten</span></li>
+                <li><span>📤 Verzonden items</span></li>
+                <li><span>🗑️ Verwijderde items</span></li>
+                <li><span>⚠️ Ongewenste e‑mail</span></li>
+              </ul>
+            </div>
+          </aside>
+
+          <!-- Berichtenlijst -->
+          <section class="ol-list" aria-label="Berichtenlijst">
+            <div class="ol-list-header">
+              <h3>Postvak IN</h3>
+              <p class="ol-hint">Klik op een bericht om het te openen.</p>
+            </div>
+            <ol id="ol-list-items"><!-- gevuld door JS --></ol>
+          </section>
+
+          <!-- Leesvenster -->
+          <section class="ol-reader" aria-label="Leesvenster">
+            <div id="ol-reader" class="ol-reader-inner">
+              <div class="ol-reader-empty">
+                <div class="ol-reader-empty-art">📬</div>
+                <p>Selecteer een bericht links om te beginnen.</p>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- Eindscherm -->
+      <div id="sim-result" class="card result-card" hidden></div>
+
+      <!-- Modal voor linkwaarschuwing / sender-uitleg / feedback -->
+      <div id="sim-modal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="sim-modal-title">
+        <div class="modal-backdrop" data-close-modal></div>
+        <div class="modal-card" role="document">
+          <h2 id="sim-modal-title"></h2>
+          <div id="sim-modal-body"></div>
+          <div id="sim-modal-actions" class="modal-actions"></div>
+        </div>
+      </div>
     </section>
 
     <!-- 5. HULP -->
