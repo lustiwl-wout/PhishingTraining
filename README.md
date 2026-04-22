@@ -31,9 +31,13 @@ een korte oefenquiz.
 ```bash
 npm install
 cp .env.example .env       # vul DATABASE_URL in (Neon)
-npm run db:init            # eenmalig: tabellen + seed
 npm run dev                # http://localhost:3000
 ```
+
+De server draait bij elke start automatisch `schema.sql` en zaait `seed.sql`
+wanneer er nog geen vragen in de DB staan, dus aparte init is niet nodig.
+(Wil je expliciet zaaien of forceren: `npm run db:init` resp.
+`node scripts/init-db.js --force-seed`.)
 
 ## Database op Neon aanmaken
 
@@ -71,9 +75,25 @@ npm run dev                # http://localhost:3000
 | **Environment variable** | `DATABASE_URL` = Neon connection string |
 | **Environment variable** | `NODE_VERSION` = `20` |
 
-Na de eerste deploy: open op Render de **Shell** van de service en draai
-eenmalig `npm run db:init` om de tabellen aan te maken en te zaaien
-(niet meer nodig bij latere deploys).
+### Render Free tier — let op
+
+Render Free heeft twee beperkingen die we hebben opgevangen:
+
+1. **Geen Shell-toegang.** Daarom draait de server bij iedere boot zelf
+   `schema.sql` (idempotent met `IF NOT EXISTS`) en zaait `seed.sql` alléén
+   wanneer `quiz_questions` leeg is. Je hoeft dus niets handmatig te doen.
+   - Wil je toch handmatig herzaaien? Draai het lokaal tegen je Neon-DB:
+     `DATABASE_URL=... npm run db:init`
+     of `node scripts/init-db.js --force-seed` om bestaande data te vervangen.
+   - Wil je auto-init uitzetten? Zet env var `SKIP_DB_INIT=1`.
+
+2. **Spin-down na 15 minuten inactiviteit.** Het eerste verzoek na een pauze
+   duurt 30-60 seconden ("cold start"). De frontend toont na 4 seconden een
+   vriendelijke melding ("De website wordt even opgestart…") zodat de
+   gebruiker niet denkt dat het kapot is.
+
+> Tip: gebruik de Neon-region `eu-central-1` (Frankfurt) en kies in Render
+> ook een EU-region (bijv. Frankfurt). Dat houdt de latency laag.
 
 ## API
 

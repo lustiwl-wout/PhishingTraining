@@ -315,6 +315,19 @@ mark.phish-mark .dot, .annotation-list .dot {
   font-size: .95rem;
 }
 
+/* ---------- cold-start banner (Render Free spin-up) ---------- */
+.coldstart-bar {
+  position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%);
+  background: var(--primary-dark); color: #fff;
+  padding: .85rem 1.25rem;
+  border-radius: 999px;
+  box-shadow: 0 6px 24px rgba(0,0,0,.18);
+  font-size: 1.05rem; font-weight: 600;
+  z-index: 100;
+  max-width: calc(100% - 2rem);
+  text-align: center;
+}
+
 /* ---------- print: alleen tips meenemen ---------- */
 @media print {
   .topbar, .stepbar, .footer, .actions, .page:not(#hulp) { display: none !important; }

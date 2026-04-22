@@ -15,12 +15,44 @@
   }
 
   // -------- API helpers --------
+  // Render Free zet de service na 15 min stil; eerste request kan 30-60s duren.
+  // We tonen daarom een vriendelijke "wordt opgestart..." melding na 4s.
+  let coldStartTimer = null;
+  let coldStartShown = false;
+
+  function showColdStartHint() {
+    coldStartShown = true;
+    let bar = document.getElementById('coldstart-bar');
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.id = 'coldstart-bar';
+      bar.className = 'coldstart-bar';
+      bar.setAttribute('role', 'status');
+      bar.innerHTML = '⏳ De website wordt even opgestart. Een momentje geduld…';
+      document.body.appendChild(bar);
+    }
+    bar.hidden = false;
+  }
+  function hideColdStartHint() {
+    const bar = document.getElementById('coldstart-bar');
+    if (bar) bar.hidden = true;
+  }
+
   async function api(path, opts) {
-    const res = await fetch('/api' + path, Object.assign({
-      headers: { 'Content-Type': 'application/json' },
-    }, opts || {}));
-    if (!res.ok) throw new Error('API ' + res.status);
-    return res.json();
+    if (!coldStartShown) {
+      clearTimeout(coldStartTimer);
+      coldStartTimer = setTimeout(showColdStartHint, 4000);
+    }
+    try {
+      const res = await fetch('/api' + path, Object.assign({
+        headers: { 'Content-Type': 'application/json' },
+      }, opts || {}));
+      if (!res.ok) throw new Error('API ' + res.status);
+      return await res.json();
+    } finally {
+      clearTimeout(coldStartTimer);
+      hideColdStartHint();
+    }
   }
 
   // -------- navigatie tussen pagina's --------
