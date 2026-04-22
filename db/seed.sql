@@ -20,25 +20,27 @@ INSERT INTO examples (channel, sender, subject, body, annotations, sort_order) V
  ]'::jsonb,
  10),
 
-('sms',
- 'PostNL',
- NULL,
- E'PostNL: Uw pakket kan niet worden bezorgd door onbetaalde invoerkosten (€ 1,95). Betaal direct: postnl-tracking.info/betaal',
+('email',
+ 'Belastingdienst <noreply@belasting-teruggave.nl>',
+ 'U heeft recht op € 423,50 teruggave',
+ E'Beste burger,\n\nNa controle blijkt u recht te hebben op een belastingteruggave van € 423,50. Vul snel uw gegevens in om het bedrag te ontvangen.\n\nKlik hier: http://belasting-teruggave.nl/claim\n\nBelastingdienst',
  '[
-   {"quote": "€ 1,95", "note": "Klein bedrag om u niet te laten twijfelen. Typisch voor oplichters."},
-   {"quote": "postnl-tracking.info/betaal", "note": "Rare link. De echte website van PostNL is postnl.nl."},
-   {"quote": "Betaal direct", "note": "Druk om snel te handelen. Niet doen."}
+   {"quote": "noreply@belasting-teruggave.nl", "note": "Kijk na de @: belasting-teruggave.nl. Dat is NIET de Belastingdienst. Het echte domein is belastingdienst.nl."},
+   {"quote": "Beste burger", "note": "Algemene aanhef zonder uw naam. De Belastingdienst weet wie u bent."},
+   {"quote": "recht te hebben op een belastingteruggave van € 423,50", "note": "Belofte van geld is een klassieke lokker. De Belastingdienst mailt nooit over teruggaven."},
+   {"quote": "http://belasting-teruggave.nl/claim", "note": "Vreemde link, niet mijn.belastingdienst.nl. Niet op klikken."}
  ]'::jsonb,
  20),
 
-('whatsapp',
- 'Onbekend nummer (+31 6 12 34 56 78)',
- NULL,
- E'Hoi mam, ik ben het. Mijn telefoon is kapot, dit is mijn nieuwe nummer. Kun je me snel helpen? Ik moet een rekening betalen maar kom er niet bij met mijn bank.',
+('email',
+ 'DigiD <info@digid-controle.org>',
+ 'Bevestig uw DigiD-gegevens',
+ E'Geachte heer/mevrouw,\n\nWij vragen u om uw DigiD opnieuw te bevestigen. Klik op onderstaande link en log in met uw gebruikersnaam en wachtwoord.\n\nhttp://digid-controle.org/inloggen\n\nBedankt,\nDigiD',
  '[
-   {"quote": "Hoi mam", "note": "Geen naam erbij. Uw kind noemt u meestal bij naam of heeft een vaste aanhef."},
-   {"quote": "Mijn telefoon is kapot, dit is mijn nieuwe nummer", "note": "Klassieke truc: nieuw nummer + noodgeval = betaal snel."},
-   {"quote": "Ik moet een rekening betalen", "note": "Vraag om geld. Bel altijd eerst het oude nummer om het te checken!"}
+   {"quote": "info@digid-controle.org", "note": "Kijk na de @: digid-controle.org. Het echte domein is digid.nl — niets anders."},
+   {"quote": "Geachte heer/mevrouw", "note": "Algemene aanhef. Een echte organisatie kent uw naam."},
+   {"quote": "log in met uw gebruikersnaam en wachtwoord", "note": "DigiD vraagt NOOIT per e-mail om uw wachtwoord. Altijd phishing."},
+   {"quote": "http://digid-controle.org/inloggen", "note": "Vreemde link. Open DigiD alleen via digid.nl of de officiële app."}
  ]'::jsonb,
  30);
 
