@@ -1244,3 +1244,111 @@ INSERT INTO inbox_messages
  '[]'::jsonb,
  'C''est du hameçonnage. On ne peut pas gagner un prix auquel on n''a pas participé. Un vrai concours ne demande jamais des frais de port à l''avance.',
  100);
+
+
+-- ============================================================
+-- ECHTE BERICHTEN MET EEN LEGITIEME LINK
+-- Leert dat niet elke klikbare link verdacht is: het gaat om het
+-- domein van de afzender, of het adres waar de link naartoe gaat
+-- daarbij past, en of u de mail verwacht. Sort order 45 plaatst het
+-- tussen het pakketbericht (40) en de bibliotheek (50).
+-- ============================================================
+
+INSERT INTO inbox_messages
+  (locale, sender_name, sender_address, sender_note, received_label, subject, preview, body, links, is_phishing, red_flags, green_flags, explanation, sort_order) VALUES
+
+-- NL
+('nl',
+ 'Booking.com',
+ 'confirmation@booking.com',
+ 'Het adres eindigt op @booking.com — het echte domein van het bedrijf.',
+ '2 dagen geleden',
+ 'Uw boeking is bevestigd — Van der Valk Amsterdam',
+ 'Beste mevrouw Janssen, uw boeking bij Van der Valk Amsterdam is...',
+ E'Beste mevrouw Janssen,\n\nUw boeking bij Van der Valk Amsterdam is bevestigd:\n\n• Check-in: vrijdag 15 mei, vanaf 15:00\n• Check-out: zondag 17 mei, vóór 11:00\n• 1 tweepersoonskamer, 2 nachten\n• Totaal: € 248,00 (al voldaan)\n\nU kunt uw boeking bekijken of wijzigen via {{link:0}}.\n\nWe kijken ernaar uit u te mogen verwelkomen.\n\nBooking.com',
+ '[{"label":"Mijn boekingen","real_url":"https://secure.booking.com/myreservations","suspicious":false,"warning":"Dit is een echte link van booking.com. Het domein klopt (secure.booking.com) en past bij de afzender (@booking.com). Nog veiliger: open zelf de Booking.com-app of typ booking.com in uw browser."}]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Afzender @booking.com is het officiële domein","De link gaat naar secure.booking.com — hetzelfde bedrijf","Persoonlijke aanhef met uw naam","Concrete, verwachte boekingsgegevens","Geen druk, geen vraag om paswoord of pincode"]'::jsonb,
+ 'Dit is een echte boekingsbevestiging. Belangrijke les: ook echte bedrijven sturen soms klikbare links. Wat u controleert: komt het domein van de afzender overeen met waar de link naartoe gaat? Verwachtte u deze mail? Is er geen tijdsdruk? Zelfs bij echte mails blijft het een goede gewoonte om zelf de app of website te openen in plaats van de link te klikken.',
+ 45),
+
+-- nl-BE
+('nl-BE',
+ 'Booking.com',
+ 'confirmation@booking.com',
+ 'Het adres eindigt op @booking.com — het echte domein van het bedrijf.',
+ '2 dagen geleden',
+ 'Uw boeking is bevestigd — Van der Valk Antwerpen',
+ 'Beste mevrouw Peeters, uw boeking bij Van der Valk Antwerpen is...',
+ E'Beste mevrouw Peeters,\n\nUw boeking bij Van der Valk Antwerpen is bevestigd:\n\n• Check-in: vrijdag 15 mei, vanaf 15u\n• Check-out: zondag 17 mei, vóór 11u\n• 1 tweepersoonskamer, 2 nachten\n• Totaal: € 248,00 (reeds betaald)\n\nU kunt uw boeking bekijken of wijzigen via {{link:0}}.\n\nWij kijken ernaar uit u te mogen verwelkomen.\n\nBooking.com',
+ '[{"label":"Mijn boekingen","real_url":"https://secure.booking.com/myreservations","suspicious":false,"warning":"Dit is een echte link van booking.com. Het domein klopt (secure.booking.com) en past bij de afzender (@booking.com). Nog veiliger: open zelf de Booking.com-app of typ booking.com in uw browser."}]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Afzender @booking.com is het officiële domein","De link gaat naar secure.booking.com — hetzelfde bedrijf","Persoonlijke aanspreking met uw naam","Concrete, verwachte boekingsgegevens","Geen druk, geen vraag om paswoord of pincode"]'::jsonb,
+ 'Dit is een echte boekingsbevestiging. Belangrijke les: ook echte bedrijven sturen soms klikbare links. Wat u controleert: komt het domein van de afzender overeen met waar de link naartoe gaat? Verwachtte u deze mail? Is er geen tijdsdruk? Zelfs bij echte mails blijft het een goede gewoonte om zelf de app of website te openen in plaats van de link te klikken.',
+ 45),
+
+-- EN (UK)
+('en',
+ 'Booking.com',
+ 'confirmation@booking.com',
+ 'The address ends in @booking.com — the company''s real domain.',
+ '2 days ago',
+ 'Your booking is confirmed — Premier Inn London County Hall',
+ 'Dear Ms Smith, your booking at Premier Inn London is confirmed...',
+ E'Dear Ms Smith,\n\nYour booking at Premier Inn London County Hall is confirmed:\n\n• Check-in: Friday 15 May, from 15:00\n• Check-out: Sunday 17 May, before 12:00\n• 1 double room, 2 nights\n• Total: £198.00 (already paid)\n\nYou can view or change your booking via {{link:0}}.\n\nWe look forward to welcoming you.\n\nBooking.com',
+ '[{"label":"My bookings","real_url":"https://secure.booking.com/myreservations","suspicious":false,"warning":"This is a real link from booking.com. The domain matches (secure.booking.com) and lines up with the sender (@booking.com). Even safer: open the Booking.com app yourself or type booking.com into your browser."}]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Sender @booking.com is the official domain","The link goes to secure.booking.com — same company","Personal greeting with your name","Specific booking details you were expecting","No urgency, no password or PIN requested"]'::jsonb,
+ 'This is a genuine booking confirmation. Key lesson: real companies do sometimes send clickable links. What to check: does the sender''s domain match where the link goes? Were you expecting this email? Is there no time pressure? Even with legitimate emails, it remains a good habit to open the app or website yourself rather than clicking the link.',
+ 45),
+
+-- FR
+('fr',
+ 'Booking.com',
+ 'confirmation@booking.com',
+ 'L''adresse se termine par @booking.com — le vrai domaine de l''entreprise.',
+ 'il y a 2 jours',
+ 'Votre réservation est confirmée — Hôtel Mercure Paris Centre',
+ 'Chère Madame Dupont, votre réservation à l''Hôtel Mercure Paris est...',
+ E'Chère Madame Dupont,\n\nVotre réservation à l''Hôtel Mercure Paris Centre est confirmée :\n\n• Arrivée : vendredi 15 mai, à partir de 15h00\n• Départ : dimanche 17 mai, avant 12h00\n• 1 chambre double, 2 nuits\n• Total : 248,00 € (déjà payé)\n\nVous pouvez consulter ou modifier votre réservation via {{link:0}}.\n\nNous avons hâte de vous accueillir.\n\nBooking.com',
+ '[{"label":"Mes réservations","real_url":"https://secure.booking.com/myreservations","suspicious":false,"warning":"C''est un vrai lien de booking.com. Le domaine correspond (secure.booking.com) et concorde avec l''expéditeur (@booking.com). Encore plus sûr : ouvrez vous-même l''application Booking.com ou tapez booking.com dans votre navigateur."}]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["L''expéditeur @booking.com est le domaine officiel","Le lien mène à secure.booking.com — même entreprise","Salutation personnelle avec votre nom","Informations de réservation concrètes et attendues","Aucune pression, aucune demande de mot de passe ni de code"]'::jsonb,
+ 'C''est une vraie confirmation de réservation. Leçon importante : même les vraies entreprises envoient parfois des liens cliquables. Ce qu''il faut vérifier : le domaine de l''expéditeur correspond-il à celui du lien ? Attendiez-vous cet e-mail ? Y a-t-il une absence de pression temporelle ? Même avec des e-mails légitimes, il reste plus prudent d''ouvrir vous-même l''application ou le site que de cliquer sur le lien.',
+ 45),
+
+-- fr-BE
+('fr-BE',
+ 'Booking.com',
+ 'confirmation@booking.com',
+ 'L''adresse se termine par @booking.com — le vrai domaine de l''entreprise.',
+ 'il y a 2 jours',
+ 'Votre réservation est confirmée — Ibis Brussels Centre',
+ 'Chère Madame Dubois, votre réservation à l''Ibis Brussels est confirmée...',
+ E'Chère Madame Dubois,\n\nVotre réservation à l''Ibis Brussels Centre est confirmée :\n\n• Arrivée : vendredi 15 mai, à partir de 15h00\n• Départ : dimanche 17 mai, avant 12h00\n• 1 chambre double, 2 nuits\n• Total : 248,00 € (déjà payé)\n\nVous pouvez consulter ou modifier votre réservation via {{link:0}}.\n\nNous avons hâte de vous accueillir.\n\nBooking.com',
+ '[{"label":"Mes réservations","real_url":"https://secure.booking.com/myreservations","suspicious":false,"warning":"C''est un vrai lien de booking.com. Le domaine correspond (secure.booking.com) et concorde avec l''expéditeur (@booking.com). Encore plus sûr : ouvrez vous-même l''application Booking.com ou tapez booking.com dans votre navigateur."}]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["L''expéditeur @booking.com est le domaine officiel","Le lien mène à secure.booking.com — même entreprise","Salutation personnelle avec votre nom","Informations de réservation concrètes et attendues","Aucune pression, aucune demande de mot de passe ni de code"]'::jsonb,
+ 'C''est une vraie confirmation de réservation. Leçon importante : même les vraies entreprises envoient parfois des liens cliquables. Ce qu''il faut vérifier : le domaine de l''expéditeur correspond-il à celui du lien ? Attendiez-vous cet e-mail ? Y a-t-il une absence de pression temporelle ? Même avec des e-mails légitimes, il reste plus prudent d''ouvrir vous-même l''application ou le site que de cliquer sur le lien.',
+ 45),
+
+-- DE
+('de',
+ 'Booking.com',
+ 'confirmation@booking.com',
+ 'Die Adresse endet auf @booking.com — die echte Domain des Unternehmens.',
+ 'vor 2 Tagen',
+ 'Ihre Buchung ist bestätigt — Motel One Berlin-Alexanderplatz',
+ 'Sehr geehrte Frau Müller, Ihre Buchung im Motel One Berlin ist...',
+ E'Sehr geehrte Frau Müller,\n\nIhre Buchung im Motel One Berlin-Alexanderplatz ist bestätigt:\n\n• Check-in: Freitag, 15. Mai, ab 15:00 Uhr\n• Check-out: Sonntag, 17. Mai, vor 12:00 Uhr\n• 1 Doppelzimmer, 2 Nächte\n• Gesamt: 198,00 € (bereits bezahlt)\n\nSie können Ihre Buchung ansehen oder ändern über {{link:0}}.\n\nWir freuen uns auf Ihren Besuch.\n\nBooking.com',
+ '[{"label":"Meine Buchungen","real_url":"https://secure.booking.com/myreservations","suspicious":false,"warning":"Dies ist ein echter Link von booking.com. Die Domain stimmt (secure.booking.com) und passt zum Absender (@booking.com). Noch sicherer: Öffnen Sie die Booking.com-App selbst oder tippen Sie booking.com in Ihren Browser."}]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Absender @booking.com ist die offizielle Domain","Der Link führt zu secure.booking.com — dasselbe Unternehmen","Persönliche Anrede mit Ihrem Namen","Konkrete, erwartete Buchungsdaten","Kein Zeitdruck, keine Abfrage von Passwort oder PIN"]'::jsonb,
+ 'Das ist eine echte Buchungsbestätigung. Wichtige Lektion: Auch echte Unternehmen versenden manchmal anklickbare Links. Was Sie prüfen: Passt die Absender-Domain zu der Domain, zu der der Link führt? Haben Sie diese E-Mail erwartet? Gibt es keinen Zeitdruck? Auch bei echten Nachrichten bleibt es eine gute Gewohnheit, die App oder Website selbst zu öffnen statt auf den Link zu klicken.',
+ 45);
