@@ -4,6 +4,76 @@
 (function () {
   'use strict';
 
+  // -------- i18n --------
+  const SUPPORTED_LANGS = ['nl', 'en', 'fr', 'de'];
+  const LANG_FLAGS = { nl: '🇳🇱', en: '🇬🇧', fr: '🇫🇷', de: '🇩🇪' };
+
+  function detectInitialLanguage() {
+    const stored = localStorage.getItem('vo_lang');
+    if (stored && SUPPORTED_LANGS.includes(stored)) return stored;
+    const nav = (navigator.language || 'nl').slice(0, 2).toLowerCase();
+    return SUPPORTED_LANGS.includes(nav) ? nav : null;
+  }
+
+  let currentLang = detectInitialLanguage() || 'nl';
+
+  function t(key) {
+    const loc = (window.VO_LOCALES && window.VO_LOCALES[currentLang]) || {};
+    if (loc[key] != null) return loc[key];
+    const fallback = (window.VO_LOCALES && window.VO_LOCALES.nl) || {};
+    return fallback[key] != null ? fallback[key] : key;
+  }
+
+  function applyI18n(root) {
+    const scope = root || document;
+    scope.querySelectorAll('[data-i18n]').forEach((el) => {
+      el.textContent = t(el.getAttribute('data-i18n'));
+    });
+    scope.querySelectorAll('[data-i18n-html]').forEach((el) => {
+      el.innerHTML = t(el.getAttribute('data-i18n-html'));
+    });
+    document.documentElement.lang = currentLang;
+    const nameEl = document.getElementById('lang-switch-name');
+    const flagEl = document.getElementById('lang-switch-flag');
+    if (nameEl) nameEl.textContent = t('lang.name');
+    if (flagEl) flagEl.textContent = LANG_FLAGS[currentLang] || '';
+  }
+
+  function setLanguage(lang) {
+    if (!SUPPORTED_LANGS.includes(lang)) return;
+    currentLang = lang;
+    localStorage.setItem('vo_lang', lang);
+    applyI18n();
+    hideLangPicker();
+  }
+
+  function showLangPicker() {
+    const p = document.getElementById('lang-picker');
+    if (p) p.hidden = false;
+  }
+  function hideLangPicker() {
+    const p = document.getElementById('lang-picker');
+    if (p) p.hidden = true;
+  }
+
+  // Bij eerste bezoek (geen taalvoorkeur opgeslagen): keuzescherm tonen.
+  document.addEventListener('DOMContentLoaded', () => {
+    applyI18n();
+    if (!localStorage.getItem('vo_lang')) showLangPicker();
+  });
+
+  document.addEventListener('click', (e) => {
+    const card = e.target.closest('[data-lang]');
+    if (card) {
+      e.preventDefault();
+      setLanguage(card.dataset.lang);
+      return;
+    }
+    if (e.target.closest('#lang-switch')) {
+      showLangPicker();
+    }
+  });
+
   // -------- session id (anoniem, alleen om de attempt te koppelen) --------
   function getSessionId() {
     let id = localStorage.getItem('vo_session');

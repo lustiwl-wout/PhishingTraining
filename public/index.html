@@ -13,17 +13,36 @@
   <header class="topbar" role="banner">
     <div class="brand">
       <span class="brand-mark" aria-hidden="true">🛡️</span>
-      <span class="brand-title">Veilig Online</span>
+      <span class="brand-title" data-i18n="brand.title">Veilig Online</span>
+    </div>
+    <div class="topbar-tools">
+      <button id="lang-switch" class="lang-switch" aria-label="Change language">
+        <span id="lang-switch-flag">🇳🇱</span> <span id="lang-switch-name">Nederlands</span> ▾
+      </button>
     </div>
   </header>
 
+  <!-- Taalkeuzescherm: verschijnt bij eerste bezoek en bij klikken op taal-knop. -->
+  <div id="lang-picker" class="lang-picker" hidden role="dialog" aria-modal="true" aria-labelledby="lang-picker-title">
+    <div class="lang-picker-inner">
+      <h1 id="lang-picker-title" data-i18n="lang.picker.title">Kies uw taal · Choose your language · Choisissez votre langue · Wählen Sie Ihre Sprache</h1>
+      <p class="lang-picker-sub" data-i18n="lang.picker.sub">U kunt dit later aanpassen via de knop rechtsboven.</p>
+      <div class="lang-grid">
+        <button class="lang-card" data-lang="nl"><span class="lang-flag">🇳🇱</span><span class="lang-label">Nederlands</span></button>
+        <button class="lang-card" data-lang="en"><span class="lang-flag">🇬🇧</span><span class="lang-label">English</span></button>
+        <button class="lang-card" data-lang="fr"><span class="lang-flag">🇫🇷</span><span class="lang-label">Français</span></button>
+        <button class="lang-card" data-lang="de"><span class="lang-flag">🇩🇪</span><span class="lang-label">Deutsch</span></button>
+      </div>
+    </div>
+  </div>
+
   <nav class="stepbar" aria-label="Stappen van de training">
     <ol id="stepbar-list">
-      <li data-step="welkom" class="active"><span class="step-num">1</span><span class="step-label">Welkom</span></li>
-      <li data-step="leren"><span class="step-num">2</span><span class="step-label">Leren</span></li>
-      <li data-step="voorbeelden"><span class="step-num">3</span><span class="step-label">Voorbeelden</span></li>
-      <li data-step="simulator"><span class="step-num">4</span><span class="step-label">Simulator</span></li>
-      <li data-step="hulp"><span class="step-num">5</span><span class="step-label">Hulp</span></li>
+      <li data-step="welkom" class="active"><span class="step-num">1</span><span class="step-label" data-i18n="nav.welkom">Welkom</span></li>
+      <li data-step="leren"><span class="step-num">2</span><span class="step-label" data-i18n="nav.leren">Leren</span></li>
+      <li data-step="voorbeelden"><span class="step-num">3</span><span class="step-label" data-i18n="nav.voorbeelden">Voorbeelden</span></li>
+      <li data-step="simulator"><span class="step-num">4</span><span class="step-label" data-i18n="nav.simulator">Simulator</span></li>
+      <li data-step="hulp"><span class="step-num">5</span><span class="step-label" data-i18n="nav.hulp">Hulp</span></li>
     </ol>
   </nav>
 
@@ -31,36 +50,36 @@
 
     <!-- 1. WELKOM -->
     <section id="welkom" class="page active" aria-labelledby="welkom-titel">
-      <h1 id="welkom-titel">Welkom bij de phishing‑training</h1>
-      <p class="lead">
+      <h1 id="welkom-titel" data-i18n="welkom.h1">Welkom bij de phishing‑training</h1>
+      <p class="lead" data-i18n-html="welkom.lead">
         In deze korte training leert u <strong>phishing</strong> herkennen.
         Phishing is een truc van oplichters om uw geld of wachtwoord te stelen.
       </p>
 
       <div class="card big">
-        <h2>Wat is phishing?</h2>
-        <p>
+        <h2 data-i18n="welkom.whatis.h">Wat is phishing?</h2>
+        <p data-i18n-html="welkom.whatis.p1">
           Stel: iemand belt aan en zegt dat hij van de bank is. Hij vraagt uw bankpas en pincode.
           Dat zou u nooit geven, toch? <strong>Phishing is hetzelfde, maar dan via e‑mail.</strong>
         </p>
-        <p>
+        <p data-i18n="welkom.whatis.p2">
           De oplichter doet alsof hij van uw bank, de Belastingdienst of een pakketbezorger is.
           Hij hoopt dat u op een link klikt en uw gegevens invult.
         </p>
       </div>
 
       <div class="card">
-        <h2>Wat gaat u leren?</h2>
+        <h2 data-i18n="welkom.learn.h">Wat gaat u leren?</h2>
         <ul class="check-list">
-          <li>Hoe een phishing‑bericht eruitziet</li>
-          <li>Welke woorden en trucs oplichters gebruiken</li>
-          <li>Wat u moet doen als u twijfelt</li>
-          <li>Bij wie u terecht kunt voor hulp</li>
+          <li data-i18n="welkom.learn.li1">Hoe een phishing‑bericht eruitziet</li>
+          <li data-i18n="welkom.learn.li2">Welke woorden en trucs oplichters gebruiken</li>
+          <li data-i18n="welkom.learn.li3">Wat u moet doen als u twijfelt</li>
+          <li data-i18n="welkom.learn.li4">Bij wie u terecht kunt voor hulp</li>
         </ul>
       </div>
 
       <div class="actions">
-        <button class="btn btn-primary big-btn" data-go="leren">Start de training →</button>
+        <button class="btn btn-primary big-btn" data-go="leren" data-i18n="welkom.start">Start de training →</button>
       </div>
     </section>
 
@@ -141,14 +160,14 @@
 
     <!-- 3. VOORBEELDEN -->
     <section id="voorbeelden" class="page" aria-labelledby="vb-titel">
-      <h1 id="vb-titel">Voorbeelden van phishing‑mails</h1>
-      <p class="lead">Hieronder staan drie voorbeelden van phishing via e‑mail. De rode bolletjes wijzen aan waarom het phishing is.</p>
+      <h1 id="vb-titel" data-i18n="voorbeelden.h1">Voorbeelden van phishing‑mails</h1>
+      <p class="lead" data-i18n="voorbeelden.lead">Hieronder staan drie voorbeelden van phishing via e‑mail. De rode bolletjes wijzen aan waarom het phishing is.</p>
 
       <div id="voorbeelden-lijst" class="example-grid"><!-- gevuld door JS --></div>
 
       <div class="actions">
-        <button class="btn btn-secondary" data-go="leren">← Terug</button>
-        <button class="btn btn-primary big-btn" data-go="simulator">Open de simulator →</button>
+        <button class="btn btn-secondary" data-go="leren" data-i18n="common.back">← Terug</button>
+        <button class="btn btn-primary big-btn" data-go="simulator" data-i18n="voorbeelden.sim">Open de simulator →</button>
       </div>
     </section>
 
@@ -159,16 +178,16 @@
       <!-- FASE 1: welkomsscherm vóór de simulatie -->
       <div id="sim-phase-intro" class="sim-phase sim-phase-center">
         <div class="sim-welcome-card">
-          <h2>U gaat zo een oefening starten</h2>
-          <p class="lead">We openen straks een <strong>nepversie van Outlook</strong>. Alles wat u ziet is voor de oefening gemaakt.</p>
+          <h2 data-i18n="sim.intro.h">U gaat zo een oefening starten</h2>
+          <p class="lead" data-i18n-html="sim.intro.lead">We openen straks een <strong>nepversie van Outlook</strong>. Alles wat u ziet is voor de oefening gemaakt.</p>
           <ul class="check-list">
-            <li>De e‑mails zien er echt uit, maar zijn niet echt.</li>
-            <li>Niet alle knoppen werken — dat hoeft ook niet, het is maar een oefening.</li>
-            <li>U kunt niets stukmaken en er wordt niets verzonden.</li>
-            <li>Uw taak: kiezen of elke e‑mail <strong>vertrouwd</strong> is, of dat het <strong>phishing</strong> is.</li>
+            <li data-i18n="sim.intro.li1">De e‑mails zien er echt uit, maar zijn niet echt.</li>
+            <li data-i18n="sim.intro.li2">Niet alle knoppen werken — dat hoeft ook niet, het is maar een oefening.</li>
+            <li data-i18n="sim.intro.li3">U kunt niets stukmaken en er wordt niets verzonden.</li>
+            <li data-i18n-html="sim.intro.li4">Uw taak: kiezen of elke e‑mail <strong>vertrouwd</strong> is, of dat het <strong>phishing</strong> is.</li>
           </ul>
           <div class="actions">
-            <button id="sim-start-btn" class="btn btn-primary big-btn">Ik ben er klaar voor →</button>
+            <button id="sim-start-btn" class="btn btn-primary big-btn" data-i18n="sim.intro.start">Ik ben er klaar voor →</button>
           </div>
         </div>
       </div>
@@ -347,6 +366,7 @@
     <p>Veilig Online · Een gratis training om phishing te herkennen.</p>
   </footer>
 
+  <script src="js/locales.js?v=__VER__"></script>
   <script src="js/app.js?v=__VER__"></script>
 </body>
 </html>
