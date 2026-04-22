@@ -74,31 +74,96 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     if (step === 'voorbeelden') loadExamples();
-    if (step === 'simulator') startSimulator();
+    if (step === 'simulator') showSimPhase('intro');
   }
+
+  // -------- Simulator fases (intro -> login -> inbox) --------
+  function showSimPhase(name) {
+    ['intro', 'login', 'inbox'].forEach((p) => {
+      const el = document.getElementById('sim-phase-' + p);
+      if (el) el.hidden = (p !== name);
+    });
+  }
+
+  async function runMicrosoftLoginAnimation() {
+    const emailEl = document.getElementById('ms-email');
+    const pwEl = document.getElementById('ms-password');
+    const pwRow = document.getElementById('ms-password-row');
+    const emailRow = document.getElementById('ms-email-row');
+    const title = document.getElementById('ms-title');
+    const subtitle = document.getElementById('ms-subtitle');
+    const submit = document.getElementById('ms-submit-btn');
+    const back = document.getElementById('ms-back-btn');
+    const status = document.getElementById('ms-status');
+
+    // reset
+    emailEl.textContent = '';
+    pwEl.textContent = '';
+    pwRow.hidden = true;
+    emailRow.hidden = false;
+    title.textContent = 'Aanmelden';
+    subtitle.textContent = 'om door te gaan naar Outlook';
+    submit.textContent = 'Volgende';
+    back.hidden = true;
+    status.hidden = true;
+
+    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+    const email = 'janssen@hotmail.com';
+
+    await sleep(450);
+    for (const ch of email) {
+      emailEl.textContent += ch;
+      await sleep(55 + Math.random() * 35);
+    }
+    await sleep(350);
+    submit.classList.add('ms-btn-pressed');
+    await sleep(180);
+    submit.classList.remove('ms-btn-pressed');
+
+    // Stap 2: wachtwoord
+    emailRow.hidden = true;
+    pwRow.hidden = false;
+    title.textContent = 'Wachtwoord invoeren';
+    subtitle.innerHTML = 'Aangemeld als <strong>janssen@hotmail.com</strong>';
+    submit.textContent = 'Aanmelden';
+    back.hidden = false;
+
+    await sleep(300);
+    for (let i = 0; i < 10; i++) {
+      pwEl.textContent += '•';
+      await sleep(80 + Math.random() * 60);
+    }
+    await sleep(350);
+    submit.classList.add('ms-btn-pressed');
+    await sleep(180);
+    submit.classList.remove('ms-btn-pressed');
+
+    // Bezig met aanmelden
+    status.hidden = false;
+    status.innerHTML = '<span class="ms-spinner" aria-hidden="true"></span> Bezig met aanmelden…';
+    submit.disabled = true;
+    back.disabled = true;
+    await sleep(900);
+
+    // Door naar de inbox
+    showSimPhase('inbox');
+    submit.disabled = false;
+    back.disabled = false;
+    startSimulator();
+  }
+
+  document.addEventListener('click', (e) => {
+    if (e.target.id === 'sim-start-btn') {
+      showSimPhase('login');
+      runMicrosoftLoginAnimation().catch((err) => console.error(err));
+    }
+  });
 
   document.addEventListener('click', (e) => {
     const t = e.target.closest('[data-go]');
     if (t) { e.preventDefault(); go(t.dataset.go); }
   });
 
-  // -------- toegankelijkheid: tekstgrootte + contrast --------
-  const root = document.documentElement;
-  const savedScale = parseFloat(localStorage.getItem('vo_scale') || '1');
-  root.style.setProperty('--text-scale', savedScale);
-  if (localStorage.getItem('vo_contrast') === '1') document.body.classList.add('high-contrast');
-
-  function setScale(s) {
-    const clamped = Math.max(0.85, Math.min(1.6, s));
-    root.style.setProperty('--text-scale', clamped);
-    localStorage.setItem('vo_scale', String(clamped));
-  }
-  document.getElementById('text-bigger').addEventListener('click', () => setScale(parseFloat(getComputedStyle(root).getPropertyValue('--text-scale')) + 0.1));
-  document.getElementById('text-smaller').addEventListener('click', () => setScale(parseFloat(getComputedStyle(root).getPropertyValue('--text-scale')) - 0.1));
-  document.getElementById('contrast-toggle').addEventListener('click', () => {
-    const on = document.body.classList.toggle('high-contrast');
-    localStorage.setItem('vo_contrast', on ? '1' : '0');
-  });
 
   // -------- voorbeelden --------
   let examplesLoaded = false;
@@ -419,7 +484,13 @@
         '<button class="btn btn-secondary" data-go="hulp">Bekijk hulp en tips</button>' +
       '</div>';
     result.hidden = false;
-    document.getElementById('sim-again').addEventListener('click', startSimulator);
+    document.getElementById('sim-again').addEventListener('click', () => {
+      // Herstart: sla intro/login over, ga direct terug naar de inbox.
+      document.body.classList.add('sim-fullscreen');
+      result.hidden = true;
+      showSimPhase('inbox');
+      startSimulator();
+    });
     result.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
