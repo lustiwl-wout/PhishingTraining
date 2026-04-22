@@ -25,14 +25,22 @@ async function initDb({ force = false } = {}) {
     console.log('[init-db] schema toepassen...');
     await client.query(schema);
 
-    const { rows } = await client.query('SELECT COUNT(*)::int AS n FROM quiz_questions');
-    const isEmpty = rows[0].n === 0;
+    // Seed wanneer een van de tabellen leeg is. Zo pakken we bij een
+    // upgrade (nieuwe tabel toegevoegd) ook de nieuwe data mee.
+    const { rows } = await client.query(`
+      SELECT
+        (SELECT COUNT(*) FROM quiz_questions)   AS q,
+        (SELECT COUNT(*) FROM examples)         AS e,
+        (SELECT COUNT(*) FROM inbox_messages)   AS i
+    `);
+    const counts = rows[0];
+    const needsSeed = Number(counts.q) === 0 || Number(counts.e) === 0 || Number(counts.i) === 0;
 
-    if (isEmpty || force) {
-      console.log(`[init-db] seed laden${force ? ' (force)' : ''}...`);
+    if (needsSeed || force) {
+      console.log(`[init-db] seed laden${force ? ' (force)' : ''} — counts: ${JSON.stringify(counts)}`);
       await client.query(seed);
     } else {
-      console.log(`[init-db] ${rows[0].n} vragen aanwezig — seed overgeslagen.`);
+      console.log(`[init-db] data aanwezig (${JSON.stringify(counts)}) — seed overgeslagen.`);
     }
   } finally {
     client.release();
