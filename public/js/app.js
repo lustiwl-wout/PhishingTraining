@@ -55,6 +55,15 @@
     localStorage.setItem('vo_lang', lang);
     applyI18n();
     hideLangPicker();
+    // Data-gedreven views opnieuw ophalen in de nieuwe taal.
+    if (document.getElementById('voorbeelden').classList.contains('active')) {
+      loadExamples();
+    }
+    const simActive = document.getElementById('simulator').classList.contains('active');
+    const inboxPhase = document.getElementById('sim-phase-inbox');
+    if (simActive && inboxPhase && !inboxPhase.hidden) {
+      startSimulator();
+    }
   }
 
   function showLangPicker() {
@@ -124,7 +133,13 @@
       coldStartTimer = setTimeout(showColdStartHint, 4000);
     }
     try {
-      const res = await fetch('/api' + path, Object.assign({
+      // Taal meegeven aan GET-requests zodat de database de juiste
+      // vertaling teruggeeft. POST-requests blijven ongewijzigd.
+      let url = '/api' + path;
+      if (!opts || !opts.method || opts.method === 'GET') {
+        url += (path.includes('?') ? '&' : '?') + 'lang=' + encodeURIComponent(currentLang);
+      }
+      const res = await fetch(url, Object.assign({
         headers: { 'Content-Type': 'application/json' },
       }, opts || {}));
       if (!res.ok) throw new Error('API ' + res.status);

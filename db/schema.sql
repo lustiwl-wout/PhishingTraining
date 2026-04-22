@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS quiz_questions (
 
 CREATE TABLE IF NOT EXISTS examples (
   id            SERIAL PRIMARY KEY,
+  locale        TEXT        NOT NULL DEFAULT 'nl',
   channel       TEXT        NOT NULL CHECK (channel IN ('email', 'sms', 'whatsapp')),
   sender        TEXT        NOT NULL,
   subject       TEXT,
@@ -25,6 +26,10 @@ CREATE TABLE IF NOT EXISTS examples (
   sort_order    INTEGER     NOT NULL DEFAULT 0,
   created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- Bestaande installaties: kolom achteraf toevoegen (idempotent).
+ALTER TABLE examples ADD COLUMN IF NOT EXISTS locale TEXT NOT NULL DEFAULT 'nl';
+CREATE INDEX IF NOT EXISTS idx_examples_locale ON examples(locale);
 
 CREATE TABLE IF NOT EXISTS quiz_attempts (
   id            SERIAL PRIMARY KEY,
@@ -52,6 +57,7 @@ CREATE INDEX IF NOT EXISTS idx_quiz_answers_attempt ON quiz_answers(attempt_id);
 -- herkenbare afzenders en een expliciete uitleg achteraf.
 CREATE TABLE IF NOT EXISTS inbox_messages (
   id              SERIAL PRIMARY KEY,
+  locale          TEXT        NOT NULL DEFAULT 'nl',
   sender_name     TEXT        NOT NULL,
   sender_address  TEXT        NOT NULL,
   sender_note     TEXT,
@@ -69,6 +75,9 @@ CREATE TABLE IF NOT EXISTS inbox_messages (
   active          BOOLEAN     NOT NULL DEFAULT TRUE,
   created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+ALTER TABLE inbox_messages ADD COLUMN IF NOT EXISTS locale TEXT NOT NULL DEFAULT 'nl';
+CREATE INDEX IF NOT EXISTS idx_inbox_messages_locale ON inbox_messages(locale);
 
 CREATE TABLE IF NOT EXISTS inbox_judgments (
   id              SERIAL PRIMARY KEY,

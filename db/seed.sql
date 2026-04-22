@@ -1,4 +1,7 @@
--- Seed data: realistische Nederlandse voorbeelden van phishing en echte berichten.
+-- Seed data: realistische voorbeelden van phishing en echte berichten,
+-- in vier talen (nl, en, fr, de). Elke taal gebruikt organisaties die voor
+-- dat land herkenbaar zijn (NL: ING/Belastingdienst, UK: Barclays/HMRC,
+-- FR: Crédit Agricole/Impôts, DE: Sparkasse/Finanzamt, ...).
 -- Verwijder eerst bestaande rijen zodat seed herhaalbaar is.
 
 TRUNCATE quiz_answers, quiz_attempts, quiz_questions, examples,
@@ -205,4 +208,625 @@ INSERT INTO inbox_messages
  '["U heeft helemaal niet meegedaan aan een winactie","Vraagt om \"verzendbijdrage\" — prijzen zijn nooit tegen betaling","Druk: \"binnen 2 uur\"","Afzender @bol-winactie.net in plaats van @bol.com"]'::jsonb,
  '[]'::jsonb,
  'Dit is phishing. U kunt geen prijs winnen waar u niet aan heeft meegedaan. Een echte winactie vraagt nooit om een verzendbijdrage vooraf.',
+ 100);
+
+
+-- ============================================================
+-- ENGLISH (UK)
+-- ============================================================
+
+-- ======== VOORBEELDEN (EN) ========
+INSERT INTO examples (locale, channel, sender, subject, body, annotations, sort_order) VALUES
+('en', 'email',
+ 'Barclays Service <service@barclays-secure-login.com>',
+ 'Important: your account will be blocked',
+ E'Dear customer,\n\nWe have noticed a suspicious transaction on your account. Your account will be BLOCKED within 24 hours unless you confirm your details.\n\nClick here to secure your account: http://barclays-secure-login.com/verify\n\nKind regards,\nBarclays Security Team',
+ '[
+   {"quote": "service@barclays-secure-login.com", "note": "Look at what comes AFTER the @: barclays-secure-login.com. That is not Barclays. Real Barclays always uses @barclays.co.uk. The part BEFORE the @ (\"service\") can be anything the scammer wants."},
+   {"quote": "BLOCKED within 24 hours unless you confirm your details", "note": "Creating fear and urgency. A real bank never does this."},
+   {"quote": "Dear customer", "note": "No name. Your bank knows your name."},
+   {"quote": "http://barclays-secure-login.com/verify", "note": "Odd link that is not from Barclays. Do not click!"}
+ ]'::jsonb,
+ 10),
+
+('en', 'email',
+ 'HMRC <noreply@hmrc-refund.co.uk>',
+ 'You are entitled to a £423.50 tax refund',
+ E'Dear taxpayer,\n\nAfter a review, you are entitled to a tax refund of £423.50. Please fill in your details quickly to receive the amount.\n\nClick here: http://hmrc-refund.co.uk/claim\n\nHMRC',
+ '[
+   {"quote": "noreply@hmrc-refund.co.uk", "note": "Look after the @: hmrc-refund.co.uk. That is NOT HMRC. The real HMRC domain is hmrc.gov.uk."},
+   {"quote": "Dear taxpayer", "note": "Generic greeting without your name. HMRC addresses you by name."},
+   {"quote": "entitled to a tax refund of £423.50", "note": "A promise of money is a classic bait. HMRC never emails to announce refunds with a link."},
+   {"quote": "http://hmrc-refund.co.uk/claim", "note": "Odd link, not gov.uk. Do not click."}
+ ]'::jsonb,
+ 20),
+
+('en', 'email',
+ 'NHS login <info@nhs-verify.org>',
+ 'Please confirm your NHS login details',
+ E'Dear Sir/Madam,\n\nWe kindly ask you to confirm your NHS login details. Click the link below and sign in with your username and password.\n\nhttp://nhs-verify.org/signin\n\nThank you,\nNHS Digital',
+ '[
+   {"quote": "info@nhs-verify.org", "note": "Look after the @: nhs-verify.org. The real domain is nhs.uk — nothing else."},
+   {"quote": "Dear Sir/Madam", "note": "Generic greeting. A real organisation knows your name."},
+   {"quote": "sign in with your username and password", "note": "The NHS NEVER asks for your password by email. Always phishing."},
+   {"quote": "http://nhs-verify.org/signin", "note": "Odd link. Only open NHS services via nhs.uk or the official NHS app."}
+ ]'::jsonb,
+ 30);
+
+-- ======== INBOX (EN) ========
+INSERT INTO inbox_messages
+  (locale, sender_name, sender_address, sender_note, received_label, subject, preview, body, links, is_phishing, red_flags, green_flags, explanation, sort_order) VALUES
+
+-- 1. PHISHING — Barclays
+('en',
+ 'Barclays Bank',
+ 'service@barclays-secure-login.com',
+ 'Look after the @: barclays-secure-login.com. Real Barclays always uses @barclays.co.uk.',
+ 'today 08:42',
+ 'Important: your account will be blocked',
+ 'Dear customer, we have noticed a suspicious transaction on your...',
+ E'Dear customer,\n\nWe have noticed a suspicious transaction on your account. To prevent misuse, your account will be BLOCKED within 24 hours unless you confirm your details.\n\nConfirm straight away via {{link:0}}.\n\nKind regards,\nBarclays Security Team',
+ '[{"label":"this secure page","real_url":"http://barclays-secure-login.com/verify","suspicious":true,"warning":"This link does NOT go to barclays.co.uk but to barclays-secure-login.com. That is a fake site dressed up to look like Barclays."}]'::jsonb,
+ TRUE,
+ '["Sender address does not end in @barclays.co.uk","Threatens a block within 24 hours — manufactured panic","Greeting is \"Dear customer\" without your name","Link goes to barclays-secure-login.com, not barclays.co.uk"]'::jsonb,
+ '[]'::jsonb,
+ 'This is phishing. Barclays never emails you to confirm your details under time pressure. If in doubt, open the Barclays app yourself or call the number on the back of your bank card.',
+ 10),
+
+-- 2. REAL — GP surgery
+('en',
+ 'Oakwood Surgery',
+ 'reception@oakwoodsurgery.nhs.uk',
+ 'The address ends in the surgery''s own domain — normal.',
+ 'today 09:15',
+ 'Reminder: your appointment tomorrow at 10:15',
+ 'Dear Ms Smith, this is a reminder of your appointment with Dr...',
+ E'Dear Ms Smith,\n\nThis is a reminder of your appointment with Dr Patel tomorrow at 10:15.\n\nTo cancel or rearrange, please call 020 7946 0123.\n\nSee you tomorrow.\n\nOakwood Surgery\n12 High Street, London',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Personal greeting with your name","No link, no button","A phone number you can call yourself","No request for details or money","Concrete, expected information"]'::jsonb,
+ 'This is an ordinary appointment reminder. No links, no details requested — you can just phone if you want to change anything.',
+ 20),
+
+-- 3. PHISHING — HMRC
+('en',
+ 'HMRC',
+ 'noreply@hmrc-refund.co.uk',
+ 'Not @hmrc.gov.uk — so not really from HMRC, even though the name appears.',
+ 'today 10:03',
+ 'You are entitled to a £423.50 tax refund',
+ 'After a review, you are entitled to a tax refund...',
+ E'Dear taxpayer,\n\nAfter a review, you are entitled to a tax refund of £423.50.\n\nFill in your details to receive the amount within 3 working days: {{link:0}}.\n\nHMRC',
+ '[{"label":"HMRC online","real_url":"http://hmrc-refund.co.uk/claim","suspicious":true,"warning":"The real domain is hmrc.gov.uk. This link goes to hmrc-refund.co.uk — a fake site."}]'::jsonb,
+ TRUE,
+ '["Sender is @hmrc-refund.co.uk, not @hmrc.gov.uk","HMRC NEVER emails about refunds","Promises money to bait a click","Link goes to an unknown website"]'::jsonb,
+ '[]'::jsonb,
+ 'This is phishing. HMRC communicates about refunds through your Personal Tax Account on gov.uk or by post — never by email with a link. If in doubt, sign in to gov.uk yourself.',
+ 30),
+
+-- 4. PHISHING — Royal Mail
+('en',
+ 'Royal Mail Tracking',
+ 'track@royal-mail-delivery.info',
+ 'The real domain is royalmail.com. ".info" is often suspicious.',
+ 'yesterday 16:48',
+ 'Your parcel could not be delivered',
+ 'Your parcel is waiting for you. There is an outstanding customs fee...',
+ E'Dear customer,\n\nYour parcel is waiting at the depot. There is an outstanding customs fee (£1.95).\n\nPay now to avoid a delay: {{link:0}}\n\nRoyal Mail',
+ '[{"label":"royal-mail-delivery.info/pay","real_url":"http://royal-mail-delivery.info/pay","suspicious":true,"warning":"The real address for Royal Mail is royalmail.com. \".info\" domains are widely used for scams."}]'::jsonb,
+ TRUE,
+ '["Small amount (£1.95) so you pay without thinking","Sender @royal-mail-delivery.info instead of @royalmail.com","\"Pay now\" — time pressure","No name, generic greeting"]'::jsonb,
+ '[]'::jsonb,
+ 'This is phishing. Royal Mail never asks for customs fees by email. Expecting a parcel? Check using the official Royal Mail app or via royalmail.com.',
+ 40),
+
+-- 5. REAL — Library
+('en',
+ 'Camden Libraries',
+ 'libraries@camden.gov.uk',
+ 'Official Camden Council domain — correct.',
+ 'yesterday 11:22',
+ 'Your borrowed book is due back',
+ 'Dear Ms Smith, this is a reminder that your book...',
+ E'Dear Ms Smith,\n\nThis is a reminder that the book "Wolf Hall" must be returned to a Camden library branch by Friday 28 April at the latest.\n\nAny questions? Call 020 7974 4001 or drop in.\n\nKind regards,\nCamden Libraries',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Personal greeting","Concrete information about your book and date","No link, no payment","A phone number you can call yourself"]'::jsonb,
+ 'This is a genuine reminder from your library. No danger.',
+ 50),
+
+-- 6. PHISHING — Gov.uk Verify
+('en',
+ 'GOV.UK Verify',
+ 'info@gov-uk-verify.org',
+ 'The real domain is gov.uk. ".org" on Gov.uk is suspicious.',
+ '2 days ago 14:30',
+ 'Please re-confirm your Gov.uk details',
+ 'Dear Sir/Madam, we kindly ask you to re-confirm your Gov.uk...',
+ E'Dear Sir/Madam,\n\nFor a security check, we ask you to re-confirm your Gov.uk details.\n\nSign in via {{link:0}} and enter your username and password.\n\nThank you,\nGOV.UK',
+ '[{"label":"this secure page","real_url":"http://gov-uk-verify.org/signin","suspicious":true,"warning":"Gov.uk NEVER asks for your password by email. The real domain is gov.uk — not gov-uk-verify.org."}]'::jsonb,
+ TRUE,
+ '["Sender @gov-uk-verify.org — not @gov.uk","Asks for both username AND password (Gov.uk NEVER does that)","Generic \"Dear Sir/Madam\" greeting","Link to an unknown .org address"]'::jsonb,
+ '[]'::jsonb,
+ 'This is phishing. Gov.uk never emails a link asking you to confirm your password. Only sign in via gov.uk directly.',
+ 60),
+
+-- 7. REAL — BT invoice
+('en',
+ 'BT',
+ 'no-reply@bt.com',
+ 'Sender @bt.com is the official domain — correct.',
+ '3 days ago',
+ 'Your April bill is ready',
+ 'Dear customer, your bill of £49.95 is ready in MyBT...',
+ E'Dear Ms Smith,\n\nYour BT bill of £49.95 for April is ready in MyBT.\n\nYou can view the bill by signing in yourself at bt.com/mybt (type the address in your browser yourself or use the MyBT app).\n\nThe amount will be taken automatically on 1 May.\n\nBT Customer Service',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Sender is @bt.com (real)","Personal greeting","The amount and date match your contract","No clickable link — you are asked to sign in YOURSELF","Expected monthly bill"]'::jsonb,
+ 'This is a real BT bill notice. Even with genuine messages, it is safer NOT to click links but to go to the site or app yourself.',
+ 70),
+
+-- 8. PHISHING — Microsoft
+('en',
+ 'Microsoft',
+ 'support@microsoft-security-check.com',
+ 'The real Microsoft domain is microsoft.com, not microsoft-security-check.com.',
+ '4 days ago',
+ 'Warning: your account has been blocked',
+ 'Your Microsoft account has been blocked due to suspicious activity...',
+ E'Dear user,\n\nYour Microsoft account has been temporarily blocked due to suspicious sign-in attempts from Russia.\n\nIf you do not unlock your account within 12 hours, you will lose all your files.\n\nUnlock your account: {{link:0}}',
+ '[{"label":"Unlock account","real_url":"http://microsoft-security-check.com/unlock","suspicious":true,"warning":"Microsoft never uses domains with dashes like microsoft-security-check.com. This is fake."}]'::jsonb,
+ TRUE,
+ '["Panic: \"you will lose all your files\"","Odd sender, not @microsoft.com","Threat about sign-in from another country","Countdown (12 hours) to rush you"]'::jsonb,
+ '[]'::jsonb,
+ 'This is phishing. Microsoft never calls or emails you out of the blue about blocked accounts. Ignore it and sign in yourself at account.microsoft.com to check.',
+ 80),
+
+-- 9. REAL — Pharmacy
+('en',
+ 'Boots Pharmacy',
+ 'pharmacy@boots.co.uk',
+ 'Boots'' own domain — correct.',
+ '5 days ago',
+ 'Your prescription is ready to collect',
+ 'Your prescription is ready at Boots Pharmacy. You can collect it...',
+ E'Dear Ms Smith,\n\nYour prescription is ready to collect at Boots Pharmacy, 12 High Street.\n\nWe are open today until 17:30. Please bring your ID or collection slip.\n\nAny questions? Call 020 7946 0555.\n\nBoots Pharmacy',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Personal greeting","Known pharmacy, own domain","Concrete information: address and opening hours","No link, no payment","A phone number you can call yourself"]'::jsonb,
+ 'This is a normal message from your pharmacy. No danger.',
+ 90),
+
+-- 10. PHISHING — Amazon prize
+('en',
+ 'Amazon',
+ 'prize@amazon-prize-draw.net',
+ 'Real Amazon emails come from @amazon.co.uk, not from @amazon-prize-draw.net.',
+ '6 days ago',
+ 'Congratulations! You have won an iPhone 15',
+ 'You are our lucky winner! Claim your prize within 2 hours...',
+ E'Dear customer,\n\nCongratulations! You have been drawn from thousands of entrants as the winner of a brand-new iPhone 15.\n\nClaim your prize within 2 hours by paying a small postage fee: {{link:0}}\n\nAmazon Prize Draw Team',
+ '[{"label":"Claim your prize","real_url":"http://amazon-prize-draw.net/claim","suspicious":true,"warning":"Amazon only ever uses amazon.co.uk. A \"postage fee\" for a prize you won is always a scam."}]'::jsonb,
+ TRUE,
+ '["You never entered a prize draw","Asks for a \"postage fee\" — real prizes are never sent against payment","Urgency: \"within 2 hours\"","Sender @amazon-prize-draw.net instead of @amazon.co.uk"]'::jsonb,
+ '[]'::jsonb,
+ 'This is phishing. You cannot win a prize you never entered. A real prize draw never asks you to pay a fee upfront.',
+ 100);
+
+
+-- ============================================================
+-- FRANÇAIS (FR)
+-- ============================================================
+
+-- ======== VOORBEELDEN (FR) ========
+INSERT INTO examples (locale, channel, sender, subject, body, annotations, sort_order) VALUES
+('fr', 'email',
+ 'Crédit Agricole <service@credit-agricole-securite.com>',
+ 'Important : votre compte va être bloqué',
+ E'Cher client,\n\nNous avons détecté une transaction suspecte sur votre compte. Votre compte sera BLOQUÉ sous 24 heures si vous ne confirmez pas vos informations.\n\nCliquez ici pour sécuriser votre compte : http://credit-agricole-securite.com/verifier\n\nCordialement,\nService Sécurité Crédit Agricole',
+ '[
+   {"quote": "service@credit-agricole-securite.com", "note": "Regardez ce qui vient APRÈS le @ : credit-agricole-securite.com. Ce n''est pas le Crédit Agricole. Le vrai Crédit Agricole utilise toujours @credit-agricole.fr. Ce qui est AVANT le @ (« service ») peut être choisi par l''escroc."},
+   {"quote": "BLOQUÉ sous 24 heures si vous ne confirmez pas vos informations", "note": "On vous fait peur et on vous presse. Une vraie banque ne fait jamais cela."},
+   {"quote": "Cher client", "note": "Pas de nom. Votre banque connaît votre nom."},
+   {"quote": "http://credit-agricole-securite.com/verifier", "note": "Lien étrange qui n''est pas du Crédit Agricole. Ne cliquez pas !"}
+ ]'::jsonb,
+ 10),
+
+('fr', 'email',
+ 'Impôts <noreply@impots-remboursement.fr>',
+ 'Vous avez droit à un remboursement de 423,50 €',
+ E'Cher contribuable,\n\nAprès vérification, vous avez droit à un remboursement d''impôts de 423,50 €. Remplissez vite vos informations pour recevoir le montant.\n\nCliquez ici : http://impots-remboursement.fr/reclamer\n\nDirection Générale des Finances Publiques',
+ '[
+   {"quote": "noreply@impots-remboursement.fr", "note": "Regardez après le @ : impots-remboursement.fr. Ce n''est PAS la DGFiP. Le vrai domaine est dgfip.finances.gouv.fr."},
+   {"quote": "Cher contribuable", "note": "Salutation générique sans votre nom. La DGFiP connaît votre identité."},
+   {"quote": "droit à un remboursement d''impôts de 423,50 €", "note": "La promesse d''argent est un appât classique. Les impôts ne communiquent jamais un remboursement par e-mail avec un lien."},
+   {"quote": "http://impots-remboursement.fr/reclamer", "note": "Lien étrange, ce n''est pas impots.gouv.fr. Ne cliquez pas."}
+ ]'::jsonb,
+ 20),
+
+('fr', 'email',
+ 'Ameli <info@ameli-controle.org>',
+ 'Confirmez vos informations Ameli',
+ E'Madame, Monsieur,\n\nNous vous demandons de confirmer à nouveau vos informations Ameli. Cliquez sur le lien ci-dessous et connectez-vous avec votre identifiant et votre mot de passe.\n\nhttp://ameli-controle.org/connexion\n\nMerci,\nAssurance Maladie',
+ '[
+   {"quote": "info@ameli-controle.org", "note": "Regardez après le @ : ameli-controle.org. Le vrai domaine est ameli.fr — rien d''autre."},
+   {"quote": "Madame, Monsieur", "note": "Salutation générique. Une vraie organisation connaît votre nom."},
+   {"quote": "connectez-vous avec votre identifiant et votre mot de passe", "note": "Ameli ne demande JAMAIS votre mot de passe par e-mail. Toujours du hameçonnage."},
+   {"quote": "http://ameli-controle.org/connexion", "note": "Lien étrange. Ouvrez Ameli uniquement via ameli.fr ou l''application officielle."}
+ ]'::jsonb,
+ 30);
+
+-- ======== INBOX (FR) ========
+INSERT INTO inbox_messages
+  (locale, sender_name, sender_address, sender_note, received_label, subject, preview, body, links, is_phishing, red_flags, green_flags, explanation, sort_order) VALUES
+
+-- 1. PHISHING — Crédit Agricole
+('fr',
+ 'Crédit Agricole',
+ 'service@credit-agricole-securite.com',
+ 'Regardez après le @ : credit-agricole-securite.com. Le vrai Crédit Agricole utilise toujours @credit-agricole.fr.',
+ 'aujourd''hui 08:42',
+ 'Important : votre compte va être bloqué',
+ 'Cher client, nous avons détecté une transaction suspecte sur votre...',
+ E'Cher client,\n\nNous avons détecté une transaction suspecte sur votre compte. Pour éviter tout abus, votre compte sera BLOQUÉ sous 24 heures si vous ne confirmez pas vos informations.\n\nConfirmez immédiatement via {{link:0}}.\n\nCordialement,\nService Sécurité Crédit Agricole',
+ '[{"label":"cette page sécurisée","real_url":"http://credit-agricole-securite.com/verifier","suspicious":true,"warning":"Ce lien ne va PAS vers credit-agricole.fr mais vers credit-agricole-securite.com. C''est un faux site qui imite le Crédit Agricole."}]'::jsonb,
+ TRUE,
+ '["L''adresse de l''expéditeur ne finit pas par @credit-agricole.fr","Menace d''un blocage sous 24 heures — création de panique","Salutation « Cher client » sans votre nom","Le lien mène à credit-agricole-securite.com, pas à credit-agricole.fr"]'::jsonb,
+ '[]'::jsonb,
+ 'C''est du hameçonnage. Le Crédit Agricole ne vous envoie jamais d''e-mail sous pression pour confirmer vos informations. En cas de doute, ouvrez vous-même l''application Ma Banque ou appelez le numéro au dos de votre carte.',
+ 10),
+
+-- 2. REAL — Médecin
+('fr',
+ 'Cabinet médical des Tilleuls',
+ 'cabinet@cabinet-tilleuls.fr',
+ 'L''adresse finit par le domaine du cabinet — normal.',
+ 'aujourd''hui 09:15',
+ 'Rappel : votre rendez-vous demain à 10h15',
+ 'Chère Madame Dupont, rappel de votre rendez-vous...',
+ E'Chère Madame Dupont,\n\nCeci est un rappel de votre rendez-vous avec le Dr Martin demain à 10h15.\n\nPour annuler ou reporter, appelez le 01 42 36 12 34.\n\nÀ demain.\n\nCabinet médical des Tilleuls\n12 rue des Lilas, Paris',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Salutation personnelle avec votre nom","Aucun lien, aucun bouton","Numéro de téléphone que vous pouvez appeler vous-même","Pas de demande d''informations ou d''argent","Information concrète et attendue"]'::jsonb,
+ 'C''est un simple rappel de rendez-vous. Pas de liens, pas d''informations demandées — vous pouvez simplement appeler si vous voulez modifier quelque chose.',
+ 20),
+
+-- 3. PHISHING — Impôts
+('fr',
+ 'Impôts',
+ 'noreply@impots-remboursement.fr',
+ 'Pas @dgfip.finances.gouv.fr — donc pas vraiment des impôts, même si le nom apparaît.',
+ 'aujourd''hui 10:03',
+ 'Vous avez droit à un remboursement de 423,50 €',
+ 'Après vérification, vous avez droit à un remboursement...',
+ E'Cher contribuable,\n\nAprès vérification, vous avez droit à un remboursement d''impôts de 423,50 €.\n\nRemplissez vos informations pour recevoir le montant sous 3 jours ouvrés : {{link:0}}.\n\nDirection Générale des Finances Publiques',
+ '[{"label":"Mon espace impots.gouv.fr","real_url":"http://impots-remboursement.fr/reclamer","suspicious":true,"warning":"La vraie adresse est impots.gouv.fr. Ce lien mène à impots-remboursement.fr — un faux site."}]'::jsonb,
+ TRUE,
+ '["Expéditeur @impots-remboursement.fr, pas @dgfip.finances.gouv.fr","La DGFiP n''envoie JAMAIS d''e-mail concernant les remboursements","Promet de l''argent pour vous faire cliquer","Le lien mène à un site inconnu"]'::jsonb,
+ '[]'::jsonb,
+ 'C''est du hameçonnage. La DGFiP communique sur les remboursements via votre espace personnel sur impots.gouv.fr ou par courrier — jamais par e-mail avec un lien. En cas de doute : connectez-vous vous-même sur impots.gouv.fr.',
+ 30),
+
+-- 4. PHISHING — La Poste / Colissimo
+('fr',
+ 'Colissimo Suivi',
+ 'suivi@colissimo-livraison.info',
+ 'Le vrai domaine est laposte.fr. « .info » est souvent suspect.',
+ 'hier 16:48',
+ 'Votre colis n''a pas pu être livré',
+ 'Votre colis vous attend. Des frais de douane restent impayés...',
+ E'Cher client,\n\nVotre colis est en attente au centre de distribution. Des frais de douane restent impayés (1,95 €).\n\nPayez immédiatement pour éviter un retard : {{link:0}}\n\nColissimo',
+ '[{"label":"colissimo-livraison.info/payer","real_url":"http://colissimo-livraison.info/payer","suspicious":true,"warning":"La vraie adresse de La Poste est laposte.fr. Les domaines en « .info » sont très utilisés pour des arnaques."}]'::jsonb,
+ TRUE,
+ '["Petit montant (1,95 €) pour que vous payiez sans réfléchir","Expéditeur @colissimo-livraison.info au lieu de @laposte.fr","« Payez immédiatement » — pression temporelle","Pas de nom, salutation générique"]'::jsonb,
+ '[]'::jsonb,
+ 'C''est du hameçonnage. La Poste ne demande jamais de frais de douane par e-mail. Vous attendez un colis ? Vérifiez vous-même via l''application officielle La Poste ou sur laposte.fr.',
+ 40),
+
+-- 5. REAL — Médiathèque
+('fr',
+ 'Médiathèque de la Ville',
+ 'accueil@mediatheque-paris.fr',
+ 'Domaine officiel de la médiathèque — correct.',
+ 'hier 11:22',
+ 'Votre livre emprunté doit être rendu',
+ 'Chère Madame Dupont, rappel que votre livre...',
+ E'Chère Madame Dupont,\n\nCeci est un rappel que le livre « L''Étranger » doit être retourné dans une médiathèque de Paris avant le vendredi 28 avril.\n\nDes questions ? Appelez le 01 44 59 29 40 ou passez nous voir.\n\nCordialement,\nMédiathèque de la Ville',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Salutation personnelle","Information concrète sur votre livre et la date","Aucun lien, aucun paiement","Numéro de téléphone que vous pouvez appeler vous-même"]'::jsonb,
+ 'C''est un vrai rappel de votre médiathèque. Aucun danger.',
+ 50),
+
+-- 6. PHISHING — Ameli
+('fr',
+ 'Ameli',
+ 'info@ameli-controle.org',
+ 'Le vrai domaine est ameli.fr. « .org » sur Ameli est suspect.',
+ 'avant-hier 14:30',
+ 'Confirmez vos informations Ameli',
+ 'Madame, Monsieur, nous vous demandons de confirmer à nouveau...',
+ E'Madame, Monsieur,\n\nDans le cadre d''un contrôle de sécurité, nous vous demandons de confirmer à nouveau vos informations Ameli.\n\nConnectez-vous via {{link:0}} et saisissez votre identifiant et votre mot de passe.\n\nMerci,\nAssurance Maladie',
+ '[{"label":"cette page sécurisée","real_url":"http://ameli-controle.org/connexion","suspicious":true,"warning":"Ameli ne demande JAMAIS votre mot de passe par e-mail. La vraie adresse est ameli.fr — pas ameli-controle.org."}]'::jsonb,
+ TRUE,
+ '["Expéditeur @ameli-controle.org — pas @ameli.fr","Demande votre identifiant ET votre mot de passe (Ameli ne fait JAMAIS cela)","Salutation générique « Madame, Monsieur »","Lien vers une adresse inconnue en « .org »"]'::jsonb,
+ '[]'::jsonb,
+ 'C''est du hameçonnage. Ameli n''envoie jamais d''e-mail avec un lien pour confirmer votre mot de passe. Connectez-vous uniquement via ameli.fr ou l''application officielle Ameli.',
+ 60),
+
+-- 7. REAL — Orange
+('fr',
+ 'Orange',
+ 'no-reply@orange.fr',
+ 'L''expéditeur @orange.fr est le domaine officiel — correct.',
+ 'il y a 3 jours',
+ 'Votre facture d''avril est disponible',
+ 'Cher client, votre facture de 49,95 € est disponible dans votre espace client...',
+ E'Chère Madame Dupont,\n\nVotre facture Orange de 49,95 € pour le mois d''avril est disponible dans votre espace client.\n\nVous pouvez consulter la facture en vous connectant vous-même à orange.fr/espace-client (tapez cette adresse vous-même dans votre navigateur ou utilisez l''application Orange et moi).\n\nLe montant sera prélevé automatiquement sur votre compte le 1er mai.\n\nService client Orange',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Expéditeur @orange.fr (réel)","Salutation personnelle","Le montant et la date correspondent à votre abonnement","Pas de lien cliquable — on vous demande de vous connecter VOUS-MÊME","Facture mensuelle attendue"]'::jsonb,
+ 'C''est une vraie notification de facture Orange. Attention : même pour un vrai message, il est plus prudent de NE PAS cliquer sur les liens mais d''aller vous-même sur le site ou l''application.',
+ 70),
+
+-- 8. PHISHING — Microsoft
+('fr',
+ 'Microsoft',
+ 'support@microsoft-security-check.com',
+ 'Le vrai domaine Microsoft est microsoft.com, pas microsoft-security-check.com.',
+ 'il y a 4 jours',
+ 'Avertissement : votre compte est bloqué',
+ 'Votre compte Microsoft est bloqué suite à une activité suspecte...',
+ E'Cher utilisateur,\n\nVotre compte Microsoft est temporairement bloqué suite à des tentatives de connexion suspectes depuis la Russie.\n\nSi vous ne déverrouillez pas votre compte dans les 12 heures, vous perdrez tous vos fichiers.\n\nDéverrouillez votre compte : {{link:0}}',
+ '[{"label":"Déverrouiller le compte","real_url":"http://microsoft-security-check.com/unlock","suspicious":true,"warning":"Microsoft n''utilise jamais de domaines avec des tirets comme microsoft-security-check.com. C''est faux."}]'::jsonb,
+ TRUE,
+ '["Panique : « vous perdrez tous vos fichiers »","Expéditeur étrange, pas @microsoft.com","Menace de connexion depuis un autre pays","Compte à rebours (12 heures) pour vous presser"]'::jsonb,
+ '[]'::jsonb,
+ 'C''est du hameçonnage. Microsoft ne vous appelle ni ne vous envoie jamais d''e-mail non sollicité au sujet de comptes bloqués. Vous recevez cela ? Ignorez et connectez-vous vous-même sur account.microsoft.com pour vérifier.',
+ 80),
+
+-- 9. REAL — Pharmacie
+('fr',
+ 'Pharmacie Centrale',
+ 'contact@pharmacie-centrale.fr',
+ 'Domaine propre de la pharmacie — correct.',
+ 'il y a 5 jours',
+ 'Vos médicaments sont prêts',
+ 'Vos médicaments sont prêts à la Pharmacie Centrale. Vous pouvez les retirer...',
+ E'Chère Madame Dupont,\n\nVos médicaments sont prêts à la Pharmacie Centrale, 12 rue des Lilas.\n\nNous sommes ouverts aujourd''hui jusqu''à 19h30. Apportez votre bon de retrait ou votre pièce d''identité.\n\nDes questions ? Appelez le 01 42 36 87 65.\n\nPharmacie Centrale',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Salutation personnelle","Pharmacie connue, domaine propre","Information concrète : adresse, horaires","Aucun lien, aucun paiement","Numéro de téléphone que vous pouvez appeler vous-même"]'::jsonb,
+ 'C''est un message normal de votre pharmacie. Aucun danger.',
+ 90),
+
+-- 10. PHISHING — Amazon concours
+('fr',
+ 'Amazon',
+ 'concours@amazon-tirage.net',
+ 'Les vrais e-mails Amazon viennent de @amazon.fr, pas de @amazon-tirage.net.',
+ 'il y a 6 jours',
+ 'Félicitations ! Vous avez gagné un iPhone 15',
+ 'Vous êtes notre heureux gagnant ! Réclamez votre prix sous 2 heures...',
+ E'Cher client,\n\nFélicitations ! Vous avez été tiré au sort parmi des milliers de participants comme notre gagnant d''un iPhone 15 flambant neuf.\n\nRéclamez votre prix sous 2 heures en payant une petite participation aux frais d''envoi : {{link:0}}\n\nÉquipe Amazon Tirage au sort',
+ '[{"label":"Réclamer votre prix","real_url":"http://amazon-tirage.net/reclamer","suspicious":true,"warning":"Amazon n''utilise que amazon.fr. Une « participation aux frais d''envoi » pour un prix gagné est toujours une arnaque."}]'::jsonb,
+ TRUE,
+ '["Vous n''avez jamais participé à un tirage au sort","Demande une « participation aux frais d''envoi » — un prix ne se paye jamais","Pression : « sous 2 heures »","Expéditeur @amazon-tirage.net au lieu de @amazon.fr"]'::jsonb,
+ '[]'::jsonb,
+ 'C''est du hameçonnage. On ne peut pas gagner un prix auquel on n''a pas participé. Un vrai tirage au sort ne demande jamais des frais de port à l''avance.',
+ 100);
+
+
+-- ============================================================
+-- DEUTSCH (DE)
+-- ============================================================
+
+-- ======== VOORBEELDEN (DE) ========
+INSERT INTO examples (locale, channel, sender, subject, body, annotations, sort_order) VALUES
+('de', 'email',
+ 'Sparkasse <service@sparkasse-sicher-login.com>',
+ 'Wichtig: Ihr Konto wird gesperrt',
+ E'Sehr geehrter Kunde,\n\nWir haben eine verdächtige Transaktion auf Ihrem Konto festgestellt. Innerhalb von 24 Stunden wird Ihr Konto GESPERRT, wenn Sie Ihre Daten nicht bestätigen.\n\nKlicken Sie hier, um Ihr Konto zu sichern: http://sparkasse-sicher-login.com/verify\n\nMit freundlichen Grüßen,\nSparkasse Sicherheitsteam',
+ '[
+   {"quote": "service@sparkasse-sicher-login.com", "note": "Achten Sie darauf, was NACH dem @ steht: sparkasse-sicher-login.com. Das ist nicht die Sparkasse. Die echte Sparkasse nutzt immer @sparkasse.de. Der Teil VOR dem @ („service“) kann vom Betrüger frei gewählt werden."},
+   {"quote": "GESPERRT, wenn Sie Ihre Daten nicht bestätigen", "note": "Angst und Eile erzeugen. Eine echte Bank macht das nie."},
+   {"quote": "Sehr geehrter Kunde", "note": "Kein Name. Ihre Bank kennt Ihren Namen."},
+   {"quote": "http://sparkasse-sicher-login.com/verify", "note": "Verdächtiger Link, der nicht von der Sparkasse ist. Nicht anklicken!"}
+ ]'::jsonb,
+ 10),
+
+('de', 'email',
+ 'Finanzamt <noreply@finanzamt-erstattung.de>',
+ 'Sie haben Anspruch auf 423,50 € Rückerstattung',
+ E'Sehr geehrter Steuerzahler,\n\nNach unserer Prüfung haben Sie Anspruch auf eine Steuererstattung in Höhe von 423,50 €. Geben Sie schnell Ihre Daten ein, um den Betrag zu erhalten.\n\nKlicken Sie hier: http://finanzamt-erstattung.de/anfordern\n\nFinanzamt',
+ '[
+   {"quote": "noreply@finanzamt-erstattung.de", "note": "Achten Sie auf den Teil nach dem @: finanzamt-erstattung.de. Das ist NICHT das Finanzamt. Echte Kommunikation läuft über @elster.de oder Briefpost."},
+   {"quote": "Sehr geehrter Steuerzahler", "note": "Allgemeine Anrede ohne Ihren Namen. Das Finanzamt kennt Sie."},
+   {"quote": "Anspruch auf eine Steuererstattung in Höhe von 423,50 €", "note": "Ein Geldversprechen ist ein klassischer Köder. Das Finanzamt kündigt Erstattungen nie per E-Mail mit Link an."},
+   {"quote": "http://finanzamt-erstattung.de/anfordern", "note": "Verdächtiger Link, nicht elster.de. Nicht anklicken."}
+ ]'::jsonb,
+ 20),
+
+('de', 'email',
+ 'ELSTER <info@elster-sicher.org>',
+ 'Bitte bestätigen Sie Ihre ELSTER-Daten',
+ E'Sehr geehrte Damen und Herren,\n\nWir bitten Sie, Ihre ELSTER-Daten erneut zu bestätigen. Klicken Sie auf den untenstehenden Link und melden Sie sich mit Ihrem Benutzernamen und Passwort an.\n\nhttp://elster-sicher.org/anmelden\n\nMit freundlichen Grüßen,\nELSTER',
+ '[
+   {"quote": "info@elster-sicher.org", "note": "Achten Sie auf den Teil nach dem @: elster-sicher.org. Die echte Domain ist elster.de — nichts anderes."},
+   {"quote": "Sehr geehrte Damen und Herren", "note": "Allgemeine Anrede. Eine echte Organisation kennt Ihren Namen."},
+   {"quote": "melden Sie sich mit Ihrem Benutzernamen und Passwort an", "note": "ELSTER fragt NIEMALS per E-Mail nach Ihrem Passwort. Immer Phishing."},
+   {"quote": "http://elster-sicher.org/anmelden", "note": "Verdächtiger Link. Öffnen Sie ELSTER nur über elster.de oder die offizielle App."}
+ ]'::jsonb,
+ 30);
+
+-- ======== INBOX (DE) ========
+INSERT INTO inbox_messages
+  (locale, sender_name, sender_address, sender_note, received_label, subject, preview, body, links, is_phishing, red_flags, green_flags, explanation, sort_order) VALUES
+
+-- 1. PHISHING — Sparkasse
+('de',
+ 'Sparkasse',
+ 'service@sparkasse-sicher-login.com',
+ 'Achten Sie auf den Teil nach dem @: sparkasse-sicher-login.com. Die echte Sparkasse nutzt immer @sparkasse.de.',
+ 'heute 08:42',
+ 'Wichtig: Ihr Konto wird gesperrt',
+ 'Sehr geehrter Kunde, wir haben eine verdächtige Transaktion auf Ihrem...',
+ E'Sehr geehrter Kunde,\n\nWir haben eine verdächtige Transaktion auf Ihrem Konto festgestellt. Um Missbrauch zu verhindern, wird Ihr Konto innerhalb von 24 Stunden GESPERRT, wenn Sie Ihre Daten nicht bestätigen.\n\nBestätigen Sie sofort über {{link:0}}.\n\nMit freundlichen Grüßen,\nSparkasse Sicherheitsteam',
+ '[{"label":"diese sichere Seite","real_url":"http://sparkasse-sicher-login.com/verify","suspicious":true,"warning":"Dieser Link führt NICHT zu sparkasse.de, sondern zu sparkasse-sicher-login.com. Das ist eine gefälschte Seite, die wie die Sparkasse aussieht."}]'::jsonb,
+ TRUE,
+ '["Absenderadresse endet nicht auf @sparkasse.de","Droht mit Sperrung innerhalb von 24 Stunden — Panikmache","Anrede „Sehr geehrter Kunde“ ohne Ihren Namen","Link führt zu sparkasse-sicher-login.com, nicht zu sparkasse.de"]'::jsonb,
+ '[]'::jsonb,
+ 'Das ist Phishing. Die Sparkasse schickt niemals E-Mails unter Zeitdruck, um Ihre Daten bestätigen zu lassen. Im Zweifel öffnen Sie selbst die Sparkassen-App oder rufen die Nummer auf der Rückseite Ihrer Karte an.',
+ 10),
+
+-- 2. REAL — Hausarzt
+('de',
+ 'Hausarztpraxis Dr. Schmidt',
+ 'praxis@hausarzt-schmidt.de',
+ 'Die Adresse endet auf der eigenen Domain der Praxis — normal.',
+ 'heute 09:15',
+ 'Erinnerung: Ihr Termin morgen um 10:15',
+ 'Sehr geehrte Frau Müller, dies ist eine Erinnerung an Ihren Termin...',
+ E'Sehr geehrte Frau Müller,\n\nDies ist eine Erinnerung an Ihren Termin bei Dr. Schmidt morgen um 10:15.\n\nMöchten Sie absagen oder verschieben? Dann rufen Sie bitte 030 123 45 67 an.\n\nBis morgen.\n\nHausarztpraxis Dr. Schmidt\nHauptstraße 12, Berlin',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Persönliche Anrede mit Ihrem Namen","Kein Link, keine Schaltfläche","Telefonnummer, die Sie selbst anrufen können","Keine Frage nach Daten oder Geld","Konkrete, erwartete Information"]'::jsonb,
+ 'Das ist eine ganz normale Terminerinnerung. Keine Links, keine Datenabfrage — Sie können einfach anrufen, wenn Sie etwas ändern möchten.',
+ 20),
+
+-- 3. PHISHING — Finanzamt
+('de',
+ 'Finanzamt',
+ 'noreply@finanzamt-erstattung.de',
+ 'Nicht @elster.de — also nicht vom Finanzamt, auch wenn der Name erscheint.',
+ 'heute 10:03',
+ 'Sie haben Anspruch auf 423,50 € Rückerstattung',
+ 'Nach unserer Prüfung haben Sie Anspruch auf eine Steuererstattung...',
+ E'Sehr geehrter Steuerzahler,\n\nNach unserer Prüfung haben Sie Anspruch auf eine Steuererstattung in Höhe von 423,50 €.\n\nGeben Sie Ihre Daten ein, um den Betrag innerhalb von 3 Werktagen zu erhalten: {{link:0}}.\n\nFinanzamt',
+ '[{"label":"Mein ELSTER","real_url":"http://finanzamt-erstattung.de/anfordern","suspicious":true,"warning":"Die echte Adresse ist elster.de. Dieser Link führt zu finanzamt-erstattung.de — einer gefälschten Seite."}]'::jsonb,
+ TRUE,
+ '["Absender @finanzamt-erstattung.de, nicht @elster.de","Das Finanzamt versendet NIEMALS E-Mails zu Erstattungen","Verspricht Geld, um Sie zum Klick zu bewegen","Link führt zu einer unbekannten Website"]'::jsonb,
+ '[]'::jsonb,
+ 'Das ist Phishing. Das Finanzamt kommuniziert über ELSTER (elster.de) oder per Briefpost — niemals per E-Mail mit Link. Im Zweifel: melden Sie sich selbst bei elster.de an.',
+ 30),
+
+-- 4. PHISHING — DHL
+('de',
+ 'DHL Sendungsverfolgung',
+ 'tracking@dhl-paket-info.com',
+ 'Die echte Domain ist dhl.de. „.com“ mit Bindestrichen ist oft verdächtig.',
+ 'gestern 16:48',
+ 'Ihr Paket konnte nicht zugestellt werden',
+ 'Ihr Paket wartet auf Sie. Es gibt noch unbezahlte Zollgebühren...',
+ E'Sehr geehrter Kunde,\n\nIhr Paket wartet im Verteilzentrum. Es gibt noch unbezahlte Zollgebühren (1,95 €).\n\nZahlen Sie sofort, um Verzögerungen zu vermeiden: {{link:0}}\n\nDHL',
+ '[{"label":"dhl-paket-info.com/zahlen","real_url":"http://dhl-paket-info.com/zahlen","suspicious":true,"warning":"Die echte Adresse von DHL ist dhl.de. Domains mit Bindestrichen werden oft für Betrug genutzt."}]'::jsonb,
+ TRUE,
+ '["Kleiner Betrag (1,95 €), damit Sie ohne Nachdenken zahlen","Absender @dhl-paket-info.com statt @dhl.de","„Zahlen Sie sofort“ — Zeitdruck","Kein Name, allgemeine Anrede"]'::jsonb,
+ '[]'::jsonb,
+ 'Das ist Phishing. DHL verlangt niemals Zollgebühren per E-Mail. Erwarten Sie ein Paket? Prüfen Sie es selbst über die offizielle DHL-App oder auf dhl.de.',
+ 40),
+
+-- 5. REAL — Stadtbibliothek
+('de',
+ 'Stadtbibliothek Berlin',
+ 'info@zlb.de',
+ 'Offizielle Domain der Berliner Stadtbibliothek (zlb.de) — passt.',
+ 'gestern 11:22',
+ 'Ihr geliehenes Buch muss zurück',
+ 'Sehr geehrte Frau Müller, dies ist eine Erinnerung, dass Sie Ihr Buch...',
+ E'Sehr geehrte Frau Müller,\n\nDies ist eine Erinnerung, dass das Buch „Der Vorleser“ spätestens am Freitag, 28. April, in einer Zweigstelle der Zentral- und Landesbibliothek zurückgegeben werden muss.\n\nFragen? Rufen Sie 030 90226 401 an oder kommen Sie vorbei.\n\nMit freundlichen Grüßen,\nStadtbibliothek Berlin',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Persönliche Anrede","Konkrete Information zu Ihrem Buch und Datum","Kein Link, keine Zahlung","Telefonnummer, die Sie selbst anrufen können"]'::jsonb,
+ 'Das ist eine echte Erinnerung Ihrer Bibliothek. Keine Gefahr.',
+ 50),
+
+-- 6. PHISHING — ELSTER
+('de',
+ 'ELSTER',
+ 'info@elster-sicher.org',
+ 'Die echte Domain ist elster.de. „.org“ bei ELSTER ist verdächtig.',
+ 'vorgestern 14:30',
+ 'Bitte bestätigen Sie Ihre ELSTER-Daten',
+ 'Sehr geehrte Damen und Herren, wir bitten Sie, Ihre ELSTER-Daten...',
+ E'Sehr geehrte Damen und Herren,\n\nIm Rahmen einer Sicherheitsprüfung bitten wir Sie, Ihre ELSTER-Daten erneut zu bestätigen.\n\nMelden Sie sich über {{link:0}} an und geben Sie Ihren Benutzernamen und Ihr Passwort ein.\n\nMit freundlichen Grüßen,\nELSTER',
+ '[{"label":"diese sichere Seite","real_url":"http://elster-sicher.org/anmelden","suspicious":true,"warning":"ELSTER fragt NIEMALS per E-Mail nach Ihrem Passwort. Die echte Adresse ist elster.de — nicht elster-sicher.org."}]'::jsonb,
+ TRUE,
+ '["Absender @elster-sicher.org — nicht @elster.de","Fragt nach Benutzername UND Passwort (das macht ELSTER NIEMALS)","Allgemeine Anrede „Sehr geehrte Damen und Herren“","Link zu unbekannter „.org“-Adresse"]'::jsonb,
+ '[]'::jsonb,
+ 'Das ist Phishing. ELSTER verschickt nie eine E-Mail mit Link, um Ihr Passwort bestätigen zu lassen. Melden Sie sich nur über elster.de oder die offizielle ElsterSmart-App an.',
+ 60),
+
+-- 7. REAL — Telekom
+('de',
+ 'Telekom',
+ 'no-reply@telekom.de',
+ 'Absender @telekom.de ist die offizielle Domain — passt.',
+ 'vor 3 Tagen',
+ 'Ihre April-Rechnung liegt bereit',
+ 'Sehr geehrter Kunde, Ihre Rechnung über 49,95 € liegt in MeineTelekom bereit...',
+ E'Sehr geehrte Frau Müller,\n\nIhre Telekom-Rechnung über 49,95 € für den Monat April liegt in MeineTelekom bereit.\n\nSie können die Rechnung einsehen, indem Sie sich selbst unter telekom.de/meinetelekom anmelden (tippen Sie diese Adresse selbst in Ihren Browser oder nutzen Sie die MeineTelekom-App).\n\nDer Betrag wird am 1. Mai automatisch von Ihrem Konto abgebucht.\n\nTelekom Kundenservice',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Absender ist @telekom.de (echt)","Persönliche Anrede","Betrag und Datum stimmen mit Ihrem Vertrag überein","Kein anklickbarer Link — Sie werden gebeten, sich SELBST anzumelden","Erwartete Monatsrechnung"]'::jsonb,
+ 'Das ist eine echte Rechnungsbenachrichtigung der Telekom. Hinweis: Auch bei echten Nachrichten ist es sicherer, NICHT auf Links zu klicken, sondern selbst zur Website oder App zu gehen.',
+ 70),
+
+-- 8. PHISHING — Microsoft
+('de',
+ 'Microsoft',
+ 'support@microsoft-security-check.com',
+ 'Die echte Microsoft-Domain ist microsoft.com, nicht microsoft-security-check.com.',
+ 'vor 4 Tagen',
+ 'Warnung: Ihr Konto wurde gesperrt',
+ 'Ihr Microsoft-Konto wurde wegen verdächtiger Aktivität gesperrt...',
+ E'Sehr geehrter Nutzer,\n\nIhr Microsoft-Konto wurde wegen verdächtiger Anmeldeversuche aus Russland vorübergehend gesperrt.\n\nWenn Sie Ihr Konto nicht innerhalb von 12 Stunden entsperren, verlieren Sie alle Ihre Dateien.\n\nKonto entsperren: {{link:0}}',
+ '[{"label":"Konto entsperren","real_url":"http://microsoft-security-check.com/unlock","suspicious":true,"warning":"Microsoft nutzt niemals Domains mit Bindestrichen wie microsoft-security-check.com. Das ist gefälscht."}]'::jsonb,
+ TRUE,
+ '["Panikmache: „verlieren Sie alle Ihre Dateien“","Seltsamer Absender, nicht @microsoft.com","Drohung über Anmeldung aus einem anderen Land","Countdown (12 Stunden), um Sie zu Eile zu zwingen"]'::jsonb,
+ '[]'::jsonb,
+ 'Das ist Phishing. Microsoft ruft Sie nie ungefragt an oder schreibt Sie wegen gesperrter Konten an. Erhalten Sie so etwas? Ignorieren und selbst unter account.microsoft.com anmelden, um zu prüfen.',
+ 80),
+
+-- 9. REAL — Apotheke
+('de',
+ 'Apotheke am Rathaus',
+ 'apotheke@apotheke-am-rathaus.de',
+ 'Eigene Domain der Apotheke — passt.',
+ 'vor 5 Tagen',
+ 'Ihre Medikamente sind abholbereit',
+ 'Ihre Medikamente sind abholbereit in der Apotheke am Rathaus. Sie können sie...',
+ E'Sehr geehrte Frau Müller,\n\nIhre Medikamente sind abholbereit in der Apotheke am Rathaus, Hauptstraße 12.\n\nWir haben heute bis 18:30 Uhr geöffnet. Bringen Sie bitte Ihren Abholschein oder einen Ausweis mit.\n\nFragen? Rufen Sie 030 111 22 33 an.\n\nApotheke am Rathaus',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Persönliche Anrede","Bekannte Apotheke, eigene Domain","Konkrete Information: Adresse, Öffnungszeit","Kein Link, keine Zahlung","Telefonnummer, die Sie selbst anrufen können"]'::jsonb,
+ 'Das ist eine normale Nachricht Ihrer Apotheke. Keine Gefahr.',
+ 90),
+
+-- 10. PHISHING — Amazon Gewinnspiel
+('de',
+ 'Amazon',
+ 'gewinn@amazon-gewinnspiel.net',
+ 'Echte Amazon-Mails kommen von @amazon.de, nicht von @amazon-gewinnspiel.net.',
+ 'vor 6 Tagen',
+ 'Herzlichen Glückwunsch! Sie haben ein iPhone 15 gewonnen',
+ 'Sie sind unser glücklicher Gewinner! Fordern Sie Ihren Preis innerhalb von 2 Stunden an...',
+ E'Sehr geehrter Kunde,\n\nHerzlichen Glückwunsch! Sie wurden aus Tausenden von Teilnehmern als Gewinner eines brandneuen iPhone 15 gezogen.\n\nFordern Sie Ihren Preis innerhalb von 2 Stunden an, indem Sie einen kleinen Versandbeitrag zahlen: {{link:0}}\n\nAmazon Gewinnspiel-Team',
+ '[{"label":"Preis anfordern","real_url":"http://amazon-gewinnspiel.net/anfordern","suspicious":true,"warning":"Amazon nutzt nur amazon.de. Ein „Versandbeitrag“ für einen gewonnenen Preis ist immer Betrug."}]'::jsonb,
+ TRUE,
+ '["Sie haben überhaupt nicht an einem Gewinnspiel teilgenommen","Fordert einen „Versandbeitrag“ — Preise werden nie gegen Bezahlung verschickt","Druck: „innerhalb von 2 Stunden“","Absender @amazon-gewinnspiel.net statt @amazon.de"]'::jsonb,
+ '[]'::jsonb,
+ 'Das ist Phishing. Sie können keinen Preis gewinnen, an dem Sie nicht teilgenommen haben. Ein echtes Gewinnspiel verlangt niemals Versandgebühren im Voraus.',
  100);

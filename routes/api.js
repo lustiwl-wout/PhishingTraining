@@ -8,6 +8,12 @@ function isUuidLike(s) {
   return typeof s === 'string' && /^[a-zA-Z0-9_-]{8,64}$/.test(s);
 }
 
+const SUPPORTED_LOCALES = new Set(['nl', 'en', 'fr', 'de']);
+function pickLocale(req) {
+  const q = (req.query && req.query.lang) || '';
+  return SUPPORTED_LOCALES.has(q) ? q : 'nl';
+}
+
 // GET /api/health
 router.get('/health', async (_req, res) => {
   try {
@@ -18,11 +24,16 @@ router.get('/health', async (_req, res) => {
   }
 });
 
-// GET /api/examples
-router.get('/examples', async (_req, res, next) => {
+// GET /api/examples?lang=nl|en|fr|de
+router.get('/examples', async (req, res, next) => {
   try {
+    const locale = pickLocale(req);
     const { rows } = await db.query(
-      'SELECT id, channel, sender, subject, body, annotations, sort_order FROM examples ORDER BY sort_order, id'
+      `SELECT id, channel, sender, subject, body, annotations, sort_order
+         FROM examples
+        WHERE locale = $1
+        ORDER BY sort_order, id`,
+      [locale]
     );
     res.json(rows);
   } catch (err) { next(err); }
@@ -112,14 +123,16 @@ router.post('/attempts/:id/finish', async (req, res, next) => {
 
 // ======== INBOX-SIMULATOR ========
 
-// GET /api/inbox — lijst berichten zonder spoilers
-router.get('/inbox', async (_req, res, next) => {
+// GET /api/inbox?lang=nl|en|fr|de — lijst berichten zonder spoilers
+router.get('/inbox', async (req, res, next) => {
   try {
+    const locale = pickLocale(req);
     const { rows } = await db.query(
       `SELECT id, sender_name, sender_address, received_label, subject, preview
-       FROM inbox_messages
-       WHERE active = TRUE
-       ORDER BY sort_order, id`
+         FROM inbox_messages
+        WHERE active = TRUE AND locale = $1
+        ORDER BY sort_order, id`,
+      [locale]
     );
     res.json(rows);
   } catch (err) { next(err); }
