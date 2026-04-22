@@ -7,6 +7,7 @@
  */
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const db = require('./index');
 
 const SCHEMA_PATH = path.join(__dirname, 'schema.sql');
@@ -19,28 +20,51 @@ async function initDb({ force = false } = {}) {
 
   const schema = fs.readFileSync(SCHEMA_PATH, 'utf8');
   const seed = fs.readFileSync(SEED_PATH, 'utf8');
+  const seedHash = crypto.createHash('sha256').update(seed).digest('hex').slice(0, 16);
 
   const client = await db.pool.connect();
   try {
     console.log('[init-db] schema toepassen...');
     await client.query(schema);
 
-    // Seed wanneer een van de tabellen leeg is. Zo pakken we bij een
-    // upgrade (nieuwe tabel toegevoegd) ook de nieuwe data mee.
-    const { rows } = await client.query(`
-      SELECT
-        (SELECT COUNT(*) FROM quiz_questions)   AS q,
-        (SELECT COUNT(*) FROM examples)         AS e,
-        (SELECT COUNT(*) FROM inbox_messages)   AS i
+    // Mini "migratie"-tabel: onthoudt welke seed-hash als laatste is geladen.
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS schema_meta (
+        key   TEXT PRIMARY KEY,
+        value TEXT NOT NULL,
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )
     `);
-    const counts = rows[0];
-    const needsSeed = Number(counts.q) === 0 || Number(counts.e) === 0 || Number(counts.i) === 0;
 
-    if (needsSeed || force) {
-      console.log(`[init-db] seed laden${force ? ' (force)' : ''} — counts: ${JSON.stringify(counts)}`);
+    const { rows: metaRows } = await client.query(
+      `SELECT value FROM schema_meta WHERE key = 'seed_hash'`
+    );
+    const previousHash = metaRows[0] && metaRows[0].value;
+
+    // Seed opnieuw draaien wanneer: tabellen leeg zijn, de seed-inhoud is
+    // veranderd (hash wijziging), of wanneer expliciet geforceerd.
+    const { rows: countRows } = await client.query(`
+      SELECT
+        (SELECT COUNT(*) FROM quiz_questions) AS q,
+        (SELECT COUNT(*) FROM examples)       AS e,
+        (SELECT COUNT(*) FROM inbox_messages) AS i
+    `);
+    const counts = countRows[0];
+    const anyEmpty = Number(counts.q) === 0 || Number(counts.e) === 0 || Number(counts.i) === 0;
+    const hashChanged = previousHash !== seedHash;
+
+    if (force || anyEmpty || hashChanged) {
+      const reason = force ? 'force' : (anyEmpty ? 'lege tabel' : 'seed-inhoud gewijzigd');
+      console.log(`[init-db] seed laden (${reason}). hash: ${previousHash || 'none'} -> ${seedHash}`);
       await client.query(seed);
+      await client.query(
+        `INSERT INTO schema_meta (key, value, updated_at)
+         VALUES ('seed_hash', $1, NOW())
+         ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()`,
+        [seedHash]
+      );
     } else {
-      console.log(`[init-db] data aanwezig (${JSON.stringify(counts)}) — seed overgeslagen.`);
+      console.log(`[init-db] seed al actueel (hash ${seedHash}) — overgeslagen.`);
     }
   } finally {
     client.release();
