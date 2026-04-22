@@ -66,6 +66,9 @@
     document.querySelectorAll('#stepbar-list li').forEach((li) => {
       li.classList.toggle('active', li.dataset.step === step);
     });
+    // Fullscreen voor de simulator: verberg trainings-chrome, laat Outlook het scherm vullen.
+    document.body.classList.toggle('sim-fullscreen', step === 'simulator');
+
     const main = document.getElementById('hoofd');
     if (main) main.focus();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -115,20 +118,28 @@
 
   function renderExample(ex) {
     const wrap = document.createElement('article');
-    wrap.className = 'example card';
+    wrap.className = 'example-outlook';
 
-    const head = document.createElement('div');
-    head.className = 'example-head ' + ex.channel;
-    head.innerHTML =
-      '<span class="badge ' + ex.channel + '">' + channelLabel(ex.channel) + '</span>' +
-      '<div class="from">Van: <strong>' + escapeHtml(ex.sender) + '</strong></div>' +
-      (ex.subject ? '<div class="subj">Onderwerp: ' + escapeHtml(ex.subject) + '</div>' : '');
-    wrap.appendChild(head);
+    const parsed = parseSender(ex.sender);
+    const addrHtml = parsed.addr ? annotateText(parsed.addr, ex.annotations || []) : '';
+    const subjectHtml = ex.subject ? annotateText(ex.subject, ex.annotations || []) : '';
+    const bodyHtml = annotateText(ex.body || '', ex.annotations || []);
 
-    const body = document.createElement('div');
-    body.className = 'example-body';
-    body.innerHTML = annotateBody(ex.body, ex.annotations || []);
-    wrap.appendChild(body);
+    wrap.innerHTML =
+      '<header class="ol-msg-head">' +
+        (subjectHtml ? '<h2 class="ol-msg-subject">' + subjectHtml + '</h2>' : '') +
+        '<div class="ol-msg-sender-row">' +
+          '<div class="ol-avatar ol-avatar-lg" aria-hidden="true">' + escapeHtml(initials(parsed.name)) + '</div>' +
+          '<div class="ol-msg-sender-info">' +
+            '<div class="ol-msg-sender-line">' +
+              '<strong class="ol-msg-sender-name">' + escapeHtml(parsed.name || parsed.addr) + '</strong>' +
+            '</div>' +
+            (addrHtml ? '<div class="ol-example-addr">&lt;' + addrHtml + '&gt;</div>' : '') +
+            '<div class="ol-msg-time">Aan: u</div>' +
+          '</div>' +
+        '</div>' +
+      '</header>' +
+      '<div class="ol-msg-body">' + bodyHtml + '</div>';
 
     if (ex.annotations && ex.annotations.length) {
       const list = document.createElement('ol');
@@ -143,12 +154,22 @@
     return wrap;
   }
 
-  function annotateBody(text, annotations) {
+  function parseSender(s) {
+    const str = String(s || '').trim();
+    const m = /^(.*?)\s*<\s*(.+?)\s*>\s*$/.exec(str);
+    if (m) return { name: m[1].trim(), addr: m[2].trim() };
+    if (str.includes('@')) return { name: str, addr: str };
+    return { name: str, addr: '' };
+  }
+
+  function annotateText(text, annotations) {
     let html = escapeHtml(text).replace(/\n/g, '<br>');
     annotations.forEach((a, i) => {
       const q = escapeHtml(a.quote);
       const re = new RegExp(escapeRegExp(q), 'i');
-      html = html.replace(re, '<mark class="phish-mark">' + q + '<sup class="dot">' + (i + 1) + '</sup></mark>');
+      if (re.test(html)) {
+        html = html.replace(re, '<mark class="phish-mark">' + q + '<sup class="dot">' + (i + 1) + '</sup></mark>');
+      }
     });
     return html;
   }
@@ -248,11 +269,8 @@
           '<div class="ol-avatar ol-avatar-lg" aria-hidden="true">' + escapeHtml(initials(m.sender_name)) + '</div>' +
           '<div class="ol-msg-sender-info">' +
             '<div class="ol-msg-sender-line">' +
-              '<strong class="ol-msg-sender-name">' + escapeHtml(m.sender_name) + '</strong> ' +
-              '<button class="ol-sender-reveal" type="button" aria-expanded="false">Toon adres</button>' +
-            '</div>' +
-            '<div class="ol-sender-address" hidden>' +
-              '<span class="ol-sender-addr-text">&lt;' + escapeHtml(m.sender_address) + '&gt;</span>' +
+              '<strong class="ol-msg-sender-name">' + escapeHtml(m.sender_name) + '</strong>' +
+              ' <span class="ol-sender-addr-inline">&lt;' + escapeHtml(m.sender_address) + '&gt;</span>' +
             '</div>' +
             '<div class="ol-msg-time">Aan: u · ' + escapeHtml(m.received_label) + '</div>' +
           '</div>' +
@@ -265,18 +283,6 @@
                   '<button class="btn btn-good big-btn" data-verdict="trust">✅ Ik vertrouw het</button>' +
                   '<button class="btn btn-bad  big-btn" data-verdict="phish">⚠️ Melden als phishing</button>' +
                 '</div>');
-
-    const revealBtn = reader.querySelector('.ol-sender-reveal');
-    if (revealBtn) {
-      revealBtn.addEventListener('click', () => {
-        const addr = reader.querySelector('.ol-sender-address');
-        const showing = !addr.hidden;
-        addr.hidden = showing;
-        revealBtn.textContent = showing ? 'Toon adres' : 'Verberg adres';
-        revealBtn.setAttribute('aria-expanded', String(!showing));
-        if (!showing) simState.interactions[m.id].revealed_sender = true;
-      });
-    }
 
     reader.querySelectorAll('[data-link-idx]').forEach((a) => {
       const idx = parseInt(a.dataset.linkIdx, 10);
@@ -392,6 +398,8 @@
 
   function finishSimulator() {
     resetReader();
+    // Verlaat fullscreen zodat het resultaat + stap-navigatie weer zichtbaar is.
+    document.body.classList.remove('sim-fullscreen');
     const result = document.getElementById('sim-result');
     const total = simState.messages.length;
     const correct = Object.values(simState.judgments).filter((j) => j.correct).length;

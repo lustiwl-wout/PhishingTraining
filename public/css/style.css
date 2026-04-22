@@ -19,6 +19,16 @@
   --focus: #ffbf47;
   --radius: 12px;
   --shadow: 0 1px 2px rgba(20,30,50,.06), 0 4px 12px rgba(20,30,50,.06);
+
+  /* Outlook-look tokens — hoisted zodat ook .example-outlook ze kan gebruiken. */
+  --ol-blue: #0f6cbd;
+  --ol-blue-dark: #115ea3;
+  --ol-blue-light: #e8f1fa;
+  --ol-bg: #faf9f8;
+  --ol-border: #e1dfdd;
+  --ol-hover: #f3f2f1;
+  --ol-ink: #242424;
+  --ol-muted: #616161;
 }
 
 body.high-contrast {
@@ -400,6 +410,41 @@ mark.phish-mark .dot, .annotation-list .dot {
 }
 
 /* ==================================================================
+   VOORBEELDEN in Outlook-stijl (statisch, geannoteerd)
+   ================================================================== */
+.example-outlook {
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: #fff;
+  color: var(--ol-ink);
+  border: 1px solid var(--ol-border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem 1.1rem;
+  box-shadow: var(--shadow);
+  margin: 0 0 1.25rem;
+}
+.example-outlook + .example-outlook { margin-top: 0; }
+.example-outlook .ol-msg-subject { font-size: 1.2rem; }
+.example-outlook .ol-msg-body { white-space: pre-wrap; }
+.ol-example-addr {
+  margin-top: .15rem;
+  color: var(--ol-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: .92rem;
+  word-break: break-all;
+}
+.ol-sender-addr-inline {
+  color: var(--ol-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: .92rem;
+  font-weight: 400;
+  margin-left: .35rem;
+  word-break: break-all;
+}
+
+/* De annotatie-lijst onder een voorbeeld */
+.example-outlook .annotation-list { margin-top: 1rem; padding-top: .75rem; border-top: 1px solid var(--ol-border); }
+
+/* ==================================================================
    OUTLOOK-SIMULATOR — lijkt op Outlook Web zodat oefening herkenbaar is
    ================================================================== */
 
@@ -407,15 +452,7 @@ mark.phish-mark .dot, .annotation-list .dot {
 .sim-progress { color: var(--ink-soft); font-weight: 600; margin: .35rem 0 0; }
 
 .outlook {
-  --ol-blue: #0f6cbd;
-  --ol-blue-dark: #115ea3;
-  --ol-blue-light: #e8f1fa;
-  --ol-bg: #faf9f8;
-  --ol-border: #e1dfdd;
-  --ol-hover: #f3f2f1;
-  --ol-ink: #242424;
-  --ol-muted: #616161;
-  --ol-selected-bar: #0f6cbd;
+  --ol-selected-bar: var(--ol-blue);
 
   font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
   color: var(--ol-ink);
@@ -465,7 +502,14 @@ mark.phish-mark .dot, .annotation-list .dot {
   width: 100%; background: transparent; border: 0; outline: none;
   font: inherit; color: var(--ol-ink);
 }
-.ol-topright { display: flex; align-items: center; gap: .25rem; }
+.ol-topright { display: flex; align-items: center; gap: .5rem; }
+.ol-exit-btn {
+  background: var(--bad); color: #fff; border: 0;
+  padding: .45rem .8rem; border-radius: 4px;
+  font-weight: 600; cursor: pointer; font-size: .9rem;
+  margin-left: .25rem;
+}
+.ol-exit-btn:hover { filter: brightness(.9); }
 .ol-avatar {
   background: var(--ol-blue); color: #fff;
   width: 2rem; height: 2rem; border-radius: 50%;
@@ -619,23 +663,6 @@ mark.phish-mark .dot, .annotation-list .dot {
 .ol-avatar-lg { width: 2.6rem; height: 2.6rem; font-size: 1rem; }
 .ol-msg-sender-name { color: var(--ol-ink); font-size: 1rem; }
 .ol-msg-sender-line { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
-.ol-sender-reveal {
-  background: transparent; border: 1px solid var(--ol-border);
-  border-radius: 4px; padding: .1rem .5rem; font-size: .82rem;
-  color: var(--ol-blue); cursor: pointer; font-weight: 600;
-}
-.ol-sender-reveal:hover { background: var(--ol-blue-light); }
-.ol-sender-address {
-  margin-top: .35rem;
-  background: #fff8e1;
-  border: 1px dashed #e0b100;
-  padding: .4rem .6rem;
-  border-radius: 4px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: .95rem;
-  word-break: break-all;
-}
-body.high-contrast .ol-sender-address { background: #2a2400; border-color: var(--focus); }
 .ol-msg-time { color: var(--ol-muted); font-size: .85rem; margin-top: .25rem; }
 
 .ol-msg-body {
@@ -706,6 +733,27 @@ body.high-contrast .ol-sender-address { background: #2a2400; border-color: var(-
   .ol-iconnav { display: none; }
   .ol-search { display: none; }
   .ol-reader-inner { padding: 1rem; }
+}
+
+/* ---------- simulator fullscreen (volledig scherm) ---------- */
+body.sim-fullscreen .topbar,
+body.sim-fullscreen .stepbar,
+body.sim-fullscreen .footer,
+body.sim-fullscreen .sim-intro,
+body.sim-fullscreen .coldstart-bar { display: none !important; }
+
+body.sim-fullscreen { background: #fff; }
+
+body.sim-fullscreen main {
+  max-width: 100vw !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+body.sim-fullscreen .outlook {
+  min-height: 100vh;
+  max-height: 100vh;
+  border: 0;
+  border-radius: 0;
 }
 
 /* ---------- print: alleen tips meenemen ---------- */
