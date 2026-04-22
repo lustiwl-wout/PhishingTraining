@@ -197,6 +197,57 @@ ol.check-list.numbered li::before {
   flex-shrink: 0;
 }
 
+/* ---------- adres-uitleg (na de @) ---------- */
+.addr-card {
+  background: #fafbfd;
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  margin: .75rem 0 .9rem;
+}
+body.high-contrast .addr-card { background: #111; }
+
+.addr-line {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 1.25rem;
+  text-align: center;
+  margin-bottom: .8rem;
+  word-break: break-all;
+  line-height: 1.5;
+}
+.addr-name   { background: var(--good-soft); color: var(--good); padding: .15rem .4rem; border-radius: 4px; font-weight: 700; }
+.addr-at     { display: inline-block; padding: 0 .3rem; font-weight: 800; font-size: 1.4rem; }
+.addr-domain { background: var(--bad-soft);  color: var(--bad);  padding: .15rem .4rem; border-radius: 4px; font-weight: 700; }
+
+.addr-points p {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .6rem;
+  align-items: start;
+  margin: .35rem 0;
+  font-size: 1rem;
+}
+.addr-tag {
+  display: inline-block;
+  padding: .15rem .55rem;
+  border-radius: 999px;
+  font-size: .85rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.addr-tag.good { background: var(--good-soft); color: var(--good); }
+.addr-tag.bad  { background: var(--bad-soft);  color: var(--bad); }
+
+.tip-line {
+  background: #fff8e1;
+  border-left: 4px solid #f1c40f;
+  padding: .6rem .85rem;
+  border-radius: 6px;
+  margin-top: .5rem;
+  font-size: 1rem;
+}
+body.high-contrast .tip-line { background: #2a2400; }
+
 /* ---------- buttons ---------- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center;

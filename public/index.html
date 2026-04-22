@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Eenvoudige training om phishing te herkennen. Met grote tekst, duidelijke voorbeelden en een korte quiz." />
   <title>Veilig Online — Phishing herkennen</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css?v=__VER__" />
 </head>
 <body>
   <a class="skip-link" href="#hoofd">Ga naar de inhoud</a>
@@ -85,10 +85,31 @@
         </li>
         <li class="card">
           <div class="learn-num" aria-hidden="true">2</div>
-          <h2>Een rare afzender</h2>
+          <h2>Kijk goed naar het adres na de @</h2>
           <p>
-            Kijk goed naar het e‑mailadres of telefoonnummer. Staat er iets vreemds, zoals
-            <span class="mono">service@ing-betaling-secure.com</span>? Dat is geen echt adres van ING.
+            Een e‑mailadres heeft <strong>twee delen</strong>, met een <strong>@</strong> ertussen.
+            Wat <strong>achter de @</strong> staat, is wie het écht is.
+          </p>
+
+          <div class="addr-card">
+            <div class="addr-line">
+              <span class="addr-name">service</span><span class="addr-at">@</span><span class="addr-domain">ing-betaling-secure.com</span>
+            </div>
+            <div class="addr-points">
+              <p><span class="addr-tag good">Vóór de @</span> <span>kan iedereen zelf kiezen — dit zegt niets.</span></p>
+              <p><span class="addr-tag bad">Na de @</span> <span>is de echte afzender. Hier staat <strong>ing-betaling-secure.com</strong> — dat is <strong>niet</strong> de ING.</span></p>
+            </div>
+          </div>
+
+          <p>
+            De echte ING gebruikt altijd <strong class="mono">@ing.nl</strong>. De Belastingdienst altijd
+            <strong class="mono">@belastingdienst.nl</strong>. Staat er iets anders na de @, dan is het
+            <strong>niet</strong> die organisatie — ook al staat de naam wel ergens in het adres.
+          </p>
+
+          <p class="tip-line">
+            💡 Vergelijk het met een brief: op de envelop kan iemand <em>"van uw bank"</em> schrijven,
+            maar het echte adres op de achterkant verraadt wie hem heeft gestuurd.
           </p>
         </li>
         <li class="card">
@@ -205,6 +226,6 @@
     <p>Veilig Online · Een gratis training om phishing te herkennen.</p>
   </footer>
 
-  <script src="js/app.js"></script>
+  <script src="js/app.js?v=__VER__"></script>
 </body>
 </html>

@@ -11,7 +11,7 @@ INSERT INTO examples (channel, sender, subject, body, annotations, sort_order) V
  'Belangrijk: uw rekening wordt geblokkeerd',
  E'Geachte klant,\n\nWij hebben een verdachte transactie op uw rekening opgemerkt. Binnen 24 uur wordt uw rekening GEBLOKKEERD als u uw gegevens niet bevestigt.\n\nKlik hier om uw rekening te beveiligen: http://ing-beveiliging.net/login\n\nMet vriendelijke groet,\nING Beveiligingsteam',
  '[
-   {"quote": "service@ing-betaling-secure.com", "note": "Rare afzender. Het echte adres van ING eindigt op @ing.nl, niet op een vreemd domein."},
+   {"quote": "service@ing-betaling-secure.com", "note": "Kijk naar wat NA de @ staat: ing-betaling-secure.com. Dat is niet ING. De echte ING gebruikt altijd @ing.nl. Het deel vóór de @ (\"service\") mag de oplichter zelf verzinnen."},
    {"quote": "GEBLOKKEERD als u uw gegevens niet bevestigt", "note": "Angst maken en haast. Een echte bank doet dit nooit."},
    {"quote": "Geachte klant", "note": "Geen naam. Uw bank kent uw naam."},
    {"quote": "http://ing-beveiliging.net/login", "note": "Vreemde link die niet van ING is. Niet op klikken!"}
