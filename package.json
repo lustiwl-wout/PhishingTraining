@@ -1,0 +1,21 @@
+{
+  "name": "veilig-online",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Eenvoudige Nederlandse phishing-trainingstool voor minder digitaal vaardige gebruikers.",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "db:init": "node scripts/init-db.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "pg": "^8.13.1"
+  }
+}

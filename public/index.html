@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Eenvoudige training om phishing te herkennen. Met grote tekst, duidelijke voorbeelden en een korte quiz." />
+  <title>Veilig Online — Phishing herkennen</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <a class="skip-link" href="#hoofd">Ga naar de inhoud</a>
+
+  <header class="topbar" role="banner">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">🛡️</span>
+      <span class="brand-title">Veilig Online</span>
+    </div>
+    <div class="topbar-tools">
+      <button id="text-smaller" class="tool-btn" aria-label="Tekst kleiner maken">A−</button>
+      <button id="text-bigger" class="tool-btn" aria-label="Tekst groter maken">A+</button>
+      <button id="contrast-toggle" class="tool-btn" aria-label="Hoog contrast aan of uit">Hoog contrast</button>
+    </div>
+  </header>
+
+  <nav class="stepbar" aria-label="Stappen van de training">
+    <ol id="stepbar-list">
+      <li data-step="welkom" class="active"><span class="step-num">1</span><span class="step-label">Welkom</span></li>
+      <li data-step="leren"><span class="step-num">2</span><span class="step-label">Leren</span></li>
+      <li data-step="voorbeelden"><span class="step-num">3</span><span class="step-label">Voorbeelden</span></li>
+      <li data-step="quiz"><span class="step-num">4</span><span class="step-label">Quiz</span></li>
+      <li data-step="hulp"><span class="step-num">5</span><span class="step-label">Hulp</span></li>
+    </ol>
+  </nav>
+
+  <main id="hoofd" tabindex="-1">
+
+    <!-- 1. WELKOM -->
+    <section id="welkom" class="page active" aria-labelledby="welkom-titel">
+      <h1 id="welkom-titel">Welkom bij de phishing‑training</h1>
+      <p class="lead">
+        In deze korte training leert u <strong>phishing</strong> herkennen.
+        Phishing is een truc van oplichters om uw geld of wachtwoord te stelen.
+      </p>
+
+      <div class="card big">
+        <h2>Wat is phishing?</h2>
+        <p>
+          Stel: iemand belt aan en zegt dat hij van de bank is. Hij vraagt uw bankpas en pincode.
+          Dat zou u nooit geven, toch? <strong>Phishing is hetzelfde, maar dan via e‑mail, sms of WhatsApp.</strong>
+        </p>
+        <p>
+          De oplichter doet alsof hij van uw bank, de Belastingdienst of een pakketbezorger is.
+          Hij hoopt dat u op een link klikt en uw gegevens invult.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>Wat gaat u leren?</h2>
+        <ul class="check-list">
+          <li>Hoe een phishing‑bericht eruitziet</li>
+          <li>Welke woorden en trucs oplichters gebruiken</li>
+          <li>Wat u moet doen als u twijfelt</li>
+          <li>Bij wie u terecht kunt voor hulp</li>
+        </ul>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary big-btn" data-go="leren">Start de training →</button>
+      </div>
+    </section>
+
+    <!-- 2. LEREN -->
+    <section id="leren" class="page" aria-labelledby="leren-titel">
+      <h1 id="leren-titel">5 dingen waar u op let</h1>
+      <p class="lead">Deze 5 punten helpen u om phishing te herkennen. Lees ze rustig door.</p>
+
+      <ol class="learn-list">
+        <li class="card">
+          <div class="learn-num" aria-hidden="true">1</div>
+          <h2>Een vreemde of dringende toon</h2>
+          <p>
+            “Uw rekening wordt vandaag geblokkeerd!” of “Laatste waarschuwing!”
+            Oplichters willen dat u in paniek snel iets doet. <strong>Een echte bank doet dat nooit.</strong>
+          </p>
+        </li>
+        <li class="card">
+          <div class="learn-num" aria-hidden="true">2</div>
+          <h2>Een rare afzender</h2>
+          <p>
+            Kijk goed naar het e‑mailadres of telefoonnummer. Staat er iets vreemds, zoals
+            <span class="mono">service@ing-betaling-secure.com</span>? Dat is geen echt adres van ING.
+          </p>
+        </li>
+        <li class="card">
+          <div class="learn-num" aria-hidden="true">3</div>
+          <h2>Spelfouten of rare zinnen</h2>
+          <p>
+            Veel phishing‑berichten zijn met een vertaalmachine gemaakt. Let op kromme zinnen,
+            verkeerde aanhef (“Beste klant” zonder uw naam), of vreemde tekens.
+          </p>
+        </li>
+        <li class="card">
+          <div class="learn-num" aria-hidden="true">4</div>
+          <h2>Een link of knop waar u op moet klikken</h2>
+          <p>
+            Klik <strong>niet zomaar</strong> op een link in een bericht. Open uw bank of de Belastingdienst altijd
+            zelf in de browser, of via de officiële app op uw telefoon.
+          </p>
+        </li>
+        <li class="card">
+          <div class="learn-num" aria-hidden="true">5</div>
+          <h2>Vragen om geld, code of pincode</h2>
+          <p>
+            Een echte organisatie vraagt <strong>nooit</strong> om uw pincode, wachtwoord, of een code uit uw bank‑app.
+            Krijgt u die vraag? Dan is het altijd phishing.
+          </p>
+        </li>
+      </ol>
+
+      <div class="actions">
+        <button class="btn btn-secondary" data-go="welkom">← Terug</button>
+        <button class="btn btn-primary big-btn" data-go="voorbeelden">Bekijk voorbeelden →</button>
+      </div>
+    </section>
+
+    <!-- 3. VOORBEELDEN -->
+    <section id="voorbeelden" class="page" aria-labelledby="vb-titel">
+      <h1 id="vb-titel">Voorbeelden van phishing</h1>
+      <p class="lead">Hieronder staan echte voorbeelden. De rode bolletjes wijzen aan waarom het phishing is.</p>
+
+      <div id="voorbeelden-lijst" class="example-grid"><!-- gevuld door JS --></div>
+
+      <div class="actions">
+        <button class="btn btn-secondary" data-go="leren">← Terug</button>
+        <button class="btn btn-primary big-btn" data-go="quiz">Doe de quiz →</button>
+      </div>
+    </section>
+
+    <!-- 4. QUIZ -->
+    <section id="quiz" class="page" aria-labelledby="quiz-titel">
+      <h1 id="quiz-titel">Oefenen: is dit veilig of phishing?</h1>
+      <p class="lead">U krijgt een paar berichten te zien. Kies steeds wat u denkt dat het is.</p>
+
+      <div id="quiz-progress" class="quiz-progress" aria-live="polite"></div>
+
+      <div id="quiz-card" class="card quiz-card"><!-- gevuld door JS --></div>
+
+      <div id="quiz-feedback" class="feedback" hidden aria-live="polite"></div>
+
+      <div id="quiz-actions" class="actions">
+        <button id="quiz-next" class="btn btn-primary big-btn" hidden>Volgende →</button>
+      </div>
+
+      <div id="quiz-result" class="card result-card" hidden></div>
+    </section>
+
+    <!-- 5. HULP -->
+    <section id="hulp" class="page" aria-labelledby="hulp-titel">
+      <h1 id="hulp-titel">Wat moet u doen?</h1>
+
+      <div class="card big">
+        <h2>U twijfelt over een bericht</h2>
+        <ol class="check-list numbered">
+          <li>Klik op niets en vul niets in.</li>
+          <li>Bel zelf het officiële nummer van de organisatie. Dat staat op de achterkant van uw bankpas of op de officiële website.</li>
+          <li>Vraag iemand die u vertrouwt (kind, kleinkind, buurvrouw) om mee te kijken.</li>
+        </ol>
+      </div>
+
+      <div class="card big">
+        <h2>U heeft per ongeluk geklikt of iets ingevuld</h2>
+        <ol class="check-list numbered">
+          <li>Bel <strong>direct</strong> uw bank. Het nummer staat op uw bankpas. Zij kunnen uw rekening blokkeren.</li>
+          <li>Verander uw wachtwoord van de getroffen website.</li>
+          <li>Doe melding bij de politie via <span class="mono">0900‑8844</span> of op politie.nl.</li>
+        </ol>
+      </div>
+
+      <div class="card">
+        <h2>Phishing doorsturen</h2>
+        <p>U kunt verdachte e‑mails doorsturen naar:</p>
+        <ul class="check-list">
+          <li><strong>valse-email@fraudehelpdesk.nl</strong> — de Fraudehelpdesk kijkt mee.</li>
+          <li>Bij sms of WhatsApp: maak een schermafdruk en stuur die naar uw bank.</li>
+        </ul>
+      </div>
+
+      <div class="card highlight">
+        <h2>Onthoud altijd</h2>
+        <p class="big-text">
+          🛑 <strong>Een bank, de overheid of een bezorger vraagt nooit om uw pincode of wachtwoord.</strong>
+          Bij twijfel: <strong>niet klikken, eerst bellen.</strong>
+        </p>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-secondary" data-go="welkom">← Terug naar het begin</button>
+        <button class="btn btn-primary" onclick="window.print()">Tips afdrukken 🖨️</button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>Veilig Online · Een gratis training om phishing te herkennen.</p>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
