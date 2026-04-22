@@ -17,11 +17,14 @@
 
   let currentLang = detectInitialLanguage() || 'nl';
 
-  function t(key) {
+  function t(key, vars) {
     const loc = (window.VO_LOCALES && window.VO_LOCALES[currentLang]) || {};
-    if (loc[key] != null) return loc[key];
     const fallback = (window.VO_LOCALES && window.VO_LOCALES.nl) || {};
-    return fallback[key] != null ? fallback[key] : key;
+    let s = loc[key] != null ? loc[key] : (fallback[key] != null ? fallback[key] : key);
+    if (vars) {
+      s = s.replace(/\{(\w+)\}/g, (m, k) => (vars[k] != null ? vars[k] : m));
+    }
+    return s;
   }
 
   function applyI18n(root) {
@@ -33,6 +36,13 @@
       el.innerHTML = t(el.getAttribute('data-i18n-html'));
     });
     document.documentElement.lang = currentLang;
+    const titleEl = document.querySelector('title[data-i18n]');
+    if (titleEl) document.title = t(titleEl.getAttribute('data-i18n'));
+    const search = document.getElementById('ol-search-input');
+    if (search) {
+      search.placeholder = t('sim.ol.search');
+      search.setAttribute('aria-label', t('sim.ol.search'));
+    }
     const nameEl = document.getElementById('lang-switch-name');
     const flagEl = document.getElementById('lang-switch-flag');
     if (nameEl) nameEl.textContent = t('lang.name');
@@ -98,9 +108,9 @@
       bar.id = 'coldstart-bar';
       bar.className = 'coldstart-bar';
       bar.setAttribute('role', 'status');
-      bar.innerHTML = '⏳ De website wordt even opgestart. Een momentje geduld…';
       document.body.appendChild(bar);
     }
+    bar.textContent = t('sim.coldstart');
     bar.hidden = false;
   }
   function hideColdStartHint() {
@@ -171,14 +181,14 @@
     pwEl.textContent = '';
     pwRow.hidden = true;
     emailRow.hidden = false;
-    title.textContent = 'Aanmelden';
-    subtitle.textContent = 'om door te gaan naar Outlook';
-    submit.textContent = 'Volgende';
+    title.textContent = t('sim.ms.title');
+    subtitle.textContent = t('sim.ms.subtitle');
+    submit.textContent = t('sim.ms.next');
     back.hidden = true;
     status.hidden = true;
 
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-    const email = 'janssen@hotmail.com';
+    const email = t('user.email');
 
     await sleep(450);
     for (const ch of email) {
@@ -193,9 +203,9 @@
     // Stap 2: wachtwoord
     emailRow.hidden = true;
     pwRow.hidden = false;
-    title.textContent = 'Wachtwoord invoeren';
-    subtitle.innerHTML = 'Aangemeld als <strong>janssen@hotmail.com</strong>';
-    submit.textContent = 'Aanmelden';
+    title.textContent = t('sim.ms.pwTitle');
+    subtitle.innerHTML = t('sim.ms.pwSubtitle', { email });
+    submit.textContent = t('sim.ms.submit');
     back.hidden = false;
 
     await sleep(300);
@@ -210,7 +220,7 @@
 
     // Bezig met aanmelden
     status.hidden = false;
-    status.innerHTML = '<span class="ms-spinner" aria-hidden="true"></span> Bezig met aanmelden…';
+    status.innerHTML = '<span class="ms-spinner" aria-hidden="true"></span> ' + escapeHtml(t('sim.ms.signingIn'));
     submit.disabled = true;
     back.disabled = true;
     await sleep(900);
@@ -236,18 +246,15 @@
 
 
   // -------- voorbeelden --------
-  let examplesLoaded = false;
   async function loadExamples() {
-    if (examplesLoaded) return;
     const container = document.getElementById('voorbeelden-lijst');
-    container.innerHTML = '<p class="muted">Bezig met laden…</p>';
+    container.innerHTML = '<p class="muted">' + escapeHtml(t('voorbeelden.loading')) + '</p>';
     try {
       const items = await api('/examples');
       container.innerHTML = '';
       items.forEach((ex) => container.appendChild(renderExample(ex)));
-      examplesLoaded = true;
     } catch (err) {
-      container.innerHTML = '<p class="error">De voorbeelden konden niet geladen worden. Probeer het later nog eens.</p>';
+      container.innerHTML = '<p class="error">' + escapeHtml(t('voorbeelden.error')) + '</p>';
     }
   }
 
@@ -270,7 +277,7 @@
               '<strong class="ol-msg-sender-name">' + escapeHtml(parsed.name || parsed.addr) + '</strong>' +
             '</div>' +
             (addrHtml ? '<div class="ol-example-addr">&lt;' + addrHtml + '&gt;</div>' : '') +
-            '<div class="ol-msg-time">Aan: u</div>' +
+            '<div class="ol-msg-time">' + escapeHtml(t('voorbeelden.to')) + '</div>' +
           '</div>' +
         '</div>' +
       '</header>' +
@@ -316,7 +323,7 @@
     const list = document.getElementById('ol-list-items');
     const result = document.getElementById('sim-result');
     result.hidden = true;
-    list.innerHTML = '<li class="ol-loading">Bezig met laden…</li>';
+    list.innerHTML = '<li class="ol-loading">' + escapeHtml(t('sim.ol.loading')) + '</li>';
 
     try {
       const messages = await api('/inbox');
@@ -325,7 +332,7 @@
       updateProgress();
       resetReader();
     } catch (err) {
-      list.innerHTML = '<li class="ol-loading error">Kon de inbox niet laden.</li>';
+      list.innerHTML = '<li class="ol-loading error">' + escapeHtml(t('sim.ol.loadError')) + '</li>';
     }
   }
 
@@ -372,13 +379,13 @@
     if (!prog) return;
     const total = simState.messages.length;
     const done = Object.keys(simState.judgments).length;
-    prog.textContent = 'Voortgang: ' + done + ' van ' + total + ' beoordeeld';
+    prog.textContent = done + ' / ' + total;
   }
 
   function resetReader() {
     document.getElementById('ol-reader').innerHTML =
       '<div class="ol-reader-empty"><div class="ol-reader-empty-art">📬</div>' +
-      '<p>Selecteer een bericht links om te beginnen.</p></div>';
+      '<p>' + escapeHtml(t('sim.ol.empty')) + '</p></div>';
   }
 
   async function openMessage(id) {
@@ -386,10 +393,10 @@
     if (!simState.interactions[id]) simState.interactions[id] = { clicked_link: false, revealed_sender: false };
     renderInboxList();
     const reader = document.getElementById('ol-reader');
-    reader.innerHTML = '<p class="muted">Laden…</p>';
+    reader.innerHTML = '<p class="muted">' + escapeHtml(t('sim.ol.loading')) + '</p>';
     let m;
     try { m = await api('/inbox/' + id); }
-    catch (_) { reader.innerHTML = '<p class="error">Bericht kon niet geladen worden.</p>'; return; }
+    catch (_) { reader.innerHTML = '<p class="error">' + escapeHtml(t('sim.ol.msgLoadError')) + '</p>'; return; }
     renderReader(m);
     reader.scrollTop = 0;
   }
@@ -407,16 +414,16 @@
               '<strong class="ol-msg-sender-name">' + escapeHtml(m.sender_name) + '</strong>' +
               ' <span class="ol-sender-addr-inline">&lt;' + escapeHtml(m.sender_address) + '&gt;</span>' +
             '</div>' +
-            '<div class="ol-msg-time">Aan: u · ' + escapeHtml(m.received_label) + '</div>' +
+            '<div class="ol-msg-time">' + escapeHtml(t('sim.ol.to')) + ' · ' + escapeHtml(m.received_label) + '</div>' +
           '</div>' +
         '</div>' +
       '</header>' +
       '<div class="ol-msg-body">' + renderBody(m.body, m.links || []) + '</div>' +
-      (judged ? '<div class="ol-msg-actions judged"><p class="muted">U heeft dit bericht al beoordeeld.</p></div>'
+      (judged ? '<div class="ol-msg-actions judged"><p class="muted">' + escapeHtml(t('sim.reader.alreadyJudged')) + '</p></div>'
               : '<div class="ol-msg-actions">' +
-                  '<p class="ol-verdict-q">Wat vindt u van dit bericht?</p>' +
-                  '<button class="btn btn-good big-btn" data-verdict="trust">✅ Ik vertrouw het</button>' +
-                  '<button class="btn btn-bad  big-btn" data-verdict="phish">⚠️ Melden als phishing</button>' +
+                  '<p class="ol-verdict-q">' + escapeHtml(t('sim.reader.verdictQ')) + '</p>' +
+                  '<button class="btn btn-good big-btn" data-verdict="trust">' + escapeHtml(t('sim.reader.verdict.trust')) + '</button>' +
+                  '<button class="btn btn-bad  big-btn" data-verdict="phish">' + escapeHtml(t('sim.reader.verdict.phish')) + '</button>' +
                 '</div>');
 
     reader.querySelectorAll('[data-link-idx]').forEach((a) => {
@@ -440,10 +447,10 @@
       const idx = parseInt(n, 10);
       const link = links[idx];
       if (!link) return '';
-      const label = escapeHtml(link.label || 'deze link');
+      const label = escapeHtml(link.label || 'link');
       const url = escapeHtml(link.real_url || '');
       return '<a href="#" class="ol-link" data-link-idx="' + idx + '" ' +
-             'title="Gaat naar: ' + url + '">' + label +
+             'title="' + escapeHtml(t('sim.reader.linkTo', { url: link.real_url || '' })) + '">' + label +
              ' <span class="ol-link-url" aria-hidden="true">(' + url + ')</span></a>';
     });
     return html;
@@ -454,16 +461,14 @@
     const url = link ? link.real_url : '';
     const warning = link ? (link.warning || '') : '';
     showModal({
-      title: bad ? '⚠️ Let op — verdachte link' : 'Link openen?',
+      title: bad ? t('sim.link.titleBad') : t('sim.link.titleSafe'),
       variant: bad ? 'bad' : '',
       bodyHtml:
-        '<p class="big-text">Deze link gaat naar:</p>' +
+        '<p class="big-text">' + escapeHtml(t('sim.link.goes')) + '</p>' +
         '<p class="mono url-preview ' + (bad ? 'bad' : '') + '">' + escapeHtml(url) + '</p>' +
         (warning ? '<p class="tip-line">' + escapeHtml(warning) + '</p>' : '') +
-        '<p>' + (bad
-          ? '<strong>Klik niet op deze link.</strong> Sluit dit bericht en meld het als phishing.'
-          : 'Tip: ook bij bekende organisaties is het veiliger om zelf naar hun website te gaan dan op links in e‑mail te klikken.') + '</p>',
-      actions: [{ label: 'Sluiten', primary: true, close: true }],
+        '<p>' + (bad ? t('sim.link.dontClick') : escapeHtml(t('sim.link.tip'))) + '</p>',
+      actions: [{ label: t('common.close'), primary: true, close: true }],
     });
   }
 
@@ -486,9 +491,9 @@
     } catch (_) {
       reader.querySelectorAll('[data-verdict]').forEach((b) => b.disabled = false);
       showModal({
-        title: 'Er ging iets mis',
-        bodyHtml: '<p>Kon uw antwoord niet opslaan. Probeer het opnieuw.</p>',
-        actions: [{ label: 'Sluiten', primary: true, close: true }],
+        title: t('sim.error.title'),
+        bodyHtml: '<p>' + escapeHtml(t('sim.error.save')) + '</p>',
+        actions: [{ label: t('common.close'), primary: true, close: true }],
       });
       return;
     }
@@ -502,19 +507,22 @@
   function showVerdictFeedback(m, res) {
     const redFlags = (res.red_flags || []).map((s) => '<li>' + escapeHtml(s) + '</li>').join('');
     const greenFlags = (res.green_flags || []).map((s) => '<li>' + escapeHtml(s) + '</li>').join('');
-    const senderNote = res.sender_note ? '<p><strong>Over het afzenderadres:</strong> ' + escapeHtml(res.sender_note) + '</p>' : '';
+    const senderNote = res.sender_note
+      ? '<p><strong>' + escapeHtml(t('sim.verdict.senderNote')) + '</strong> ' + escapeHtml(res.sender_note) + '</p>'
+      : '';
 
     showModal({
-      title: res.correct ? '✅ Goed beoordeeld!' : '❌ Dat klopt niet.',
+      title: res.correct ? t('sim.verdict.correct') : t('sim.verdict.wrong'),
       variant: res.correct ? 'good' : 'bad',
       bodyHtml:
-        '<p><strong>Het juiste antwoord:</strong> ' + (res.is_phishing ? 'dit is phishing.' : 'dit is een echt bericht.') + '</p>' +
+        '<p><strong>' + escapeHtml(t('sim.verdict.answer')) + '</strong> ' +
+          escapeHtml(res.is_phishing ? t('sim.verdict.isPhishing') : t('sim.verdict.isReal')) + '</p>' +
         '<p>' + escapeHtml(res.explanation) + '</p>' +
         senderNote +
-        (redFlags ? '<p><strong>Rode vlaggen:</strong></p><ul class="check-list">' + redFlags + '</ul>' : '') +
-        (greenFlags ? '<p><strong>Groene vlaggen:</strong></p><ul class="check-list">' + greenFlags + '</ul>' : ''),
+        (redFlags ? '<p><strong>' + escapeHtml(t('sim.verdict.redFlags')) + '</strong></p><ul class="check-list">' + redFlags + '</ul>' : '') +
+        (greenFlags ? '<p><strong>' + escapeHtml(t('sim.verdict.greenFlags')) + '</strong></p><ul class="check-list">' + greenFlags + '</ul>' : ''),
       actions: [
-        { label: allJudged() ? 'Bekijk uw resultaat →' : 'Volgende bericht →',
+        { label: allJudged() ? t('sim.verdict.seeResult') : t('sim.verdict.next'),
           primary: true, close: true, onClick: nextOrFinish },
       ],
     });
@@ -539,19 +547,21 @@
     const total = simState.messages.length;
     const correct = Object.values(simState.judgments).filter((j) => j.correct).length;
     const pct = Math.round((correct / total) * 100);
-    let titel, advies;
-    if (pct === 100)    { titel = 'Perfect! 🎉';          advies = 'U herkende alle berichten goed. Blijf alert bij echte e‑mail.'; }
-    else if (pct >= 80) { titel = 'Heel goed gedaan! 👍'; advies = 'U weet bijna alles. Bekijk de uitleg van de berichten die u miste nog eens.'; }
-    else if (pct >= 60) { titel = 'Goede start.';         advies = 'Oefen de simulator gerust nog een keer. Herhaling helpt.'; }
-    else                 { titel = 'Geen zorgen.';         advies = 'Phishing is lastig. Bekijk de lesjes en voorbeelden, en probeer het opnieuw.'; }
+    let bucket;
+    if (pct === 100)    bucket = 'perfect';
+    else if (pct >= 80) bucket = 'good';
+    else if (pct >= 60) bucket = 'okay';
+    else                bucket = 'weak';
+    const titel = t('sim.final.' + bucket + '.h');
+    const advies = t('sim.final.' + bucket + '.p');
 
     result.innerHTML =
-      '<h2>' + titel + '</h2>' +
-      '<p class="big-text">U beoordeelde <strong>' + correct + ' van de ' + total + '</strong> berichten goed (' + pct + '%).</p>' +
-      '<p>' + advies + '</p>' +
+      '<h2>' + escapeHtml(titel) + '</h2>' +
+      '<p class="big-text">' + t('sim.final.score', { correct, total, pct }) + '</p>' +
+      '<p>' + escapeHtml(advies) + '</p>' +
       '<div class="actions">' +
-        '<button class="btn btn-primary" id="sim-again">Opnieuw oefenen</button>' +
-        '<button class="btn btn-secondary" data-go="hulp">Bekijk hulp en tips</button>' +
+        '<button class="btn btn-primary" id="sim-again">' + escapeHtml(t('sim.final.again')) + '</button>' +
+        '<button class="btn btn-secondary" data-go="hulp">' + escapeHtml(t('sim.final.help')) + '</button>' +
       '</div>';
     result.hidden = false;
     document.getElementById('sim-again').addEventListener('click', () => {

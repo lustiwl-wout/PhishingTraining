@@ -4,11 +4,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Eenvoudige training om phishing te herkennen. Met grote tekst, duidelijke voorbeelden en een korte quiz." />
-  <title>Veilig Online — Phishing herkennen</title>
+  <title data-i18n="meta.title">Veilig Online — Phishing herkennen</title>
   <link rel="stylesheet" href="css/style.css?v=__VER__" />
 </head>
 <body>
-  <a class="skip-link" href="#hoofd">Ga naar de inhoud</a>
+  <a class="skip-link" href="#hoofd" data-i18n="skip.main">Ga naar de inhoud</a>
 
   <header class="topbar" role="banner">
     <div class="brand">
@@ -85,22 +85,22 @@
 
     <!-- 2. LEREN -->
     <section id="leren" class="page" aria-labelledby="leren-titel">
-      <h1 id="leren-titel">5 dingen waar u op let</h1>
-      <p class="lead">Deze 5 punten helpen u om phishing te herkennen. Lees ze rustig door.</p>
+      <h1 id="leren-titel" data-i18n="leren.h1">5 dingen waar u op let</h1>
+      <p class="lead" data-i18n="leren.lead">Deze 5 punten helpen u om phishing te herkennen. Lees ze rustig door.</p>
 
       <ol class="learn-list">
         <li class="card">
           <div class="learn-num" aria-hidden="true">1</div>
-          <h2>Een vreemde of dringende toon</h2>
-          <p>
+          <h2 data-i18n="leren.it1.h">Een vreemde of dringende toon</h2>
+          <p data-i18n-html="leren.it1.p">
             “Uw rekening wordt vandaag geblokkeerd!” of “Laatste waarschuwing!”
             Oplichters willen dat u in paniek snel iets doet. <strong>Een echte bank doet dat nooit.</strong>
           </p>
         </li>
         <li class="card">
           <div class="learn-num" aria-hidden="true">2</div>
-          <h2>Kijk goed naar het adres na de @</h2>
-          <p>
+          <h2 data-i18n="leren.it2.h">Kijk goed naar het adres na de @</h2>
+          <p data-i18n-html="leren.it2.p1">
             Een e‑mailadres heeft <strong>twee delen</strong>, met een <strong>@</strong> ertussen.
             Wat <strong>achter de @</strong> staat, is wie het écht is.
           </p>
@@ -110,42 +110,42 @@
               <span class="addr-name">service</span><span class="addr-at">@</span><span class="addr-domain">ing-betaling-secure.com</span>
             </div>
             <div class="addr-points">
-              <p><span class="addr-tag good">Vóór de @</span> <span>kan iedereen zelf kiezen — dit zegt niets.</span></p>
-              <p><span class="addr-tag bad">Na de @</span> <span>is de echte afzender. Hier staat <strong>ing-betaling-secure.com</strong> — dat is <strong>niet</strong> de ING.</span></p>
+              <p><span class="addr-tag good" data-i18n="leren.addr.good.tag">Vóór de @</span> <span data-i18n="leren.addr.good.text">kan iedereen zelf kiezen — dit zegt niets.</span></p>
+              <p><span class="addr-tag bad" data-i18n="leren.addr.bad.tag">Na de @</span> <span data-i18n-html="leren.addr.bad.text">is de echte afzender. Hier staat <strong>ing-betaling-secure.com</strong> — dat is <strong>niet</strong> de ING.</span></p>
             </div>
           </div>
 
-          <p>
+          <p data-i18n-html="leren.it2.p2">
             De echte ING gebruikt altijd <strong class="mono">@ing.nl</strong>. De Belastingdienst altijd
             <strong class="mono">@belastingdienst.nl</strong>. Staat er iets anders na de @, dan is het
             <strong>niet</strong> die organisatie — ook al staat de naam wel ergens in het adres.
           </p>
 
-          <p class="tip-line">
+          <p class="tip-line" data-i18n-html="leren.it2.tip">
             💡 Vergelijk het met een brief: op de envelop kan iemand <em>"van uw bank"</em> schrijven,
             maar het echte adres op de achterkant verraadt wie hem heeft gestuurd.
           </p>
         </li>
         <li class="card">
           <div class="learn-num" aria-hidden="true">3</div>
-          <h2>Spelfouten of rare zinnen</h2>
-          <p>
+          <h2 data-i18n="leren.it3.h">Spelfouten of rare zinnen</h2>
+          <p data-i18n-html="leren.it3.p">
             Veel phishing‑berichten zijn met een vertaalmachine gemaakt. Let op kromme zinnen,
             verkeerde aanhef (“Beste klant” zonder uw naam), of vreemde tekens.
           </p>
         </li>
         <li class="card">
           <div class="learn-num" aria-hidden="true">4</div>
-          <h2>Een link of knop waar u op moet klikken</h2>
-          <p>
+          <h2 data-i18n="leren.it4.h">Een link of knop waar u op moet klikken</h2>
+          <p data-i18n-html="leren.it4.p">
             Klik <strong>niet zomaar</strong> op een link in een bericht. Open uw bank of de Belastingdienst altijd
             zelf in de browser, of via de officiële app op uw telefoon.
           </p>
         </li>
         <li class="card">
           <div class="learn-num" aria-hidden="true">5</div>
-          <h2>Vragen om geld, code of pincode</h2>
-          <p>
+          <h2 data-i18n="leren.it5.h">Vragen om geld, code of pincode</h2>
+          <p data-i18n-html="leren.it5.p">
             Een echte organisatie vraagt <strong>nooit</strong> om uw pincode, wachtwoord, of een code uit uw bank‑app.
             Krijgt u die vraag? Dan is het altijd phishing.
           </p>
@@ -153,8 +153,8 @@
       </ol>
 
       <div class="actions">
-        <button class="btn btn-secondary" data-go="welkom">← Terug</button>
-        <button class="btn btn-primary big-btn" data-go="voorbeelden">Bekijk voorbeelden →</button>
+        <button class="btn btn-secondary" data-go="welkom" data-i18n="common.back">← Terug</button>
+        <button class="btn btn-primary big-btn" data-go="voorbeelden" data-i18n="leren.examples">Bekijk voorbeelden →</button>
       </div>
     </section>
 
@@ -201,8 +201,8 @@
               <span class="ms-sq ms-sq-b"></span><span class="ms-sq ms-sq-y"></span>
               <span class="ms-wordmark">Microsoft</span>
             </div>
-            <h2 id="ms-title" class="ms-title">Aanmelden</h2>
-            <p id="ms-subtitle" class="ms-subtitle">om door te gaan naar Outlook</p>
+            <h2 id="ms-title" class="ms-title" data-i18n="sim.ms.title">Aanmelden</h2>
+            <p id="ms-subtitle" class="ms-subtitle" data-i18n="sim.ms.subtitle">om door te gaan naar Outlook</p>
 
             <div id="ms-email-row" class="ms-field">
               <div class="ms-input"><span id="ms-email" class="ms-input-text"></span><span class="ms-caret">|</span></div>
@@ -211,12 +211,12 @@
               <div class="ms-input ms-input-pw"><span id="ms-password" class="ms-input-text"></span><span class="ms-caret">|</span></div>
             </div>
 
-            <div class="ms-link-row"><a href="#" onclick="event.preventDefault()">Geen account? Maak er een.</a></div>
-            <div class="ms-link-row"><a href="#" onclick="event.preventDefault()">Hebt u geen toegang tot het account?</a></div>
+            <div class="ms-link-row"><a href="#" onclick="event.preventDefault()" data-i18n="sim.ms.noaccount">Geen account? Maak er een.</a></div>
+            <div class="ms-link-row"><a href="#" onclick="event.preventDefault()" data-i18n="sim.ms.forgot">Hebt u geen toegang tot het account?</a></div>
 
             <div class="ms-actions">
-              <button id="ms-back-btn" class="ms-btn ms-btn-ghost">Vorige</button>
-              <button id="ms-submit-btn" class="ms-btn ms-btn-primary">Volgende</button>
+              <button id="ms-back-btn" class="ms-btn ms-btn-ghost" data-i18n="sim.ms.back">Vorige</button>
+              <button id="ms-submit-btn" class="ms-btn ms-btn-primary" data-i18n="sim.ms.next">Volgende</button>
             </div>
             <div id="ms-status" class="ms-status" hidden></div>
           </div>
@@ -230,22 +230,22 @@
         <div class="ol-topbar">
           <button class="ol-iconbtn" aria-label="Apps">⠿</button>
           <div class="ol-brand">Outlook</div>
-          <div class="ol-search"><span class="ol-search-icon">🔍</span><input type="text" placeholder="Zoeken" aria-label="Zoeken" disabled></div>
+          <div class="ol-search"><span class="ol-search-icon">🔍</span><input type="text" id="ol-search-input" placeholder="Zoeken" aria-label="Zoeken" disabled></div>
           <div class="ol-topright">
             <button class="ol-iconbtn" aria-label="Meldingen">🔔</button>
             <button class="ol-iconbtn" aria-label="Instellingen">⚙️</button>
-            <span class="ol-avatar" aria-hidden="true">J</span>
-            <button class="ol-exit-btn" type="button" data-go="leren" aria-label="Sluit de oefen-Outlook">✕ Sluit oefening</button>
+            <span class="ol-avatar" aria-hidden="true" data-i18n="user.avatar">J</span>
+            <button class="ol-exit-btn" type="button" data-go="leren" aria-label="Sluit de oefen-Outlook" data-i18n="sim.ol.exit">✕ Sluit oefening</button>
           </div>
         </div>
 
         <!-- Ribbon -->
         <div class="ol-ribbon">
-          <button class="ol-new-btn" disabled>✉️ Nieuw bericht</button>
-          <span class="ol-tab">Bestand</span>
-          <span class="ol-tab active">Start</span>
-          <span class="ol-tab">Weergave</span>
-          <span class="ol-tab">Help</span>
+          <button class="ol-new-btn" disabled data-i18n="sim.ol.new">✉️ Nieuw bericht</button>
+          <span class="ol-tab" data-i18n="sim.ol.tab.file">Bestand</span>
+          <span class="ol-tab active" data-i18n="sim.ol.tab.home">Start</span>
+          <span class="ol-tab" data-i18n="sim.ol.tab.view">Weergave</span>
+          <span class="ol-tab" data-i18n="sim.ol.tab.help">Help</span>
         </div>
 
         <div class="ol-main">
@@ -260,21 +260,21 @@
           <!-- Mappen -->
           <aside class="ol-folders" aria-label="Mappen">
             <div class="ol-folder-group">
-              <div class="ol-folder-header">Favorieten</div>
+              <div class="ol-folder-header" data-i18n="sim.ol.favorites">Favorieten</div>
               <ul>
-                <li class="active"><span>📥 Postvak IN</span><span class="ol-count" id="ol-unread-count">0</span></li>
-                <li><span>📤 Verzonden items</span></li>
-                <li><span>🗑️ Verwijderde items</span></li>
+                <li class="active"><span data-i18n="sim.ol.inbox">📥 Postvak IN</span><span class="ol-count" id="ol-unread-count">0</span></li>
+                <li><span data-i18n="sim.ol.sent">📤 Verzonden items</span></li>
+                <li><span data-i18n="sim.ol.trash">🗑️ Verwijderde items</span></li>
               </ul>
             </div>
             <div class="ol-folder-group">
-              <div class="ol-folder-header">janssen@hotmail.com</div>
+              <div class="ol-folder-header" data-i18n="user.email">janssen@hotmail.com</div>
               <ul>
-                <li><span>📥 Postvak IN</span><span class="ol-count" id="ol-unread-count-2">0</span></li>
-                <li><span>📝 Concepten</span></li>
-                <li><span>📤 Verzonden items</span></li>
-                <li><span>🗑️ Verwijderde items</span></li>
-                <li><span>⚠️ Ongewenste e‑mail</span></li>
+                <li><span data-i18n="sim.ol.inbox">📥 Postvak IN</span><span class="ol-count" id="ol-unread-count-2">0</span></li>
+                <li><span data-i18n="sim.ol.drafts">📝 Concepten</span></li>
+                <li><span data-i18n="sim.ol.sent">📤 Verzonden items</span></li>
+                <li><span data-i18n="sim.ol.trash">🗑️ Verwijderde items</span></li>
+                <li><span data-i18n="sim.ol.junk">⚠️ Ongewenste e‑mail</span></li>
               </ul>
             </div>
           </aside>
@@ -282,8 +282,8 @@
           <!-- Berichtenlijst -->
           <section class="ol-list" aria-label="Berichtenlijst">
             <div class="ol-list-header">
-              <h3>Postvak IN</h3>
-              <p class="ol-hint">Klik op een bericht om het te openen.</p>
+              <h3 data-i18n="sim.ol.inbox.title">Postvak IN</h3>
+              <p class="ol-hint" data-i18n="sim.ol.inbox.hint">Klik op een bericht om het te openen.</p>
             </div>
             <ol id="ol-list-items"><!-- gevuld door JS --></ol>
           </section>
@@ -293,7 +293,7 @@
             <div id="ol-reader" class="ol-reader-inner">
               <div class="ol-reader-empty">
                 <div class="ol-reader-empty-art">📬</div>
-                <p>Selecteer een bericht links om te beginnen.</p>
+                <p data-i18n="sim.ol.empty">Selecteer een bericht links om te beginnen.</p>
               </div>
             </div>
           </section>
@@ -317,46 +317,46 @@
 
     <!-- 5. HULP -->
     <section id="hulp" class="page" aria-labelledby="hulp-titel">
-      <h1 id="hulp-titel">Wat moet u doen?</h1>
+      <h1 id="hulp-titel" data-i18n="hulp.h1">Wat moet u doen?</h1>
 
       <div class="card big">
-        <h2>U twijfelt over een bericht</h2>
+        <h2 data-i18n="hulp.twijfel.h">U twijfelt over een bericht</h2>
         <ol class="check-list numbered">
-          <li>Klik op niets en vul niets in.</li>
-          <li>Bel zelf het officiële nummer van de organisatie. Dat staat op de achterkant van uw bankpas of op de officiële website.</li>
-          <li>Vraag iemand die u vertrouwt (kind, kleinkind, buurvrouw) om mee te kijken.</li>
+          <li data-i18n="hulp.twijfel.li1">Klik op niets en vul niets in.</li>
+          <li data-i18n="hulp.twijfel.li2">Bel zelf het officiële nummer van de organisatie. Dat staat op de achterkant van uw bankpas of op de officiële website.</li>
+          <li data-i18n="hulp.twijfel.li3">Vraag iemand die u vertrouwt (kind, kleinkind, buurvrouw) om mee te kijken.</li>
         </ol>
       </div>
 
       <div class="card big">
-        <h2>U heeft per ongeluk geklikt of iets ingevuld</h2>
+        <h2 data-i18n="hulp.geklikt.h">U heeft per ongeluk geklikt of iets ingevuld</h2>
         <ol class="check-list numbered">
-          <li>Bel <strong>direct</strong> uw bank. Het nummer staat op uw bankpas. Zij kunnen uw rekening blokkeren.</li>
-          <li>Verander uw wachtwoord van de getroffen website.</li>
-          <li>Doe melding bij de politie via <span class="mono">0900‑8844</span> of op politie.nl.</li>
+          <li data-i18n-html="hulp.geklikt.li1">Bel <strong>direct</strong> uw bank. Het nummer staat op uw bankpas. Zij kunnen uw rekening blokkeren.</li>
+          <li data-i18n="hulp.geklikt.li2">Verander uw wachtwoord van de getroffen website.</li>
+          <li data-i18n-html="hulp.geklikt.li3">Doe melding bij de politie via <span class="mono">0900‑8844</span> of op politie.nl.</li>
         </ol>
       </div>
 
       <div class="card">
-        <h2>Phishing doorsturen</h2>
-        <p>U kunt verdachte e‑mails doorsturen naar:</p>
+        <h2 data-i18n="hulp.doorsturen.h">Phishing doorsturen</h2>
+        <p data-i18n="hulp.doorsturen.p">U kunt verdachte e‑mails doorsturen naar:</p>
         <ul class="check-list">
-          <li><strong>valse-email@fraudehelpdesk.nl</strong> — de Fraudehelpdesk kijkt mee.</li>
-          <li>Ook doorsturen aan uw bank kan: die adressen vindt u op de website van uw bank.</li>
+          <li data-i18n-html="hulp.doorsturen.li1"><strong>valse-email@fraudehelpdesk.nl</strong> — de Fraudehelpdesk kijkt mee.</li>
+          <li data-i18n="hulp.doorsturen.li2">Ook doorsturen aan uw bank kan: die adressen vindt u op de website van uw bank.</li>
         </ul>
       </div>
 
       <div class="card highlight">
-        <h2>Onthoud altijd</h2>
-        <p class="big-text">
+        <h2 data-i18n="hulp.onthoud.h">Onthoud altijd</h2>
+        <p class="big-text" data-i18n-html="hulp.onthoud.p">
           🛑 <strong>Een bank, de overheid of een bezorger vraagt nooit om uw pincode of wachtwoord.</strong>
           Bij twijfel: <strong>niet klikken, eerst bellen.</strong>
         </p>
       </div>
 
       <div class="actions">
-        <button class="btn btn-secondary" data-go="welkom">← Terug naar het begin</button>
-        <button class="btn btn-primary" onclick="window.print()">Tips afdrukken 🖨️</button>
+        <button class="btn btn-secondary" data-go="welkom" data-i18n="hulp.back">← Terug naar het begin</button>
+        <button class="btn btn-primary" onclick="window.print()" data-i18n="hulp.print">Tips afdrukken 🖨️</button>
       </div>
     </section>
 
