@@ -47,6 +47,7 @@ window.VO_LOCALES = {
     'leren.addr.good.text': 'kan iedereen zelf kiezen — dit zegt niets.',
     'leren.addr.bad.tag': 'Na de @',
     'leren.addr.bad.text': 'is de echte afzender. Hier staat <strong>ing-betaling-secure.com</strong> — dat is <strong>niet</strong> de ING.',
+    'leren.addr.example': 'ing-betaling-secure.com',
     'leren.it2.p2': 'De echte ING gebruikt altijd <strong class="mono">@ing.nl</strong>. De Belastingdienst altijd <strong class="mono">@belastingdienst.nl</strong>. Staat er iets anders na de @, dan is het <strong>niet</strong> die organisatie — ook al staat de naam wel ergens in het adres.',
     'leren.it2.tip': '💡 Vergelijk het met een brief: op de envelop kan iemand <em>"van uw bank"</em> schrijven, maar het echte adres op de achterkant verraadt wie hem heeft gestuurd.',
     'leren.it3.h': 'Spelfouten of rare zinnen',
@@ -162,6 +163,8 @@ window.VO_LOCALES = {
     'hulp.back': '← Terug naar het begin',
     'hulp.print': 'Tips afdrukken 🖨️',
 
+    'footer.tagline': 'Veilig Online · Een gratis training om phishing te herkennen.',
+
     'common.back': '← Terug',
     'common.close': 'Sluiten',
     'common.next': 'Volgende →',
@@ -210,6 +213,7 @@ window.VO_LOCALES = {
     'leren.addr.good.text': 'kan iedereen zelf kiezen — dit zegt niets.',
     'leren.addr.bad.tag': 'Na de @',
     'leren.addr.bad.text': 'is de echte afzender. Hier staat <strong>bnp-veilig-login.com</strong> — dat is <strong>niet</strong> BNP Paribas Fortis.',
+    'leren.addr.example': 'bnp-veilig-login.com',
     'leren.it2.p2': 'BNP Paribas Fortis gebruikt altijd <strong class="mono">@bnpparibasfortis.com</strong>. De FOD Financiën altijd <strong class="mono">@minfin.fed.be</strong>. Staat er iets anders na de @, dan is het <strong>niet</strong> die organisatie — ook al staat de naam wel ergens in het adres.',
     'leren.it2.tip': '💡 Vergelijk het met een brief: op de omslag kan iemand <em>"van uw bank"</em> schrijven, maar het echte adres op de achterkant verraadt wie hem heeft verstuurd.',
     'leren.it3.h': 'Spelfouten of rare zinnen',
@@ -325,6 +329,8 @@ window.VO_LOCALES = {
     'hulp.back': '← Terug naar het begin',
     'hulp.print': 'Tips afdrukken 🖨️',
 
+    'footer.tagline': 'Veilig Online · Een gratis opleiding om phishing te herkennen.',
+
     'common.back': '← Terug',
     'common.close': 'Sluiten',
     'common.next': 'Volgende →',
@@ -372,8 +378,9 @@ window.VO_LOCALES = {
     'leren.addr.good.tag': 'Before the @',
     'leren.addr.good.text': 'can be anything — this part tells you nothing.',
     'leren.addr.bad.tag': 'After the @',
-    'leren.addr.bad.text': 'is the real sender. Here it says <strong>hmrc-refund-secure.co.uk</strong> — that is <strong>not</strong> HMRC.',
-    'leren.it2.p2': 'Real HMRC emails always use <strong class="mono">@hmrc.gov.uk</strong>. The NHS always uses <strong class="mono">@nhs.uk</strong>. If the part after the @ is anything else, the email is <strong>not</strong> from that organisation — even if the name appears somewhere in the address.',
+    'leren.addr.bad.text': 'is the real sender. Here it says <strong>barclays-secure-login.com</strong> — that is <strong>not</strong> Barclays.',
+    'leren.addr.example': 'barclays-secure-login.com',
+    'leren.it2.p2': 'Real Barclays emails always use <strong class="mono">@barclays.co.uk</strong>. HMRC always uses <strong class="mono">@hmrc.gov.uk</strong>. If the part after the @ is anything else, the email is <strong>not</strong> from that organisation — even if the name appears somewhere in the address.',
     'leren.it2.tip': '💡 Think of a letter: anyone can write <em>"from your bank"</em> on the envelope, but the real address on the back tells you who actually sent it.',
     'leren.it3.h': 'Spelling mistakes or strange phrasing',
     'leren.it3.p': 'Many phishing messages are made with a translation tool. Watch out for awkward sentences, odd greetings (“Dear customer” without your name) or strange characters.',
@@ -488,6 +495,8 @@ window.VO_LOCALES = {
     'hulp.back': '← Back to the start',
     'hulp.print': 'Print tips 🖨️',
 
+    'footer.tagline': 'Safe Online · A free training to help you spot phishing.',
+
     'common.back': '← Back',
     'common.close': 'Close',
     'common.next': 'Next →',
@@ -535,8 +544,9 @@ window.VO_LOCALES = {
     'leren.addr.good.tag': 'Avant le @',
     'leren.addr.good.text': 'n’importe qui peut le choisir — cela ne dit rien.',
     'leren.addr.bad.tag': 'Après le @',
-    'leren.addr.bad.text': 'c’est le vrai expéditeur. Ici il est écrit <strong>impots-remboursement-securise.com</strong> — ce n’est <strong>pas</strong> les impôts.',
-    'leren.it2.p2': 'Les vrais courriels des impôts utilisent toujours <strong class="mono">@dgfip.finances.gouv.fr</strong>. L’Assurance Maladie utilise toujours <strong class="mono">@ameli.fr</strong>. Si ce qui suit le @ est différent, l’e‑mail ne vient <strong>pas</strong> de cette organisation — même si le nom apparaît dans l’adresse.',
+    'leren.addr.bad.text': 'c’est le vrai expéditeur. Ici il est écrit <strong>credit-agricole-securite.com</strong> — ce n’est <strong>pas</strong> le Crédit Agricole.',
+    'leren.addr.example': 'credit-agricole-securite.com',
+    'leren.it2.p2': 'Les vrais e‑mails du Crédit Agricole utilisent toujours <strong class="mono">@credit-agricole.fr</strong>. Les impôts utilisent toujours <strong class="mono">@dgfip.finances.gouv.fr</strong>. Si ce qui suit le @ est différent, l’e‑mail ne vient <strong>pas</strong> de cette organisation — même si le nom apparaît dans l’adresse.',
     'leren.it2.tip': '💡 Comme une lettre : n’importe qui peut écrire <em>« de votre banque »</em> sur l’enveloppe, mais c’est la vraie adresse au dos qui dit qui l’a envoyée.',
     'leren.it3.h': 'Fautes d’orthographe ou phrases bizarres',
     'leren.it3.p': 'Beaucoup de messages d’hameçonnage sont rédigés avec un traducteur automatique. Attention aux phrases maladroites, aux salutations étranges (« Cher client » sans votre nom) ou aux caractères bizarres.',
@@ -651,6 +661,8 @@ window.VO_LOCALES = {
     'hulp.back': '← Retour au début',
     'hulp.print': 'Imprimer les conseils 🖨️',
 
+    'footer.tagline': 'Sécurité en ligne · Une formation gratuite pour reconnaître le hameçonnage.',
+
     'common.back': '← Retour',
     'common.close': 'Fermer',
     'common.next': 'Suivant →',
@@ -699,6 +711,7 @@ window.VO_LOCALES = {
     'leren.addr.good.text': 'n’importe qui peut le choisir — cela ne dit rien.',
     'leren.addr.bad.tag': 'Après le @',
     'leren.addr.bad.text': 'c’est le vrai expéditeur. Ici il est écrit <strong>belfius-securise.com</strong> — ce n’est <strong>pas</strong> Belfius.',
+    'leren.addr.example': 'belfius-securise.com',
     'leren.it2.p2': 'Belfius utilise toujours <strong class="mono">@belfius.be</strong>. Le SPF Finances utilise toujours <strong class="mono">@minfin.fed.be</strong>. Si ce qui suit le @ est différent, l’e‑mail ne vient <strong>pas</strong> de cette organisation — même si le nom apparaît dans l’adresse.',
     'leren.it2.tip': '💡 Comme une lettre : n’importe qui peut écrire <em>« de votre banque »</em> sur l’enveloppe, mais c’est la vraie adresse au dos qui dit qui l’a envoyée.',
     'leren.it3.h': 'Fautes d’orthographe ou phrases bizarres',
@@ -814,6 +827,8 @@ window.VO_LOCALES = {
     'hulp.back': '← Retour au début',
     'hulp.print': 'Imprimer les conseils 🖨️',
 
+    'footer.tagline': 'Sécurité en ligne · Une formation gratuite pour reconnaître le hameçonnage.',
+
     'common.back': '← Retour',
     'common.close': 'Fermer',
     'common.next': 'Suivant →',
@@ -862,7 +877,8 @@ window.VO_LOCALES = {
     'leren.addr.good.text': 'kann jeder selbst wählen — das sagt nichts aus.',
     'leren.addr.bad.tag': 'Nach dem @',
     'leren.addr.bad.text': 'steht der echte Absender. Hier steht <strong>sparkasse-sicher-login.com</strong> — das ist <strong>nicht</strong> die Sparkasse.',
-    'leren.it2.p2': 'Das Finanzamt nutzt immer <strong class="mono">@elster.de</strong>. Die Sparkasse nutzt <strong class="mono">@sparkasse.de</strong>. Steht nach dem @ etwas anderes, ist die E‑Mail <strong>nicht</strong> von dieser Organisation — auch wenn der Name irgendwo in der Adresse auftaucht.',
+    'leren.addr.example': 'sparkasse-sicher-login.com',
+    'leren.it2.p2': 'Die Sparkasse nutzt immer <strong class="mono">@sparkasse.de</strong>. Das Finanzamt nutzt <strong class="mono">@elster.de</strong>. Steht nach dem @ etwas anderes, ist die E‑Mail <strong>nicht</strong> von dieser Organisation — auch wenn der Name irgendwo in der Adresse auftaucht.',
     'leren.it2.tip': '💡 Wie bei einem Brief: Jemand kann <em>„von Ihrer Bank“</em> auf den Umschlag schreiben, aber die echte Adresse auf der Rückseite zeigt, wer ihn wirklich geschickt hat.',
     'leren.it3.h': 'Rechtschreibfehler oder seltsame Sätze',
     'leren.it3.p': 'Viele Phishing‑Nachrichten werden mit einem Übersetzungsprogramm erstellt. Achten Sie auf holprige Sätze, ungewöhnliche Anreden („Sehr geehrter Kunde“ ohne Ihren Namen) oder seltsame Zeichen.',
@@ -976,6 +992,8 @@ window.VO_LOCALES = {
     'hulp.onthoud.p': '🛑 <strong>Eine Bank, eine Behörde oder ein Paketdienst fragt niemals nach Ihrer PIN oder Ihrem Passwort.</strong> Im Zweifel: <strong>nicht klicken, erst anrufen.</strong>',
     'hulp.back': '← Zurück zum Anfang',
     'hulp.print': 'Tipps drucken 🖨️',
+
+    'footer.tagline': 'Sicher Online · Eine kostenlose Schulung, um Phishing zu erkennen.',
 
     'common.back': '← Zurück',
     'common.close': 'Schließen',
