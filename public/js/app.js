@@ -5,14 +5,24 @@
   'use strict';
 
   // -------- i18n --------
-  const SUPPORTED_LANGS = ['nl', 'en', 'fr', 'de'];
-  const LANG_FLAGS = { nl: '🇳🇱', en: '🇬🇧', fr: '🇫🇷', de: '🇩🇪' };
+  const SUPPORTED_LANGS = ['nl', 'nl-BE', 'en', 'fr', 'fr-BE', 'de'];
+  const LANG_FLAGS = {
+    'nl': '🇳🇱', 'nl-BE': '🇧🇪',
+    'en': '🇬🇧',
+    'fr': '🇫🇷', 'fr-BE': '🇧🇪',
+    'de': '🇩🇪',
+  };
 
   function detectInitialLanguage() {
     const stored = localStorage.getItem('vo_lang');
     if (stored && SUPPORTED_LANGS.includes(stored)) return stored;
-    const nav = (navigator.language || 'nl').slice(0, 2).toLowerCase();
-    return SUPPORTED_LANGS.includes(nav) ? nav : null;
+    // Match browser preference — e.g. "nl-BE" maps to nl-BE, "fr-CH" falls
+    // back to "fr", "nl" stays as "nl". We check the full tag first, then
+    // the primary subtag.
+    const tag = (navigator.language || 'nl');
+    if (SUPPORTED_LANGS.includes(tag)) return tag;
+    const primary = tag.slice(0, 2).toLowerCase();
+    return SUPPORTED_LANGS.includes(primary) ? primary : null;
   }
 
   let currentLang = detectInitialLanguage() || 'nl';

@@ -830,3 +830,417 @@ INSERT INTO inbox_messages
  '[]'::jsonb,
  'Das ist Phishing. Sie können keinen Preis gewinnen, an dem Sie nicht teilgenommen haben. Ein echtes Gewinnspiel verlangt niemals Versandgebühren im Voraus.',
  100);
+
+
+-- ============================================================
+-- NEDERLANDS (BELGIË / VLAAMS) — nl-BE
+-- ============================================================
+
+-- ======== VOORBEELDEN (nl-BE) ========
+INSERT INTO examples (locale, channel, sender, subject, body, annotations, sort_order) VALUES
+('nl-BE', 'email',
+ 'BNP Paribas Fortis <service@bnp-veilig-login.com>',
+ 'Belangrijk: uw rekening wordt geblokkeerd',
+ E'Geachte klant,\n\nWij hebben een verdachte transactie op uw rekening opgemerkt. Binnen 24 uur wordt uw rekening GEBLOKKEERD als u uw gegevens niet bevestigt.\n\nKlik hier om uw rekening te beveiligen: http://bnp-veilig-login.com/login\n\nMet vriendelijke groeten,\nBNP Paribas Fortis Beveiligingsteam',
+ '[
+   {"quote": "service@bnp-veilig-login.com", "note": "Kijk naar wat NA de @ staat: bnp-veilig-login.com. Dat is niet BNP Paribas Fortis. De echte bank gebruikt altijd @bnpparibasfortis.com. Het deel vóór de @ (\"service\") mag de oplichter zelf verzinnen."},
+   {"quote": "GEBLOKKEERD als u uw gegevens niet bevestigt", "note": "Angst maken en haast. Een echte bank doet dit nooit."},
+   {"quote": "Geachte klant", "note": "Geen naam. Uw bank kent uw naam."},
+   {"quote": "http://bnp-veilig-login.com/login", "note": "Vreemde link die niet van BNP Paribas Fortis is. Niet op klikken!"}
+ ]'::jsonb,
+ 10),
+
+('nl-BE', 'email',
+ 'FOD Financiën <noreply@minfin-teruggave.be>',
+ 'U heeft recht op € 423,50 terugbetaling',
+ E'Beste burger,\n\nNa controle blijkt u recht te hebben op een belastingteruggave van € 423,50. Vul snel uw gegevens in om het bedrag te ontvangen.\n\nKlik hier: http://minfin-teruggave.be/claim\n\nFOD Financiën',
+ '[
+   {"quote": "noreply@minfin-teruggave.be", "note": "Kijk na de @: minfin-teruggave.be. Dat is NIET de FOD Financiën. Het echte domein is minfin.fed.be."},
+   {"quote": "Beste burger", "note": "Algemene aanspreking zonder uw naam. De FOD Financiën kent u."},
+   {"quote": "recht te hebben op een belastingteruggave van € 423,50", "note": "Belofte van geld is een klassieke lokker. De FOD Financiën mailt nooit over teruggaven."},
+   {"quote": "http://minfin-teruggave.be/claim", "note": "Vreemde link, niet myminfin.be. Niet op klikken."}
+ ]'::jsonb,
+ 20),
+
+('nl-BE', 'email',
+ 'itsme <info@itsme-controle.org>',
+ 'Bevestig uw itsme-gegevens',
+ E'Geachte heer/mevrouw,\n\nWij vragen u om uw itsme opnieuw te bevestigen. Klik op onderstaande link en meld u aan met uw gebruikersnaam en paswoord.\n\nhttp://itsme-controle.org/aanmelden\n\nBedankt,\nitsme',
+ '[
+   {"quote": "info@itsme-controle.org", "note": "Kijk na de @: itsme-controle.org. Het echte domein is itsme.be — niets anders."},
+   {"quote": "Geachte heer/mevrouw", "note": "Algemene aanspreking. Een echte organisatie kent uw naam."},
+   {"quote": "meld u aan met uw gebruikersnaam en paswoord", "note": "itsme werkt via uw eigen app en vraagt NOOIT uw paswoord per e-mail. Altijd phishing."},
+   {"quote": "http://itsme-controle.org/aanmelden", "note": "Vreemde link. Gebruik itsme alleen via de officiële app of via itsme.be."}
+ ]'::jsonb,
+ 30);
+
+-- ======== INBOX (nl-BE) ========
+INSERT INTO inbox_messages
+  (locale, sender_name, sender_address, sender_note, received_label, subject, preview, body, links, is_phishing, red_flags, green_flags, explanation, sort_order) VALUES
+
+-- 1. PHISHING — BNP Paribas Fortis
+('nl-BE',
+ 'BNP Paribas Fortis',
+ 'service@bnp-veilig-login.com',
+ 'Kijk na de @: bnp-veilig-login.com. BNP Paribas Fortis gebruikt altijd @bnpparibasfortis.com.',
+ 'vandaag 08:42',
+ 'Belangrijk: uw rekening wordt geblokkeerd',
+ 'Geachte klant, wij hebben een verdachte transactie opgemerkt op uw...',
+ E'Geachte klant,\n\nWij hebben een verdachte transactie opgemerkt op uw rekening. Om misbruik te voorkomen wordt uw rekening binnen 24 uur GEBLOKKEERD als u uw gegevens niet bevestigt.\n\nBevestig onmiddellijk via {{link:0}}.\n\nMet vriendelijke groeten,\nBNP Paribas Fortis Beveiligingsteam',
+ '[{"label":"deze beveiligde pagina","real_url":"http://bnp-veilig-login.com/login","suspicious":true,"warning":"Deze link gaat NIET naar bnpparibasfortis.com maar naar bnp-veilig-login.com. Dat is een nepwebsite die op BNP Paribas Fortis lijkt."}]'::jsonb,
+ TRUE,
+ '["Afzenderadres eindigt niet op @bnpparibasfortis.com","Dreigt met blokkering binnen 24 uur — paniek maken","Aanspreking \"Geachte klant\" zonder uw naam","Link gaat naar bnp-veilig-login.com, niet naar bnpparibasfortis.com"]'::jsonb,
+ '[]'::jsonb,
+ 'Dit is phishing. BNP Paribas Fortis stuurt nooit e-mails om u onder tijdsdruk uw gegevens te laten bevestigen. Had u getwijfeld? Open dan altijd zelf de Easy Banking App of bel Card Stop (078 170 170) om uw kaart te blokkeren.',
+ 10),
+
+-- 2. REAL — Huisarts
+('nl-BE',
+ 'Huisartsenpraktijk De Linde',
+ 'praktijk@huisartsendelinde.be',
+ 'Het adres eindigt op het eigen domein van de praktijk — normaal.',
+ 'vandaag 09:15',
+ 'Herinnering: uw afspraak morgen om 10u15',
+ 'Beste mevrouw Peeters, dit is een herinnering aan uw afspraak...',
+ E'Beste mevrouw Peeters,\n\nDit is een herinnering aan uw afspraak bij dokter Vermeulen morgen om 10u15.\n\nWilt u afzeggen of verzetten? Bel dan 03 123 45 67.\n\nTot morgen.\n\nHuisartsenpraktijk De Linde\nMarkt 12, Antwerpen',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Persoonlijke aanspreking met uw naam","Geen link, geen knop","Telefoonnummer om zelf te bellen","Geen vraag om gegevens of geld","Concrete, verwachte informatie"]'::jsonb,
+ 'Dit is een gewone afspraakherinnering. Geen links, geen gegevens gevraagd — u kunt gewoon bellen als u iets wilt wijzigen.',
+ 20),
+
+-- 3. PHISHING — FOD Financiën
+('nl-BE',
+ 'FOD Financiën',
+ 'noreply@minfin-teruggave.be',
+ 'Niet @minfin.fed.be — dus niet van de FOD Financiën, ook al staat de naam er in.',
+ 'vandaag 10:03',
+ 'U heeft recht op € 423,50 terugbetaling',
+ 'Na controle blijkt u recht te hebben op een belastingteruggave...',
+ E'Beste burger,\n\nNa controle blijkt u recht te hebben op een belastingteruggave van € 423,50.\n\nVul uw gegevens in om het bedrag binnen 3 werkdagen te ontvangen: {{link:0}}.\n\nFOD Financiën',
+ '[{"label":"MyMinfin","real_url":"http://minfin-teruggave.be/claim","suspicious":true,"warning":"Het echte adres is myminfin.be. Deze link gaat naar minfin-teruggave.be — een nepsite."}]'::jsonb,
+ TRUE,
+ '["Afzender is @minfin-teruggave.be, niet @minfin.fed.be","De FOD Financiën stuurt NOOIT e-mails over teruggaven","Belooft geld om u op de link te laten klikken","Link gaat naar een onbekende website"]'::jsonb,
+ '[]'::jsonb,
+ 'Dit is phishing. De FOD Financiën communiceert over teruggaven via MyMinfin of per post — nooit per e-mail met een link. Bij twijfel: meld u zelf aan bij myminfin.be met itsme of uw eID.',
+ 30),
+
+-- 4. PHISHING — bpost
+('nl-BE',
+ 'bpost Tracking',
+ 'track@bpost-levering.info',
+ 'Het echte domein is bpost.be. ".info" is vaak verdacht.',
+ 'gisteren 16:48',
+ 'Uw pakket kan niet bezorgd worden',
+ 'Uw pakket wacht op u. Er zijn nog onbetaalde invoerkosten...',
+ E'Beste klant,\n\nUw pakket wacht in het sorteercentrum. Er zijn nog onbetaalde invoerkosten (€ 1,95).\n\nBetaal onmiddellijk om uitstel te vermijden: {{link:0}}\n\nbpost',
+ '[{"label":"bpost-levering.info/betaal","real_url":"http://bpost-levering.info/betaal","suspicious":true,"warning":"Het echte adres van bpost is bpost.be. \".info\"-domeinen worden veel gebruikt voor oplichting."}]'::jsonb,
+ TRUE,
+ '["Klein bedrag (€ 1,95) om u zonder nadenken te laten betalen","Afzender @bpost-levering.info in plaats van @bpost.be","\"Betaal onmiddellijk\" — druk uitoefenen","Geen naam, algemene aanspreking"]'::jsonb,
+ '[]'::jsonb,
+ 'Dit is phishing. bpost vraagt nooit per e-mail om invoerkosten. Verwacht u een pakket? Controleer het zelf via de officiële My bpost app of via bpost.be.',
+ 40),
+
+-- 5. REAL — Bibliotheek
+('nl-BE',
+ 'Bibliotheek Antwerpen',
+ 'info@bibliotheek.antwerpen.be',
+ 'Officieel domein van de stad Antwerpen — klopt.',
+ 'gisteren 11:22',
+ 'Uw geleend boek moet terug',
+ 'Beste mevrouw Peeters, dit is een herinnering dat u uw boek...',
+ E'Beste mevrouw Peeters,\n\nDit is een herinnering dat u het boek "Het verdriet van België" ten laatste op vrijdag 28 april moet terugbrengen naar een filiaal van de Bibliotheek Antwerpen.\n\nVragen? Bel 03 338 88 88 of kom langs.\n\nMet vriendelijke groeten,\nBibliotheek Antwerpen',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Persoonlijke aanspreking","Concrete informatie over uw boek en datum","Geen link, geen betaling","Telefoonnummer dat u zelf kunt bellen"]'::jsonb,
+ 'Dit is een echte herinnering van uw bibliotheek. Geen gevaar.',
+ 50),
+
+-- 6. PHISHING — itsme
+('nl-BE',
+ 'itsme',
+ 'info@itsme-controle.org',
+ 'Het echte domein is itsme.be. ".org" op itsme is verdacht.',
+ 'eergisteren 14:30',
+ 'Bevestig uw itsme-gegevens',
+ 'Geachte heer/mevrouw, wij vragen u om uw itsme opnieuw te bevestigen...',
+ E'Geachte heer/mevrouw,\n\nIn verband met een veiligheidscontrole vragen wij u uw itsme opnieuw te bevestigen.\n\nMeld u aan via {{link:0}} en vul uw gebruikersnaam en paswoord in.\n\nBedankt,\nitsme',
+ '[{"label":"deze beveiligde pagina","real_url":"http://itsme-controle.org/aanmelden","suspicious":true,"warning":"itsme vraagt NOOIT per e-mail om uw paswoord. Het echte adres is itsme.be — niet itsme-controle.org. itsme werkt alleen via de eigen app."}]'::jsonb,
+ TRUE,
+ '["Afzender @itsme-controle.org — niet @itsme.be","Vraagt om gebruikersnaam én paswoord (doet itsme NOOIT, want itsme werkt zonder paswoord)","Algemene aanspreking \"Geachte heer/mevrouw\"","Link naar onbekend \".org\"-adres"]'::jsonb,
+ '[]'::jsonb,
+ 'Dit is phishing. itsme werkt via uw eigen gsm-app met vingerafdruk of code — niet via e-mail met een link. Gebruik itsme alleen via de officiële app.',
+ 60),
+
+-- 7. REAL — Proximus factuur
+('nl-BE',
+ 'Proximus',
+ 'no-reply@proximus.be',
+ 'Afzender @proximus.be is het officiële domein — klopt.',
+ '3 dagen geleden',
+ 'Uw factuur van april staat klaar',
+ 'Beste klant, uw factuur van € 49,95 staat klaar in MyProximus...',
+ E'Beste mevrouw Peeters,\n\nUw Proximus-factuur van € 49,95 voor de maand april staat klaar in MyProximus.\n\nU kunt de factuur bekijken door zelf aan te melden op proximus.be/myproximus (typ dit adres zelf in uw browser of gebruik de MyProximus-app).\n\nHet bedrag wordt op 1 mei automatisch van uw rekening afgeschreven.\n\nProximus Klantendienst',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Afzender is @proximus.be (echt)","Persoonlijke aanspreking","Bedrag en datum kloppen met uw abonnement","Geen klikbare link — u wordt gevraagd ZELF aan te melden","Verwachte maandelijkse factuur"]'::jsonb,
+ 'Dit is een echte Proximus-factuurmelding. Let op: ook bij een echt bericht is het verstandig om NIET op links te klikken maar zelf naar de website of app te gaan.',
+ 70),
+
+-- 8. PHISHING — Microsoft
+('nl-BE',
+ 'Microsoft',
+ 'support@microsoft-security-check.com',
+ 'Het echte Microsoft-domein is microsoft.com, niet microsoft-security-check.com.',
+ '4 dagen geleden',
+ 'Waarschuwing: uw account is geblokkeerd',
+ 'Uw Microsoft-account is geblokkeerd wegens verdachte activiteit...',
+ E'Beste gebruiker,\n\nUw Microsoft-account is tijdelijk geblokkeerd wegens verdachte aanmeldpogingen vanuit Rusland.\n\nAls u uw account niet binnen 12 uur ontgrendelt, verliest u al uw bestanden.\n\nOntgrendel uw account: {{link:0}}',
+ '[{"label":"Ontgrendel account","real_url":"http://microsoft-security-check.com/unlock","suspicious":true,"warning":"Microsoft gebruikt nooit domeinen met koppeltekens zoals microsoft-security-check.com. Dit is nep."}]'::jsonb,
+ TRUE,
+ '["Paniek: \"verliest u al uw bestanden\"","Rare afzender, niet @microsoft.com","Dreiging over aanmelding vanuit een ander land","Afteltijd (12 uur) om u te laten haasten"]'::jsonb,
+ '[]'::jsonb,
+ 'Dit is phishing. Microsoft belt of mailt u nooit ongevraagd over geblokkeerde accounts. Ontvangt u zoiets? Negeer het en meld u zelf aan op account.microsoft.com om te controleren.',
+ 80),
+
+-- 9. REAL — Apotheek
+('nl-BE',
+ 'Apotheek Peeters',
+ 'apotheek@apotheek-peeters.be',
+ 'Eigen domein van de apotheek — klopt.',
+ '5 dagen geleden',
+ 'Uw medicijnen liggen klaar',
+ 'Uw medicijnen liggen klaar bij Apotheek Peeters. U kunt ze afhalen...',
+ E'Beste mevrouw Peeters,\n\nUw medicijnen liggen klaar bij Apotheek Peeters, Markt 12.\n\nWij zijn vandaag open tot 18u30. Breng uw afhaalbon of identiteitskaart mee.\n\nVragen? Bel 03 111 22 33.\n\nApotheek Peeters',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Persoonlijke aanspreking","Bekende apotheek, eigen domein","Concrete informatie: adres, openingsuren","Geen link, geen betaling","Telefoonnummer om zelf te bellen"]'::jsonb,
+ 'Dit is een normale melding van uw apotheek. Geen gevaar.',
+ 90),
+
+-- 10. PHISHING — Bol.com winactie
+('nl-BE',
+ 'Bol.com',
+ 'winactie@bol-winactie.net',
+ 'Echte Bol.com-mails komen van @bol.com, niet van @bol-winactie.net.',
+ '6 dagen geleden',
+ 'Gefeliciteerd! U heeft een iPhone 15 gewonnen',
+ 'U bent onze gelukkige winnaar! Claim uw prijs binnen 2 uur...',
+ E'Beste klant,\n\nGefeliciteerd! U bent uit duizenden deelnemers getrokken als onze winnaar van een gloednieuwe iPhone 15.\n\nClaim uw prijs binnen 2 uur door een kleine verzendbijdrage te betalen: {{link:0}}\n\nBol.com Winactie Team',
+ '[{"label":"Claim uw prijs","real_url":"http://bol-winactie.net/claim","suspicious":true,"warning":"Bol.com gebruikt alleen bol.com als adres. Een \"verzendbijdrage\" bij een gewonnen prijs is altijd oplichterij."}]'::jsonb,
+ TRUE,
+ '["U heeft helemaal niet deelgenomen aan een winactie","Vraagt om \"verzendbijdrage\" — prijzen zijn nooit tegen betaling","Druk: \"binnen 2 uur\"","Afzender @bol-winactie.net in plaats van @bol.com"]'::jsonb,
+ '[]'::jsonb,
+ 'Dit is phishing. U kunt geen prijs winnen waar u niet aan heeft deelgenomen. Een echte winactie vraagt nooit om een verzendbijdrage op voorhand.',
+ 100);
+
+
+-- ============================================================
+-- FRANÇAIS (BELGIQUE) — fr-BE
+-- ============================================================
+
+-- ======== VOORBEELDEN (fr-BE) ========
+INSERT INTO examples (locale, channel, sender, subject, body, annotations, sort_order) VALUES
+('fr-BE', 'email',
+ 'Belfius <service@belfius-securise.com>',
+ 'Important : votre compte va être bloqué',
+ E'Cher client,\n\nNous avons détecté une transaction suspecte sur votre compte. Votre compte sera BLOQUÉ sous 24 heures si vous ne confirmez pas vos informations.\n\nCliquez ici pour sécuriser votre compte : http://belfius-securise.com/verifier\n\nCordialement,\nService Sécurité Belfius',
+ '[
+   {"quote": "service@belfius-securise.com", "note": "Regardez ce qui vient APRÈS le @ : belfius-securise.com. Ce n''est pas Belfius. La vraie banque utilise toujours @belfius.be. Ce qui est AVANT le @ (« service ») peut être choisi par l''escroc."},
+   {"quote": "BLOQUÉ sous 24 heures si vous ne confirmez pas vos informations", "note": "On vous fait peur et on vous presse. Une vraie banque ne fait jamais cela."},
+   {"quote": "Cher client", "note": "Pas de nom. Votre banque connaît votre nom."},
+   {"quote": "http://belfius-securise.com/verifier", "note": "Lien étrange qui n''est pas de Belfius. Ne cliquez pas !"}
+ ]'::jsonb,
+ 10),
+
+('fr-BE', 'email',
+ 'SPF Finances <noreply@minfin-remboursement.be>',
+ 'Vous avez droit à un remboursement de 423,50 €',
+ E'Cher contribuable,\n\nAprès vérification, vous avez droit à un remboursement d''impôts de 423,50 €. Remplissez vite vos informations pour recevoir le montant.\n\nCliquez ici : http://minfin-remboursement.be/reclamer\n\nSPF Finances',
+ '[
+   {"quote": "noreply@minfin-remboursement.be", "note": "Regardez après le @ : minfin-remboursement.be. Ce n''est PAS le SPF Finances. Le vrai domaine est minfin.fed.be."},
+   {"quote": "Cher contribuable", "note": "Salutation générique sans votre nom. Le SPF Finances connaît votre identité."},
+   {"quote": "droit à un remboursement d''impôts de 423,50 €", "note": "La promesse d''argent est un appât classique. Le SPF Finances ne communique jamais un remboursement par e-mail avec un lien."},
+   {"quote": "http://minfin-remboursement.be/reclamer", "note": "Lien étrange, ce n''est pas myminfin.be. Ne cliquez pas."}
+ ]'::jsonb,
+ 20),
+
+('fr-BE', 'email',
+ 'itsme <info@itsme-controle.org>',
+ 'Confirmez vos informations itsme',
+ E'Madame, Monsieur,\n\nNous vous demandons de confirmer à nouveau vos informations itsme. Cliquez sur le lien ci-dessous et connectez-vous avec votre identifiant et votre mot de passe.\n\nhttp://itsme-controle.org/connexion\n\nMerci,\nitsme',
+ '[
+   {"quote": "info@itsme-controle.org", "note": "Regardez après le @ : itsme-controle.org. Le vrai domaine est itsme.be — rien d''autre."},
+   {"quote": "Madame, Monsieur", "note": "Salutation générique. Une vraie organisation connaît votre nom."},
+   {"quote": "connectez-vous avec votre identifiant et votre mot de passe", "note": "itsme fonctionne via votre application personnelle et ne demande JAMAIS votre mot de passe par e-mail. Toujours du hameçonnage."},
+   {"quote": "http://itsme-controle.org/connexion", "note": "Lien étrange. Utilisez itsme uniquement via l''application officielle ou via itsme.be."}
+ ]'::jsonb,
+ 30);
+
+-- ======== INBOX (fr-BE) ========
+INSERT INTO inbox_messages
+  (locale, sender_name, sender_address, sender_note, received_label, subject, preview, body, links, is_phishing, red_flags, green_flags, explanation, sort_order) VALUES
+
+-- 1. PHISHING — Belfius
+('fr-BE',
+ 'Belfius',
+ 'service@belfius-securise.com',
+ 'Regardez après le @ : belfius-securise.com. Le vrai Belfius utilise toujours @belfius.be.',
+ 'aujourd''hui 08:42',
+ 'Important : votre compte va être bloqué',
+ 'Cher client, nous avons détecté une transaction suspecte sur votre...',
+ E'Cher client,\n\nNous avons détecté une transaction suspecte sur votre compte. Pour éviter tout abus, votre compte sera BLOQUÉ sous 24 heures si vous ne confirmez pas vos informations.\n\nConfirmez immédiatement via {{link:0}}.\n\nCordialement,\nService Sécurité Belfius',
+ '[{"label":"cette page sécurisée","real_url":"http://belfius-securise.com/verifier","suspicious":true,"warning":"Ce lien ne va PAS vers belfius.be mais vers belfius-securise.com. C''est un faux site qui imite Belfius."}]'::jsonb,
+ TRUE,
+ '["L''adresse de l''expéditeur ne finit pas par @belfius.be","Menace d''un blocage sous 24 heures — création de panique","Salutation « Cher client » sans votre nom","Le lien mène à belfius-securise.com, pas à belfius.be"]'::jsonb,
+ '[]'::jsonb,
+ 'C''est du hameçonnage. Belfius ne vous envoie jamais d''e-mail sous pression pour confirmer vos informations. En cas de doute, ouvrez vous-même l''application Belfius Mobile ou appelez Card Stop (078 170 170) pour bloquer votre carte.',
+ 10),
+
+-- 2. REAL — Médecin
+('fr-BE',
+ 'Cabinet médical des Tilleuls',
+ 'cabinet@cabinet-tilleuls.be',
+ 'L''adresse finit par le domaine du cabinet — normal.',
+ 'aujourd''hui 09:15',
+ 'Rappel : votre rendez-vous demain à 10h15',
+ 'Chère Madame Dubois, rappel de votre rendez-vous...',
+ E'Chère Madame Dubois,\n\nCeci est un rappel de votre rendez-vous avec le Dr Vermeulen demain à 10h15.\n\nPour annuler ou reporter, appelez le 02 123 45 67.\n\nÀ demain.\n\nCabinet médical des Tilleuls\nRue de la Loi 12, Bruxelles',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Salutation personnelle avec votre nom","Aucun lien, aucun bouton","Numéro de téléphone que vous pouvez appeler vous-même","Pas de demande d''informations ou d''argent","Information concrète et attendue"]'::jsonb,
+ 'C''est un simple rappel de rendez-vous. Pas de liens, pas d''informations demandées — vous pouvez simplement appeler si vous voulez modifier quelque chose.',
+ 20),
+
+-- 3. PHISHING — SPF Finances
+('fr-BE',
+ 'SPF Finances',
+ 'noreply@minfin-remboursement.be',
+ 'Pas @minfin.fed.be — donc pas vraiment du SPF Finances, même si le nom apparaît.',
+ 'aujourd''hui 10:03',
+ 'Vous avez droit à un remboursement de 423,50 €',
+ 'Après vérification, vous avez droit à un remboursement...',
+ E'Cher contribuable,\n\nAprès vérification, vous avez droit à un remboursement d''impôts de 423,50 €.\n\nRemplissez vos informations pour recevoir le montant sous 3 jours ouvrables : {{link:0}}.\n\nSPF Finances',
+ '[{"label":"Mon espace MyMinfin","real_url":"http://minfin-remboursement.be/reclamer","suspicious":true,"warning":"La vraie adresse est myminfin.be. Ce lien mène à minfin-remboursement.be — un faux site."}]'::jsonb,
+ TRUE,
+ '["Expéditeur @minfin-remboursement.be, pas @minfin.fed.be","Le SPF Finances n''envoie JAMAIS d''e-mail concernant les remboursements","Promet de l''argent pour vous faire cliquer","Le lien mène à un site inconnu"]'::jsonb,
+ '[]'::jsonb,
+ 'C''est du hameçonnage. Le SPF Finances communique sur les remboursements via MyMinfin ou par courrier — jamais par e-mail avec un lien. En cas de doute : connectez-vous vous-même sur myminfin.be avec itsme ou votre eID.',
+ 30),
+
+-- 4. PHISHING — bpost
+('fr-BE',
+ 'bpost Suivi',
+ 'suivi@bpost-livraison.info',
+ 'Le vrai domaine est bpost.be. « .info » est souvent suspect.',
+ 'hier 16:48',
+ 'Votre colis n''a pas pu être livré',
+ 'Votre colis vous attend. Des frais d''importation restent impayés...',
+ E'Cher client,\n\nVotre colis est en attente au centre de tri. Des frais d''importation restent impayés (1,95 €).\n\nPayez immédiatement pour éviter un retard : {{link:0}}\n\nbpost',
+ '[{"label":"bpost-livraison.info/payer","real_url":"http://bpost-livraison.info/payer","suspicious":true,"warning":"La vraie adresse de bpost est bpost.be. Les domaines en « .info » sont très utilisés pour des arnaques."}]'::jsonb,
+ TRUE,
+ '["Petit montant (1,95 €) pour que vous payiez sans réfléchir","Expéditeur @bpost-livraison.info au lieu de @bpost.be","« Payez immédiatement » — pression temporelle","Pas de nom, salutation générique"]'::jsonb,
+ '[]'::jsonb,
+ 'C''est du hameçonnage. bpost ne demande jamais de frais d''importation par e-mail. Vous attendez un colis ? Vérifiez vous-même via l''application officielle My bpost ou sur bpost.be.',
+ 40),
+
+-- 5. REAL — Bibliothèque
+('fr-BE',
+ 'Bibliothèque de Bruxelles',
+ 'accueil@bibliotheque.bruxelles.be',
+ 'Domaine officiel de la Ville de Bruxelles — correct.',
+ 'hier 11:22',
+ 'Votre livre emprunté doit être rendu',
+ 'Chère Madame Dubois, rappel que votre livre...',
+ E'Chère Madame Dubois,\n\nCeci est un rappel que le livre « Le Chagrin des Belges » doit être retourné dans une succursale de la Bibliothèque de Bruxelles avant le vendredi 28 avril.\n\nDes questions ? Appelez le 02 279 37 60 ou passez nous voir.\n\nCordialement,\nBibliothèque de Bruxelles',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Salutation personnelle","Information concrète sur votre livre et la date","Aucun lien, aucun paiement","Numéro de téléphone que vous pouvez appeler vous-même"]'::jsonb,
+ 'C''est un vrai rappel de votre bibliothèque. Aucun danger.',
+ 50),
+
+-- 6. PHISHING — itsme
+('fr-BE',
+ 'itsme',
+ 'info@itsme-controle.org',
+ 'Le vrai domaine est itsme.be. « .org » sur itsme est suspect.',
+ 'avant-hier 14:30',
+ 'Confirmez vos informations itsme',
+ 'Madame, Monsieur, nous vous demandons de confirmer à nouveau...',
+ E'Madame, Monsieur,\n\nDans le cadre d''un contrôle de sécurité, nous vous demandons de confirmer à nouveau vos informations itsme.\n\nConnectez-vous via {{link:0}} et saisissez votre identifiant et votre mot de passe.\n\nMerci,\nitsme',
+ '[{"label":"cette page sécurisée","real_url":"http://itsme-controle.org/connexion","suspicious":true,"warning":"itsme ne demande JAMAIS votre mot de passe par e-mail. La vraie adresse est itsme.be — pas itsme-controle.org. itsme fonctionne uniquement via sa propre application."}]'::jsonb,
+ TRUE,
+ '["Expéditeur @itsme-controle.org — pas @itsme.be","Demande votre identifiant ET votre mot de passe (itsme ne fait JAMAIS cela, puisque itsme fonctionne sans mot de passe)","Salutation générique « Madame, Monsieur »","Lien vers une adresse inconnue en « .org »"]'::jsonb,
+ '[]'::jsonb,
+ 'C''est du hameçonnage. itsme fonctionne via votre application GSM avec empreinte digitale ou code — jamais par e-mail avec un lien. Utilisez itsme uniquement via l''application officielle.',
+ 60),
+
+-- 7. REAL — Proximus
+('fr-BE',
+ 'Proximus',
+ 'no-reply@proximus.be',
+ 'L''expéditeur @proximus.be est le domaine officiel — correct.',
+ 'il y a 3 jours',
+ 'Votre facture d''avril est disponible',
+ 'Cher client, votre facture de 49,95 € est disponible dans MyProximus...',
+ E'Chère Madame Dubois,\n\nVotre facture Proximus de 49,95 € pour le mois d''avril est disponible dans MyProximus.\n\nVous pouvez consulter la facture en vous connectant vous-même à proximus.be/myproximus (tapez cette adresse vous-même dans votre navigateur ou utilisez l''application MyProximus).\n\nLe montant sera prélevé automatiquement sur votre compte le 1er mai.\n\nService client Proximus',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Expéditeur @proximus.be (réel)","Salutation personnelle","Le montant et la date correspondent à votre abonnement","Pas de lien cliquable — on vous demande de vous connecter VOUS-MÊME","Facture mensuelle attendue"]'::jsonb,
+ 'C''est une vraie notification de facture Proximus. Attention : même pour un vrai message, il est plus prudent de NE PAS cliquer sur les liens mais d''aller vous-même sur le site ou l''application.',
+ 70),
+
+-- 8. PHISHING — Microsoft
+('fr-BE',
+ 'Microsoft',
+ 'support@microsoft-security-check.com',
+ 'Le vrai domaine Microsoft est microsoft.com, pas microsoft-security-check.com.',
+ 'il y a 4 jours',
+ 'Avertissement : votre compte est bloqué',
+ 'Votre compte Microsoft est bloqué suite à une activité suspecte...',
+ E'Cher utilisateur,\n\nVotre compte Microsoft est temporairement bloqué suite à des tentatives de connexion suspectes depuis la Russie.\n\nSi vous ne déverrouillez pas votre compte dans les 12 heures, vous perdrez tous vos fichiers.\n\nDéverrouillez votre compte : {{link:0}}',
+ '[{"label":"Déverrouiller le compte","real_url":"http://microsoft-security-check.com/unlock","suspicious":true,"warning":"Microsoft n''utilise jamais de domaines avec des tirets comme microsoft-security-check.com. C''est faux."}]'::jsonb,
+ TRUE,
+ '["Panique : « vous perdrez tous vos fichiers »","Expéditeur étrange, pas @microsoft.com","Menace de connexion depuis un autre pays","Compte à rebours (12 heures) pour vous presser"]'::jsonb,
+ '[]'::jsonb,
+ 'C''est du hameçonnage. Microsoft ne vous appelle ni ne vous envoie jamais d''e-mail non sollicité au sujet de comptes bloqués. Vous recevez cela ? Ignorez et connectez-vous vous-même sur account.microsoft.com pour vérifier.',
+ 80),
+
+-- 9. REAL — Pharmacie
+('fr-BE',
+ 'Pharmacie Dubois',
+ 'contact@pharmacie-dubois.be',
+ 'Domaine propre de la pharmacie — correct.',
+ 'il y a 5 jours',
+ 'Vos médicaments sont prêts',
+ 'Vos médicaments sont prêts à la Pharmacie Dubois. Vous pouvez les retirer...',
+ E'Chère Madame Dubois,\n\nVos médicaments sont prêts à la Pharmacie Dubois, Rue de la Loi 12.\n\nNous sommes ouverts aujourd''hui jusqu''à 18h30. Apportez votre bon de retrait ou votre carte d''identité.\n\nDes questions ? Appelez le 02 111 22 33.\n\nPharmacie Dubois',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Salutation personnelle","Pharmacie connue, domaine propre","Information concrète : adresse, horaires","Aucun lien, aucun paiement","Numéro de téléphone que vous pouvez appeler vous-même"]'::jsonb,
+ 'C''est un message normal de votre pharmacie. Aucun danger.',
+ 90),
+
+-- 10. PHISHING — Bol.com concours
+('fr-BE',
+ 'Bol.com',
+ 'concours@bol-concours.net',
+ 'Les vrais e-mails Bol.com viennent de @bol.com, pas de @bol-concours.net.',
+ 'il y a 6 jours',
+ 'Félicitations ! Vous avez gagné un iPhone 15',
+ 'Vous êtes notre heureux gagnant ! Réclamez votre prix sous 2 heures...',
+ E'Cher client,\n\nFélicitations ! Vous avez été tiré au sort parmi des milliers de participants comme notre gagnant d''un iPhone 15 flambant neuf.\n\nRéclamez votre prix sous 2 heures en payant une petite participation aux frais d''envoi : {{link:0}}\n\nÉquipe Bol.com Concours',
+ '[{"label":"Réclamer votre prix","real_url":"http://bol-concours.net/reclamer","suspicious":true,"warning":"Bol.com n''utilise que bol.com. Une « participation aux frais d''envoi » pour un prix gagné est toujours une arnaque."}]'::jsonb,
+ TRUE,
+ '["Vous n''avez jamais participé à un concours","Demande une « participation aux frais d''envoi » — un prix ne se paye jamais","Pression : « sous 2 heures »","Expéditeur @bol-concours.net au lieu de @bol.com"]'::jsonb,
+ '[]'::jsonb,
+ 'C''est du hameçonnage. On ne peut pas gagner un prix auquel on n''a pas participé. Un vrai concours ne demande jamais des frais de port à l''avance.',
+ 100);

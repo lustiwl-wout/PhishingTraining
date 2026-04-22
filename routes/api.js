@@ -8,10 +8,19 @@ function isUuidLike(s) {
   return typeof s === 'string' && /^[a-zA-Z0-9_-]{8,64}$/.test(s);
 }
 
-const SUPPORTED_LOCALES = new Set(['nl', 'en', 'fr', 'de']);
+const SUPPORTED_LOCALES = new Set(['nl', 'nl-BE', 'en', 'fr', 'fr-BE', 'de']);
 function pickLocale(req) {
   const q = (req.query && req.query.lang) || '';
   return SUPPORTED_LOCALES.has(q) ? q : 'nl';
+}
+
+// Voer `queryFn(locale)` uit voor de gevraagde taal en val terug op 'nl'
+// wanneer er nog geen vertaalde rijen bestaan. Zo breekt de UI niet bij
+// een nieuwe locale die nog niet in de seed zit.
+async function withFallback(locale, queryFn) {
+  const primary = await queryFn(locale);
+  if (primary.rowCount > 0 || locale === 'nl') return primary;
+  return queryFn('nl');
 }
 
 // GET /api/health
@@ -24,18 +33,18 @@ router.get('/health', async (_req, res) => {
   }
 });
 
-// GET /api/examples?lang=nl|en|fr|de
+// GET /api/examples?lang=nl|nl-BE|en|fr|fr-BE|de
 router.get('/examples', async (req, res, next) => {
   try {
     const locale = pickLocale(req);
-    const { rows } = await db.query(
+    const result = await withFallback(locale, (loc) => db.query(
       `SELECT id, channel, sender, subject, body, annotations, sort_order
          FROM examples
         WHERE locale = $1
         ORDER BY sort_order, id`,
-      [locale]
-    );
-    res.json(rows);
+      [loc]
+    ));
+    res.json(result.rows);
   } catch (err) { next(err); }
 });
 
@@ -123,18 +132,18 @@ router.post('/attempts/:id/finish', async (req, res, next) => {
 
 // ======== INBOX-SIMULATOR ========
 
-// GET /api/inbox?lang=nl|en|fr|de — lijst berichten zonder spoilers
+// GET /api/inbox?lang=nl|nl-BE|en|fr|fr-BE|de — lijst berichten zonder spoilers
 router.get('/inbox', async (req, res, next) => {
   try {
     const locale = pickLocale(req);
-    const { rows } = await db.query(
+    const result = await withFallback(locale, (loc) => db.query(
       `SELECT id, sender_name, sender_address, received_label, subject, preview
          FROM inbox_messages
         WHERE active = TRUE AND locale = $1
         ORDER BY sort_order, id`,
-      [locale]
-    );
-    res.json(rows);
+      [loc]
+    ));
+    res.json(result.rows);
   } catch (err) { next(err); }
 });
 
