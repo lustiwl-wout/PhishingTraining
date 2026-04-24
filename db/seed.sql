@@ -1704,3 +1704,173 @@ INSERT INTO inbox_messages
  '[]'::jsonb,
  'Dit is phishing met een kwaadaardige bijlage. Bestanden met dubbele extensies (.pdf.exe) zijn uitvoerbare programma''s vermomd als document. Open ze NOOIT. Een serieuze recruiter met een serieuze opdracht stuurt geen losse uitvoerbare bijlagen. Meld dit bij IT of verwijder de mail.',
  100);
+
+-- ============ EN (UK) — BUSINESS (1/2) ============
+
+INSERT INTO inbox_messages
+  (locale, audience, sender_name, sender_address, sender_note, received_label, subject, preview, body, links, is_phishing, red_flags, green_flags, explanation, sort_order) VALUES
+
+-- 1. PHISHING — CEO fraud
+('en', 'business',
+ 'Thomas Richardson (CEO)',
+ 't.richardson@kestrel-group.com',
+ 'The real domain is @kestrel.co.uk. This is @kestrel-group.com — a lookalike.',
+ 'today 09:02',
+ 'Quick favour — are you in?',
+ 'Jane, I''m in a meeting. Can you sort something quickly? Don''t call...',
+ E'Jane,\n\nI''m in an important client meeting and can''t take calls. I need something urgently.\n\nCould you pick up 5 Amazon gift cards at £100 each? Email me the codes as soon as you have them, and I''ll have Finance reimburse you. Please keep this between us — it''s confidential until I can explain.\n\nThanks,\nThomas',
+ '[]'::jsonb,
+ TRUE,
+ '["Sender @kestrel-group.com, not @kestrel.co.uk — lookalike domain","Asks for gift cards as a form of payment (textbook CEO fraud)","Pressure: \"don''t call\", \"confidential\" — designed to isolate you from colleagues","Bypasses the normal process — real expenses go through Finance, not via an employee buying gift cards"]'::jsonb,
+ '[]'::jsonb,
+ 'This is CEO fraud. Scammers impersonate a senior leader and ask for gift cards or an urgent transfer, using confidentiality to keep you from double-checking. If in doubt, walk over to the sender''s desk or call them on their known number — never via anything in the suspicious email.',
+ 10),
+
+-- 2. REAL — HR memo
+('en', 'business',
+ 'HR Kestrel',
+ 'hr@kestrel.co.uk',
+ 'Own @kestrel.co.uk domain — correct.',
+ 'today 10:15',
+ 'New holiday page available on MyKestrel',
+ 'Hello colleague, from this week the updated holiday page is live on MyKestrel...',
+ E'Hello colleague,\n\nFrom this week the updated holiday page is live on MyKestrel. You''ll find your remaining days, a monthly overview and the request form there.\n\nYou sign in the way you always do — head to MyKestrel yourself via your start page or your browser bookmark. We deliberately don''t send a direct link.\n\nQuestions? Drop by HR or email hr@kestrel.co.uk.\n\nKind regards,\nHR Kestrel',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Sender @kestrel.co.uk is the official internal domain","No clickable link — you are asked to navigate to MyKestrel YOURSELF","No request for a password or personal data","Concrete, plausible internal announcement","Points to HR as the known follow-up contact"]'::jsonb,
+ 'This is a genuine HR message. Note the good pattern: NO link is sent; you''re asked to navigate to MyKestrel yourself. That''s what professional internal communication should look like.',
+ 20),
+
+-- 3. PHISHING — IT password reset
+('en', 'business',
+ 'IT Support',
+ 'it-support@kestrel-helpdesk.com',
+ 'Not @kestrel.co.uk but @kestrel-helpdesk.com — a separate lookalike domain. Suspicious.',
+ 'today 11:30',
+ 'Your password expires today at 17:00 — renew now',
+ 'Your Kestrel password expires today. Renew immediately to avoid lock-out...',
+ E'Dear user,\n\nYour Kestrel password expires today at 17:00. If you don''t renew it, you''ll lose access to email, SharePoint and Teams.\n\nUse the link below to renew your password. This takes 30 seconds.\n\n{{link:0}}\n\nKind regards,\nIT Support Kestrel',
+ '[{"label":"Renew password","real_url":"http://kestrel-helpdesk.com/password-renew","suspicious":true,"warning":"This link goes to kestrel-helpdesk.com — NOT Kestrel''s official domain. Your real IT team sends reset links via the internal portal, never via a stand-alone domain."}]'::jsonb,
+ TRUE,
+ '["Sender @kestrel-helpdesk.com, not @kestrel.co.uk","Time pressure (\"expires today at 17:00\") so you click without thinking","Threat of losing access — fear-based","Link goes to a domain that looks like the company but isn''t","Real IT teams have you sign in via internal portals, never via a stand-alone link in an email"]'::jsonb,
+ '[]'::jsonb,
+ 'This is phishing posing as your own IT team. The real IT team rarely emails reset links — and when they do, it''s via the internal domain and the official portal. Unsure? Call a colleague in IT or drop by in person — never via any number in the email.',
+ 30),
+
+-- 4. PHISHING — DocuSign lookalike
+('en', 'business',
+ 'DocuSign via Adam Baker',
+ 'dse@docusigne-delivery.com',
+ 'Real DocuSign uses @docusign.net or @docusign.com. "docusigne" is a typo in the domain.',
+ 'today 13:47',
+ 'Adam Baker would like you to sign a document',
+ 'You have a document waiting via DocuSign. The document "Framework-Agreement-2024.pdf" is...',
+ E'DocuSign\n\nAdam Baker (a.baker@kestrel-group.com) has asked you to sign a document via DocuSign.\n\nDocument: Framework-Agreement-2024.pdf\nSent: today at 13:47\n\nOpen the document: {{link:0}}\n\nThank you,\nDocuSign',
+ '[{"label":"Review document","real_url":"http://docusigne-delivery.com/sign?id=78a2f","suspicious":true,"warning":"The domain is docusigne-delivery.com — a typo on DocuSign. The real domain is docusign.net. On top of that, Adam Baker is using @kestrel-group.com, not @kestrel.co.uk."}]'::jsonb,
+ TRUE,
+ '["Domain is \"docusigne-delivery.com\" (not docusign.net/.com)","The \"sender\" Adam Baker uses @kestrel-group.com — not our own @kestrel.co.uk","An unexpected document from a colleague you haven''t spoken to recently","Real DocuSign notifications include a security code you can enter on docusign.com to retrieve the document"]'::jsonb,
+ '[]'::jsonb,
+ 'This is phishing masquerading as DocuSign. If in doubt, don''t open the link — go to docusign.com yourself and enter the security code from a real DocuSign email. Or phone Adam directly to check whether he actually sent anything.',
+ 40),
+
+-- 5. REAL — Colleague calendar invite
+('en', 'business',
+ 'Emma Walsh',
+ 'e.walsh@kestrel.co.uk',
+ 'Own @kestrel.co.uk domain from a known colleague — fine.',
+ 'today 14:12',
+ 'Meeting Thursday 14:00 — Q2 quarterly planning',
+ 'Hi Jane, can you join the Q2 planning on Thursday at 14:00? Agenda below...',
+ E'Hi Jane,\n\nCould you join the Q2 planning on Thursday at 14:00? We''ll cover:\n\n• Status of the running projects\n• Planning for May and June\n• Priorities for the team\n\nOne hour max. Meeting room Ash, or via Teams if you''d rather dial in. Just let me know.\n\nThanks!\nEmma',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Sender @kestrel.co.uk is the official internal domain","Known colleague you normally speak to","Concrete, plausible work context","No link, no attachment, no request for data","Informal, personal tone — fits internal communication"]'::jsonb,
+ 'This is a normal calendar request from a colleague. Nothing to do other than reply substantively. Good lesson: a personally addressed, specific internal email with no links or attachments is usually a safe signal.',
+ 50);
+
+-- ============ EN (UK) — BUSINESS (2/2) ============
+
+INSERT INTO inbox_messages
+  (locale, audience, sender_name, sender_address, sender_note, received_label, subject, preview, body, links, is_phishing, red_flags, green_flags, explanation, sort_order) VALUES
+
+-- 6. PHISHING — Fake vendor invoice
+('en', 'business',
+ 'Accounts — Print Solutions Ltd',
+ 'invoices@print-services-uk.com',
+ 'Unknown supplier on a stand-alone .com domain. Kestrel''s real suppliers are in the purchasing system.',
+ 'yesterday 15:30',
+ 'Invoice P-2024-0452 — payment overdue',
+ 'Dear Sir/Madam, please find attached the outstanding invoice for print servicing. Kindly settle promptly...',
+ E'Dear Sir/Madam,\n\nPlease find attached invoice P-2024-0452 for quarterly print servicing (Q1), total £1,847.50.\n\nThe 14-day payment term has now passed. Please settle this immediately to avoid late fees. Payment details are in the attachment.\n\nTo pay now: {{link:0}}\n\nKind regards,\nAccounts — Print Solutions Ltd',
+ '[{"label":"Pay now","real_url":"http://print-services-uk.com/pay/P-2024-0452","suspicious":true,"warning":"Unknown payment domain. At Kestrel, invoices go through the purchasing portal — not via a stand-alone link in an email."}]'::jsonb,
+ TRUE,
+ '["Unknown supplier — not in your purchasing system","Time pressure: \"payment overdue\", \"settle immediately\"","Stand-alone pay link instead of the purchasing portal","Generic \"Dear Sir/Madam\" — should use your name","The amount (£1,847.50) is just high enough to pressure, low enough not to raise flags"]'::jsonb,
+ '[]'::jsonb,
+ 'This is invoice fraud. Unknown suppliers with unexpected invoices should be checked with Purchasing or Accounts Payable first. Never pay via a link in an email — always via your own purchasing portal or via a fresh invoice review.',
+ 60),
+
+-- 7. REAL — Internal newsletter
+('en', 'business',
+ 'Kestrel Communications',
+ 'communications@kestrel.co.uk',
+ 'Own @kestrel.co.uk domain — fine.',
+ 'yesterday 09:00',
+ 'Q1 update — Kestrel in brief',
+ 'Dear colleagues, here''s the Q1 update with news from every team...',
+ E'Dear colleagues,\n\nHere''s the quarterly update covering the first three months of 2024.\n\nHighlights:\n• Three new client projects started\n• Operations team grew by four people\n• The new floor plan is live (see MyKestrel)\n• Next all-hands: Thursday 16 May, 16:00 in the canteen\n\nThe full update is on MyKestrel. Sign in the way you always do — we deliberately don''t send a direct link.\n\nQuestions or ideas? Drop by Communications (office 2.14) or send a message.\n\nSee you next quarter!\nKestrel Communications team',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Sender @kestrel.co.uk, internally known","Concrete, expected internal content","No clickable link — you are asked to go to MyKestrel YOURSELF","No pressure, no request for data","Points to a known internal location (office 2.14) as follow-up"]'::jsonb,
+ 'This is a normal internal newsletter. The good pattern: internal domain, expected content and no link that would push you to sign in somewhere.',
+ 70),
+
+-- 8. PHISHING — Microsoft 365 password
+('en', 'business',
+ 'Microsoft 365',
+ 'account-security@microsoft-365-secure.com',
+ 'The real Microsoft domain is microsoft.com. "microsoft-365-secure.com" is fake.',
+ '2 days ago 08:14',
+ 'Your Microsoft 365 password expires today',
+ 'Your password for Microsoft 365 expires within 24 hours. Keep your current password...',
+ E'Microsoft 365 Account Security\n\nYour password for Microsoft 365 expires within 24 hours. After this period you will lose access to email, OneDrive and Teams.\n\nClick below to keep your current password and prevent expiry:\n\n{{link:0}}\n\nThis action takes less than a minute. If you ignore this, your account will be temporarily locked.\n\nMicrosoft 365 Security Team',
+ '[{"label":"Keep password","real_url":"http://microsoft-365-secure.com/keep-password","suspicious":true,"warning":"Microsoft never uses hyphenated domains like microsoft-365-secure.com. This is fake. Microsoft also never asks you to \"keep\" or \"confirm\" a password via a link."}]'::jsonb,
+ TRUE,
+ '["Sender @microsoft-365-secure.com (not @microsoft.com)","Time pressure: \"within 24 hours\", \"locked\"","Nonsensical concept: \"keep password\" via a link doesn''t exist","Threat of losing access","If Microsoft 365 wants to rotate a password, it happens at sign-in — not via a stand-alone email"]'::jsonb,
+ '[]'::jsonb,
+ 'This is one of the most common business phishing variants. Microsoft never communicates password changes this way. Unsure? Close the email and go to portal.office.com yourself, or open Teams to see whether there''s really a problem.',
+ 80),
+
+-- 9. REAL — Short question from a colleague
+('en', 'business',
+ 'Emma Walsh',
+ 'e.walsh@kestrel.co.uk',
+ 'Own @kestrel.co.uk domain from a known colleague — fine.',
+ '2 days ago 14:45',
+ 'Could you check the budget?',
+ 'Hi Jane, Mark asked whether you could quickly check that row 14 in the budget is right...',
+ E'Hi Jane,\n\nMark asked whether you could quickly check that row 14 in the Project North budget is right. He thinks the amount is wrong, but I''m not sure he was looking at the latest version.\n\nThe budget lives on the team share under /Projects/North/2024/.\n\nCould you let him know?\n\nThanks!\nEmma',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Sender @kestrel.co.uk, known colleague","Concrete internal context (Mark, Project North, team share path)","No link to an external domain","No request for data, passwords or money","Informal tone fits normal internal communication"]'::jsonb,
+ 'This is a normal work question from a colleague. Nothing to do other than look and reply. Note: a personally addressed, specific work context on an internal domain is generally a good sign.',
+ 90),
+
+-- 10. PHISHING — Recruiter with malicious attachment
+('en', 'business',
+ 'Sarah Clarke — Premium Talent',
+ 'sarah.clarke@premium-talent-careers.info',
+ 'A ".info" domain and a lone recruiter with no demonstrable connection to a known agency. Suspicious pattern.',
+ '3 days ago 17:20',
+ 'Exclusive opportunity with an international client — profile shortlisted',
+ 'Dear Jane, I''ve reviewed your profile on LinkedIn and have an exclusive position...',
+ E'Dear Jane,\n\nI''ve reviewed your profile and I have an exclusive senior position with an international client that, in my view, fits your experience perfectly. Salary range: £85k - £105k.\n\nThe role hasn''t been made public yet and it''s urgent. The client wants a shortlist this week.\n\nAttached you''ll find the job specification and the non-disclosure agreement (NDA) that I''d ask you to open and sign before I can share more details.\n\nAttachment: Job_Spec_and_NDA.pdf.exe\n\nKind regards,\nSarah Clarke\nPremium Talent — Executive Search',
+ '[]'::jsonb,
+ TRUE,
+ '["Sender on a \".info\" domain with no known recognised agency","Unsolicited contact with an attachment","File name ends in .pdf.exe — that is an executable program disguised as a PDF","Time pressure: \"shortlist this week\"","Asks for confidentiality — designed to isolate you","Salary as bait with no verifiable context"]'::jsonb,
+ '[]'::jsonb,
+ 'This is phishing with a malicious attachment. Files with double extensions (.pdf.exe) are executable programs disguised as documents. NEVER open them. A real recruiter with a real role does not send stand-alone executable attachments. Report to IT or delete the email.',
+ 100);
