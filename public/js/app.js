@@ -373,10 +373,10 @@
         showSimPhase('login');
         runMicrosoftLoginAnimation().catch((err) => console.error(err));
       } else {
-        // M1: mobiele skin nog placeholder — val terug op desktop zodat
-        // de oefening blijft werken. Volgende commits vullen dit in.
-        showSimPhase('login');
-        runMicrosoftLoginAnimation().catch((err) => console.error(err));
+        // Mobiel: geen MS-login-animatie, de "je bent al ingelogd"-situatie
+        // van een telefoon simuleren. Direct naar de inbox.
+        showSimPhase('mobile');
+        startMobileSimulator().catch((err) => console.error(err));
       }
     }
   });
@@ -639,6 +639,143 @@
     });
   });
 
+  // ================================================================
+  // Mobiele simulator (Android / iPhone).
+  // Hergebruikt simState, de /api/inbox endpoint en alle modal-logica.
+  // Alleen de rendering in #mob-app verschilt per apparaat-skin.
+  // ================================================================
+
+  async function startMobileSimulator() {
+    const result = document.getElementById('sim-result');
+    result.hidden = true;
+    currentFolder = 'inbox';
+    buildMobSkin();
+    const list = document.getElementById('mob-list-items');
+    if (list) list.innerHTML = '<li class="mob-item" style="justify-content:center"><em>' + escapeHtml(t('sim.ol.loading')) + '</em></li>';
+    try {
+      const messages = await api('/inbox');
+      simState = { messages, judgments: {}, current: null, interactions: {} };
+      renderMobList();
+      if (messages.length > 0) openMobMessage(messages[0].id);
+    } catch (err) {
+      if (list) list.innerHTML = '<li class="mob-item" style="justify-content:center;color:#b3261e">' + escapeHtml(t('sim.ol.loadError')) + '</li>';
+    }
+  }
+
+  // Bouwt de DOM voor de juiste skin op basis van currentAudience
+  // (zakelijk = Outlook Mobile; later volgen Gmail / Apple Mail voor privé).
+  function buildMobSkin() {
+    const app = document.getElementById('mob-app');
+    if (!app) return;
+    app.className = 'mob-app mob-outlook';
+    app.innerHTML =
+      '<header class="mob-topbar">' +
+        '<button class="mob-btn mob-btn-menu" aria-label="Menu">☰</button>' +
+        '<h1 class="mob-title">' + escapeHtml(t('sim.ol.inbox.title')) + '</h1>' +
+        '<button class="mob-btn mob-btn-search" aria-label="' + escapeHtml(t('sim.ol.search')) + '">🔍</button>' +
+        '<div class="mob-avatar">' + escapeHtml(t('user.avatar')) + '</div>' +
+      '</header>' +
+      '<ol class="mob-list" id="mob-list-items"></ol>' +
+      '<div class="mob-reader" id="mob-reader" hidden></div>';
+  }
+
+  function renderMobList() {
+    const list = document.getElementById('mob-list-items');
+    if (!list || !simState) return;
+    list.innerHTML = '';
+    simState.messages.forEach((m) => {
+      const judged = simState.judgments[m.id];
+      const li = document.createElement('li');
+      li.className = 'mob-item' + (judged ? ' judged' : '');
+      const statusIco = judged
+        ? (judged.correct ? ' <span class="mob-item-status good">✓</span>' : ' <span class="mob-item-status bad">✗</span>')
+        : '';
+      li.innerHTML =
+        '<div class="mob-item-avatar">' + escapeHtml(initials(m.sender_name)) + '</div>' +
+        '<div class="mob-item-body">' +
+          '<div class="mob-item-top">' +
+            '<span class="mob-item-sender">' + escapeHtml(m.sender_name) + statusIco + '</span>' +
+            '<span class="mob-item-time">' + escapeHtml(m.received_label || '') + '</span>' +
+          '</div>' +
+          '<div class="mob-item-subject">' + escapeHtml(m.subject) + '</div>' +
+          '<div class="mob-item-preview">' + escapeHtml(m.preview || '') + '</div>' +
+        '</div>';
+      li.addEventListener('click', () => openMobMessage(m.id));
+      list.appendChild(li);
+    });
+  }
+
+  async function openMobMessage(id) {
+    simState.current = id;
+    if (!simState.interactions[id]) simState.interactions[id] = { clicked_link: false, revealed_sender: false };
+    const reader = document.getElementById('mob-reader');
+    if (!reader) return;
+    reader.hidden = false;
+    reader.innerHTML =
+      '<header class="mob-reader-head">' +
+        '<button class="mob-btn mob-btn-back" aria-label="Terug">←</button>' +
+      '</header>' +
+      '<div class="mob-reader-content"><p class="muted" style="padding:14px">' + escapeHtml(t('sim.ol.loading')) + '</p></div>';
+    reader.querySelector('.mob-btn-back').addEventListener('click', closeMobReader);
+    let m;
+    try { m = await api('/inbox/' + id); }
+    catch (_) {
+      reader.querySelector('.mob-reader-content').innerHTML =
+        '<p class="error" style="padding:14px">' + escapeHtml(t('sim.ol.msgLoadError')) + '</p>';
+      return;
+    }
+    renderMobReader(m);
+  }
+
+  function renderMobReader(m) {
+    const reader = document.getElementById('mob-reader');
+    if (!reader) return;
+    const judged = simState.judgments[m.id];
+    const verdictBlock = judged
+      ? '<div class="mob-verdict judged"><p class="muted">' + escapeHtml(t('sim.reader.alreadyJudged')) + '</p></div>'
+      : '<div class="mob-verdict">' +
+          '<p class="mob-verdict-q">' + escapeHtml(t('sim.reader.verdictQ')) + '</p>' +
+          '<button class="btn-good" data-verdict="trust">' + escapeHtml(t('sim.reader.verdict.trust')) + '</button>' +
+          '<button class="btn-bad" data-verdict="phish">' + escapeHtml(t('sim.reader.verdict.phish')) + '</button>' +
+        '</div>';
+    reader.innerHTML =
+      '<header class="mob-reader-head">' +
+        '<button class="mob-btn mob-btn-back" aria-label="Terug">←</button>' +
+      '</header>' +
+      '<div class="mob-reader-content">' +
+        '<h2 class="mob-reader-subject">' + escapeHtml(m.subject) + '</h2>' +
+        '<div class="mob-reader-sender">' +
+          '<div class="mob-avatar">' + escapeHtml(initials(m.sender_name)) + '</div>' +
+          '<div style="min-width:0">' +
+            '<div class="mob-reader-name">' + escapeHtml(m.sender_name) + '</div>' +
+            '<div class="mob-reader-addr">&lt;' + escapeHtml(m.sender_address) + '&gt;</div>' +
+            '<div class="mob-reader-to">' + escapeHtml(t('sim.ol.to')) + ' · ' + escapeHtml(m.received_label) + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="mob-reader-body">' + renderBody(m.body, m.links || []) + '</div>' +
+      '</div>' +
+      verdictBlock;
+    reader.querySelector('.mob-btn-back').addEventListener('click', closeMobReader);
+    reader.querySelectorAll('[data-link-idx]').forEach((a) => {
+      const idx = parseInt(a.dataset.linkIdx, 10);
+      const link = (m.links || [])[idx];
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        simState.interactions[m.id].clicked_link = true;
+        openLinkModal(link);
+      });
+    });
+    reader.querySelectorAll('[data-verdict]').forEach((b) => {
+      b.addEventListener('click', () => submitVerdict(m, b.dataset.verdict));
+    });
+  }
+
+  function closeMobReader() {
+    const reader = document.getElementById('mob-reader');
+    if (reader) reader.hidden = true;
+    renderMobList();
+  }
+
   async function openMessage(id) {
     simState.current = id;
     if (!simState.interactions[id]) simState.interactions[id] = { clicked_link: false, revealed_sender: false };
@@ -730,8 +867,10 @@
   }
 
   async function submitVerdict(m, verdict) {
-    const reader = document.getElementById('ol-reader');
-    reader.querySelectorAll('[data-verdict]').forEach((b) => b.disabled = true);
+    // Verdict-knoppen disablen — werkt in beide skins omdat iedere
+    // verdict-knop het data-verdict attribuut draagt.
+    const activeButtons = document.querySelectorAll((currentDevice === 'desktop' ? '#ol-reader ' : '#mob-reader ') + '[data-verdict]');
+    activeButtons.forEach((b) => b.disabled = true);
 
     const interactions = simState.interactions[m.id] || {};
     let res;
@@ -746,7 +885,7 @@
         }),
       });
     } catch (_) {
-      reader.querySelectorAll('[data-verdict]').forEach((b) => b.disabled = false);
+      activeButtons.forEach((b) => b.disabled = false);
       showModal({
         title: t('sim.error.title'),
         bodyHtml: '<p>' + escapeHtml(t('sim.error.save')) + '</p>',
@@ -756,7 +895,8 @@
     }
 
     simState.judgments[m.id] = { verdict, correct: res.correct };
-    renderInboxList();
+    if (currentDevice === 'desktop') renderInboxList();
+    else renderMobList();
     updateProgress();
     showVerdictFeedback(m, res);
   }
@@ -792,13 +932,21 @@
   function nextOrFinish() {
     if (allJudged()) { finishSimulator(); return; }
     const next = simState.messages.find((m) => !simState.judgments[m.id]);
-    if (next) openMessage(next.id);
-    else resetReader();
+    if (!next) return;
+    if (currentDevice === 'desktop') openMessage(next.id);
+    else openMobMessage(next.id);
   }
 
   function finishSimulator() {
-    resetReader();
-    // Verlaat fullscreen zodat het resultaat + stap-navigatie weer zichtbaar is.
+    if (currentDevice === 'desktop') {
+      resetReader();
+    } else {
+      const reader = document.getElementById('mob-reader');
+      if (reader) reader.hidden = true;
+    }
+    // Verberg alle simulator-fases en verlaat fullscreen zodat
+    // het resultaat en de stap-navigatie weer zichtbaar zijn.
+    showSimPhase(null);
     document.body.classList.remove('sim-fullscreen');
     const result = document.getElementById('sim-result');
     const total = simState.messages.length;
@@ -822,11 +970,17 @@
       '</div>';
     result.hidden = false;
     document.getElementById('sim-again').addEventListener('click', () => {
-      // Herstart: sla intro/login over, ga direct terug naar de inbox.
+      // Herstart: sla intro/login over, ga direct terug naar de inbox
+      // van hetzelfde apparaat als daarnet.
       document.body.classList.add('sim-fullscreen');
       result.hidden = true;
-      showSimPhase('inbox');
-      startSimulator();
+      if (currentDevice === 'desktop') {
+        showSimPhase('inbox');
+        startSimulator();
+      } else {
+        showSimPhase('mobile');
+        startMobileSimulator();
+      }
     });
     result.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
