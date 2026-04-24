@@ -224,12 +224,20 @@
     const submit = document.getElementById('ms-submit-btn');
     const back = document.getElementById('ms-back-btn');
     const status = document.getElementById('ms-status');
+    const mfaRow = document.getElementById('ms-mfa-row');
+    const mfaNum = document.getElementById('ms-mfa-num');
+    const mfaStatus = document.getElementById('ms-mfa-status');
+    const linkRows = document.getElementById('ms-link-rows');
+    const actions = submit && submit.parentElement;
 
     // reset
     emailEl.textContent = '';
     pwEl.textContent = '';
     pwRow.hidden = true;
     emailRow.hidden = false;
+    mfaRow.hidden = true;
+    if (linkRows) linkRows.hidden = false;
+    if (actions) actions.hidden = false;
     title.textContent = t('sim.ms.title');
     subtitle.textContent = t('sim.ms.subtitle');
     submit.textContent = t('sim.ms.next');
@@ -266,6 +274,23 @@
     submit.classList.add('ms-btn-pressed');
     await sleep(180);
     submit.classList.remove('ms-btn-pressed');
+
+    // Stap 3 (alleen zakelijk): MFA-goedkeuring via Authenticator.
+    if (currentAudience === 'business') {
+      pwRow.hidden = true;
+      if (linkRows) linkRows.hidden = true;
+      if (actions) actions.hidden = true;
+      title.textContent = t('sim.ms.mfa.title');
+      subtitle.innerHTML = t('sim.ms.pwSubtitle', { email });
+      const mfaCode = String(Math.floor(10 + Math.random() * 90)); // tweecijferig
+      mfaNum.textContent = mfaCode;
+      mfaStatus.innerHTML = '<span class="ms-spinner" aria-hidden="true"></span> ' + escapeHtml(t('sim.ms.mfa.waiting'));
+      mfaRow.hidden = false;
+      await sleep(2200);
+      mfaStatus.innerHTML = '✓ ' + escapeHtml(t('sim.ms.mfa.approved'));
+      await sleep(600);
+      mfaRow.hidden = true;
+    }
 
     // Bezig met aanmelden
     status.hidden = false;

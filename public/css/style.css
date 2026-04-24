@@ -822,6 +822,18 @@ body.sim-fullscreen .outlook {
 .sim-welcome-card .lead { margin-bottom: 1rem; }
 .sim-welcome-card .actions { justify-content: center; margin-top: 1.25rem; }
 
+/* MFA-getal in de nagebootste Microsoft-login (alleen zakelijk). */
+.ms-mfa { margin-top: .75rem; text-align: center; }
+.ms-mfa-lead { margin: 0 0 .75rem; color: #333; }
+.ms-mfa-number {
+  font-size: 2.75rem; font-weight: 700; letter-spacing: .15em;
+  color: #0067c0;
+  background: #f3f3f3; border: 1px solid #d1d1d1; border-radius: 4px;
+  padding: .4rem .75rem; display: inline-block; min-width: 5rem;
+}
+.ms-mfa-status { margin: .85rem 0 0; font-size: .9rem; color: #605e5c; }
+.ms-mfa-status .ms-spinner { margin-right: .4rem; vertical-align: -2px; }
+
 /* Persoonlijk- vs zakelijk-keuzevraag + knoppen voor de simulator. */
 .sim-choice-q { margin-top: 1.25rem; margin-bottom: .5rem; font-weight: 600; }
 .actions-choice { flex-direction: column; gap: .6rem; align-items: stretch; }

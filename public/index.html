@@ -215,8 +215,17 @@
               <div class="ms-input ms-input-pw"><span id="ms-password" class="ms-input-text"></span><span class="ms-caret">|</span></div>
             </div>
 
-            <div class="ms-link-row"><a href="#" onclick="event.preventDefault()" data-i18n="sim.ms.noaccount">Geen account? Maak er een.</a></div>
-            <div class="ms-link-row"><a href="#" onclick="event.preventDefault()" data-i18n="sim.ms.forgot">Hebt u geen toegang tot het account?</a></div>
+            <!-- MFA-stap (alleen bij zakelijk inloggen) -->
+            <div id="ms-mfa-row" class="ms-mfa" hidden>
+              <p id="ms-mfa-lead" class="ms-mfa-lead" data-i18n="sim.ms.mfa.lead">Open uw Microsoft Authenticator-app en voer dit getal in om u aan te melden.</p>
+              <div class="ms-mfa-number" aria-live="polite"><span id="ms-mfa-num">--</span></div>
+              <p id="ms-mfa-status" class="ms-mfa-status" data-i18n-html="sim.ms.mfa.waiting">Wachten op goedkeuring in de Authenticator-app…</p>
+            </div>
+
+            <div id="ms-link-rows">
+              <div class="ms-link-row"><a href="#" onclick="event.preventDefault()" data-i18n="sim.ms.noaccount">Geen account? Maak er een.</a></div>
+              <div class="ms-link-row"><a href="#" onclick="event.preventDefault()" data-i18n="sim.ms.forgot">Hebt u geen toegang tot het account?</a></div>
+            </div>
 
             <div class="ms-actions">
               <button id="ms-back-btn" class="ms-btn ms-btn-ghost" data-i18n="sim.ms.back">Vorige</button>

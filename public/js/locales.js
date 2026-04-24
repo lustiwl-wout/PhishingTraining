@@ -73,8 +73,8 @@ window.VO_LOCALES = {
     'sim.intro.li3': 'U kunt niets stukmaken en er wordt niets verzonden.',
     'sim.intro.li4': 'Uw taak: kiezen of elke e‑mail <strong>vertrouwd</strong> is, of dat het <strong>phishing</strong> is.',
     'sim.intro.choose': 'Welk postvak wilt u oefenen?',
-    'sim.intro.start.personal': '📥 <strong>Privé‑postvak</strong> <small>— bank, overheid, pakketjes</small>',
-    'sim.intro.start.business': '💼 <strong>Werk‑postvak</strong> <small>— collega’s, IT, leveranciers</small>',
+    'sim.intro.start.personal': '📥 <strong>Privé‑postvak</strong>',
+    'sim.intro.start.business': '💼 <strong>Werk‑postvak</strong>',
 
     'sim.coldstart': '⏳ De website wordt even opgestart. Een momentje geduld…',
 
@@ -88,6 +88,11 @@ window.VO_LOCALES = {
     'sim.ms.signingIn': 'Bezig met aanmelden…',
     'sim.ms.noaccount': 'Geen account? Maak er een.',
     'sim.ms.forgot': 'Hebt u geen toegang tot het account?',
+
+    'sim.ms.mfa.title': 'Aanmeldverzoek goedkeuren',
+    'sim.ms.mfa.lead': 'Open uw Microsoft Authenticator-app en voer dit getal in om u aan te melden.',
+    'sim.ms.mfa.waiting': 'Wachten op goedkeuring in de Authenticator-app…',
+    'sim.ms.mfa.approved': 'Goedgekeurd',
 
     'sim.ol.search': 'Zoeken',
     'sim.ol.new': '✉️ Nieuw bericht',
@@ -243,8 +248,8 @@ window.VO_LOCALES = {
     'sim.intro.li3': 'U kunt niets stukmaken en er wordt niets verzonden.',
     'sim.intro.li4': 'Uw taak: kiezen of elke e‑mail <strong>betrouwbaar</strong> is, of dat het <strong>phishing</strong> is.',
     'sim.intro.choose': 'Welk postvak wilt u oefenen?',
-    'sim.intro.start.personal': '📥 <strong>Privé‑postvak</strong> <small>— bank, overheid, pakjes</small>',
-    'sim.intro.start.business': '💼 <strong>Werk‑postvak</strong> <small>— collega’s, IT, leveranciers</small>',
+    'sim.intro.start.personal': '📥 <strong>Privé‑postvak</strong>',
+    'sim.intro.start.business': '💼 <strong>Werk‑postvak</strong>',
 
     'sim.coldstart': '⏳ De website wordt even opgestart. Een momentje geduld…',
 
@@ -258,6 +263,11 @@ window.VO_LOCALES = {
     'sim.ms.signingIn': 'Bezig met aanmelden…',
     'sim.ms.noaccount': 'Geen account? Maak er een.',
     'sim.ms.forgot': 'Hebt u geen toegang tot uw account?',
+
+    'sim.ms.mfa.title': 'Aanmeldverzoek goedkeuren',
+    'sim.ms.mfa.lead': 'Open uw Microsoft Authenticator-app en voer dit getal in om u aan te melden.',
+    'sim.ms.mfa.waiting': 'Wachten op goedkeuring in de Authenticator-app…',
+    'sim.ms.mfa.approved': 'Goedgekeurd',
 
     'sim.ol.search': 'Zoeken',
     'sim.ol.new': '✉️ Nieuw bericht',
@@ -413,8 +423,8 @@ window.VO_LOCALES = {
     'sim.intro.li3': 'You cannot break anything and nothing will be sent.',
     'sim.intro.li4': 'Your task: decide whether each email is <strong>trustworthy</strong> or <strong>phishing</strong>.',
     'sim.intro.choose': 'Which mailbox do you want to practise with?',
-    'sim.intro.start.personal': '📥 <strong>Personal mailbox</strong> <small>— bank, tax, parcels</small>',
-    'sim.intro.start.business': '💼 <strong>Work mailbox</strong> <small>— colleagues, IT, suppliers</small>',
+    'sim.intro.start.personal': '📥 <strong>Personal mailbox</strong>',
+    'sim.intro.start.business': '💼 <strong>Work mailbox</strong>',
 
     'sim.coldstart': '⏳ The website is starting up. Just a moment…',
 
@@ -428,6 +438,11 @@ window.VO_LOCALES = {
     'sim.ms.signingIn': 'Signing in…',
     'sim.ms.noaccount': 'No account? Create one.',
     'sim.ms.forgot': 'Can’t access your account?',
+
+    'sim.ms.mfa.title': 'Approve sign-in request',
+    'sim.ms.mfa.lead': 'Open your Microsoft Authenticator app and enter this number to sign in.',
+    'sim.ms.mfa.waiting': 'Waiting for approval in the Authenticator app…',
+    'sim.ms.mfa.approved': 'Approved',
 
     'sim.ol.search': 'Search',
     'sim.ol.new': '✉️ New message',
@@ -583,8 +598,8 @@ window.VO_LOCALES = {
     'sim.intro.li3': 'Vous ne pouvez rien casser et rien ne sera envoyé.',
     'sim.intro.li4': 'Votre tâche : décider si chaque e‑mail est <strong>fiable</strong> ou s’il s’agit d’<strong>hameçonnage</strong>.',
     'sim.intro.choose': 'Quelle boîte aux lettres voulez‑vous entraîner ?',
-    'sim.intro.start.personal': '📥 <strong>Boîte personnelle</strong> <small>— banque, impôts, colis</small>',
-    'sim.intro.start.business': '💼 <strong>Boîte professionnelle</strong> <small>— collègues, informatique, fournisseurs</small>',
+    'sim.intro.start.personal': '📥 <strong>Boîte personnelle</strong>',
+    'sim.intro.start.business': '💼 <strong>Boîte professionnelle</strong>',
 
     'sim.coldstart': '⏳ Le site démarre. Un instant s’il vous plaît…',
 
@@ -598,6 +613,11 @@ window.VO_LOCALES = {
     'sim.ms.signingIn': 'Connexion en cours…',
     'sim.ms.noaccount': 'Pas de compte ? Créez‑en un.',
     'sim.ms.forgot': 'Vous n’arrivez pas à accéder à votre compte ?',
+
+    'sim.ms.mfa.title': 'Approuver la demande de connexion',
+    'sim.ms.mfa.lead': 'Ouvrez votre application Microsoft Authenticator et saisissez ce numéro pour vous connecter.',
+    'sim.ms.mfa.waiting': 'En attente d’approbation dans l’application Authenticator…',
+    'sim.ms.mfa.approved': 'Approuvé',
 
     'sim.ol.search': 'Rechercher',
     'sim.ol.new': '✉️ Nouveau message',
@@ -753,8 +773,8 @@ window.VO_LOCALES = {
     'sim.intro.li3': 'Vous ne pouvez rien casser et rien ne sera envoyé.',
     'sim.intro.li4': 'Votre tâche : décider si chaque e‑mail est <strong>fiable</strong> ou s’il s’agit d’<strong>hameçonnage</strong>.',
     'sim.intro.choose': 'Quelle boîte aux lettres voulez‑vous entraîner ?',
-    'sim.intro.start.personal': '📥 <strong>Boîte personnelle</strong> <small>— banque, impôts, colis</small>',
-    'sim.intro.start.business': '💼 <strong>Boîte professionnelle</strong> <small>— collègues, informatique, fournisseurs</small>',
+    'sim.intro.start.personal': '📥 <strong>Boîte personnelle</strong>',
+    'sim.intro.start.business': '💼 <strong>Boîte professionnelle</strong>',
 
     'sim.coldstart': '⏳ Le site démarre. Un instant s’il vous plaît…',
 
@@ -768,6 +788,11 @@ window.VO_LOCALES = {
     'sim.ms.signingIn': 'Connexion en cours…',
     'sim.ms.noaccount': 'Pas de compte ? Créez‑en un.',
     'sim.ms.forgot': 'Vous n’arrivez pas à accéder à votre compte ?',
+
+    'sim.ms.mfa.title': 'Approuver la demande de connexion',
+    'sim.ms.mfa.lead': 'Ouvrez votre application Microsoft Authenticator et saisissez ce numéro pour vous connecter.',
+    'sim.ms.mfa.waiting': 'En attente d’approbation dans l’application Authenticator…',
+    'sim.ms.mfa.approved': 'Approuvé',
 
     'sim.ol.search': 'Rechercher',
     'sim.ol.new': '✉️ Nouveau message',
@@ -923,8 +948,8 @@ window.VO_LOCALES = {
     'sim.intro.li3': 'Sie können nichts kaputtmachen, und es wird nichts gesendet.',
     'sim.intro.li4': 'Ihre Aufgabe: entscheiden, ob jede E‑Mail <strong>vertrauenswürdig</strong> ist oder ob es sich um <strong>Phishing</strong> handelt.',
     'sim.intro.choose': 'Welches Postfach möchten Sie üben?',
-    'sim.intro.start.personal': '📥 <strong>Privates Postfach</strong> <small>— Bank, Behörden, Pakete</small>',
-    'sim.intro.start.business': '💼 <strong>Arbeitspostfach</strong> <small>— Kollegen, IT, Lieferanten</small>',
+    'sim.intro.start.personal': '📥 <strong>Privates Postfach</strong>',
+    'sim.intro.start.business': '💼 <strong>Arbeitspostfach</strong>',
 
     'sim.coldstart': '⏳ Die Website wird gestartet. Einen Moment bitte…',
 
@@ -938,6 +963,11 @@ window.VO_LOCALES = {
     'sim.ms.signingIn': 'Wird angemeldet…',
     'sim.ms.noaccount': 'Kein Konto? Erstellen Sie eines.',
     'sim.ms.forgot': 'Sie haben keinen Zugriff auf Ihr Konto?',
+
+    'sim.ms.mfa.title': 'Anmeldung bestätigen',
+    'sim.ms.mfa.lead': 'Öffnen Sie Ihre Microsoft Authenticator-App und geben Sie diese Zahl ein, um sich anzumelden.',
+    'sim.ms.mfa.waiting': 'Warten auf Bestätigung in der Authenticator-App…',
+    'sim.ms.mfa.approved': 'Bestätigt',
 
     'sim.ol.search': 'Suchen',
     'sim.ol.new': '✉️ Neue Nachricht',
