@@ -83,7 +83,11 @@ window.VO_LOCALES = {
     'sim.intro.li2': 'Niet alle knoppen werken — dat hoeft ook niet, het is maar een oefening.',
     'sim.intro.li3': 'U kunt niets stukmaken en er wordt niets verzonden.',
     'sim.intro.li4': 'Uw taak: kiezen of elke e‑mail <strong>vertrouwd</strong> is, of dat het <strong>phishing</strong> is.',
-    'sim.intro.start': 'Ik ben er klaar voor →',
+    'sim.intro.pickDevice': 'Op welk apparaat wilt u oefenen?',
+    'sim.intro.start.desktop': '💻<span>Desktop</span>',
+    'sim.intro.start.android': '📱<span>Android</span>',
+    'sim.intro.start.iphone': '🍏<span>iPhone</span>',
+    'sim.mobile.placeholder': 'De mobiele simulator wordt gebouwd — voor nu krijgt u de desktopweergave.',
 
     'sim.coldstart': '⏳ De website wordt even opgestart. Een momentje geduld…',
 
@@ -280,7 +284,11 @@ window.VO_LOCALES = {
     'sim.intro.li2': 'Niet alle knoppen werken — dat hoeft ook niet, het is maar een oefening.',
     'sim.intro.li3': 'U kunt niets stukmaken en er wordt niets verzonden.',
     'sim.intro.li4': 'Uw taak: kiezen of elke e‑mail <strong>betrouwbaar</strong> is, of dat het <strong>phishing</strong> is.',
-    'sim.intro.start': 'Ik ben er klaar voor →',
+    'sim.intro.pickDevice': 'Op welk apparaat wilt u oefenen?',
+    'sim.intro.start.desktop': '💻<span>Desktop</span>',
+    'sim.intro.start.android': '📱<span>Android</span>',
+    'sim.intro.start.iphone': '🍏<span>iPhone</span>',
+    'sim.mobile.placeholder': 'De mobiele simulator wordt gebouwd — voor nu krijgt u de desktopweergave.',
 
     'sim.coldstart': '⏳ De website wordt even opgestart. Een momentje geduld…',
 
@@ -477,7 +485,11 @@ window.VO_LOCALES = {
     'sim.intro.li2': 'Not every button works — that’s fine, this is only practice.',
     'sim.intro.li3': 'You cannot break anything and nothing will be sent.',
     'sim.intro.li4': 'Your task: decide whether each email is <strong>trustworthy</strong> or <strong>phishing</strong>.',
-    'sim.intro.start': 'I’m ready →',
+    'sim.intro.pickDevice': 'Which device do you want to practise on?',
+    'sim.intro.start.desktop': '💻<span>Desktop</span>',
+    'sim.intro.start.android': '📱<span>Android</span>',
+    'sim.intro.start.iphone': '🍏<span>iPhone</span>',
+    'sim.mobile.placeholder': 'The mobile simulator is being built — for now you will see the desktop view.',
 
     'sim.coldstart': '⏳ The website is starting up. Just a moment…',
 
@@ -674,7 +686,11 @@ window.VO_LOCALES = {
     'sim.intro.li2': 'Tous les boutons ne fonctionnent pas — c’est normal, c’est un entraînement.',
     'sim.intro.li3': 'Vous ne pouvez rien casser et rien ne sera envoyé.',
     'sim.intro.li4': 'Votre tâche : décider si chaque e‑mail est <strong>fiable</strong> ou s’il s’agit d’<strong>hameçonnage</strong>.',
-    'sim.intro.start': 'Je suis prêt(e) →',
+    'sim.intro.pickDevice': 'Sur quel appareil souhaitez-vous vous entraîner ?',
+    'sim.intro.start.desktop': '💻<span>Desktop</span>',
+    'sim.intro.start.android': '📱<span>Android</span>',
+    'sim.intro.start.iphone': '🍏<span>iPhone</span>',
+    'sim.mobile.placeholder': 'Le simulateur mobile est en cours de construction — pour l’instant vous verrez la vue desktop.',
 
     'sim.coldstart': '⏳ Le site démarre. Un instant s’il vous plaît…',
 
@@ -871,7 +887,11 @@ window.VO_LOCALES = {
     'sim.intro.li2': 'Tous les boutons ne fonctionnent pas — c’est normal, c’est un entraînement.',
     'sim.intro.li3': 'Vous ne pouvez rien casser et rien ne sera envoyé.',
     'sim.intro.li4': 'Votre tâche : décider si chaque e‑mail est <strong>fiable</strong> ou s’il s’agit d’<strong>hameçonnage</strong>.',
-    'sim.intro.start': 'Je suis prêt(e) →',
+    'sim.intro.pickDevice': 'Sur quel appareil souhaitez-vous vous entraîner ?',
+    'sim.intro.start.desktop': '💻<span>Desktop</span>',
+    'sim.intro.start.android': '📱<span>Android</span>',
+    'sim.intro.start.iphone': '🍏<span>iPhone</span>',
+    'sim.mobile.placeholder': 'Le simulateur mobile est en cours de construction — pour l’instant vous verrez la vue desktop.',
 
     'sim.coldstart': '⏳ Le site démarre. Un instant s’il vous plaît…',
 
@@ -1068,7 +1088,11 @@ window.VO_LOCALES = {
     'sim.intro.li2': 'Nicht jede Schaltfläche funktioniert — das ist in Ordnung, es ist nur eine Übung.',
     'sim.intro.li3': 'Sie können nichts kaputtmachen, und es wird nichts gesendet.',
     'sim.intro.li4': 'Ihre Aufgabe: entscheiden, ob jede E‑Mail <strong>vertrauenswürdig</strong> ist oder ob es sich um <strong>Phishing</strong> handelt.',
-    'sim.intro.start': 'Ich bin bereit →',
+    'sim.intro.pickDevice': 'Auf welchem Gerät möchten Sie üben?',
+    'sim.intro.start.desktop': '💻<span>Desktop</span>',
+    'sim.intro.start.android': '📱<span>Android</span>',
+    'sim.intro.start.iphone': '🍏<span>iPhone</span>',
+    'sim.mobile.placeholder': 'Der mobile Simulator wird gerade gebaut — vorerst sehen Sie die Desktop-Ansicht.',
 
     'sim.coldstart': '⏳ Die Website wird gestartet. Einen Moment bitte…',
 

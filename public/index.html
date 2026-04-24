@@ -212,7 +212,12 @@
             <li data-i18n-html="sim.intro.li4">Uw taak: kiezen of elke e‑mail <strong>vertrouwd</strong> is, of dat het <strong>phishing</strong> is.</li>
           </ul>
           <div class="actions">
-            <button id="sim-start-btn" class="btn btn-primary big-btn" data-i18n="sim.intro.start">Ik ben er klaar voor →</button>
+            <p class="sim-choice-q" data-i18n="sim.intro.pickDevice">Op welk apparaat wilt u oefenen?</p>
+            <div class="sim-device-grid">
+              <button class="btn btn-primary big-btn sim-device-btn" data-device="desktop" data-i18n-html="sim.intro.start.desktop"><span class="sim-device-ico">💻</span><span>Desktop</span></button>
+              <button class="btn btn-primary big-btn sim-device-btn" data-device="android" data-i18n-html="sim.intro.start.android"><span class="sim-device-ico">📱</span><span>Android</span></button>
+              <button class="btn btn-primary big-btn sim-device-btn" data-device="iphone" data-i18n-html="sim.intro.start.iphone"><span class="sim-device-ico">🍏</span><span>iPhone</span></button>
+            </div>
           </div>
         </div>
       </div>
@@ -334,6 +339,29 @@
         </div>
       </div>
       </div><!-- /#sim-phase-inbox -->
+
+      <!-- FASE 4: Mobiele simulator (Android / iPhone). De device-chrome
+           en app-skin worden bepaald door body-klassen: .device-android /
+           .device-iphone en .mob-outlook / .mob-gmail / .mob-applemail. -->
+      <div id="sim-phase-mobile" class="sim-phase sim-phase-center" hidden>
+        <div id="device-frame" class="device-frame">
+          <div class="device-speaker"></div>
+          <div class="device-notch"></div>
+          <div class="device-statusbar">
+            <span class="device-time">09:41</span>
+            <span class="device-status-right">
+              <span class="device-signal">●●●●</span>
+              <span class="device-wifi">🛜</span>
+              <span class="device-battery">🔋</span>
+            </span>
+          </div>
+          <div class="device-screen">
+            <div id="mob-app" class="mob-app"><!-- gevuld door JS per skin --></div>
+          </div>
+          <div class="device-homebar"></div>
+          <button class="device-exit-btn" type="button" data-go="leren" aria-label="Sluit de oefening" data-i18n="sim.ol.exit">✕</button>
+        </div>
+      </div>
 
       <!-- Eindscherm -->
       <div id="sim-result" class="card result-card" hidden></div>

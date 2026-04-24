@@ -1048,3 +1048,77 @@ body.sim-fullscreen .outlook {
   text-align: left;
   opacity: 1;
 }
+
+/* ========================================================
+   Mobiele simulators — apparaat-keuze en device-frame.
+   ======================================================== */
+
+/* Device-picker op de sim-intropagina: drie knoppen naast elkaar
+   met een groot pictogram bovenaan en de label eronder. */
+.sim-device-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .6rem;
+  margin-top: .75rem;
+}
+.sim-device-btn {
+  display: flex; flex-direction: column; align-items: center; gap: .25rem;
+  padding: 1rem .5rem;
+  font-size: .95rem;
+}
+.sim-device-btn .sim-device-ico {
+  font-size: 1.9rem;
+  line-height: 1;
+}
+@media (max-width: 480px) {
+  .sim-device-grid { grid-template-columns: 1fr; }
+}
+
+/* Device-frame: wrapper die een fysieke telefoon nabootst. De
+   specifieke chrome (notch/statusbar/navbar/home-indicator) wordt
+   ingeschakeld door de .device-android of .device-iphone klasse op
+   de <body>. */
+#sim-phase-mobile {
+  padding: 1.5rem 1rem;
+  display: flex; align-items: flex-start; justify-content: center;
+}
+.device-frame {
+  position: relative;
+  width: 390px;
+  height: 780px;
+  background: #000;
+  border-radius: 44px;
+  box-shadow: 0 30px 60px rgba(0,0,0,.35), 0 0 0 2px #222;
+  padding: 12px;
+  overflow: hidden;
+}
+.device-screen {
+  position: absolute;
+  inset: 12px;
+  background: #fff;
+  border-radius: 32px;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.device-speaker, .device-notch,
+.device-statusbar, .device-homebar { display: none; }
+
+/* Verlaten-knop, rechts-boven buiten het telefoon-scherm. */
+.device-exit-btn {
+  position: absolute; top: -6px; right: -6px;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: #fff; color: #333;
+  border: 1px solid #d1d1d1;
+  font-size: 1rem; font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,.2);
+}
+.device-exit-btn:hover { background: #f5f5f5; }
+
+@media (max-width: 420px) {
+  .device-frame {
+    width: 100%; max-width: 390px;
+    height: calc(100vh - 100px);
+  }
+}

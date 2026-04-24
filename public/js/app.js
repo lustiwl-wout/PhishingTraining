@@ -27,6 +27,18 @@
 
   let currentLang = detectInitialLanguage() || 'nl';
 
+  // -------- device (desktop / android / iphone) --------
+  // Per sessie gekozen bij elke start van de simulator; niet opgeslagen.
+  const SUPPORTED_DEVICES = ['desktop', 'android', 'iphone'];
+  let currentDevice = 'desktop';
+  function setDevice(d) {
+    if (!SUPPORTED_DEVICES.includes(d)) return;
+    currentDevice = d;
+    // Body-klasse zodat CSS per device kan stijlen.
+    document.body.classList.remove('device-desktop', 'device-android', 'device-iphone');
+    document.body.classList.add('device-' + d);
+  }
+
   // -------- audience (persoonlijk vs zakelijk) --------
   const SUPPORTED_AUDIENCES = ['personal', 'business'];
   const AUDIENCE_ICONS = { personal: '📥', business: '💼' };
@@ -252,9 +264,9 @@
     if (step === 'simulator') showSimPhase('intro');
   }
 
-  // -------- Simulator fases (intro -> login -> inbox) --------
+  // -------- Simulator fases (intro -> login -> inbox | mobile) --------
   function showSimPhase(name) {
-    ['intro', 'login', 'inbox'].forEach((p) => {
+    ['intro', 'login', 'inbox', 'mobile'].forEach((p) => {
       const el = document.getElementById('sim-phase-' + p);
       if (el) el.hidden = (p !== name);
     });
@@ -353,9 +365,19 @@
   }
 
   document.addEventListener('click', (e) => {
-    if (e.target.id === 'sim-start-btn') {
-      showSimPhase('login');
-      runMicrosoftLoginAnimation().catch((err) => console.error(err));
+    const devBtn = e.target.closest('.sim-device-btn[data-device]');
+    if (devBtn) {
+      e.preventDefault();
+      setDevice(devBtn.dataset.device);
+      if (currentDevice === 'desktop') {
+        showSimPhase('login');
+        runMicrosoftLoginAnimation().catch((err) => console.error(err));
+      } else {
+        // M1: mobiele skin nog placeholder — val terug op desktop zodat
+        // de oefening blijft werken. Volgende commits vullen dit in.
+        showSimPhase('login');
+        runMicrosoftLoginAnimation().catch((err) => console.error(err));
+      }
     }
   });
 
