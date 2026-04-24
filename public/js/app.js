@@ -29,15 +29,37 @@
 
   // -------- audience (persoonlijk vs zakelijk) --------
   const SUPPORTED_AUDIENCES = ['personal', 'business'];
+  const AUDIENCE_ICONS = { personal: '📥', business: '💼' };
   function detectInitialAudience() {
     const stored = localStorage.getItem('vo_audience');
-    return SUPPORTED_AUDIENCES.includes(stored) ? stored : 'personal';
+    return SUPPORTED_AUDIENCES.includes(stored) ? stored : null;
   }
-  let currentAudience = detectInitialAudience();
+  // Tijdens de eerste bezoek nog geen keuze: tot de picker iets teruggeeft
+  // gedragen we ons als 'personal', zodat niets kapot gaat.
+  let currentAudience = detectInitialAudience() || 'personal';
   function setAudience(a) {
     if (!SUPPORTED_AUDIENCES.includes(a)) return;
     currentAudience = a;
     localStorage.setItem('vo_audience', a);
+    applyI18n();
+    // Data-gedreven views opnieuw laden in de nieuwe variant.
+    if (document.getElementById('voorbeelden').classList.contains('active')) {
+      loadExamples();
+    }
+    const inboxPhase = document.getElementById('sim-phase-inbox');
+    const simActive = document.getElementById('simulator').classList.contains('active');
+    if (simActive && inboxPhase && !inboxPhase.hidden) {
+      startSimulator();
+    }
+  }
+
+  function showAudiencePicker() {
+    const p = document.getElementById('audience-picker');
+    if (p) p.hidden = false;
+  }
+  function hideAudiencePicker() {
+    const p = document.getElementById('audience-picker');
+    if (p) p.hidden = true;
   }
 
   function t(key, vars) {
@@ -78,6 +100,10 @@
     const flagEl = document.getElementById('lang-switch-flag');
     if (nameEl) nameEl.textContent = t('lang.name');
     if (flagEl) flagEl.textContent = LANG_FLAGS[currentLang] || '';
+    const audName = document.getElementById('audience-switch-name');
+    const audIcon = document.getElementById('audience-switch-icon');
+    if (audName) audName.textContent = t('audience.' + currentAudience + '.title');
+    if (audIcon) audIcon.textContent = AUDIENCE_ICONS[currentAudience] || '';
   }
 
   function setLanguage(lang) {
@@ -86,6 +112,10 @@
     localStorage.setItem('vo_lang', lang);
     applyI18n();
     hideLangPicker();
+    // Na taalkeuze bij eerste bezoek: direct door naar de doelgroep-keuze.
+    if (!localStorage.getItem('vo_audience')) {
+      showAudiencePicker();
+    }
     // Data-gedreven views opnieuw ophalen in de nieuwe taal.
     if (document.getElementById('voorbeelden').classList.contains('active')) {
       loadExamples();
@@ -106,21 +136,37 @@
     if (p) p.hidden = true;
   }
 
-  // Bij eerste bezoek (geen taalvoorkeur opgeslagen): keuzescherm tonen.
+  // Bij eerste bezoek: eerst taal kiezen, daarna doelgroep (privé/zakelijk).
+  // setLanguage() (hieronder) zorgt dat na het sluiten van de taal-picker
+  // de doelgroep-picker automatisch volgt als die nog niet gekozen is.
   document.addEventListener('DOMContentLoaded', () => {
     applyI18n();
-    if (!localStorage.getItem('vo_lang')) showLangPicker();
+    if (!localStorage.getItem('vo_lang')) {
+      showLangPicker();
+    } else if (!localStorage.getItem('vo_audience')) {
+      showAudiencePicker();
+    }
   });
 
   document.addEventListener('click', (e) => {
-    const card = e.target.closest('[data-lang]');
-    if (card) {
+    const langCard = e.target.closest('[data-lang]');
+    if (langCard) {
       e.preventDefault();
-      setLanguage(card.dataset.lang);
+      setLanguage(langCard.dataset.lang);
+      return;
+    }
+    const audCard = e.target.closest('[data-audience]');
+    if (audCard) {
+      e.preventDefault();
+      setAudience(audCard.dataset.audience);
+      hideAudiencePicker();
       return;
     }
     if (e.target.closest('#lang-switch')) {
       showLangPicker();
+    }
+    if (e.target.closest('#audience-switch')) {
+      showAudiencePicker();
     }
   });
 
@@ -307,10 +353,7 @@
   }
 
   document.addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-audience]');
-    if (btn && (btn.id === 'sim-start-personal' || btn.id === 'sim-start-business')) {
-      setAudience(btn.dataset.audience);
-      applyI18n(); // user.email kan per doelgroep anders zijn
+    if (e.target.id === 'sim-start-btn') {
       showSimPhase('login');
       runMicrosoftLoginAnimation().catch((err) => console.error(err));
     }

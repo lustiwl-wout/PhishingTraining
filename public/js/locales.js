@@ -12,6 +12,13 @@ window.VO_LOCALES = {
     'lang.picker.title': 'Kies uw taal',
     'lang.picker.sub': 'U kunt dit later aanpassen via de knop rechtsboven.',
 
+    'audience.picker.title': 'Kies uw situatie',
+    'audience.picker.sub': 'U kunt dit later aanpassen via de knop rechtsboven.',
+    'audience.personal.title': 'Privé',
+    'audience.personal.sub': 'Thuispost: bank, overheid, pakketjes',
+    'audience.business.title': 'Zakelijk',
+    'audience.business.sub': 'Werkmail: collega’s, IT, leveranciers',
+
     'meta.title': 'Veilig Online — Phishing herkennen',
     'skip.main': 'Ga naar de inhoud',
 
@@ -72,9 +79,7 @@ window.VO_LOCALES = {
     'sim.intro.li2': 'Niet alle knoppen werken — dat hoeft ook niet, het is maar een oefening.',
     'sim.intro.li3': 'U kunt niets stukmaken en er wordt niets verzonden.',
     'sim.intro.li4': 'Uw taak: kiezen of elke e‑mail <strong>vertrouwd</strong> is, of dat het <strong>phishing</strong> is.',
-    'sim.intro.choose': 'Welk postvak wilt u oefenen?',
-    'sim.intro.start.personal': '📥 <strong>Privé‑postvak</strong>',
-    'sim.intro.start.business': '💼 <strong>Werk‑postvak</strong>',
+    'sim.intro.start': 'Ik ben er klaar voor →',
 
     'sim.coldstart': '⏳ De website wordt even opgestart. Een momentje geduld…',
 
@@ -187,6 +192,13 @@ window.VO_LOCALES = {
     'lang.picker.title': 'Kies uw taal',
     'lang.picker.sub': 'U kunt dit later aanpassen via de knop rechtsboven.',
 
+    'audience.picker.title': 'Kies uw situatie',
+    'audience.picker.sub': 'U kunt dit later aanpassen via de knop rechtsboven.',
+    'audience.personal.title': 'Privé',
+    'audience.personal.sub': 'Thuispost: bank, overheid, pakjes',
+    'audience.business.title': 'Zakelijk',
+    'audience.business.sub': 'Werkmail: collega’s, IT, leveranciers',
+
     'meta.title': 'Veilig Online — Phishing herkennen',
     'skip.main': 'Ga naar de inhoud',
 
@@ -247,9 +259,7 @@ window.VO_LOCALES = {
     'sim.intro.li2': 'Niet alle knoppen werken — dat hoeft ook niet, het is maar een oefening.',
     'sim.intro.li3': 'U kunt niets stukmaken en er wordt niets verzonden.',
     'sim.intro.li4': 'Uw taak: kiezen of elke e‑mail <strong>betrouwbaar</strong> is, of dat het <strong>phishing</strong> is.',
-    'sim.intro.choose': 'Welk postvak wilt u oefenen?',
-    'sim.intro.start.personal': '📥 <strong>Privé‑postvak</strong>',
-    'sim.intro.start.business': '💼 <strong>Werk‑postvak</strong>',
+    'sim.intro.start': 'Ik ben er klaar voor →',
 
     'sim.coldstart': '⏳ De website wordt even opgestart. Een momentje geduld…',
 
@@ -362,6 +372,13 @@ window.VO_LOCALES = {
     'lang.picker.title': 'Choose your language',
     'lang.picker.sub': 'You can change this later using the button in the top right.',
 
+    'audience.picker.title': 'Choose your situation',
+    'audience.picker.sub': 'You can change this later using the button in the top right.',
+    'audience.personal.title': 'Personal',
+    'audience.personal.sub': 'Home inbox: bank, tax, parcels',
+    'audience.business.title': 'Work',
+    'audience.business.sub': 'Work inbox: colleagues, IT, suppliers',
+
     'meta.title': 'Safe Online — Spot phishing',
     'skip.main': 'Skip to main content',
 
@@ -422,9 +439,7 @@ window.VO_LOCALES = {
     'sim.intro.li2': 'Not every button works — that’s fine, this is only practice.',
     'sim.intro.li3': 'You cannot break anything and nothing will be sent.',
     'sim.intro.li4': 'Your task: decide whether each email is <strong>trustworthy</strong> or <strong>phishing</strong>.',
-    'sim.intro.choose': 'Which mailbox do you want to practise with?',
-    'sim.intro.start.personal': '📥 <strong>Personal mailbox</strong>',
-    'sim.intro.start.business': '💼 <strong>Work mailbox</strong>',
+    'sim.intro.start': 'I’m ready →',
 
     'sim.coldstart': '⏳ The website is starting up. Just a moment…',
 
@@ -537,6 +552,13 @@ window.VO_LOCALES = {
     'lang.picker.title': 'Choisissez votre langue',
     'lang.picker.sub': 'Vous pouvez la modifier plus tard via le bouton en haut à droite.',
 
+    'audience.picker.title': 'Choisissez votre contexte',
+    'audience.picker.sub': 'Vous pouvez le modifier plus tard via le bouton en haut à droite.',
+    'audience.personal.title': 'Personnel',
+    'audience.personal.sub': 'Boîte privée : banque, impôts, colis',
+    'audience.business.title': 'Professionnel',
+    'audience.business.sub': 'Boîte pro : collègues, informatique, fournisseurs',
+
     'meta.title': 'Sécurité en ligne — Reconnaître le hameçonnage',
     'skip.main': 'Aller au contenu principal',
 
@@ -597,9 +619,7 @@ window.VO_LOCALES = {
     'sim.intro.li2': 'Tous les boutons ne fonctionnent pas — c’est normal, c’est un entraînement.',
     'sim.intro.li3': 'Vous ne pouvez rien casser et rien ne sera envoyé.',
     'sim.intro.li4': 'Votre tâche : décider si chaque e‑mail est <strong>fiable</strong> ou s’il s’agit d’<strong>hameçonnage</strong>.',
-    'sim.intro.choose': 'Quelle boîte aux lettres voulez‑vous entraîner ?',
-    'sim.intro.start.personal': '📥 <strong>Boîte personnelle</strong>',
-    'sim.intro.start.business': '💼 <strong>Boîte professionnelle</strong>',
+    'sim.intro.start': 'Je suis prêt(e) →',
 
     'sim.coldstart': '⏳ Le site démarre. Un instant s’il vous plaît…',
 
@@ -712,6 +732,13 @@ window.VO_LOCALES = {
     'lang.picker.title': 'Choisissez votre langue',
     'lang.picker.sub': 'Vous pouvez la modifier plus tard via le bouton en haut à droite.',
 
+    'audience.picker.title': 'Choisissez votre contexte',
+    'audience.picker.sub': 'Vous pouvez le modifier plus tard via le bouton en haut à droite.',
+    'audience.personal.title': 'Personnel',
+    'audience.personal.sub': 'Boîte privée : banque, impôts, colis',
+    'audience.business.title': 'Professionnel',
+    'audience.business.sub': 'Boîte pro : collègues, informatique, fournisseurs',
+
     'meta.title': 'Sécurité en ligne — Reconnaître le hameçonnage',
     'skip.main': 'Aller au contenu principal',
 
@@ -772,9 +799,7 @@ window.VO_LOCALES = {
     'sim.intro.li2': 'Tous les boutons ne fonctionnent pas — c’est normal, c’est un entraînement.',
     'sim.intro.li3': 'Vous ne pouvez rien casser et rien ne sera envoyé.',
     'sim.intro.li4': 'Votre tâche : décider si chaque e‑mail est <strong>fiable</strong> ou s’il s’agit d’<strong>hameçonnage</strong>.',
-    'sim.intro.choose': 'Quelle boîte aux lettres voulez‑vous entraîner ?',
-    'sim.intro.start.personal': '📥 <strong>Boîte personnelle</strong>',
-    'sim.intro.start.business': '💼 <strong>Boîte professionnelle</strong>',
+    'sim.intro.start': 'Je suis prêt(e) →',
 
     'sim.coldstart': '⏳ Le site démarre. Un instant s’il vous plaît…',
 
@@ -887,6 +912,13 @@ window.VO_LOCALES = {
     'lang.picker.title': 'Wählen Sie Ihre Sprache',
     'lang.picker.sub': 'Sie können dies später über die Schaltfläche oben rechts ändern.',
 
+    'audience.picker.title': 'Wählen Sie Ihre Situation',
+    'audience.picker.sub': 'Sie können dies später über die Schaltfläche oben rechts ändern.',
+    'audience.personal.title': 'Privat',
+    'audience.personal.sub': 'Privates Postfach: Bank, Behörden, Pakete',
+    'audience.business.title': 'Beruflich',
+    'audience.business.sub': 'Arbeitspostfach: Kollegen, IT, Lieferanten',
+
     'meta.title': 'Sicher Online — Phishing erkennen',
     'skip.main': 'Zum Hauptinhalt springen',
 
@@ -947,9 +979,7 @@ window.VO_LOCALES = {
     'sim.intro.li2': 'Nicht jede Schaltfläche funktioniert — das ist in Ordnung, es ist nur eine Übung.',
     'sim.intro.li3': 'Sie können nichts kaputtmachen, und es wird nichts gesendet.',
     'sim.intro.li4': 'Ihre Aufgabe: entscheiden, ob jede E‑Mail <strong>vertrauenswürdig</strong> ist oder ob es sich um <strong>Phishing</strong> handelt.',
-    'sim.intro.choose': 'Welches Postfach möchten Sie üben?',
-    'sim.intro.start.personal': '📥 <strong>Privates Postfach</strong>',
-    'sim.intro.start.business': '💼 <strong>Arbeitspostfach</strong>',
+    'sim.intro.start': 'Ich bin bereit →',
 
     'sim.coldstart': '⏳ Die Website wird gestartet. Einen Moment bitte…',
 

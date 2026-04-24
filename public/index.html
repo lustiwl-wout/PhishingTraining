@@ -16,11 +16,36 @@
       <span class="brand-title" data-i18n="brand.title">Veilig Online</span>
     </div>
     <div class="topbar-tools">
+      <button id="audience-switch" class="lang-switch" aria-label="Change mode">
+        <span id="audience-switch-icon">📥</span> <span id="audience-switch-name">Privé</span> ▾
+      </button>
       <button id="lang-switch" class="lang-switch" aria-label="Change language">
         <span id="lang-switch-flag">🇳🇱</span> <span id="lang-switch-name">Nederlands</span> ▾
       </button>
     </div>
   </header>
+
+  <!-- Doelgroep-keuzescherm: verschijnt na de taalkeuze bij een eerste bezoek
+       en via de knop rechtsboven. Bepaalt of de training de privé- of
+       zakelijke variant laat zien. -->
+  <div id="audience-picker" class="lang-picker" hidden role="dialog" aria-modal="true" aria-labelledby="audience-picker-title">
+    <div class="lang-picker-inner">
+      <h1 id="audience-picker-title" data-i18n="audience.picker.title">Kies uw situatie</h1>
+      <p class="lang-picker-sub" data-i18n="audience.picker.sub">U kunt dit later aanpassen via de knop rechtsboven.</p>
+      <div class="lang-grid lang-grid-2">
+        <button class="lang-card audience-card" data-audience="personal">
+          <span class="lang-flag">📥</span>
+          <span class="lang-label" data-i18n="audience.personal.title">Privé</span>
+          <span class="audience-sub" data-i18n="audience.personal.sub">Thuispost: bank, overheid, pakketjes</span>
+        </button>
+        <button class="lang-card audience-card" data-audience="business">
+          <span class="lang-flag">💼</span>
+          <span class="lang-label" data-i18n="audience.business.title">Zakelijk</span>
+          <span class="audience-sub" data-i18n="audience.business.sub">Werkmail: collega's, IT, leveranciers</span>
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- Taalkeuzescherm: verschijnt bij eerste bezoek en bij klikken op taal-knop. -->
   <div id="lang-picker" class="lang-picker" hidden role="dialog" aria-modal="true" aria-labelledby="lang-picker-title">
@@ -188,10 +213,8 @@
             <li data-i18n="sim.intro.li3">U kunt niets stukmaken en er wordt niets verzonden.</li>
             <li data-i18n-html="sim.intro.li4">Uw taak: kiezen of elke e‑mail <strong>vertrouwd</strong> is, of dat het <strong>phishing</strong> is.</li>
           </ul>
-          <p class="sim-choice-q" data-i18n="sim.intro.choose">Welke postvak wilt u oefenen?</p>
-          <div class="actions actions-choice">
-            <button id="sim-start-personal" class="btn btn-primary big-btn" data-audience="personal" data-i18n-html="sim.intro.start.personal">📥 <strong>Privé‑postvak</strong> — bank, overheid, pakketjes</button>
-            <button id="sim-start-business" class="btn btn-primary big-btn" data-audience="business" data-i18n-html="sim.intro.start.business">💼 <strong>Werk‑postvak</strong> — collega's, IT, leveranciers</button>
+          <div class="actions">
+            <button id="sim-start-btn" class="btn btn-primary big-btn" data-i18n="sim.intro.start">Ik ben er klaar voor →</button>
           </div>
         </div>
       </div>
