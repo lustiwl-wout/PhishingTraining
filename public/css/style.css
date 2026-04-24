@@ -1117,8 +1117,12 @@ body.sim-fullscreen .outlook {
   overflow: hidden;
   display: flex; flex-direction: column;
 }
-.device-speaker, .device-notch,
+.device-notch { display: none; }
 .device-statusbar, .device-homebar { display: none; }
+
+/* Wanneer er wel een skin actief is, moet mob-app de middenruimte
+   pakken tussen statusbar en homebar. */
+.device-screen > .mob-app { flex: 1; min-height: 0; }
 
 /* (de oude .device-exit-btn is verhuisd naar de site-topbar als #sim-exit-btn) */
 
