@@ -1534,3 +1534,173 @@ INSERT INTO inbox_messages
  '[]'::jsonb,
  'Dit is phishing met een kwaadaardige bijlage. Bestanden met dubbele extensies (.pdf.exe) zijn uitvoerbare programma''s vermomd als document. Open ze NOOIT. Een serieuze recruiter met een serieuze opdracht stuurt geen losse uitvoerbare bijlagen. Meld dit bij IT of verwijder de mail.',
  100);
+
+-- ============ nl-BE — BUSINESS (1/2) ============
+
+INSERT INTO inbox_messages
+  (locale, audience, sender_name, sender_address, sender_note, received_label, subject, preview, body, links, is_phishing, red_flags, green_flags, explanation, sort_order) VALUES
+
+-- 1. PHISHING — CEO-fraude
+('nl-BE', 'business',
+ 'Luc Vermeulen (CEO)',
+ 'l.vermeulen@kestrel-group.com',
+ 'Let op: het echte domein is @kestrel.be. Dit is @kestrel-group.com — verdacht.',
+ 'vandaag 09:02',
+ 'Kun je even iets voor mij regelen?',
+ 'Peter, ik zit in een overleg. Kun je nu snel iets voor mij regelen? Bel me niet...',
+ E'Peter,\n\nIk zit in een belangrijk overleg met een klant en kan niet bellen. Ik heb iets dringends nodig.\n\nKun jij voor mij 5 iTunes-cadeaubonnen van € 100 halen? Stuur me daarna de codes via deze mail, dan regel ik de terugbetaling via de boekhouding. Bel niemand hierover — het is vertrouwelijk.\n\nAlvast bedankt,\nLuc',
+ '[]'::jsonb,
+ TRUE,
+ '["Afzenderadres @kestrel-group.com, niet @kestrel.be — nep-domein dat op het bedrijf lijkt","Vraagt om cadeaubonnen als betaling (klassieke CEO-fraude)","Druk: \"niet bellen\", \"vertrouwelijk\" — bedoeld om u los te snijden van collega''s","Past niet bij de normale procedure — facturen lopen via de boekhouding, niet via medewerkers"]'::jsonb,
+ '[]'::jsonb,
+ 'Dit is CEO-fraude. Oplichters doen zich voor als een leidinggevende en vragen om cadeaubonnen of een spoedoverschrijving, onder het mom van vertrouwelijkheid. Loop bij twijfel langs het bureau van de afzender of bel hem/haar op het bekende nummer — nooit via het nummer of e-mailadres in de verdachte mail.',
+ 10),
+
+-- 2. REAL — HR-memo
+('nl-BE', 'business',
+ 'HR Kestrel',
+ 'hr@kestrel.be',
+ 'Eigen domein @kestrel.be — klopt.',
+ 'vandaag 10:15',
+ 'Nieuwe verlofpagina in MijnKestrel',
+ 'Beste collega, vanaf deze week staat de vernieuwde verlofpagina in MijnKestrel...',
+ E'Beste collega,\n\nVanaf deze week staat de vernieuwde verlofpagina live in MijnKestrel. U vindt daar uw resterende verlofdagen, een overzicht per maand en het aanvraagformulier.\n\nU meldt zich aan zoals altijd — ga zelf naar MijnKestrel via uw startpagina of de bladwijzer in uw browser. We sturen bewust geen rechtstreekse link.\n\nVragen? Loop even langs bij HR, of stuur een mailtje naar hr@kestrel.be.\n\nMet vriendelijke groeten,\nHR Kestrel',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Afzender @kestrel.be is het officiële interne domein","Geen klikbare link — u wordt gevraagd ZELF naar MijnKestrel te gaan","Geen vraag om paswoord of persoonlijke gegevens","Concrete, aannemelijke bedrijfsmededeling","Verwijst naar HR als bekend aanspreekpunt"]'::jsonb,
+ 'Dit is een echte HR-mededeling. Let op het goede patroon: er wordt GEEN link meegestuurd, u moet zelf naar MijnKestrel navigeren. Zo zou een professionele interne communicatie eruit moeten zien.',
+ 20),
+
+-- 3. PHISHING — IT paswoord-reset
+('nl-BE', 'business',
+ 'IT Support',
+ 'it-support@kestrel-helpdesk.com',
+ 'Niet @kestrel.be maar @kestrel-helpdesk.com — een apart domein dat op het bedrijf lijkt. Verdacht.',
+ 'vandaag 11:30',
+ 'Uw paswoord verloopt vandaag om 17u — verleng nu',
+ 'Uw Kestrel-paswoord verloopt vandaag. Verleng het direct om uitsluiting te voorkomen...',
+ E'Beste gebruiker,\n\nUw Kestrel-paswoord verloopt vandaag om 17u. Als u het niet verlengt, verliest u toegang tot e-mail, SharePoint en Teams.\n\nGebruik de onderstaande link om uw paswoord te verlengen. Dit duurt 30 seconden.\n\n{{link:0}}\n\nMet vriendelijke groeten,\nIT Support Kestrel',
+ '[{"label":"Paswoord verlengen","real_url":"http://kestrel-helpdesk.com/password-renew","suspicious":true,"warning":"Deze link gaat naar kestrel-helpdesk.com — NIET het officiële domein van Kestrel. Uw echte IT-afdeling stuurt reset-links via het interne portaal, niet via een los domein."}]'::jsonb,
+ TRUE,
+ '["Afzender @kestrel-helpdesk.com, niet @kestrel.be","Tijdsdruk (\"verloopt vandaag om 17u\") om u zonder nadenken te laten klikken","Dreigt met verlies van toegang — angst maken","Link naar een domein dat op het bedrijf lijkt maar het niet is","Echte IT-afdelingen laten u aanmelden via interne portalen, nooit via een losse link in een e-mail"]'::jsonb,
+ '[]'::jsonb,
+ 'Dit is phishing die zich voordoet als uw eigen IT-afdeling. De echte IT-afdeling mailt zelden reset-links; en als ze dat al doen, is het via het interne domein en het officiële portaal. Twijfelt u? Bel uw IT-collega of loop langs — nooit via het nummer in de mail.',
+ 30),
+
+-- 4. PHISHING — DocuSign
+('nl-BE', 'business',
+ 'DocuSign via Bart Claes',
+ 'dse@docusigne-delivery.com',
+ 'Echte DocuSign gebruikt @docusign.net of @docusign.com. "docusigne" is een typefout in het domein.',
+ 'vandaag 13:47',
+ 'Bart Claes wil dat u een document ondertekent',
+ 'U heeft een document ontvangen via DocuSign. Het document "Raamovereenkomst-2024.pdf" wacht...',
+ E'DocuSign\n\nBart Claes (b.claes@kestrel-group.com) heeft u gevraagd om een document te ondertekenen via DocuSign.\n\nDocument: Raamovereenkomst-2024.pdf\nVerzonden: vandaag om 13u47\n\nOpen het document: {{link:0}}\n\nDank u wel,\nDocuSign',
+ '[{"label":"Document beoordelen","real_url":"http://docusigne-delivery.com/sign?id=78a2f","suspicious":true,"warning":"Dit domein is docusigne-delivery.com — een typefout op DocuSign. Het echte domein is docusign.net. Bovendien gebruikt Bart Claes @kestrel-group.com, niet @kestrel.be."}]'::jsonb,
+ TRUE,
+ '["Domein is \"docusigne-delivery.com\" (niet docusign.net/.com)","De \"afzender\" Bart Claes gebruikt @kestrel-group.com — niet ons eigen @kestrel.be","Onverwacht document van een collega die u niet recent sprak","Echte DocuSign-notificaties bevatten een beveiligingscode die u op docusign.com kunt invoeren om het document terug te vinden"]'::jsonb,
+ '[]'::jsonb,
+ 'Dit is phishing die DocuSign nabootst. Bij twijfel: open nooit de link, maar ga zelf naar docusign.com en vul daar de beveiligingscode uit een echte DocuSign-mail in. Of bel Bart rechtstreeks om te vragen of hij echt iets heeft verstuurd.',
+ 40),
+
+-- 5. REAL — Agenda-uitnodiging van collega
+('nl-BE', 'business',
+ 'Sophie Dewit',
+ 's.dewit@kestrel.be',
+ 'Eigen domein @kestrel.be van een bekende collega — klopt.',
+ 'vandaag 14:12',
+ 'Vergadering donderdag 14u — kwartaalplanning Q2',
+ 'Hallo Peter, kun je donderdag om 14u bij de kwartaalplanning zijn? Agenda staat eronder...',
+ E'Hallo Peter,\n\nKan jij donderdag om 14u even aansluiten bij de kwartaalplanning Q2? We bespreken:\n\n• Status van de lopende projecten\n• Planning voor mei en juni\n• Prioriteiten voor het team\n\nHet duurt maximaal een uur. Vergaderzaal De Meir, of via Teams als je liever belt. Laat even iets weten.\n\nDank!\nSophie',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Afzender @kestrel.be is het officiële interne domein","Bekende collega die u normaal ook spreekt","Concrete, aannemelijke werkgerelateerde context","Geen link, geen bijlage, geen vraag om gegevens","Informele, persoonlijke toon — past bij interne communicatie"]'::jsonb,
+ 'Dit is een gewone agenda-uitnodiging van een collega. Geen actie nodig behalve inhoudelijk antwoorden. Goede les: persoonlijk geadresseerde, concrete interne mail zonder links of bijlagen is meestal een veilig teken.',
+ 50);
+
+-- ============ nl-BE — BUSINESS (2/2) ============
+
+INSERT INTO inbox_messages
+  (locale, audience, sender_name, sender_address, sender_note, received_label, subject, preview, body, links, is_phishing, red_flags, green_flags, explanation, sort_order) VALUES
+
+-- 6. PHISHING — Nep-factuur van leverancier
+('nl-BE', 'business',
+ 'Administratie Printwerk BVBA',
+ 'facturen@printservice-be.com',
+ 'Onbekende leverancier op een los .com-domein. Echte leveranciers van Kestrel staan in uw inkoopsysteem.',
+ 'gisteren 15:30',
+ 'Factuur P-2024-0452 — betaaltermijn overschreden',
+ 'Geachte heer/mevrouw, bijgevoegd de openstaande factuur voor onderhoud. Gelieve spoedig te voldoen...',
+ E'Geachte heer/mevrouw,\n\nBijgevoegd treft u factuur P-2024-0452 aan voor periodiek printonderhoud over Q1, bedrag € 1.847,50.\n\nDe betaaltermijn van 14 dagen is overschreden. Gelieve direct te voldoen om aanmaningskosten te vermijden. Betalingsgegevens staan in de bijlage.\n\nAls u snel wilt betalen: {{link:0}}\n\nMet vriendelijke groeten,\nAdministratie Printwerk BVBA',
+ '[{"label":"Direct betalen","real_url":"http://printservice-be.com/pay/P-2024-0452","suspicious":true,"warning":"Onbekend betaal-domein. Bij Kestrel lopen facturen via het inkoopportaal — niet via een losse link in een e-mail."}]'::jsonb,
+ TRUE,
+ '["Onbekende leverancier — niet in uw inkoopsysteem","Tijdsdruk: \"betaaltermijn overschreden\", \"direct voldoen\"","Losse betaal-link in plaats van via het inkoopportaal","Algemene aanspreking \"Geachte heer/mevrouw\" — zou uw naam moeten gebruiken","Het bedrag is net hoog genoeg om te drukken, laag genoeg om niet op te vallen"]'::jsonb,
+ '[]'::jsonb,
+ 'Dit is factuurfraude. Onbekende leveranciers met onverwachte facturen horen eerst gecontroleerd te worden via uw aankoopdienst of crediteuren. Betaal nooit via een link in een e-mail, altijd via uw eigen inkoopportaal of via een nieuwe factuur-review.',
+ 60),
+
+-- 7. REAL — Interne nieuwsbrief
+('nl-BE', 'business',
+ 'Kestrel Communicatie',
+ 'communicatie@kestrel.be',
+ 'Eigen domein @kestrel.be — klopt.',
+ 'gisteren 09u',
+ 'Kwartaalupdate Q1 — Kestrel in het kort',
+ 'Beste collega''s, hierbij de kwartaalupdate met nieuws uit alle teams...',
+ E'Beste collega''s,\n\nHierbij de kwartaalupdate over het eerste kwartaal van 2024.\n\nHoogtepunten:\n• Drie nieuwe klantprojecten gestart\n• Team Operations is met vier mensen gegroeid\n• De nieuwe kantoorplattegrond is klaar (te bekijken op MijnKestrel)\n• Volgende all-hands: donderdag 16 mei, 16u in de bedrijfsrestaurant\n\nDe volledige update staat op MijnKestrel. Meld uzelf aan zoals gewoonlijk — we sturen bewust geen rechtstreekse link.\n\nVragen of ideeën? Loop langs bij Communicatie (bureau 2.14) of stuur een berichtje.\n\nTot volgend kwartaal!\nCommunicatieteam Kestrel',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Afzender @kestrel.be, intern bekend","Concrete, verwachte interne informatie","Geen klikbare link — u wordt gevraagd ZELF naar MijnKestrel te gaan","Geen druk of vraag om gegevens","Verwijst naar een bekende interne plek (bureau 2.14) als aanspreekpunt"]'::jsonb,
+ 'Dit is een normale interne nieuwsbrief. Goed patroon: intern domein, verwachte inhoud en geen link die u dwingt ergens aan te melden.',
+ 70),
+
+-- 8. PHISHING — Microsoft 365
+('nl-BE', 'business',
+ 'Microsoft 365',
+ 'account-security@microsoft-365-secure.com',
+ 'Het echte Microsoft-domein is microsoft.com. "microsoft-365-secure.com" is nep.',
+ '2 dagen geleden 08u14',
+ 'Uw Microsoft 365-paswoord verloopt vandaag',
+ 'Uw paswoord voor Microsoft 365 verloopt binnen 24 uur. Behoud uw huidige paswoord...',
+ E'Microsoft 365 Accountbeveiliging\n\nUw paswoord voor Microsoft 365 verloopt binnen 24 uur. Na deze periode verliest u toegang tot e-mail, OneDrive en Teams.\n\nKlik hieronder om uw huidige paswoord te behouden en het verlopen te vermijden:\n\n{{link:0}}\n\nDeze actie duurt minder dan een minuut. Als u dit negeert, wordt uw account tijdelijk vergrendeld.\n\nMicrosoft 365 Security Team',
+ '[{"label":"Paswoord behouden","real_url":"http://microsoft-365-secure.com/keep-password","suspicious":true,"warning":"Microsoft gebruikt nooit domeinen met streepjes zoals microsoft-365-secure.com. Dit is nep. Microsoft vraagt u ook nooit om via een link uw paswoord te \"behouden\" of te \"bevestigen\"."}]'::jsonb,
+ TRUE,
+ '["Afzender @microsoft-365-secure.com (niet @microsoft.com)","Tijdsdruk: \"binnen 24 uur\", \"vergrendeld\"","Bizar concept: \"paswoord behouden\" via een link bestaat niet","Dreiging met verlies van toegang","Als Microsoft 365 een paswoord wil vernieuwen, gebeurt dat bij het aanmelden zelf — niet via een losse mail"]'::jsonb,
+ '[]'::jsonb,
+ 'Dit is een van de meest voorkomende zakelijke phishing-varianten. Microsoft communiceert paswoordwijzigingen nooit zo. Twijfelt u? Sluit de mail en ga zelf naar portal.office.com of open Teams om te zien of er echt een probleem is.',
+ 80),
+
+-- 9. REAL — Korte vraag van collega
+('nl-BE', 'business',
+ 'Sophie Dewit',
+ 's.dewit@kestrel.be',
+ 'Eigen domein @kestrel.be van een bekende collega — klopt.',
+ '2 dagen geleden 14u45',
+ 'Kun je even naar de begroting kijken?',
+ 'Hallo Peter, Mark vroeg of jij even kan controleren of regel 14 in de begroting klopt...',
+ E'Hallo Peter,\n\nMark vroeg of jij snel kunt controleren of regel 14 in de begroting van project Noord klopt. Volgens hem staat daar een verkeerd bedrag, maar ik weet niet zeker of hij naar de juiste versie keek.\n\nDe begroting staat op de teamshare onder /Projecten/Noord/2024/.\n\nGeef je het even door?\n\nDank!\nSophie',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Afzender @kestrel.be, bekende collega","Concrete interne context (Mark, project Noord, teamshare-pad)","Geen link naar een extern domein","Geen vraag om gegevens, paswoorden of geld","Informele toon past bij normale interne communicatie"]'::jsonb,
+ 'Dit is een normale werkvraag van een collega. Geen actie behalve kijken en antwoorden. Let op: persoonlijke, concrete werkcontext op intern domein is normaal een goed teken.',
+ 90),
+
+-- 10. PHISHING — Recruiter met gevaarlijke bijlage
+('nl-BE', 'business',
+ 'Sarah Vermeulen — Premium Talent',
+ 'sarah.vermeulen@premium-talent-careers.info',
+ '".info"-domein en losse recruiter zonder aantoonbare link met een bekend bureau. Verdacht patroon.',
+ '3 dagen geleden 17u20',
+ 'Exclusieve kans bij internationale opdrachtgever — profiel beoordeeld',
+ 'Beste Peter, ik heb uw profiel op LinkedIn bekeken en heb een exclusieve positie...',
+ E'Beste Peter,\n\nIk heb uw profiel bekeken en heb een exclusieve senior-positie bij een internationale opdrachtgever die volgens mij perfect bij uw ervaring past. Salarisindicatie: € 95.000 - € 115.000 bruto.\n\nDe rol is nog niet publiek gemaakt en er is haast bij. Klant wil deze week al een shortlist.\n\nIn de bijlage vindt u de functieomschrijving en het geheimhoudingscontract (NDA) dat ik u vraag te openen en te ondertekenen voordat ik meer details kan delen.\n\nBijlage: Functiebeschrijving_en_NDA.pdf.exe\n\nMet vriendelijke groeten,\nSarah Vermeulen\nPremium Talent — Executive Search',
+ '[]'::jsonb,
+ TRUE,
+ '["Afzender op \".info\"-domein zonder bekend bureau","Onverwacht contact met een bijlage","De bestandsnaam eindigt op .pdf.exe — dat is een uitvoerbaar programma vermomd als pdf","Tijdsdruk: \"deze week al een shortlist\"","Geheimhouding gevraagd — bedoeld om u te isoleren","Salaris als lokker zonder enige controleerbare context"]'::jsonb,
+ '[]'::jsonb,
+ 'Dit is phishing met een kwaadaardige bijlage. Bestanden met dubbele extensies (.pdf.exe) zijn uitvoerbare programma''s vermomd als document. Open ze NOOIT. Een serieuze recruiter met een serieuze opdracht stuurt geen losse uitvoerbare bijlagen. Meld dit bij IT of verwijder de mail.',
+ 100);
