@@ -645,10 +645,14 @@
   // Alleen de rendering in #mob-app verschilt per apparaat-skin.
   // ================================================================
 
+  // Mobiele folder-state: 'inbox' is normaal, 'junk' toont de easter egg.
+  let currentMobFolder = 'inbox';
+
   async function startMobileSimulator() {
     const result = document.getElementById('sim-result');
     result.hidden = true;
     currentFolder = 'inbox';
+    currentMobFolder = 'inbox';
     buildMobSkin();
     const list = document.getElementById('mob-list-items');
     if (list) list.innerHTML = '<li class="mob-item" style="justify-content:center"><em>' + escapeHtml(t('sim.ol.loading')) + '</em></li>';
@@ -678,6 +682,30 @@
     }
   }
 
+  function mobDrawerHtml() {
+    // Wordt in elk van de skins achteraan toegevoegd. Één gedeelde
+    // drawer met twee mappen: Postvak IN (zet je terug op de oefening)
+    // en Ongewenste e-mail (de easter egg).
+    return (
+      '<div class="mob-drawer" id="mob-drawer" hidden>' +
+        '<header class="mob-drawer-head">' +
+          '<button class="mob-btn mob-btn-drawer-back" aria-label="Sluiten">←</button>' +
+          '<h2 class="mob-drawer-title">' + escapeHtml(t('sim.ol.favorites')) + '</h2>' +
+        '</header>' +
+        '<ol class="mob-drawer-list">' +
+          '<li data-mob-folder="inbox">' +
+            '<span class="mob-drawer-ico">📥</span>' +
+            '<span class="mob-drawer-label">' + escapeHtml(t('sim.ol.inbox.title')) + '</span>' +
+          '</li>' +
+          '<li data-mob-folder="junk">' +
+            '<span class="mob-drawer-ico">⚠️</span>' +
+            '<span class="mob-drawer-label">' + escapeHtml(t('sim.ol.junk').replace(/^[^\w]+\s*/, '')) + '</span>' +
+          '</li>' +
+        '</ol>' +
+      '</div>'
+    );
+  }
+
   function buildMobOutlook(app) {
     app.className = 'mob-app mob-outlook';
     app.innerHTML =
@@ -688,7 +716,8 @@
         '<div class="mob-avatar">' + escapeHtml(t('user.avatar')) + '</div>' +
       '</header>' +
       '<ol class="mob-list" id="mob-list-items"></ol>' +
-      '<div class="mob-reader" id="mob-reader" hidden></div>';
+      '<div class="mob-reader" id="mob-reader" hidden></div>' +
+      mobDrawerHtml();
   }
 
   function buildMobGmail(app) {
@@ -701,7 +730,8 @@
       '</header>' +
       '<ol class="mob-list" id="mob-list-items"></ol>' +
       '<button class="mob-fab" aria-hidden="true" tabindex="-1">✏️</button>' +
-      '<div class="mob-reader" id="mob-reader" hidden></div>';
+      '<div class="mob-reader" id="mob-reader" hidden></div>' +
+      mobDrawerHtml();
   }
 
   function buildMobAppleMail(app) {
@@ -709,14 +739,84 @@
     app.innerHTML =
       '<header class="mob-topbar">' +
         '<div class="mob-topbar-row">' +
-          '<button class="mob-btn mob-btn-back-top" aria-hidden="true" tabindex="-1">‹ Mailboxes</button>' +
+          '<button class="mob-btn mob-btn-menu">‹ Mailboxes</button>' +
           '<button class="mob-btn" aria-hidden="true" tabindex="-1">Edit</button>' +
         '</div>' +
         '<h1 class="mob-title">' + escapeHtml(t('sim.ol.inbox.title')) + '</h1>' +
         '<div class="mob-search">🔍 ' + escapeHtml(t('sim.ol.search')) + '</div>' +
       '</header>' +
       '<ol class="mob-list" id="mob-list-items"></ol>' +
-      '<div class="mob-reader" id="mob-reader" hidden></div>';
+      '<div class="mob-reader" id="mob-reader" hidden></div>' +
+      mobDrawerHtml();
+  }
+
+  function openMobDrawer() {
+    const d = document.getElementById('mob-drawer');
+    if (d) d.hidden = false;
+  }
+  function closeMobDrawer() {
+    const d = document.getElementById('mob-drawer');
+    if (d) d.hidden = true;
+  }
+
+  function switchMobFolder(folder) {
+    closeMobDrawer();
+    if (folder === currentMobFolder) return;
+    currentMobFolder = folder;
+    // Reader dichtklappen als die nog open stond
+    const reader = document.getElementById('mob-reader');
+    if (reader) reader.hidden = true;
+    if (folder === 'junk') {
+      renderMobJunkList();
+    } else {
+      renderMobList();
+    }
+  }
+
+  function renderMobJunkList() {
+    const list = document.getElementById('mob-list-items');
+    if (!list) return;
+    list.innerHTML = '';
+    const li = document.createElement('li');
+    li.className = 'mob-item';
+    li.innerHTML =
+      '<div class="mob-item-avatar">👑</div>' +
+      '<div class="mob-item-body">' +
+        '<div class="mob-item-top">' +
+          '<span class="mob-item-sender">' + escapeHtml(t('sim.junk.sender')) + '</span>' +
+          '<span class="mob-item-time">' + escapeHtml(t('sim.junk.received')) + '</span>' +
+        '</div>' +
+        '<div class="mob-item-subject">' + escapeHtml(t('sim.junk.subject')) + '</div>' +
+        '<div class="mob-item-preview">' + escapeHtml(t('sim.junk.preview')) + '</div>' +
+      '</div>';
+    li.addEventListener('click', () => renderMobJunkReader());
+    list.appendChild(li);
+  }
+
+  function renderMobJunkReader() {
+    const reader = document.getElementById('mob-reader');
+    if (!reader) return;
+    reader.hidden = false;
+    reader.innerHTML =
+      '<header class="mob-reader-head">' +
+        '<button class="mob-btn mob-btn-back" aria-label="Terug">←</button>' +
+      '</header>' +
+      '<div class="mob-reader-content">' +
+        '<h2 class="mob-reader-subject">' + escapeHtml(t('sim.junk.subject')) + '</h2>' +
+        '<div class="mob-reader-sender">' +
+          '<div class="mob-avatar">👑</div>' +
+          '<div style="min-width:0">' +
+            '<div class="mob-reader-name">' + escapeHtml(t('sim.junk.sender')) + '</div>' +
+            '<div class="mob-reader-addr">&lt;' + escapeHtml(t('sim.junk.senderEmail')) + '&gt;</div>' +
+            '<div class="mob-reader-to">' + escapeHtml(t('sim.ol.to')) + ' · ' + escapeHtml(t('sim.junk.received')) + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="mob-reader-body mob-junk-body">' + t('sim.junk.body') + '</div>' +
+      '</div>' +
+      '<div class="mob-junk-note">' + t('sim.junk.note') + '</div>';
+    reader.querySelector('.mob-btn-back').addEventListener('click', () => {
+      reader.hidden = true;
+    });
   }
 
   function renderMobList() {
@@ -813,8 +913,30 @@
   function closeMobReader() {
     const reader = document.getElementById('mob-reader');
     if (reader) reader.hidden = true;
-    renderMobList();
+    if (currentMobFolder === 'junk') renderMobJunkList();
+    else renderMobList();
   }
+
+  // Hamburger / "< Mailboxes" / drawer-interacties. Eén enkele delegated
+  // click-handler op document om te voorkomen dat we bij elke re-render
+  // alles opnieuw moeten binden.
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('.mob-btn-menu')) {
+      e.preventDefault();
+      openMobDrawer();
+      return;
+    }
+    if (e.target.closest('.mob-btn-drawer-back')) {
+      e.preventDefault();
+      closeMobDrawer();
+      return;
+    }
+    const folderLi = e.target.closest('.mob-drawer-list li[data-mob-folder]');
+    if (folderLi) {
+      e.preventDefault();
+      switchMobFolder(folderLi.dataset.mobFolder);
+    }
+  });
 
   async function openMessage(id) {
     simState.current = id;

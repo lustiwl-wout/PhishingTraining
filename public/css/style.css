@@ -1728,3 +1728,77 @@ body.device-iphone .device-homebar::after {
   background: #ff3b30; color: #fff;
 }
 .mob-applemail .mob-verdict.judged { text-align: center; color: #8e8e93; font-size: .85rem; padding: 14px; }
+
+/* ========================================================
+   Mobile folder drawer — verschijnt als de gebruiker op de
+   hamburger/Mailboxes-knop tikt. Toont Postvak IN + Ongewenste
+   e-mail. Alle drie de skins krijgen dezelfde structuur; de
+   header kleurt mee met de skin via override-selectoren.
+   ======================================================== */
+.mob-drawer {
+  position: absolute; inset: 0;
+  background: #fff;
+  display: flex; flex-direction: column;
+  z-index: 6;
+}
+.mob-drawer[hidden] { display: none; }
+.mob-drawer-head {
+  padding: 10px 8px;
+  display: flex; align-items: center; gap: 6px;
+  flex-shrink: 0;
+  min-height: 54px;
+  border-bottom: 1px solid #e1dfdd;
+}
+.mob-drawer-title {
+  font-size: 1.1rem; font-weight: 600; margin: 0;
+  flex: 1;
+}
+.mob-drawer-list {
+  list-style: none; margin: 0; padding: 0;
+  flex: 1; overflow-y: auto;
+}
+.mob-drawer-list li {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 20px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+}
+.mob-drawer-list li:active { background: #f3f2f1; }
+.mob-drawer-ico { font-size: 1.3rem; line-height: 1; }
+.mob-drawer-label { flex: 1; font-size: .95rem; font-weight: 500; }
+.mob-drawer-count { font-size: .8rem; color: #605e5c; }
+
+/* Skin-specifieke drawer-headers */
+.mob-outlook .mob-drawer-head { background: #0078d4; color: #fff; }
+.mob-outlook .mob-drawer-head .mob-btn { color: #fff; }
+.mob-gmail .mob-drawer-head   { background: #f6f8fc; color: #202124; }
+.mob-gmail .mob-drawer-head .mob-btn { color: #5f6368; }
+.mob-applemail .mob-drawer-head {
+  background: #f6f6f6; color: #000;
+  border-bottom: 0.5px solid #c6c6c8;
+}
+.mob-applemail .mob-drawer-head .mob-btn { color: #007aff; }
+.mob-applemail .mob-drawer-list li { border-bottom: 0.5px solid #e5e5ea; }
+
+/* Junk-body — de Nigeriaanse prins leest lekker in een smallere
+   kolom met iets grotere regelhoogte op telefoonformaat. */
+.mob-reader-body.mob-junk-body p { margin-bottom: 1em; }
+.mob-junk-note {
+  padding: 14px;
+  border-top: 1px solid #e1dfdd;
+  background: #faf9f8;
+  color: #605e5c;
+  font-size: .85rem;
+  line-height: 1.5;
+  flex-shrink: 0;
+}
+.mob-applemail .mob-junk-note {
+  background: #f6f6f6;
+  border-top: 0.5px solid #c6c6c8;
+  color: #636366;
+}
+.mob-gmail .mob-junk-note {
+  background: #f6f8fc;
+  border-top: 1px solid #e0e4ea;
+  color: #5f6368;
+}
