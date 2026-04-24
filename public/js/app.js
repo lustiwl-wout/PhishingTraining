@@ -443,6 +443,8 @@
     const list = document.getElementById('ol-list-items');
     const result = document.getElementById('sim-result');
     result.hidden = true;
+    currentFolder = 'inbox';
+    setActiveFolderLi('inbox');
     list.innerHTML = '<li class="ol-loading">' + escapeHtml(t('sim.ol.loading')) + '</li>';
 
     try {
@@ -507,6 +509,93 @@
       '<div class="ol-reader-empty"><div class="ol-reader-empty-art">📬</div>' +
       '<p>' + escapeHtml(t('sim.ol.empty')) + '</p></div>';
   }
+
+  // -------- Folder-switching (easter egg: Ongewenste e-mail) --------
+  // De meeste mappen in de zijbalk zijn decoratief. Alleen "Postvak IN"
+  // en "Ongewenste e-mail" reageren: de junk-folder toont één vaste mail
+  // (de klassieke Nigeriaanse-prins-oplichting) als knipoog naar wat een
+  // spamfilter normaal vangt.
+  let currentFolder = 'inbox';
+
+  function setActiveFolderLi(folderName) {
+    document.querySelectorAll('.ol-folders li').forEach((li) => {
+      li.classList.toggle('active', li.dataset && li.dataset.folder === folderName);
+    });
+  }
+
+  function showFolder(folderName) {
+    if (folderName !== 'inbox' && folderName !== 'junk') return;
+    currentFolder = folderName;
+    setActiveFolderLi(folderName);
+    const headerEl = document.querySelector('.ol-list-header h3');
+    const hintEl = document.querySelector('.ol-list-header .ol-hint');
+    if (folderName === 'junk') {
+      if (headerEl) headerEl.textContent = t('sim.ol.junk').replace(/^[^\w]+\s*/, '');
+      if (hintEl)   hintEl.textContent = t('sim.ol.inbox.hint');
+      renderJunkList();
+      resetReader();
+    } else {
+      if (headerEl) headerEl.textContent = t('sim.ol.inbox.title');
+      if (hintEl)   hintEl.textContent = t('sim.ol.inbox.hint');
+      if (simState) renderInboxList();
+      resetReader();
+    }
+  }
+
+  function renderJunkList() {
+    const list = document.getElementById('ol-list-items');
+    list.innerHTML = '';
+    const li = document.createElement('li');
+    li.className = 'ol-item';
+    li.setAttribute('role', 'button');
+    li.tabIndex = 0;
+    li.innerHTML =
+      '<span class="ol-unread" aria-label="Ongelezen"></span>' +
+      '<div class="ol-item-main">' +
+        '<div class="ol-item-top">' +
+          '<span class="ol-item-sender">' + escapeHtml(t('sim.junk.sender')) + '</span>' +
+          '<span class="ol-item-time">' + escapeHtml(t('sim.junk.received')) + '</span>' +
+        '</div>' +
+        '<div class="ol-item-subject">' + escapeHtml(t('sim.junk.subject')) + '</div>' +
+        '<div class="ol-item-preview">' + escapeHtml(t('sim.junk.preview')) + '</div>' +
+      '</div>';
+    li.addEventListener('click', () => { renderJunkReader(); li.classList.add('judged'); });
+    li.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); renderJunkReader(); }
+    });
+    list.appendChild(li);
+  }
+
+  function renderJunkReader() {
+    const reader = document.getElementById('ol-reader');
+    reader.innerHTML =
+      '<header class="ol-msg-head">' +
+        '<h2 class="ol-msg-subject">' + escapeHtml(t('sim.junk.subject')) + '</h2>' +
+        '<div class="ol-msg-sender-row">' +
+          '<div class="ol-avatar ol-avatar-lg" aria-hidden="true">👑</div>' +
+          '<div class="ol-msg-sender-info">' +
+            '<div class="ol-msg-sender-line">' +
+              '<strong class="ol-msg-sender-name">' + escapeHtml(t('sim.junk.sender')) + '</strong>' +
+              ' <span class="ol-sender-addr-inline">&lt;' + escapeHtml(t('sim.junk.senderEmail')) + '&gt;</span>' +
+            '</div>' +
+            '<div class="ol-msg-time">' + escapeHtml(t('sim.ol.to')) + ' · ' + escapeHtml(t('sim.junk.received')) + '</div>' +
+          '</div>' +
+        '</div>' +
+      '</header>' +
+      '<div class="ol-msg-body ol-junk-body">' + t('sim.junk.body') + '</div>' +
+      '<div class="ol-msg-actions judged">' +
+        '<p class="muted">' + t('sim.junk.note') + '</p>' +
+      '</div>';
+    reader.scrollTop = 0;
+  }
+
+  document.addEventListener('click', (e) => {
+    const folderLi = e.target.closest('.ol-folders li[data-folder]');
+    if (folderLi) {
+      e.preventDefault();
+      showFolder(folderLi.dataset.folder);
+    }
+  });
 
   async function openMessage(id) {
     simState.current = id;

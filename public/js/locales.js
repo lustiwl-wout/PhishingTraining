@@ -162,6 +162,14 @@ window.VO_LOCALES = {
     'sim.final.again': 'Opnieuw oefenen',
     'sim.final.help': 'Bekijk hulp en tips',
 
+    'sim.junk.sender': 'Z.K.H. Prins Adewale Ogundimu',
+    'sim.junk.senderEmail': 'hrh.ogundimu@central-bank-transfer.info',
+    'sim.junk.received': '3 weken geleden',
+    'sim.junk.subject': 'CONFIDENTIEEL — DRINGEND ZAKELIJK VOORSTEL (US$24.5M)',
+    'sim.junk.preview': 'Zeer geachte vriend, ik schrijf u met grootste vertrouwen en verwachtingen…',
+    'sim.junk.body': '<p>Zeer geachte vriend,</p><p>Ik schrijf u deze brief met grootste vertrouwen en verwachtingen in mijn hart.</p><p>Mijn naam is <strong>Z.K.H. Prins Adewale Ogundimu</strong>, enige zoon van wijlen Generaal Musa Ogundimu, voormalig Minister van Olie in mijn geboorteland. Door de recente politieke onrust heeft mijn familie een bedrag van <strong>VIERENTWINTIG MILJOEN VIJFHONDERDDUIZEND AMERIKAANSE DOLLAR (US$24,500,000.00)</strong> moeten achterlaten op een slapende rekening bij een Centrale Bank in een buurland.</p><p>Ik ben op zoek naar een <strong>EERLIJK</strong> en <strong>BETROUWBAAR</strong> persoon zoals uzelf om mij te helpen dit fonds over te maken naar een buitenlandse rekening. U ontvangt <strong>30% commissie (US$7.35 miljoen)</strong> voor uw nederige medewerking.</p><p>Gelieve mij SPOEDIG het volgende te bezorgen om de overdracht te beginnen:</p><ol><li>Uw VOLLEDIGE NAAM en ADRES</li><li>Uw bankrekeningnummer (IBAN) en BIC‑code</li><li>Een kopie van uw paspoort</li><li>Uw mobiele telefoonnummer</li></ol><p>Deze zaak moet <strong>STRIKT VERTROUWELIJK</strong> blijven en moet binnen <strong>48 UUR</strong> worden geregeld voordat de rekening wordt geblokkeerd.</p><p>Moge de Almachtige u zegenen.</p><p>Hoogachtend,<br>Z.K.H. Prins <strong>ADEWALE OGUNDIMU</strong><br>Koninklijk Huis</p>',
+    'sim.junk.note': '✨ <strong>Easter egg.</strong> Dit is de oerklassieker onder de phishing: de <em>419‑fraude</em>, genoemd naar artikel 419 van het Nigeriaanse Wetboek van Strafrecht. Circuleert al sinds het fax‑tijdperk en is nog altijd actief — gelukkig vangt uw spamfilter hem meestal netjes op.',
+
     'hulp.h1': 'Wat moet u doen?',
     'hulp.contacts.h': 'Bij wie u terecht kunt voor hulp',
     'hulp.contacts.lead': 'Drie vaste aanspreekpunten. Noteer ze of print deze pagina, zodat u ze snel bij de hand hebt.',
@@ -350,6 +358,14 @@ window.VO_LOCALES = {
     'sim.final.score': 'U beoordeelde <strong>{correct} van de {total}</strong> berichten goed ({pct}%).',
     'sim.final.again': 'Opnieuw oefenen',
     'sim.final.help': 'Bekijk hulp en tips',
+
+    'sim.junk.sender': 'Z.K.H. Prins Adewale Ogundimu',
+    'sim.junk.senderEmail': 'hrh.ogundimu@central-bank-transfer.info',
+    'sim.junk.received': '3 weken geleden',
+    'sim.junk.subject': 'CONFIDENTIEEL — DRINGEND ZAKELIJK VOORSTEL (US$24.5M)',
+    'sim.junk.preview': 'Zeer geachte vriend, ik schrijf u met grootste vertrouwen en verwachtingen…',
+    'sim.junk.body': '<p>Zeer geachte vriend,</p><p>Ik schrijf u deze brief met grootste vertrouwen en verwachtingen in mijn hart.</p><p>Mijn naam is <strong>Z.K.H. Prins Adewale Ogundimu</strong>, enige zoon van wijlen Generaal Musa Ogundimu, voormalig Minister van Olie in mijn geboorteland. Door de recente politieke onrust heeft mijn familie een bedrag van <strong>VIERENTWINTIG MILJOEN VIJFHONDERDDUIZEND AMERIKAANSE DOLLAR (US$24,500,000.00)</strong> moeten achterlaten op een slapende rekening bij een Centrale Bank in een buurland.</p><p>Ik ben op zoek naar een <strong>EERLIJK</strong> en <strong>BETROUWBAAR</strong> persoon zoals uzelf om mij te helpen dit fonds over te maken naar een buitenlandse rekening. U ontvangt <strong>30% commissie (US$7.35 miljoen)</strong> voor uw nederige medewerking.</p><p>Gelieve mij SPOEDIG het volgende te bezorgen om de overdracht te starten:</p><ol><li>Uw VOLLEDIGE NAAM en ADRES</li><li>Uw bankrekeningnummer (IBAN) en BIC‑code</li><li>Een kopie van uw paspoort</li><li>Uw gsm‑nummer</li></ol><p>Deze zaak moet <strong>STRIKT VERTROUWELIJK</strong> blijven en moet binnen <strong>48 UUR</strong> geregeld zijn voordat de rekening wordt geblokkeerd.</p><p>Moge de Almachtige u zegenen.</p><p>Hoogachtend,<br>Z.K.H. Prins <strong>ADEWALE OGUNDIMU</strong><br>Koninklijk Huis</p>',
+    'sim.junk.note': '✨ <strong>Easter egg.</strong> Dit is de oerklassieker onder de phishing: de <em>419‑fraude</em>, genoemd naar artikel 419 van het Nigeriaanse Wetboek van Strafrecht. Circuleert al sinds het fax‑tijdperk en is nog altijd actief — gelukkig vangt uw spamfilter hem meestal netjes op.',
 
     'hulp.h1': 'Wat moet u doen?',
     'hulp.contacts.h': 'Bij wie u terecht kunt voor hulp',
@@ -540,6 +556,14 @@ window.VO_LOCALES = {
     'sim.final.again': 'Practise again',
     'sim.final.help': 'See help and tips',
 
+    'sim.junk.sender': 'HRH Prince Adewale Ogundimu',
+    'sim.junk.senderEmail': 'hrh.ogundimu@central-bank-transfer.info',
+    'sim.junk.received': '3 weeks ago',
+    'sim.junk.subject': 'CONFIDENTIAL — URGENT BUSINESS PROPOSAL (US$24.5M)',
+    'sim.junk.preview': 'Dear friend, I write to you with utmost trust and confidence…',
+    'sim.junk.body': '<p>Dear friend,</p><p>I write to you with utmost trust and confidence in my heart.</p><p>My name is <strong>HRH Prince Adewale Ogundimu</strong>, only son of late General Musa Ogundimu, former Minister of Petroleum in my home country. Due to recent political turmoil, my family has had to leave behind the sum of <strong>TWENTY-FOUR MILLION FIVE HUNDRED THOUSAND UNITED STATES DOLLARS (US$24,500,000.00)</strong> in a dormant account with a Central Bank in a neighbouring country.</p><p>I am seeking an <strong>HONEST</strong> and <strong>TRUSTWORTHY</strong> person such as yourself to help me transfer this fund to a foreign account. You will receive <strong>30% commission (US$7.35 million)</strong> for your humble cooperation.</p><p>Please provide me URGENTLY with the following to begin the transfer:</p><ol><li>Your FULL NAME and ADDRESS</li><li>Your bank account number (IBAN) and BIC code</li><li>A copy of your passport</li><li>Your mobile phone number</li></ol><p>This matter must remain <strong>STRICTLY CONFIDENTIAL</strong> and must be concluded within <strong>48 HOURS</strong> before the account is frozen.</p><p>May the Almighty bless you.</p><p>Yours sincerely,<br>HRH Prince <strong>ADEWALE OGUNDIMU</strong><br>Royal House</p>',
+    'sim.junk.note': '✨ <strong>Easter egg.</strong> This is the ur-classic of phishing: the <em>419 scam</em>, named after section 419 of the Nigerian Criminal Code. It has been circulating since the fax era and is still active today — luckily your spam filter usually catches it.',
+
     'hulp.h1': 'What should you do?',
     'hulp.contacts.h': 'Who you can turn to for help',
     'hulp.contacts.lead': 'Three reliable contacts. Note them down or print this page so you always have them to hand.',
@@ -728,6 +752,14 @@ window.VO_LOCALES = {
     'sim.final.score': 'Vous avez correctement jugé <strong>{correct} message(s) sur {total}</strong> ({pct} %).',
     'sim.final.again': 'Recommencer l’entraînement',
     'sim.final.help': 'Voir l’aide et les conseils',
+
+    'sim.junk.sender': 'S.A.R. Prince Adewale Ogundimu',
+    'sim.junk.senderEmail': 'hrh.ogundimu@central-bank-transfer.info',
+    'sim.junk.received': 'il y a 3 semaines',
+    'sim.junk.subject': 'CONFIDENTIEL — PROPOSITION D’AFFAIRES URGENTE (US$24,5M)',
+    'sim.junk.preview': 'Cher ami, je vous écris avec la plus grande confiance et espérance…',
+    'sim.junk.body': '<p>Cher ami,</p><p>Je vous écris cette lettre avec la plus grande confiance et espérance dans mon cœur.</p><p>Mon nom est <strong>S.A.R. le Prince Adewale Ogundimu</strong>, fils unique de feu le Général Musa Ogundimu, ancien Ministre du Pétrole dans mon pays natal. En raison des récents troubles politiques, ma famille a dû abandonner la somme de <strong>VINGT-QUATRE MILLIONS CINQ CENT MILLE DOLLARS AMÉRICAINS (US$24 500 000,00)</strong> sur un compte dormant d’une Banque Centrale d’un pays voisin.</p><p>Je recherche une personne <strong>HONNÊTE</strong> et <strong>DIGNE DE CONFIANCE</strong> comme vous pour m’aider à transférer ces fonds vers un compte étranger. Vous recevrez <strong>30% de commission (US$7,35 millions)</strong> pour votre humble coopération.</p><p>Veuillez me fournir D’URGENCE les éléments suivants pour lancer le transfert :</p><ol><li>Vos NOM et ADRESSE complets</li><li>Votre numéro de compte bancaire (IBAN) et code BIC</li><li>Une copie de votre passeport</li><li>Votre numéro de téléphone portable</li></ol><p>Cette affaire doit rester <strong>STRICTEMENT CONFIDENTIELLE</strong> et être conclue dans les <strong>48 HEURES</strong> avant que le compte ne soit gelé.</p><p>Que le Tout-Puissant vous bénisse.</p><p>Sincèrement vôtre,<br>S.A.R. le Prince <strong>ADEWALE OGUNDIMU</strong><br>Maison Royale</p>',
+    'sim.junk.note': '✨ <strong>Easter egg.</strong> C’est le grand classique du hameçonnage : la <em>fraude 419</em>, du nom de l’article 419 du Code Pénal nigérian. Elle circule depuis l’ère du fax et reste active aujourd’hui — heureusement, votre filtre anti-spam la détecte généralement.',
 
     'hulp.h1': 'Que devez‑vous faire ?',
     'hulp.contacts.h': 'À qui vous adresser pour obtenir de l’aide',
@@ -918,6 +950,14 @@ window.VO_LOCALES = {
     'sim.final.again': 'Recommencer l’entraînement',
     'sim.final.help': 'Voir l’aide et les conseils',
 
+    'sim.junk.sender': 'S.A.R. Prince Adewale Ogundimu',
+    'sim.junk.senderEmail': 'hrh.ogundimu@central-bank-transfer.info',
+    'sim.junk.received': 'il y a 3 semaines',
+    'sim.junk.subject': 'CONFIDENTIEL — PROPOSITION D’AFFAIRES URGENTE (US$24,5M)',
+    'sim.junk.preview': 'Cher ami, je vous écris avec la plus grande confiance et espérance…',
+    'sim.junk.body': '<p>Cher ami,</p><p>Je vous écris cette lettre avec la plus grande confiance et espérance dans mon cœur.</p><p>Mon nom est <strong>S.A.R. le Prince Adewale Ogundimu</strong>, fils unique de feu le Général Musa Ogundimu, ancien Ministre du Pétrole dans mon pays natal. En raison des récents troubles politiques, ma famille a dû abandonner la somme de <strong>VINGT-QUATRE MILLIONS CINQ CENT MILLE DOLLARS AMÉRICAINS (US$24 500 000,00)</strong> sur un compte dormant d’une Banque Centrale d’un pays voisin.</p><p>Je recherche une personne <strong>HONNÊTE</strong> et <strong>DIGNE DE CONFIANCE</strong> comme vous pour m’aider à transférer ces fonds vers un compte étranger. Vous recevrez <strong>30% de commission (US$7,35 millions)</strong> pour votre humble coopération.</p><p>Veuillez me fournir D’URGENCE les éléments suivants pour lancer le transfert :</p><ol><li>Vos NOM et ADRESSE complets</li><li>Votre numéro de compte bancaire (IBAN) et code BIC</li><li>Une copie de votre passeport</li><li>Votre numéro de GSM</li></ol><p>Cette affaire doit rester <strong>STRICTEMENT CONFIDENTIELLE</strong> et être conclue dans les <strong>48 HEURES</strong> avant que le compte ne soit gelé.</p><p>Que le Tout-Puissant vous bénisse.</p><p>Sincèrement vôtre,<br>S.A.R. le Prince <strong>ADEWALE OGUNDIMU</strong><br>Maison Royale</p>',
+    'sim.junk.note': '✨ <strong>Easter egg.</strong> C’est le grand classique du hameçonnage : la <em>fraude 419</em>, du nom de l’article 419 du Code Pénal nigérian. Elle circule depuis l’ère du fax et reste active aujourd’hui — heureusement, votre filtre anti-spam la détecte généralement.',
+
     'hulp.h1': 'Que devez‑vous faire ?',
     'hulp.contacts.h': 'À qui vous adresser pour obtenir de l’aide',
     'hulp.contacts.lead': 'Trois interlocuteurs fiables. Notez‑les ou imprimez cette page pour les avoir toujours à portée de main.',
@@ -1106,6 +1146,14 @@ window.VO_LOCALES = {
     'sim.final.score': 'Sie haben <strong>{correct} von {total}</strong> Nachrichten richtig bewertet ({pct} %).',
     'sim.final.again': 'Erneut üben',
     'sim.final.help': 'Hilfe und Tipps ansehen',
+
+    'sim.junk.sender': 'S.K.H. Prinz Adewale Ogundimu',
+    'sim.junk.senderEmail': 'hrh.ogundimu@central-bank-transfer.info',
+    'sim.junk.received': 'vor 3 Wochen',
+    'sim.junk.subject': 'VERTRAULICH — DRINGENDER GESCHÄFTSVORSCHLAG (US$24,5 Mio.)',
+    'sim.junk.preview': 'Sehr geehrter Freund, ich schreibe Ihnen mit größtem Vertrauen und Hoffnung…',
+    'sim.junk.body': '<p>Sehr geehrter Freund,</p><p>ich schreibe Ihnen diesen Brief mit größtem Vertrauen und Hoffnung in meinem Herzen.</p><p>Mein Name ist <strong>S.K.H. Prinz Adewale Ogundimu</strong>, einziger Sohn des verstorbenen Generals Musa Ogundimu, ehemaliger Ölminister in meinem Heimatland. Aufgrund der jüngsten politischen Unruhen musste meine Familie einen Betrag von <strong>VIERUNDZWANZIG MILLIONEN FÜNFHUNDERTTAUSEND US-DOLLAR (US$24.500.000,00)</strong> auf einem ruhenden Konto bei einer Zentralbank in einem Nachbarland zurücklassen.</p><p>Ich suche eine <strong>EHRLICHE</strong> und <strong>VERTRAUENSWÜRDIGE</strong> Person wie Sie, die mir hilft, diese Mittel auf ein ausländisches Konto zu überweisen. Sie erhalten <strong>30 % Provision (US$7,35 Mio.)</strong> für Ihre bescheidene Mitarbeit.</p><p>Bitte stellen Sie mir DRINGEND Folgendes zur Verfügung, um die Überweisung zu starten:</p><ol><li>Ihr VOLLSTÄNDIGER NAME und Ihre ADRESSE</li><li>Ihre Bankkontonummer (IBAN) und BIC</li><li>Eine Kopie Ihres Reisepasses</li><li>Ihre Mobilfunknummer</li></ol><p>Diese Angelegenheit muss <strong>STRENG VERTRAULICH</strong> bleiben und innerhalb von <strong>48 STUNDEN</strong> abgeschlossen werden, bevor das Konto gesperrt wird.</p><p>Möge der Allmächtige Sie segnen.</p><p>Mit freundlichen Grüßen,<br>S.K.H. Prinz <strong>ADEWALE OGUNDIMU</strong><br>Königliches Haus</p>',
+    'sim.junk.note': '✨ <strong>Easter Egg.</strong> Das ist der Urklassiker des Phishings: der <em>419-Betrug</em>, benannt nach § 419 des nigerianischen Strafgesetzbuchs. Er kursiert seit dem Fax-Zeitalter und ist bis heute aktiv — zum Glück fängt Ihr Spam-Filter ihn meist ab.',
 
     'hulp.h1': 'Was sollten Sie tun?',
     'hulp.contacts.h': 'An wen Sie sich wenden können',

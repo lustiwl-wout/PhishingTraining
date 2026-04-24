@@ -622,6 +622,7 @@ mark.phish-mark .dot, .annotation-list .dot {
   color: var(--ol-ink);
   cursor: default;
 }
+.ol-folders li[data-folder] { cursor: pointer; }
 .ol-folders li:hover { background: var(--ol-hover); }
 .ol-folders li.active {
   background: var(--ol-blue-light); color: var(--ol-blue-dark); font-weight: 700;
