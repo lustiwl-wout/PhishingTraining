@@ -15,9 +15,7 @@ window.VO_LOCALES = {
     'audience.picker.title': 'Kies uw situatie',
     'audience.picker.sub': 'U kunt dit later aanpassen via de knop rechtsboven.',
     'audience.personal.title': 'Privé',
-    'audience.personal.sub': 'Thuispost: bank, overheid, pakketjes',
     'audience.business.title': 'Zakelijk',
-    'audience.business.sub': 'Werkmail: collega’s, IT, leveranciers',
 
     'meta.title': 'Veilig Online — Phishing herkennen',
     'skip.main': 'Ga naar de inhoud',
@@ -206,9 +204,7 @@ window.VO_LOCALES = {
     'audience.picker.title': 'Kies uw situatie',
     'audience.picker.sub': 'U kunt dit later aanpassen via de knop rechtsboven.',
     'audience.personal.title': 'Privé',
-    'audience.personal.sub': 'Thuispost: bank, overheid, pakjes',
     'audience.business.title': 'Zakelijk',
-    'audience.business.sub': 'Werkmail: collega’s, IT, leveranciers',
 
     'meta.title': 'Veilig Online — Phishing herkennen',
     'skip.main': 'Ga naar de inhoud',
@@ -397,9 +393,7 @@ window.VO_LOCALES = {
     'audience.picker.title': 'Choose your situation',
     'audience.picker.sub': 'You can change this later using the button in the top right.',
     'audience.personal.title': 'Personal',
-    'audience.personal.sub': 'Home inbox: bank, tax, parcels',
     'audience.business.title': 'Work',
-    'audience.business.sub': 'Work inbox: colleagues, IT, suppliers',
 
     'meta.title': 'Safe Online — Spot phishing',
     'skip.main': 'Skip to main content',
@@ -588,9 +582,7 @@ window.VO_LOCALES = {
     'audience.picker.title': 'Choisissez votre contexte',
     'audience.picker.sub': 'Vous pouvez le modifier plus tard via le bouton en haut à droite.',
     'audience.personal.title': 'Personnel',
-    'audience.personal.sub': 'Boîte privée : banque, impôts, colis',
     'audience.business.title': 'Professionnel',
-    'audience.business.sub': 'Boîte pro : collègues, informatique, fournisseurs',
 
     'meta.title': 'Sécurité en ligne — Reconnaître le hameçonnage',
     'skip.main': 'Aller au contenu principal',
@@ -779,9 +771,7 @@ window.VO_LOCALES = {
     'audience.picker.title': 'Choisissez votre contexte',
     'audience.picker.sub': 'Vous pouvez le modifier plus tard via le bouton en haut à droite.',
     'audience.personal.title': 'Personnel',
-    'audience.personal.sub': 'Boîte privée : banque, impôts, colis',
     'audience.business.title': 'Professionnel',
-    'audience.business.sub': 'Boîte pro : collègues, informatique, fournisseurs',
 
     'meta.title': 'Sécurité en ligne — Reconnaître le hameçonnage',
     'skip.main': 'Aller au contenu principal',
@@ -970,9 +960,7 @@ window.VO_LOCALES = {
     'audience.picker.title': 'Wählen Sie Ihre Situation',
     'audience.picker.sub': 'Sie können dies später über die Schaltfläche oben rechts ändern.',
     'audience.personal.title': 'Privat',
-    'audience.personal.sub': 'Privates Postfach: Bank, Behörden, Pakete',
     'audience.business.title': 'Beruflich',
-    'audience.business.sub': 'Arbeitspostfach: Kollegen, IT, Lieferanten',
 
     'meta.title': 'Sicher Online — Phishing erkennen',
     'skip.main': 'Zum Hauptinhalt springen',

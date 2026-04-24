@@ -823,13 +823,8 @@ body.sim-fullscreen .outlook {
 .sim-welcome-card .actions { justify-content: center; margin-top: 1.25rem; }
 
 /* Doelgroep-picker hergebruikt de styling van de taal-picker; alleen
-   een 2-kolomsraster en een subregel onder het hoofdlabel zijn nieuw. */
+   het 2-kolomsraster is nieuw. */
 .lang-grid-2 { grid-template-columns: 1fr 1fr; }
-.audience-card { gap: .25rem; }
-.audience-sub {
-  font-size: .85rem; font-weight: 400; opacity: .8;
-  display: block; margin-top: .25rem;
-}
 @media (max-width: 480px) {
   .lang-grid-2 { grid-template-columns: 1fr; }
 }
