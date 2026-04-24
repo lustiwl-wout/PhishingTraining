@@ -1313,3 +1313,66 @@ body.device-android .device-screen { border-radius: 24px; background: #fff; }
   background: #b3261e; color: #fff; border-color: #b3261e;
 }
 .mob-outlook .mob-verdict.judged { text-align: center; color: #605e5c; font-size: .85rem; padding: 14px; }
+
+/* ========================================================
+   iPhone device chrome — Dynamic Island, iOS statusbar,
+   home-indicator. Ingeschakeld door body.device-iphone.
+   ======================================================== */
+body.device-iphone .device-frame {
+  background: #0a0a0a;
+  border-radius: 52px;
+  box-shadow:
+    0 30px 60px rgba(0,0,0,.35),
+    0 0 0 2px #1f1f1f,
+    inset 0 0 0 1px #333;
+}
+body.device-iphone .device-screen {
+  border-radius: 42px;
+  background: #fff;
+  inset: 12px;
+}
+body.device-iphone .device-notch {
+  display: block;
+  position: absolute;
+  left: 50%;
+  top: 22px;
+  transform: translateX(-50%);
+  width: 120px; height: 32px;
+  background: #000;
+  border-radius: 999px;
+  z-index: 10;
+}
+body.device-iphone .device-statusbar {
+  display: flex; justify-content: space-between; align-items: center;
+  height: 44px;
+  padding: 14px 28px 0;
+  background: transparent;
+  color: #000;
+  font-size: .78rem;
+  font-weight: 600;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 5;
+}
+body.device-iphone .device-statusbar .device-time {
+  font-variant-numeric: tabular-nums;
+}
+body.device-iphone .device-statusbar .device-status-right {
+  display: inline-flex; gap: 5px; align-items: center;
+  font-size: .7rem;
+}
+body.device-iphone .device-statusbar .device-signal { letter-spacing: 1px; font-size: .65rem; }
+body.device-iphone .device-homebar {
+  display: block;
+  height: 22px;
+  background: transparent;
+  position: relative;
+  flex-shrink: 0;
+}
+body.device-iphone .device-homebar::after {
+  content: "";
+  position: absolute; left: 50%; bottom: 8px;
+  transform: translateX(-50%);
+  width: 134px; height: 5px;
+  background: #000; border-radius: 999px;
+}
