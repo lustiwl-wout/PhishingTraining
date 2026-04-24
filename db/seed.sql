@@ -1384,7 +1384,7 @@ INSERT INTO inbox_messages
  '["Afzenderadres @kestrel-group.com, niet @kestrel.nl — nep-domein dat op het bedrijf lijkt","Vraagt om cadeaubonnen als vorm van betaling (klassieke CEO-fraude)","Druk: \"niet bellen\", \"vertrouwelijk\" — bedoeld om u los te snijden van collega''s","Past niet bij de normale procedure — facturen lopen via de boekhouding, niet via medewerkers"]'::jsonb,
  '[]'::jsonb,
  'Dit is CEO-fraude. Oplichters doen zich voor als een leidinggevende en vragen om cadeaubonnen of een spoedoverboeking, onder het mom van vertrouwelijkheid. Loop bij twijfel langs het kantoor van de afzender of bel hem/haar op het bekende nummer — nooit via het nummer of e-mailadres in de verdachte mail.',
- 10),
+ 90),
 
 -- 2. REAL — HR-memo
 ('nl', 'business',
@@ -1418,20 +1418,20 @@ INSERT INTO inbox_messages
  'Dit is phishing die zich voordoet als uw eigen IT-afdeling. De echte IT-afdeling mailt zelden reset-links; en als ze dat al doen, is het via het interne domein en het officiële portaal. Twijfelt u? Bel uw IT-collega of loop langs — nooit via het nummer in de mail.',
  30),
 
--- 4. PHISHING — DocuSign
+-- 4. PHISHING — Nep SharePoint-deellink
 ('nl', 'business',
- 'DocuSign via Adam Bakker',
- 'dse@docusigne-delivery.com',
- 'Echte DocuSign gebruikt @docusign.net of @docusign.com. "docusigne" is een typefout in het domein.',
+ 'Microsoft OneDrive',
+ 'no-reply@sharepoint-online-share.com',
+ 'Echte SharePoint-meldingen komen van @sharepointonline.com en de link wijst naar uw eigen tenant (bv. kestrel.sharepoint.com). Dit domein is nep.',
  'vandaag 13:47',
- 'Adam Bakker wil dat u een document ondertekent',
- 'U heeft een document ontvangen via DocuSign. Het document "Raamovereenkomst-2024.pdf" wacht...',
- E'DocuSign\n\nAdam Bakker (a.bakker@kestrel-group.com) heeft u gevraagd om een document te ondertekenen via DocuSign.\n\nDocument: Raamovereenkomst-2024.pdf\nVerzonden: vandaag om 13:47\n\nOpen het document: {{link:0}}\n\nDank u wel,\nDocuSign',
- '[{"label":"Document beoordelen","real_url":"http://docusigne-delivery.com/sign?id=78a2f","suspicious":true,"warning":"Dit domein is docusigne-delivery.com — een typefout op DocuSign. Het echte domein is docusign.net. Bovendien gebruikt Adam Bakker @kestrel-group.com, niet @kestrel.nl."}]'::jsonb,
+ 'Anna Bakker heeft "Raamovereenkomst-2024.pdf" met u gedeeld',
+ 'Anna Bakker heeft een document met u gedeeld via OneDrive. Bekijk het nu...',
+ E'Een document is met u gedeeld\n\nAnna Bakker (a.bakker@kestrel-partner.com) heeft het volgende document met u gedeeld:\n\n📄 Raamovereenkomst-2024.pdf\n\nDe link verloopt over 7 dagen. Bekijk het document om toegang te behouden:\n\n{{link:0}}\n\nMicrosoft OneDrive',
+ '[{"label":"Document openen","real_url":"http://sharepoint-online-share.com/view?id=8a3f2","suspicious":true,"warning":"Dit is geen Microsoft-domein. Echte SharePoint- en OneDrive-links gaan naar uw eigen tenant (bv. kestrel.sharepoint.com) of naar onedrive.live.com. \"sharepoint-online-share.com\" is nep. Bovendien gebruikt Anna @kestrel-partner.com in plaats van @kestrel.nl."}]'::jsonb,
  TRUE,
- '["Domein is \"docusigne-delivery.com\" (niet docusign.net/.com)","De \"afzender\" Adam Bakker gebruikt @kestrel-group.com — niet ons eigen @kestrel.nl","Onverwacht document van een collega die u niet recent sprak","Echte DocuSign-notificaties bevatten meestal een beveiligingscode die u op docusign.com kunt invoeren om het document terug te vinden"]'::jsonb,
+ '["Afzenderdomein sharepoint-online-share.com — geen Microsoft- of Kestrel-domein","De \"deler\" Anna Bakker gebruikt @kestrel-partner.com — niet ons eigen @kestrel.nl","Onverwacht document zonder context van een onbekende persoon","Link gaat naar een los extern domein, niet naar kestrel.sharepoint.com","Kunstmatige tijdsdruk (\"verloopt over 7 dagen\")"]'::jsonb,
  '[]'::jsonb,
- 'Dit is phishing die DocuSign nabootst. Bij twijfel: open nooit de link, maar ga zelf naar docusign.com en vul daar de beveiligingscode uit een echte DocuSign-mail in. Of bel Adam direct om te vragen of hij echt iets heeft gestuurd.',
+ 'Dit is phishing die een SharePoint/OneDrive-deellink nabootst. Echte deellinks leiden naar uw eigen Microsoft 365-tenant (bv. kestrel.sharepoint.com) of naar onedrive.live.com. Twijfelt u? Open SharePoint zelf via uw browser of Teams-app en kijk onder "Gedeeld met mij" of het document er staat.',
  40),
 
 -- 5. REAL — Agenda-uitnodiging van collega
@@ -1471,20 +1471,20 @@ INSERT INTO inbox_messages
  'Dit is factuurfraude. Onbekende leveranciers met onverwachte facturen horen eerst gecheckt te worden via uw inkoopafdeling of crediteuren. Betaal nooit via een link in een e-mail, altijd via uw eigen inkoopportaal of via een nieuwe factuur-review.',
  60),
 
--- 7. REAL — Interne nieuwsbrief
+-- 7. REAL — SharePoint-document gedeeld door collega
 ('nl', 'business',
- 'Kestrel Communicatie',
- 'communicatie@kestrel.nl',
- 'Eigen domein @kestrel.nl — klopt.',
+ 'Microsoft SharePoint',
+ 'no-reply@sharepointonline.com',
+ 'Echte SharePoint-notificaties komen van @sharepointonline.com en de link wijst naar uw eigen tenant (kestrel.sharepoint.com).',
  'gisteren 09:00',
- 'Kwartaalupdate Q1 — Kestrel in het kort',
- 'Beste collega''s, hierbij de kwartaalupdate met nieuws uit alle teams...',
- E'Beste collega''s,\n\nHierbij de kwartaalupdate over het eerste kwartaal van 2024.\n\nHoogtepunten:\n• Drie nieuwe klantprojecten gestart\n• Team Operations is met vier mensen gegroeid\n• De nieuwe kantoorplattegrond is klaar (te bekijken op MijnKestrel)\n• Volgende all-hands: donderdag 16 mei, 16:00 in de kantine\n\nDe volledige update staat op MijnKestrel. Log zelf in zoals gewoonlijk — we sturen bewust geen rechtstreekse link.\n\nVragen of ideeën? Loop langs bij Communicatie (kamer 2.14) of stuur een berichtje.\n\nTot volgend kwartaal!\nCommunicatieteam Kestrel',
- '[]'::jsonb,
+ 'Lisa Verhoeven heeft "Projectplan-Noord-v4.docx" met u gedeeld',
+ 'Lisa Verhoeven heeft een document met u gedeeld: Projectplan-Noord-v4.docx...',
+ E'Lisa Verhoeven (l.verhoeven@kestrel.nl) heeft het volgende document met u gedeeld:\n\n📄 Projectplan-Noord-v4.docx\n\nBericht van Lisa:\n"Hoi Jan, dit is de versie voor de planning van donderdag. Laat even weten als er iets moet wijzigen."\n\nOpen het document: {{link:0}}\n\nMicrosoft SharePoint',
+ '[{"label":"Document openen","real_url":"https://kestrel.sharepoint.com/:w:/s/ProjectNoord/EYnRNcTq0/Projectplan-Noord-v4.docx","suspicious":false,"warning":"Dit is een echte SharePoint-link binnen ons eigen tenant (kestrel.sharepoint.com). Nog veiliger: open SharePoint of Teams zelf en vind het document onder \"Gedeeld met mij\"."}]'::jsonb,
  FALSE,
  '[]'::jsonb,
- '["Afzender @kestrel.nl, intern bekend","Concrete, verwachte interne informatie","Geen klikbare link — u wordt gevraagd ZELF naar MijnKestrel te gaan","Geen druk of vraag om gegevens","Verwijst naar een bekende interne plek (kamer 2.14) als aanspreekpunt"]'::jsonb,
- 'Dit is een normale interne nieuwsbrief. Goed patroon: intern domein, verwachte inhoud, en geen link die u dwingt ergens in te loggen.',
+ '["Afzender @sharepointonline.com is het officiële Microsoft-notificatiedomein","Link gaat naar kestrel.sharepoint.com — ons eigen tenant","Interne collega (Lisa via @kestrel.nl) is bekend","Persoonlijk bericht sluit aan op lopend werk (planning donderdag, project Noord)","Geen druk, geen vraag om paswoord"]'::jsonb,
+ 'Dit is een echte SharePoint-deellink van een collega. Goed patroon: notificatie via @sharepointonline.com, link naar uw eigen tenant (kestrel.sharepoint.com), persoonlijk bericht erbij. Een extra veilige gewoonte: open SharePoint zelf via de app of browser en vind het document onder "Gedeeld met mij".',
  70),
 
 -- 8. PHISHING — Microsoft 365 wachtwoord
@@ -1517,7 +1517,7 @@ INSERT INTO inbox_messages
  '[]'::jsonb,
  '["Afzender @kestrel.nl, bekende collega","Concrete interne context (Mark, project Noord, teamshare pad)","Geen link naar een extern domein","Geen vraag om gegevens, wachtwoorden of geld","Informele toon past bij normale interne communicatie"]'::jsonb,
  'Dit is een normale werkvraag van een collega. Geen actie behalve kijken en antwoorden. Let op: persoonlijke, concrete werkcontext op intern domein is normaal een goed teken.',
- 90),
+ 10),
 
 -- 10. PHISHING — Recruiter met gevaarlijke bijlage
 ('nl', 'business',
@@ -1554,7 +1554,7 @@ INSERT INTO inbox_messages
  '["Afzenderadres @kestrel-group.com, niet @kestrel.be — nep-domein dat op het bedrijf lijkt","Vraagt om cadeaubonnen als betaling (klassieke CEO-fraude)","Druk: \"niet bellen\", \"vertrouwelijk\" — bedoeld om u los te snijden van collega''s","Past niet bij de normale procedure — facturen lopen via de boekhouding, niet via medewerkers"]'::jsonb,
  '[]'::jsonb,
  'Dit is CEO-fraude. Oplichters doen zich voor als een leidinggevende en vragen om cadeaubonnen of een spoedoverschrijving, onder het mom van vertrouwelijkheid. Loop bij twijfel langs het bureau van de afzender of bel hem/haar op het bekende nummer — nooit via het nummer of e-mailadres in de verdachte mail.',
- 10),
+ 90),
 
 -- 2. REAL — HR-memo
 ('nl-BE', 'business',
@@ -1588,20 +1588,20 @@ INSERT INTO inbox_messages
  'Dit is phishing die zich voordoet als uw eigen IT-afdeling. De echte IT-afdeling mailt zelden reset-links; en als ze dat al doen, is het via het interne domein en het officiële portaal. Twijfelt u? Bel uw IT-collega of loop langs — nooit via het nummer in de mail.',
  30),
 
--- 4. PHISHING — DocuSign
+-- 4. PHISHING — Nep SharePoint-deellink
 ('nl-BE', 'business',
- 'DocuSign via Bart Claes',
- 'dse@docusigne-delivery.com',
- 'Echte DocuSign gebruikt @docusign.net of @docusign.com. "docusigne" is een typefout in het domein.',
+ 'Microsoft OneDrive',
+ 'no-reply@sharepoint-online-share.com',
+ 'Echte SharePoint-meldingen komen van @sharepointonline.com en de link wijst naar uw eigen tenant (bv. kestrel.sharepoint.com). Dit domein is nep.',
  'vandaag 13:47',
- 'Bart Claes wil dat u een document ondertekent',
- 'U heeft een document ontvangen via DocuSign. Het document "Raamovereenkomst-2024.pdf" wacht...',
- E'DocuSign\n\nBart Claes (b.claes@kestrel-group.com) heeft u gevraagd om een document te ondertekenen via DocuSign.\n\nDocument: Raamovereenkomst-2024.pdf\nVerzonden: vandaag om 13u47\n\nOpen het document: {{link:0}}\n\nDank u wel,\nDocuSign',
- '[{"label":"Document beoordelen","real_url":"http://docusigne-delivery.com/sign?id=78a2f","suspicious":true,"warning":"Dit domein is docusigne-delivery.com — een typefout op DocuSign. Het echte domein is docusign.net. Bovendien gebruikt Bart Claes @kestrel-group.com, niet @kestrel.be."}]'::jsonb,
+ 'Bart Claes heeft "Raamovereenkomst-2024.pdf" met u gedeeld',
+ 'Bart Claes heeft een document met u gedeeld via OneDrive. Bekijk het nu...',
+ E'Een document is met u gedeeld\n\nBart Claes (b.claes@kestrel-partner.com) heeft het volgende document met u gedeeld:\n\n📄 Raamovereenkomst-2024.pdf\n\nDe link verloopt over 7 dagen. Bekijk het document om toegang te behouden:\n\n{{link:0}}\n\nMicrosoft OneDrive',
+ '[{"label":"Document openen","real_url":"http://sharepoint-online-share.com/view?id=8a3f2","suspicious":true,"warning":"Dit is geen Microsoft-domein. Echte SharePoint- en OneDrive-links gaan naar uw eigen tenant (bv. kestrel.sharepoint.com) of naar onedrive.live.com. \"sharepoint-online-share.com\" is nep. Bovendien gebruikt Bart @kestrel-partner.com in plaats van @kestrel.be."}]'::jsonb,
  TRUE,
- '["Domein is \"docusigne-delivery.com\" (niet docusign.net/.com)","De \"afzender\" Bart Claes gebruikt @kestrel-group.com — niet ons eigen @kestrel.be","Onverwacht document van een collega die u niet recent sprak","Echte DocuSign-notificaties bevatten een beveiligingscode die u op docusign.com kunt invoeren om het document terug te vinden"]'::jsonb,
+ '["Afzenderdomein sharepoint-online-share.com — geen Microsoft- of Kestrel-domein","De \"deler\" Bart Claes gebruikt @kestrel-partner.com — niet ons eigen @kestrel.be","Onverwacht document zonder context","Link gaat naar een los extern domein, niet naar kestrel.sharepoint.com","Kunstmatige tijdsdruk (\"verloopt over 7 dagen\")"]'::jsonb,
  '[]'::jsonb,
- 'Dit is phishing die DocuSign nabootst. Bij twijfel: open nooit de link, maar ga zelf naar docusign.com en vul daar de beveiligingscode uit een echte DocuSign-mail in. Of bel Bart rechtstreeks om te vragen of hij echt iets heeft verstuurd.',
+ 'Dit is phishing die een SharePoint/OneDrive-deellink nabootst. Echte deellinks leiden naar uw eigen Microsoft 365-tenant (bv. kestrel.sharepoint.com) of naar onedrive.live.com. Twijfelt u? Open SharePoint zelf via uw browser of Teams-app en kijk onder "Gedeeld met mij" of het document er staat.',
  40),
 
 -- 5. REAL — Agenda-uitnodiging van collega
@@ -1641,20 +1641,20 @@ INSERT INTO inbox_messages
  'Dit is factuurfraude. Onbekende leveranciers met onverwachte facturen horen eerst gecontroleerd te worden via uw aankoopdienst of crediteuren. Betaal nooit via een link in een e-mail, altijd via uw eigen inkoopportaal of via een nieuwe factuur-review.',
  60),
 
--- 7. REAL — Interne nieuwsbrief
+-- 7. REAL — SharePoint-document gedeeld door collega
 ('nl-BE', 'business',
- 'Kestrel Communicatie',
- 'communicatie@kestrel.be',
- 'Eigen domein @kestrel.be — klopt.',
- 'gisteren 09u',
- 'Kwartaalupdate Q1 — Kestrel in het kort',
- 'Beste collega''s, hierbij de kwartaalupdate met nieuws uit alle teams...',
- E'Beste collega''s,\n\nHierbij de kwartaalupdate over het eerste kwartaal van 2024.\n\nHoogtepunten:\n• Drie nieuwe klantprojecten gestart\n• Team Operations is met vier mensen gegroeid\n• De nieuwe kantoorplattegrond is klaar (te bekijken op MijnKestrel)\n• Volgende all-hands: donderdag 16 mei, 16u in de bedrijfsrestaurant\n\nDe volledige update staat op MijnKestrel. Meld uzelf aan zoals gewoonlijk — we sturen bewust geen rechtstreekse link.\n\nVragen of ideeën? Loop langs bij Communicatie (bureau 2.14) of stuur een berichtje.\n\nTot volgend kwartaal!\nCommunicatieteam Kestrel',
- '[]'::jsonb,
+ 'Microsoft SharePoint',
+ 'no-reply@sharepointonline.com',
+ 'Echte SharePoint-notificaties komen van @sharepointonline.com en de link wijst naar uw eigen tenant (kestrel.sharepoint.com).',
+ 'gisteren 09u00',
+ 'Sophie Dewit heeft "Projectplan-Noord-v4.docx" met u gedeeld',
+ 'Sophie Dewit heeft een document met u gedeeld: Projectplan-Noord-v4.docx...',
+ E'Sophie Dewit (s.dewit@kestrel.be) heeft het volgende document met u gedeeld:\n\n📄 Projectplan-Noord-v4.docx\n\nBericht van Sophie:\n"Hallo Peter, dit is de versie voor de planning van donderdag. Laat even weten als er iets moet wijzigen."\n\nOpen het document: {{link:0}}\n\nMicrosoft SharePoint',
+ '[{"label":"Document openen","real_url":"https://kestrel.sharepoint.com/:w:/s/ProjectNoord/EYnRNcTq0/Projectplan-Noord-v4.docx","suspicious":false,"warning":"Dit is een echte SharePoint-link binnen ons eigen tenant (kestrel.sharepoint.com). Nog veiliger: open SharePoint of Teams zelf en vind het document onder \"Gedeeld met mij\"."}]'::jsonb,
  FALSE,
  '[]'::jsonb,
- '["Afzender @kestrel.be, intern bekend","Concrete, verwachte interne informatie","Geen klikbare link — u wordt gevraagd ZELF naar MijnKestrel te gaan","Geen druk of vraag om gegevens","Verwijst naar een bekende interne plek (bureau 2.14) als aanspreekpunt"]'::jsonb,
- 'Dit is een normale interne nieuwsbrief. Goed patroon: intern domein, verwachte inhoud en geen link die u dwingt ergens aan te melden.',
+ '["Afzender @sharepointonline.com is het officiële Microsoft-notificatiedomein","Link gaat naar kestrel.sharepoint.com — ons eigen tenant","Interne collega (Sophie via @kestrel.be) is bekend","Persoonlijk bericht sluit aan op lopend werk (planning donderdag, project Noord)","Geen druk, geen vraag om paswoord"]'::jsonb,
+ 'Dit is een echte SharePoint-deellink van een collega. Goed patroon: notificatie via @sharepointonline.com, link naar uw eigen tenant (kestrel.sharepoint.com), persoonlijk bericht erbij. Een extra veilige gewoonte: open SharePoint zelf via de app of browser en vind het document onder "Gedeeld met mij".',
  70),
 
 -- 8. PHISHING — Microsoft 365
@@ -1687,7 +1687,7 @@ INSERT INTO inbox_messages
  '[]'::jsonb,
  '["Afzender @kestrel.be, bekende collega","Concrete interne context (Mark, project Noord, teamshare-pad)","Geen link naar een extern domein","Geen vraag om gegevens, paswoorden of geld","Informele toon past bij normale interne communicatie"]'::jsonb,
  'Dit is een normale werkvraag van een collega. Geen actie behalve kijken en antwoorden. Let op: persoonlijke, concrete werkcontext op intern domein is normaal een goed teken.',
- 90),
+ 10),
 
 -- 10. PHISHING — Recruiter met gevaarlijke bijlage
 ('nl-BE', 'business',
@@ -1724,7 +1724,7 @@ INSERT INTO inbox_messages
  '["Sender @kestrel-group.com, not @kestrel.co.uk — lookalike domain","Asks for gift cards as a form of payment (textbook CEO fraud)","Pressure: \"don''t call\", \"confidential\" — designed to isolate you from colleagues","Bypasses the normal process — real expenses go through Finance, not via an employee buying gift cards"]'::jsonb,
  '[]'::jsonb,
  'This is CEO fraud. Scammers impersonate a senior leader and ask for gift cards or an urgent transfer, using confidentiality to keep you from double-checking. If in doubt, walk over to the sender''s desk or call them on their known number — never via anything in the suspicious email.',
- 10),
+ 90),
 
 -- 2. REAL — HR memo
 ('en', 'business',
@@ -1758,20 +1758,20 @@ INSERT INTO inbox_messages
  'This is phishing posing as your own IT team. The real IT team rarely emails reset links — and when they do, it''s via the internal domain and the official portal. Unsure? Call a colleague in IT or drop by in person — never via any number in the email.',
  30),
 
--- 4. PHISHING — DocuSign lookalike
+-- 4. PHISHING — Fake SharePoint share
 ('en', 'business',
- 'DocuSign via Adam Baker',
- 'dse@docusigne-delivery.com',
- 'Real DocuSign uses @docusign.net or @docusign.com. "docusigne" is a typo in the domain.',
+ 'Microsoft OneDrive',
+ 'no-reply@sharepoint-online-share.com',
+ 'Real SharePoint notifications come from @sharepointonline.com and the link points to your own tenant (e.g. kestrel.sharepoint.com). This domain is fake.',
  'today 13:47',
- 'Adam Baker would like you to sign a document',
- 'You have a document waiting via DocuSign. The document "Framework-Agreement-2024.pdf" is...',
- E'DocuSign\n\nAdam Baker (a.baker@kestrel-group.com) has asked you to sign a document via DocuSign.\n\nDocument: Framework-Agreement-2024.pdf\nSent: today at 13:47\n\nOpen the document: {{link:0}}\n\nThank you,\nDocuSign',
- '[{"label":"Review document","real_url":"http://docusigne-delivery.com/sign?id=78a2f","suspicious":true,"warning":"The domain is docusigne-delivery.com — a typo on DocuSign. The real domain is docusign.net. On top of that, Adam Baker is using @kestrel-group.com, not @kestrel.co.uk."}]'::jsonb,
+ 'Adam Baker shared "Framework-Agreement-2024.pdf" with you',
+ 'Adam Baker shared a document with you via OneDrive. View it now...',
+ E'A document has been shared with you\n\nAdam Baker (a.baker@kestrel-partner.com) has shared the following document with you:\n\n📄 Framework-Agreement-2024.pdf\n\nThe link expires in 7 days. View the document to keep access:\n\n{{link:0}}\n\nMicrosoft OneDrive',
+ '[{"label":"Open document","real_url":"http://sharepoint-online-share.com/view?id=8a3f2","suspicious":true,"warning":"This is not a Microsoft domain. Real SharePoint and OneDrive links point to your own tenant (e.g. kestrel.sharepoint.com) or to onedrive.live.com. \"sharepoint-online-share.com\" is fake. On top of that, Adam uses @kestrel-partner.com, not @kestrel.co.uk."}]'::jsonb,
  TRUE,
- '["Domain is \"docusigne-delivery.com\" (not docusign.net/.com)","The \"sender\" Adam Baker uses @kestrel-group.com — not our own @kestrel.co.uk","An unexpected document from a colleague you haven''t spoken to recently","Real DocuSign notifications include a security code you can enter on docusign.com to retrieve the document"]'::jsonb,
+ '["Sender domain sharepoint-online-share.com — not a Microsoft or Kestrel domain","The \"sharer\" Adam Baker uses @kestrel-partner.com — not our own @kestrel.co.uk","Unexpected document with no context","The link points to a stand-alone external domain rather than kestrel.sharepoint.com","Artificial time pressure (\"expires in 7 days\")"]'::jsonb,
  '[]'::jsonb,
- 'This is phishing masquerading as DocuSign. If in doubt, don''t open the link — go to docusign.com yourself and enter the security code from a real DocuSign email. Or phone Adam directly to check whether he actually sent anything.',
+ 'This is phishing masquerading as a SharePoint/OneDrive share link. Real share links take you to your own Microsoft 365 tenant (e.g. kestrel.sharepoint.com) or to onedrive.live.com. If in doubt, open SharePoint or the Teams app yourself and check "Shared with me" to see whether the document is actually there.',
  40),
 
 -- 5. REAL — Colleague calendar invite
@@ -1811,20 +1811,20 @@ INSERT INTO inbox_messages
  'This is invoice fraud. Unknown suppliers with unexpected invoices should be checked with Purchasing or Accounts Payable first. Never pay via a link in an email — always via your own purchasing portal or via a fresh invoice review.',
  60),
 
--- 7. REAL — Internal newsletter
+-- 7. REAL — SharePoint document shared by a colleague
 ('en', 'business',
- 'Kestrel Communications',
- 'communications@kestrel.co.uk',
- 'Own @kestrel.co.uk domain — fine.',
+ 'Microsoft SharePoint',
+ 'no-reply@sharepointonline.com',
+ 'Real SharePoint notifications come from @sharepointonline.com and the link points to your own tenant (kestrel.sharepoint.com).',
  'yesterday 09:00',
- 'Q1 update — Kestrel in brief',
- 'Dear colleagues, here''s the Q1 update with news from every team...',
- E'Dear colleagues,\n\nHere''s the quarterly update covering the first three months of 2024.\n\nHighlights:\n• Three new client projects started\n• Operations team grew by four people\n• The new floor plan is live (see MyKestrel)\n• Next all-hands: Thursday 16 May, 16:00 in the canteen\n\nThe full update is on MyKestrel. Sign in the way you always do — we deliberately don''t send a direct link.\n\nQuestions or ideas? Drop by Communications (office 2.14) or send a message.\n\nSee you next quarter!\nKestrel Communications team',
- '[]'::jsonb,
+ 'Emma Walsh shared "Project-North-Plan-v4.docx" with you',
+ 'Emma Walsh shared a document with you: Project-North-Plan-v4.docx...',
+ E'Emma Walsh (e.walsh@kestrel.co.uk) has shared the following document with you:\n\n📄 Project-North-Plan-v4.docx\n\nMessage from Emma:\n"Hi Jane, this is the version for Thursday''s planning. Let me know if anything needs to change."\n\nOpen the document: {{link:0}}\n\nMicrosoft SharePoint',
+ '[{"label":"Open document","real_url":"https://kestrel.sharepoint.com/:w:/s/ProjectNorth/EYnRNcTq0/Project-North-Plan-v4.docx","suspicious":false,"warning":"This is a genuine SharePoint link within our own tenant (kestrel.sharepoint.com). Even safer: open SharePoint or Teams yourself and find the document under \"Shared with me\"."}]'::jsonb,
  FALSE,
  '[]'::jsonb,
- '["Sender @kestrel.co.uk, internally known","Concrete, expected internal content","No clickable link — you are asked to go to MyKestrel YOURSELF","No pressure, no request for data","Points to a known internal location (office 2.14) as follow-up"]'::jsonb,
- 'This is a normal internal newsletter. The good pattern: internal domain, expected content and no link that would push you to sign in somewhere.',
+ '["Sender @sharepointonline.com is the official Microsoft notification domain","Link points to kestrel.sharepoint.com — our own tenant","Internal colleague (Emma via @kestrel.co.uk) is known","Personal message ties in with ongoing work (Thursday''s planning, Project North)","No pressure, no password request"]'::jsonb,
+ 'This is a genuine SharePoint share link from a colleague. The good pattern: notification via @sharepointonline.com, link to your own tenant (kestrel.sharepoint.com), a personal message attached. An even safer habit: open SharePoint or Teams yourself and find the document under "Shared with me".',
  70),
 
 -- 8. PHISHING — Microsoft 365 password
@@ -1857,7 +1857,7 @@ INSERT INTO inbox_messages
  '[]'::jsonb,
  '["Sender @kestrel.co.uk, known colleague","Concrete internal context (Mark, Project North, team share path)","No link to an external domain","No request for data, passwords or money","Informal tone fits normal internal communication"]'::jsonb,
  'This is a normal work question from a colleague. Nothing to do other than look and reply. Note: a personally addressed, specific work context on an internal domain is generally a good sign.',
- 90),
+ 10),
 
 -- 10. PHISHING — Recruiter with malicious attachment
 ('en', 'business',
@@ -1894,7 +1894,7 @@ INSERT INTO inbox_messages
  '["Expéditeur @kestrel-group.com, pas @kestrel.fr — domaine imitation","Demande des cartes cadeaux comme moyen de paiement (fraude au dirigeant classique)","Pression : \"ne m''appelle pas\", \"confidentiel\" — vise à vous isoler de vos collègues","Contourne la procédure normale — les dépenses passent par la comptabilité, pas par un salarié"]'::jsonb,
  '[]'::jsonb,
  'C''est de la fraude au dirigeant. Les escrocs se font passer pour un responsable et réclament des cartes cadeaux ou un virement urgent, sous couvert de confidentialité. En cas de doute, rendez-vous au bureau de l''expéditeur ou appelez-le sur son numéro connu — jamais via les coordonnées de l''e-mail suspect.',
- 10),
+ 90),
 
 -- 2. REAL — HR memo
 ('fr', 'business',
@@ -1928,20 +1928,20 @@ INSERT INTO inbox_messages
  'C''est du hameçonnage qui se fait passer pour votre service informatique. Votre vrai service informatique envoie rarement des liens de réinitialisation, et quand il le fait, c''est via le domaine interne et le portail officiel. Dans le doute, appelez un(e) collègue de l''informatique ou passez le voir — jamais via le numéro indiqué dans l''e-mail.',
  30),
 
--- 4. PHISHING — DocuSign
+-- 4. PHISHING — Faux partage SharePoint
 ('fr', 'business',
- 'DocuSign via Julien Martin',
- 'dse@docusigne-delivery.com',
- 'Le vrai DocuSign utilise @docusign.net ou @docusign.com. "docusigne" est une faute de frappe dans le domaine.',
+ 'Microsoft OneDrive',
+ 'no-reply@sharepoint-online-share.com',
+ 'Les vraies notifications SharePoint viennent de @sharepointonline.com et le lien pointe vers votre propre tenant (p. ex. kestrel.sharepoint.com). Ce domaine est faux.',
  'aujourd''hui 13:47',
- 'Julien Martin vous demande de signer un document',
- 'Vous avez un document en attente sur DocuSign. Le document "Contrat-Cadre-2024.pdf"...',
- E'DocuSign\n\nJulien Martin (j.martin@kestrel-group.com) vous demande de signer un document via DocuSign.\n\nDocument : Contrat-Cadre-2024.pdf\nEnvoyé : aujourd''hui à 13h47\n\nOuvrez le document : {{link:0}}\n\nMerci,\nDocuSign',
- '[{"label":"Consulter le document","real_url":"http://docusigne-delivery.com/sign?id=78a2f","suspicious":true,"warning":"Le domaine est docusigne-delivery.com — une faute de frappe sur DocuSign. Le vrai domaine est docusign.net. De plus, Julien Martin utilise @kestrel-group.com, pas @kestrel.fr."}]'::jsonb,
+ 'Julien Martin a partagé "Contrat-Cadre-2024.pdf" avec vous',
+ 'Julien Martin a partagé un document avec vous via OneDrive. Consultez-le maintenant...',
+ E'Un document a été partagé avec vous\n\nJulien Martin (j.martin@kestrel-partner.com) a partagé le document suivant avec vous :\n\n📄 Contrat-Cadre-2024.pdf\n\nLe lien expire dans 7 jours. Consultez le document pour conserver votre accès :\n\n{{link:0}}\n\nMicrosoft OneDrive',
+ '[{"label":"Ouvrir le document","real_url":"http://sharepoint-online-share.com/view?id=8a3f2","suspicious":true,"warning":"Ce n''est pas un domaine Microsoft. Les vrais liens SharePoint et OneDrive pointent vers votre propre tenant (p. ex. kestrel.sharepoint.com) ou vers onedrive.live.com. \"sharepoint-online-share.com\" est faux. De plus, Julien utilise @kestrel-partner.com, pas @kestrel.fr."}]'::jsonb,
  TRUE,
- '["Le domaine est \"docusigne-delivery.com\" (pas docusign.net/.com)","L''\"expéditeur\" Julien Martin utilise @kestrel-group.com — pas notre @kestrel.fr","Document inattendu d''un collègue que vous n''avez pas vu récemment","Les vraies notifications DocuSign contiennent un code de sécurité que vous pouvez saisir sur docusign.com pour retrouver le document"]'::jsonb,
+ '["Domaine expéditeur sharepoint-online-share.com — pas un domaine Microsoft ni Kestrel","L''\"partageur\" Julien Martin utilise @kestrel-partner.com — pas notre @kestrel.fr","Document inattendu sans contexte","Le lien mène à un domaine externe isolé, pas à kestrel.sharepoint.com","Pression temporelle artificielle (\"expire dans 7 jours\")"]'::jsonb,
  '[]'::jsonb,
- 'C''est du hameçonnage qui imite DocuSign. En cas de doute, ne cliquez jamais sur le lien : rendez-vous vous-même sur docusign.com et entrez le code de sécurité d''un vrai e-mail DocuSign. Ou appelez Julien directement pour vérifier s''il a vraiment envoyé quelque chose.',
+ 'C''est du hameçonnage qui imite un lien de partage SharePoint/OneDrive. Les vrais liens de partage pointent vers votre tenant Microsoft 365 (p. ex. kestrel.sharepoint.com) ou vers onedrive.live.com. En cas de doute, ouvrez SharePoint ou l''application Teams vous-même et vérifiez sous « Partagé avec moi » si le document y est.',
  40),
 
 -- 5. REAL — Invitation réunion collègue
@@ -1981,20 +1981,20 @@ INSERT INTO inbox_messages
  'C''est de la fraude à la fausse facture. Un fournisseur inconnu envoyant une facture inattendue doit d''abord être vérifié auprès du service Achats ou Comptabilité fournisseurs. Ne payez jamais via un lien dans un e-mail — toujours via votre propre portail d''achats ou après un nouvel examen de la facture.',
  60),
 
--- 7. REAL — Newsletter interne
+-- 7. REAL — Document SharePoint partagé par une collègue
 ('fr', 'business',
- 'Communication Kestrel',
- 'communication@kestrel.fr',
- 'Domaine interne @kestrel.fr — correct.',
+ 'Microsoft SharePoint',
+ 'no-reply@sharepointonline.com',
+ 'Les vraies notifications SharePoint viennent de @sharepointonline.com et le lien pointe vers votre propre tenant (kestrel.sharepoint.com).',
  'hier 09h00',
- 'Lettre d''info T1 — Kestrel en bref',
- 'Chers collègues, voici la lettre trimestrielle avec les nouvelles de chaque équipe...',
- E'Chers collègues,\n\nVoici la lettre trimestrielle couvrant les trois premiers mois de 2024.\n\nFaits marquants :\n• Trois nouveaux projets clients lancés\n• L''équipe Opérations s''est agrandie de quatre personnes\n• Le nouveau plan des bureaux est disponible (voir MonKestrel)\n• Prochaine réunion générale : jeudi 16 mai, 16h, à la cafétéria\n\nLa lettre complète est sur MonKestrel. Connectez-vous comme d''habitude — nous n''envoyons volontairement aucun lien direct.\n\nQuestions ou idées ? Passez à la Communication (bureau 2.14) ou envoyez un message.\n\nÀ la prochaine !\nÉquipe Communication Kestrel',
- '[]'::jsonb,
+ 'Claire Lambert a partagé "Plan-Projet-Nord-v4.docx" avec vous',
+ 'Claire Lambert a partagé un document avec vous : Plan-Projet-Nord-v4.docx...',
+ E'Claire Lambert (c.lambert@kestrel.fr) a partagé le document suivant avec vous :\n\n📄 Plan-Projet-Nord-v4.docx\n\nMessage de Claire :\n"Bonjour Pierre, voici la version pour la planification de jeudi. Dis-moi si quelque chose doit être modifié."\n\nOuvrez le document : {{link:0}}\n\nMicrosoft SharePoint',
+ '[{"label":"Ouvrir le document","real_url":"https://kestrel.sharepoint.com/:w:/s/ProjetNord/EYnRNcTq0/Plan-Projet-Nord-v4.docx","suspicious":false,"warning":"C''est un vrai lien SharePoint au sein de notre propre tenant (kestrel.sharepoint.com). Encore plus sûr : ouvrez SharePoint ou Teams vous-même et retrouvez le document sous « Partagé avec moi »."}]'::jsonb,
  FALSE,
  '[]'::jsonb,
- '["Expéditeur @kestrel.fr, interne connue","Contenu interne concret et attendu","Aucun lien cliquable — on vous demande d''aller VOUS-MÊME sur MonKestrel","Aucune pression, aucune demande d''information","Renvoie à un endroit interne connu (bureau 2.14) comme point de contact"]'::jsonb,
- 'C''est une newsletter interne classique. Le bon modèle : domaine interne, contenu attendu, aucun lien qui vous obligerait à vous connecter quelque part.',
+ '["Expéditeur @sharepointonline.com est le domaine officiel de notification Microsoft","Le lien pointe vers kestrel.sharepoint.com — notre propre tenant","Collègue interne (Claire via @kestrel.fr) connue","Message personnel relié au travail en cours (planification de jeudi, projet Nord)","Aucune pression, aucune demande de mot de passe"]'::jsonb,
+ 'C''est un vrai lien de partage SharePoint d''une collègue. Le bon modèle : notification via @sharepointonline.com, lien vers votre propre tenant (kestrel.sharepoint.com), message personnel joint. Habitude encore plus sûre : ouvrez SharePoint ou Teams vous-même et retrouvez le document sous « Partagé avec moi ».',
  70),
 
 -- 8. PHISHING — Microsoft 365
@@ -2027,7 +2027,7 @@ INSERT INTO inbox_messages
  '[]'::jsonb,
  '["Expéditeur @kestrel.fr, collègue connue","Contexte interne concret (Marc, projet Nord, chemin du partage d''équipe)","Aucun lien vers un domaine externe","Aucune demande d''information, de mot de passe ou d''argent","Ton informel cohérent avec la communication interne normale"]'::jsonb,
  'C''est une question de travail tout à fait normale d''une collègue. Rien à faire sinon regarder et répondre. À retenir : un contexte de travail concret et personnalisé sur un domaine interne est en général un bon signe.',
- 90),
+ 10),
 
 -- 10. PHISHING — Recruteur avec pièce jointe malveillante
 ('fr', 'business',
@@ -2064,7 +2064,7 @@ INSERT INTO inbox_messages
  '["Expéditeur @kestrel-group.com, pas @kestrel.be — domaine imitation","Demande des cartes cadeaux comme moyen de paiement (fraude au dirigeant classique)","Pression : \"ne m''appelle pas\", \"confidentiel\" — vise à vous isoler de vos collègues","Contourne la procédure normale — les dépenses passent par la comptabilité"]'::jsonb,
  '[]'::jsonb,
  'C''est de la fraude au dirigeant. Les escrocs se font passer pour un responsable et réclament des cartes cadeaux ou un virement urgent, sous couvert de confidentialité. En cas de doute, rendez-vous au bureau de l''expéditeur ou appelez-le sur son numéro connu — jamais via les coordonnées de l''e-mail suspect.',
- 10),
+ 90),
 
 -- 2. REAL — HR memo
 ('fr-BE', 'business',
@@ -2098,20 +2098,20 @@ INSERT INTO inbox_messages
  'C''est du hameçonnage qui se fait passer pour votre service informatique. Dans le doute, appelez un(e) collègue de l''informatique ou passez le voir — jamais via le numéro indiqué dans l''e-mail.',
  30),
 
--- 4. PHISHING — DocuSign
+-- 4. PHISHING — Faux partage SharePoint
 ('fr-BE', 'business',
- 'DocuSign via Thomas Leclercq',
- 'dse@docusigne-delivery.com',
- 'Le vrai DocuSign utilise @docusign.net ou @docusign.com. "docusigne" est une faute de frappe dans le domaine.',
+ 'Microsoft OneDrive',
+ 'no-reply@sharepoint-online-share.com',
+ 'Les vraies notifications SharePoint viennent de @sharepointonline.com et le lien pointe vers votre propre tenant (p. ex. kestrel.sharepoint.com). Ce domaine est faux.',
  'aujourd''hui 13:47',
- 'Thomas Leclercq vous demande de signer un document',
- 'Vous avez un document en attente sur DocuSign. Le document "Contrat-Cadre-2024.pdf"...',
- E'DocuSign\n\nThomas Leclercq (t.leclercq@kestrel-group.com) vous demande de signer un document via DocuSign.\n\nDocument : Contrat-Cadre-2024.pdf\nEnvoyé : aujourd''hui à 13h47\n\nOuvrez le document : {{link:0}}\n\nMerci,\nDocuSign',
- '[{"label":"Consulter le document","real_url":"http://docusigne-delivery.com/sign?id=78a2f","suspicious":true,"warning":"Le domaine est docusigne-delivery.com — une faute de frappe sur DocuSign. Le vrai domaine est docusign.net. De plus, Thomas Leclercq utilise @kestrel-group.com, pas @kestrel.be."}]'::jsonb,
+ 'Thomas Leclercq a partagé "Contrat-Cadre-2024.pdf" avec vous',
+ 'Thomas Leclercq a partagé un document avec vous via OneDrive. Consultez-le maintenant...',
+ E'Un document a été partagé avec vous\n\nThomas Leclercq (t.leclercq@kestrel-partner.com) a partagé le document suivant avec vous :\n\n📄 Contrat-Cadre-2024.pdf\n\nLe lien expire dans 7 jours. Consultez le document pour conserver votre accès :\n\n{{link:0}}\n\nMicrosoft OneDrive',
+ '[{"label":"Ouvrir le document","real_url":"http://sharepoint-online-share.com/view?id=8a3f2","suspicious":true,"warning":"Ce n''est pas un domaine Microsoft. Les vrais liens SharePoint et OneDrive pointent vers votre propre tenant (p. ex. kestrel.sharepoint.com) ou vers onedrive.live.com. \"sharepoint-online-share.com\" est faux. De plus, Thomas utilise @kestrel-partner.com, pas @kestrel.be."}]'::jsonb,
  TRUE,
- '["Le domaine est \"docusigne-delivery.com\" (pas docusign.net/.com)","L''\"expéditeur\" Thomas Leclercq utilise @kestrel-group.com — pas notre @kestrel.be","Document inattendu d''un collègue que vous n''avez pas vu récemment","Les vraies notifications DocuSign contiennent un code de sécurité à saisir sur docusign.com"]'::jsonb,
+ '["Domaine expéditeur sharepoint-online-share.com — pas un domaine Microsoft ni Kestrel","Le \"partageur\" Thomas Leclercq utilise @kestrel-partner.com — pas notre @kestrel.be","Document inattendu sans contexte","Le lien mène à un domaine externe isolé, pas à kestrel.sharepoint.com","Pression temporelle artificielle (\"expire dans 7 jours\")"]'::jsonb,
  '[]'::jsonb,
- 'C''est du hameçonnage qui imite DocuSign. En cas de doute, ne cliquez jamais sur le lien : rendez-vous vous-même sur docusign.com et entrez le code de sécurité d''un vrai e-mail DocuSign. Ou appelez Thomas directement pour vérifier.',
+ 'C''est du hameçonnage qui imite un lien de partage SharePoint/OneDrive. Les vrais liens pointent vers votre tenant Microsoft 365 (p. ex. kestrel.sharepoint.com) ou vers onedrive.live.com. En cas de doute, ouvrez SharePoint ou Teams vous-même et vérifiez sous « Partagé avec moi » si le document y est.',
  40),
 
 -- 5. REAL — Invitation réunion collègue
@@ -2151,20 +2151,20 @@ INSERT INTO inbox_messages
  'C''est de la fraude à la fausse facture. Un fournisseur inconnu envoyant une facture inattendue doit d''abord être vérifié auprès du service Achats. Ne payez jamais via un lien dans un e-mail.',
  60),
 
--- 7. REAL — Newsletter interne
+-- 7. REAL — Document SharePoint partagé par une collègue
 ('fr-BE', 'business',
- 'Communication Kestrel',
- 'communication@kestrel.be',
- 'Domaine interne @kestrel.be — correct.',
+ 'Microsoft SharePoint',
+ 'no-reply@sharepointonline.com',
+ 'Les vraies notifications SharePoint viennent de @sharepointonline.com et le lien pointe vers votre propre tenant (kestrel.sharepoint.com).',
  'hier 09h00',
- 'Lettre d''info T1 — Kestrel en bref',
- 'Chers collègues, voici la lettre trimestrielle avec les nouvelles de chaque équipe...',
- E'Chers collègues,\n\nVoici la lettre trimestrielle couvrant les trois premiers mois de 2024.\n\nFaits marquants :\n• Trois nouveaux projets clients lancés\n• L''équipe Opérations s''est agrandie de quatre personnes\n• Le nouveau plan des bureaux est disponible (voir MonKestrel)\n• Prochaine réunion générale : jeudi 16 mai, 16h, à la cafétéria\n\nLa lettre complète est sur MonKestrel. Connectez-vous comme d''habitude — nous n''envoyons volontairement aucun lien direct.\n\nQuestions ou idées ? Passez à la Communication (bureau 2.14) ou envoyez un message.\n\nÀ la prochaine !\nÉquipe Communication Kestrel',
- '[]'::jsonb,
+ 'Marie Lemaire a partagé "Plan-Projet-Nord-v4.docx" avec vous',
+ 'Marie Lemaire a partagé un document avec vous : Plan-Projet-Nord-v4.docx...',
+ E'Marie Lemaire (m.lemaire@kestrel.be) a partagé le document suivant avec vous :\n\n📄 Plan-Projet-Nord-v4.docx\n\nMessage de Marie :\n"Bonjour Pierre, voici la version pour la planification de jeudi. Dis-moi si quelque chose doit être modifié."\n\nOuvrez le document : {{link:0}}\n\nMicrosoft SharePoint',
+ '[{"label":"Ouvrir le document","real_url":"https://kestrel.sharepoint.com/:w:/s/ProjetNord/EYnRNcTq0/Plan-Projet-Nord-v4.docx","suspicious":false,"warning":"C''est un vrai lien SharePoint au sein de notre propre tenant (kestrel.sharepoint.com). Encore plus sûr : ouvrez SharePoint ou Teams vous-même et retrouvez le document sous « Partagé avec moi »."}]'::jsonb,
  FALSE,
  '[]'::jsonb,
- '["Expéditeur @kestrel.be, interne connue","Contenu interne concret et attendu","Aucun lien cliquable — on vous demande d''aller VOUS-MÊME sur MonKestrel","Aucune pression, aucune demande d''information","Renvoie à un endroit interne connu (bureau 2.14) comme point de contact"]'::jsonb,
- 'C''est une newsletter interne classique. Le bon modèle : domaine interne, contenu attendu, aucun lien qui vous obligerait à vous connecter quelque part.',
+ '["Expéditeur @sharepointonline.com est le domaine officiel de notification Microsoft","Le lien pointe vers kestrel.sharepoint.com — notre propre tenant","Collègue interne (Marie via @kestrel.be) connue","Message personnel relié au travail en cours (planification de jeudi, projet Nord)","Aucune pression, aucune demande de mot de passe"]'::jsonb,
+ 'C''est un vrai lien de partage SharePoint d''une collègue. Le bon modèle : notification via @sharepointonline.com, lien vers votre propre tenant (kestrel.sharepoint.com), message personnel joint.',
  70),
 
 -- 8. PHISHING — Microsoft 365
@@ -2197,7 +2197,7 @@ INSERT INTO inbox_messages
  '[]'::jsonb,
  '["Expéditeur @kestrel.be, collègue connue","Contexte interne concret (Marc, projet Nord, chemin du partage d''équipe)","Aucun lien vers un domaine externe","Aucune demande d''information, de mot de passe ou d''argent","Ton informel cohérent avec la communication interne normale"]'::jsonb,
  'C''est une question de travail tout à fait normale. Rien à faire sinon regarder et répondre. À retenir : un contexte de travail concret et personnalisé sur un domaine interne est en général un bon signe.',
- 90),
+ 10),
 
 -- 10. PHISHING — Recruiter with attachment
 ('fr-BE', 'business',
@@ -2234,7 +2234,7 @@ INSERT INTO inbox_messages
  '["Absender @kestrel-group.com, nicht @kestrel.de — nachgemachte Domain","Bittet um Gutscheine als Zahlungsmittel (typischer CEO-Betrug)","Druck: \"nicht telefonieren\", \"vertraulich\" — soll Sie von Kollegen isolieren","Umgeht den normalen Prozess — Ausgaben laufen über die Buchhaltung, nicht über Mitarbeiter"]'::jsonb,
  '[]'::jsonb,
  'Das ist CEO-Betrug. Betrüger geben sich als Führungsperson aus und bitten um Gutscheine oder eine dringende Überweisung, unter dem Vorwand der Vertraulichkeit. Gehen Sie im Zweifel persönlich beim Absender vorbei oder rufen Sie ihn/sie auf der bekannten Nummer an — nie über etwas aus der verdächtigen E-Mail.',
- 10),
+ 90),
 
 -- 2. REAL — HR-Memo
 ('de', 'business',
@@ -2268,20 +2268,20 @@ INSERT INTO inbox_messages
  'Das ist Phishing, das Ihre eigene IT vortäuscht. Die echte IT verschickt selten Reset-Links, und wenn doch, dann über die interne Domain und das offizielle Portal. Im Zweifel: rufen Sie eine/n IT-Kollegin/Kollegen an oder gehen Sie persönlich vorbei — nie über die Nummer in der E-Mail.',
  30),
 
--- 4. PHISHING — DocuSign
+-- 4. PHISHING — Gefälschter SharePoint-Freigabelink
 ('de', 'business',
- 'DocuSign via Stefan Becker',
- 'dse@docusigne-delivery.com',
- 'Echtes DocuSign nutzt @docusign.net oder @docusign.com. "docusigne" ist ein Tippfehler in der Domain.',
+ 'Microsoft OneDrive',
+ 'no-reply@sharepoint-online-share.com',
+ 'Echte SharePoint-Benachrichtigungen kommen von @sharepointonline.com, und der Link führt zu Ihrem eigenen Tenant (z. B. kestrel.sharepoint.com). Diese Domain ist gefälscht.',
  'heute 13:47',
- 'Stefan Becker bittet Sie, ein Dokument zu unterschreiben',
- 'Sie haben ein Dokument über DocuSign erhalten. Das Dokument "Rahmenvertrag-2024.pdf" wartet...',
- E'DocuSign\n\nStefan Becker (s.becker@kestrel-group.com) bittet Sie, ein Dokument über DocuSign zu unterschreiben.\n\nDokument: Rahmenvertrag-2024.pdf\nGesendet: heute um 13:47\n\nDokument öffnen: {{link:0}}\n\nVielen Dank,\nDocuSign',
- '[{"label":"Dokument prüfen","real_url":"http://docusigne-delivery.com/sign?id=78a2f","suspicious":true,"warning":"Die Domain ist docusigne-delivery.com — ein Tippfehler auf DocuSign. Die echte Domain ist docusign.net. Außerdem nutzt Stefan Becker @kestrel-group.com, nicht @kestrel.de."}]'::jsonb,
+ 'Stefan Becker hat "Rahmenvertrag-2024.pdf" mit Ihnen geteilt',
+ 'Stefan Becker hat ein Dokument per OneDrive mit Ihnen geteilt. Jetzt ansehen...',
+ E'Ein Dokument wurde mit Ihnen geteilt\n\nStefan Becker (s.becker@kestrel-partner.com) hat folgendes Dokument mit Ihnen geteilt:\n\n📄 Rahmenvertrag-2024.pdf\n\nDer Link läuft in 7 Tagen ab. Sehen Sie sich das Dokument an, um den Zugriff zu behalten:\n\n{{link:0}}\n\nMicrosoft OneDrive',
+ '[{"label":"Dokument öffnen","real_url":"http://sharepoint-online-share.com/view?id=8a3f2","suspicious":true,"warning":"Dies ist keine Microsoft-Domain. Echte SharePoint- und OneDrive-Links führen zu Ihrem eigenen Tenant (z. B. kestrel.sharepoint.com) oder zu onedrive.live.com. \"sharepoint-online-share.com\" ist gefälscht. Außerdem nutzt Stefan @kestrel-partner.com statt @kestrel.de."}]'::jsonb,
  TRUE,
- '["Domain ist \"docusigne-delivery.com\" (nicht docusign.net/.com)","Der \"Absender\" Stefan Becker nutzt @kestrel-group.com — nicht unser eigenes @kestrel.de","Unerwartetes Dokument von einem Kollegen, mit dem Sie nicht vor kurzem gesprochen haben","Echte DocuSign-Benachrichtigungen enthalten einen Sicherheitscode, den Sie auf docusign.com eingeben können, um das Dokument abzurufen"]'::jsonb,
+ '["Absenderdomain sharepoint-online-share.com — keine Microsoft- oder Kestrel-Domain","Der \"Freigebende\" Stefan Becker nutzt @kestrel-partner.com — nicht unser eigenes @kestrel.de","Unerwartetes Dokument ohne Kontext","Der Link führt zu einer separaten externen Domain, nicht zu kestrel.sharepoint.com","Künstlicher Zeitdruck (\"läuft in 7 Tagen ab\")"]'::jsonb,
  '[]'::jsonb,
- 'Das ist Phishing, das DocuSign nachahmt. Öffnen Sie im Zweifel niemals den Link — gehen Sie selbst zu docusign.com und geben Sie den Sicherheitscode aus einer echten DocuSign-Mail ein. Oder rufen Sie Stefan direkt an und fragen Sie, ob er wirklich etwas geschickt hat.',
+ 'Das ist Phishing, das einen SharePoint/OneDrive-Freigabelink nachahmt. Echte Freigabelinks führen zu Ihrem Microsoft 365-Tenant (z. B. kestrel.sharepoint.com) oder zu onedrive.live.com. Im Zweifel: Öffnen Sie SharePoint oder Teams selbst und prüfen Sie unter „Mit mir geteilt", ob das Dokument dort steht.',
  40),
 
 -- 5. REAL — Kalender-Einladung Kollegin
@@ -2321,20 +2321,20 @@ INSERT INTO inbox_messages
  'Das ist Rechnungsbetrug. Unbekannte Lieferanten mit unerwarteten Rechnungen sollten zuerst über den Einkauf oder die Kreditorenbuchhaltung geprüft werden. Zahlen Sie nie über einen Link in einer E-Mail, sondern immer über Ihr eigenes Einkaufsportal oder nach einer erneuten Rechnungsprüfung.',
  60),
 
--- 7. REAL — Interner Newsletter
+-- 7. REAL — SharePoint-Dokument von Kollegin geteilt
 ('de', 'business',
- 'Kestrel Kommunikation',
- 'kommunikation@kestrel.de',
- 'Eigene Domain @kestrel.de — korrekt.',
+ 'Microsoft SharePoint',
+ 'no-reply@sharepointonline.com',
+ 'Echte SharePoint-Benachrichtigungen kommen von @sharepointonline.com, und der Link führt zu Ihrem eigenen Tenant (kestrel.sharepoint.com).',
  'gestern 09:00',
- 'Quartals-Update Q1 — Kestrel in Kürze',
- 'Liebe Kolleginnen und Kollegen, hier das Quartals-Update mit Neuigkeiten aus allen Teams...',
- E'Liebe Kolleginnen und Kollegen,\n\nhier das Quartals-Update für die ersten drei Monate von 2024.\n\nHighlights:\n• Drei neue Kundenprojekte gestartet\n• Das Operations-Team ist um vier Personen gewachsen\n• Der neue Bürogrundriss ist fertig (zu sehen auf MeinKestrel)\n• Nächstes All-Hands: Donnerstag, 16. Mai, 16:00 Uhr in der Kantine\n\nDas vollständige Update steht auf MeinKestrel. Melden Sie sich wie gewohnt an — wir verschicken bewusst keinen Direktlink.\n\nFragen oder Ideen? Kommen Sie bei Kommunikation vorbei (Büro 2.14) oder schicken Sie eine Nachricht.\n\nBis zum nächsten Quartal!\nTeam Kommunikation Kestrel',
- '[]'::jsonb,
+ 'Anna Weber hat "Projektplan-Nord-v4.docx" mit Ihnen geteilt',
+ 'Anna Weber hat ein Dokument mit Ihnen geteilt: Projektplan-Nord-v4.docx...',
+ E'Anna Weber (a.weber@kestrel.de) hat folgendes Dokument mit Ihnen geteilt:\n\n📄 Projektplan-Nord-v4.docx\n\nNachricht von Anna:\n"Hallo Martin, das ist die Version für die Planung am Donnerstag. Gib Bescheid, falls etwas geändert werden muss."\n\nDokument öffnen: {{link:0}}\n\nMicrosoft SharePoint',
+ '[{"label":"Dokument öffnen","real_url":"https://kestrel.sharepoint.com/:w:/s/ProjektNord/EYnRNcTq0/Projektplan-Nord-v4.docx","suspicious":false,"warning":"Dies ist ein echter SharePoint-Link innerhalb unseres eigenen Tenants (kestrel.sharepoint.com). Noch sicherer: Öffnen Sie SharePoint oder Teams selbst und suchen Sie das Dokument unter „Mit mir geteilt\"."}]'::jsonb,
  FALSE,
  '[]'::jsonb,
- '["Absender @kestrel.de, intern bekannt","Konkreter, erwarteter interner Inhalt","Kein anklickbarer Link — Sie werden gebeten, SELBST zu MeinKestrel zu gehen","Kein Druck, keine Datenabfrage","Verweist auf einen bekannten internen Ort (Büro 2.14) als Ansprechpunkt"]'::jsonb,
- 'Das ist ein normaler interner Newsletter. Gutes Muster: interne Domain, erwarteter Inhalt und kein Link, der Sie dazu drängt, sich irgendwo anzumelden.',
+ '["Absender @sharepointonline.com ist die offizielle Microsoft-Benachrichtigungsdomain","Der Link führt zu kestrel.sharepoint.com — unser eigener Tenant","Interne Kollegin (Anna via @kestrel.de) ist bekannt","Persönliche Nachricht passt zu laufender Arbeit (Planung Donnerstag, Projekt Nord)","Kein Druck, keine Passwortabfrage"]'::jsonb,
+ 'Das ist ein echter SharePoint-Freigabelink von einer Kollegin. Gutes Muster: Benachrichtigung über @sharepointonline.com, Link zu Ihrem eigenen Tenant (kestrel.sharepoint.com), persönliche Nachricht dabei. Noch sicherere Gewohnheit: SharePoint oder Teams selbst öffnen und das Dokument unter „Mit mir geteilt" suchen.',
  70),
 
 -- 8. PHISHING — Microsoft 365
@@ -2367,7 +2367,7 @@ INSERT INTO inbox_messages
  '[]'::jsonb,
  '["Absender @kestrel.de, bekannte Kollegin","Konkreter interner Kontext (Markus, Projekt Nord, Team-Share-Pfad)","Kein Link zu einer externen Domain","Keine Datenabfrage, kein Passwort, kein Geld","Informeller Ton passt zur normalen internen Kommunikation"]'::jsonb,
  'Das ist eine ganz normale Arbeitsfrage einer Kollegin. Außer nachsehen und antworten ist nichts zu tun. Merke: Ein persönlich adressierter, konkreter Arbeitskontext auf der internen Domain ist in der Regel ein gutes Zeichen.',
- 90),
+ 10),
 
 -- 10. PHISHING — Recruiter mit gefährlichem Anhang
 ('de', 'business',
