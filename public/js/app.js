@@ -593,8 +593,22 @@
     const folderLi = e.target.closest('.ol-folders li[data-folder]');
     if (folderLi) {
       e.preventDefault();
+      e.stopPropagation();
       showFolder(folderLi.dataset.folder);
     }
+  });
+
+  // Extra directe listeners per folder-li zodat klikken altijd reageert,
+  // ook als event-delegatie door een overlay of stoppedPropagation elders
+  // wordt gebroken. Loopt bij DOMContentLoaded zodat de DOM bestaat.
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.ol-folders li[data-folder]').forEach((li) => {
+      li.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        showFolder(li.dataset.folder);
+      });
+    });
   });
 
   async function openMessage(id) {
