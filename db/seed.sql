@@ -1426,10 +1426,10 @@ INSERT INTO inbox_messages
  'vandaag 13:47',
  'Anna Bakker heeft "Raamovereenkomst-2024.pdf" met u gedeeld',
  'Anna Bakker heeft een document met u gedeeld via OneDrive. Bekijk het nu...',
- E'Een document is met u gedeeld\n\nAnna Bakker (a.bakker@kestrel-partner.com) heeft het volgende document met u gedeeld:\n\n📄 Raamovereenkomst-2024.pdf\n\nDe link verloopt over 7 dagen. Bekijk het document om toegang te behouden:\n\n{{link:0}}\n\nMicrosoft OneDrive',
+ E'BAKKER Anna heeft u uitgenodigd om een bestand te bewerken\n\nDit is het document dat BAKKER Anna met u heeft gedeeld.\n\n📎 Raamovereenkomst-2024.pdf\n\nDeze uitnodiging werkt alleen voor u en personen met bestaande toegang.\n\n{{link:0}}',
  '[{"label":"Document openen","real_url":"http://sharepoint-online-share.com/view?id=8a3f2","suspicious":true,"warning":"Dit is geen Microsoft-domein. Echte SharePoint- en OneDrive-links gaan naar uw eigen tenant (bv. kestrel.sharepoint.com) of naar onedrive.live.com. \"sharepoint-online-share.com\" is nep. Bovendien gebruikt Anna @kestrel-partner.com in plaats van @kestrel.nl."}]'::jsonb,
  TRUE,
- '["Afzenderdomein sharepoint-online-share.com — geen Microsoft- of Kestrel-domein","De \"deler\" Anna Bakker gebruikt @kestrel-partner.com — niet ons eigen @kestrel.nl","Onverwacht document zonder context van een onbekende persoon","Link gaat naar een los extern domein, niet naar kestrel.sharepoint.com","Kunstmatige tijdsdruk (\"verloopt over 7 dagen\")"]'::jsonb,
+ '["Afzenderdomein sharepoint-online-share.com — geen Microsoft- of Kestrel-domein","De \"deler\" Anna Bakker gebruikt @kestrel-partner.com — niet ons eigen @kestrel.nl","Onverwacht document zonder context van een onbekende persoon","Link gaat naar een los extern domein, niet naar kestrel.sharepoint.com"]'::jsonb,
  '[]'::jsonb,
  'Dit is phishing die een SharePoint/OneDrive-deellink nabootst. Echte deellinks leiden naar uw eigen Microsoft 365-tenant (bv. kestrel.sharepoint.com) of naar onedrive.live.com. Twijfelt u? Open SharePoint zelf via uw browser of Teams-app en kijk onder "Gedeeld met mij" of het document er staat.',
  40),
@@ -1479,7 +1479,7 @@ INSERT INTO inbox_messages
  'gisteren 09:00',
  'Lisa Verhoeven heeft "Projectplan-Noord-v4.docx" met u gedeeld',
  'Lisa Verhoeven heeft een document met u gedeeld: Projectplan-Noord-v4.docx...',
- E'Lisa Verhoeven (l.verhoeven@kestrel.nl) heeft het volgende document met u gedeeld:\n\n📄 Projectplan-Noord-v4.docx\n\nBericht van Lisa:\n"Hoi Jan, dit is de versie voor de planning van donderdag. Laat even weten als er iets moet wijzigen."\n\nOpen het document: {{link:0}}\n\nMicrosoft SharePoint',
+ E'VERHOEVEN Lisa heeft u uitgenodigd om een bestand te bewerken\n\n"Hoi Jan, dit is de versie voor de planning van donderdag. Laat even weten als er iets moet wijzigen."\n\nDit is het document dat VERHOEVEN Lisa met u heeft gedeeld.\n\n📎 Projectplan-Noord-v4.docx\n\nDeze uitnodiging werkt alleen voor u en personen met bestaande toegang.\n\n{{link:0}}',
  '[{"label":"Document openen","real_url":"https://kestrel.sharepoint.com/:w:/s/ProjectNoord/EYnRNcTq0/Projectplan-Noord-v4.docx","suspicious":false,"warning":"Dit is een echte SharePoint-link binnen ons eigen tenant (kestrel.sharepoint.com). Nog veiliger: open SharePoint of Teams zelf en vind het document onder \"Gedeeld met mij\"."}]'::jsonb,
  FALSE,
  '[]'::jsonb,
@@ -1596,10 +1596,10 @@ INSERT INTO inbox_messages
  'vandaag 13:47',
  'Bart Claes heeft "Raamovereenkomst-2024.pdf" met u gedeeld',
  'Bart Claes heeft een document met u gedeeld via OneDrive. Bekijk het nu...',
- E'Een document is met u gedeeld\n\nBart Claes (b.claes@kestrel-partner.com) heeft het volgende document met u gedeeld:\n\n📄 Raamovereenkomst-2024.pdf\n\nDe link verloopt over 7 dagen. Bekijk het document om toegang te behouden:\n\n{{link:0}}\n\nMicrosoft OneDrive',
+ E'CLAES Bart heeft u uitgenodigd om een bestand te bewerken\n\nDit is het document dat CLAES Bart met u heeft gedeeld.\n\n📎 Raamovereenkomst-2024.pdf\n\nDeze uitnodiging werkt alleen voor u en personen met bestaande toegang.\n\n{{link:0}}',
  '[{"label":"Document openen","real_url":"http://sharepoint-online-share.com/view?id=8a3f2","suspicious":true,"warning":"Dit is geen Microsoft-domein. Echte SharePoint- en OneDrive-links gaan naar uw eigen tenant (bv. kestrel.sharepoint.com) of naar onedrive.live.com. \"sharepoint-online-share.com\" is nep. Bovendien gebruikt Bart @kestrel-partner.com in plaats van @kestrel.be."}]'::jsonb,
  TRUE,
- '["Afzenderdomein sharepoint-online-share.com — geen Microsoft- of Kestrel-domein","De \"deler\" Bart Claes gebruikt @kestrel-partner.com — niet ons eigen @kestrel.be","Onverwacht document zonder context","Link gaat naar een los extern domein, niet naar kestrel.sharepoint.com","Kunstmatige tijdsdruk (\"verloopt over 7 dagen\")"]'::jsonb,
+ '["Afzenderdomein sharepoint-online-share.com — geen Microsoft- of Kestrel-domein","De \"deler\" Bart Claes gebruikt @kestrel-partner.com — niet ons eigen @kestrel.be","Onverwacht document zonder context","Link gaat naar een los extern domein, niet naar kestrel.sharepoint.com"]'::jsonb,
  '[]'::jsonb,
  'Dit is phishing die een SharePoint/OneDrive-deellink nabootst. Echte deellinks leiden naar uw eigen Microsoft 365-tenant (bv. kestrel.sharepoint.com) of naar onedrive.live.com. Twijfelt u? Open SharePoint zelf via uw browser of Teams-app en kijk onder "Gedeeld met mij" of het document er staat.',
  40),
@@ -1649,7 +1649,7 @@ INSERT INTO inbox_messages
  'gisteren 09u00',
  'Sophie Dewit heeft "Projectplan-Noord-v4.docx" met u gedeeld',
  'Sophie Dewit heeft een document met u gedeeld: Projectplan-Noord-v4.docx...',
- E'Sophie Dewit (s.dewit@kestrel.be) heeft het volgende document met u gedeeld:\n\n📄 Projectplan-Noord-v4.docx\n\nBericht van Sophie:\n"Hallo Peter, dit is de versie voor de planning van donderdag. Laat even weten als er iets moet wijzigen."\n\nOpen het document: {{link:0}}\n\nMicrosoft SharePoint',
+ E'DEWIT Sophie heeft u uitgenodigd om een bestand te bewerken\n\n"Hallo Peter, dit is de versie voor de planning van donderdag. Laat even weten als er iets moet wijzigen."\n\nDit is het document dat DEWIT Sophie met u heeft gedeeld.\n\n📎 Projectplan-Noord-v4.docx\n\nDeze uitnodiging werkt alleen voor u en personen met bestaande toegang.\n\n{{link:0}}',
  '[{"label":"Document openen","real_url":"https://kestrel.sharepoint.com/:w:/s/ProjectNoord/EYnRNcTq0/Projectplan-Noord-v4.docx","suspicious":false,"warning":"Dit is een echte SharePoint-link binnen ons eigen tenant (kestrel.sharepoint.com). Nog veiliger: open SharePoint of Teams zelf en vind het document onder \"Gedeeld met mij\"."}]'::jsonb,
  FALSE,
  '[]'::jsonb,
@@ -1766,10 +1766,10 @@ INSERT INTO inbox_messages
  'today 13:47',
  'Adam Baker shared "Framework-Agreement-2024.pdf" with you',
  'Adam Baker shared a document with you via OneDrive. View it now...',
- E'A document has been shared with you\n\nAdam Baker (a.baker@kestrel-partner.com) has shared the following document with you:\n\n📄 Framework-Agreement-2024.pdf\n\nThe link expires in 7 days. View the document to keep access:\n\n{{link:0}}\n\nMicrosoft OneDrive',
+ E'BAKER Adam has invited you to edit a file\n\nThis is the document BAKER Adam shared with you.\n\n📎 Framework-Agreement-2024.pdf\n\nThis invitation only works for you and people with existing access.\n\n{{link:0}}',
  '[{"label":"Open document","real_url":"http://sharepoint-online-share.com/view?id=8a3f2","suspicious":true,"warning":"This is not a Microsoft domain. Real SharePoint and OneDrive links point to your own tenant (e.g. kestrel.sharepoint.com) or to onedrive.live.com. \"sharepoint-online-share.com\" is fake. On top of that, Adam uses @kestrel-partner.com, not @kestrel.co.uk."}]'::jsonb,
  TRUE,
- '["Sender domain sharepoint-online-share.com — not a Microsoft or Kestrel domain","The \"sharer\" Adam Baker uses @kestrel-partner.com — not our own @kestrel.co.uk","Unexpected document with no context","The link points to a stand-alone external domain rather than kestrel.sharepoint.com","Artificial time pressure (\"expires in 7 days\")"]'::jsonb,
+ '["Sender domain sharepoint-online-share.com — not a Microsoft or Kestrel domain","The \"sharer\" Adam Baker uses @kestrel-partner.com — not our own @kestrel.co.uk","Unexpected document with no context","The link points to a stand-alone external domain rather than kestrel.sharepoint.com"]'::jsonb,
  '[]'::jsonb,
  'This is phishing masquerading as a SharePoint/OneDrive share link. Real share links take you to your own Microsoft 365 tenant (e.g. kestrel.sharepoint.com) or to onedrive.live.com. If in doubt, open SharePoint or the Teams app yourself and check "Shared with me" to see whether the document is actually there.',
  40),
@@ -1819,7 +1819,7 @@ INSERT INTO inbox_messages
  'yesterday 09:00',
  'Emma Walsh shared "Project-North-Plan-v4.docx" with you',
  'Emma Walsh shared a document with you: Project-North-Plan-v4.docx...',
- E'Emma Walsh (e.walsh@kestrel.co.uk) has shared the following document with you:\n\n📄 Project-North-Plan-v4.docx\n\nMessage from Emma:\n"Hi Jane, this is the version for Thursday''s planning. Let me know if anything needs to change."\n\nOpen the document: {{link:0}}\n\nMicrosoft SharePoint',
+ E'WALSH Emma has invited you to edit a file\n\n"Hi Jane, this is the version for Thursday\'s planning. Let me know if anything needs to change."\n\nThis is the document WALSH Emma shared with you.\n\n📎 Project-North-Plan-v4.docx\n\nThis invitation only works for you and people with existing access.\n\n{{link:0}}',
  '[{"label":"Open document","real_url":"https://kestrel.sharepoint.com/:w:/s/ProjectNorth/EYnRNcTq0/Project-North-Plan-v4.docx","suspicious":false,"warning":"This is a genuine SharePoint link within our own tenant (kestrel.sharepoint.com). Even safer: open SharePoint or Teams yourself and find the document under \"Shared with me\"."}]'::jsonb,
  FALSE,
  '[]'::jsonb,
@@ -1936,10 +1936,10 @@ INSERT INTO inbox_messages
  'aujourd''hui 13:47',
  'Julien Martin a partagé "Contrat-Cadre-2024.pdf" avec vous',
  'Julien Martin a partagé un document avec vous via OneDrive. Consultez-le maintenant...',
- E'Un document a été partagé avec vous\n\nJulien Martin (j.martin@kestrel-partner.com) a partagé le document suivant avec vous :\n\n📄 Contrat-Cadre-2024.pdf\n\nLe lien expire dans 7 jours. Consultez le document pour conserver votre accès :\n\n{{link:0}}\n\nMicrosoft OneDrive',
+ E'MARTIN Julien vous a invité à modifier un fichier\n\nVoici le document que MARTIN Julien a partagé avec vous.\n\n📎 Contrat-Cadre-2024.pdf\n\nCette invitation ne fonctionne que pour vous et les personnes ayant déjà accès.\n\n{{link:0}}',
  '[{"label":"Ouvrir le document","real_url":"http://sharepoint-online-share.com/view?id=8a3f2","suspicious":true,"warning":"Ce n''est pas un domaine Microsoft. Les vrais liens SharePoint et OneDrive pointent vers votre propre tenant (p. ex. kestrel.sharepoint.com) ou vers onedrive.live.com. \"sharepoint-online-share.com\" est faux. De plus, Julien utilise @kestrel-partner.com, pas @kestrel.fr."}]'::jsonb,
  TRUE,
- '["Domaine expéditeur sharepoint-online-share.com — pas un domaine Microsoft ni Kestrel","L''\"partageur\" Julien Martin utilise @kestrel-partner.com — pas notre @kestrel.fr","Document inattendu sans contexte","Le lien mène à un domaine externe isolé, pas à kestrel.sharepoint.com","Pression temporelle artificielle (\"expire dans 7 jours\")"]'::jsonb,
+ '["Domaine expéditeur sharepoint-online-share.com — pas un domaine Microsoft ni Kestrel","L''\"partageur\" Julien Martin utilise @kestrel-partner.com — pas notre @kestrel.fr","Document inattendu sans contexte","Le lien mène à un domaine externe isolé, pas à kestrel.sharepoint.com"]'::jsonb,
  '[]'::jsonb,
  'C''est du hameçonnage qui imite un lien de partage SharePoint/OneDrive. Les vrais liens de partage pointent vers votre tenant Microsoft 365 (p. ex. kestrel.sharepoint.com) ou vers onedrive.live.com. En cas de doute, ouvrez SharePoint ou l''application Teams vous-même et vérifiez sous « Partagé avec moi » si le document y est.',
  40),
@@ -1989,7 +1989,7 @@ INSERT INTO inbox_messages
  'hier 09h00',
  'Claire Lambert a partagé "Plan-Projet-Nord-v4.docx" avec vous',
  'Claire Lambert a partagé un document avec vous : Plan-Projet-Nord-v4.docx...',
- E'Claire Lambert (c.lambert@kestrel.fr) a partagé le document suivant avec vous :\n\n📄 Plan-Projet-Nord-v4.docx\n\nMessage de Claire :\n"Bonjour Pierre, voici la version pour la planification de jeudi. Dis-moi si quelque chose doit être modifié."\n\nOuvrez le document : {{link:0}}\n\nMicrosoft SharePoint',
+ E'LAMBERT Claire vous a invité à modifier un fichier\n\n"Bonjour Pierre, voici la version pour la planification de jeudi. Dis-moi si quelque chose doit être modifié."\n\nVoici le document que LAMBERT Claire a partagé avec vous.\n\n📎 Plan-Projet-Nord-v4.docx\n\nCette invitation ne fonctionne que pour vous et les personnes ayant déjà accès.\n\n{{link:0}}',
  '[{"label":"Ouvrir le document","real_url":"https://kestrel.sharepoint.com/:w:/s/ProjetNord/EYnRNcTq0/Plan-Projet-Nord-v4.docx","suspicious":false,"warning":"C''est un vrai lien SharePoint au sein de notre propre tenant (kestrel.sharepoint.com). Encore plus sûr : ouvrez SharePoint ou Teams vous-même et retrouvez le document sous « Partagé avec moi »."}]'::jsonb,
  FALSE,
  '[]'::jsonb,
@@ -2106,10 +2106,10 @@ INSERT INTO inbox_messages
  'aujourd''hui 13:47',
  'Thomas Leclercq a partagé "Contrat-Cadre-2024.pdf" avec vous',
  'Thomas Leclercq a partagé un document avec vous via OneDrive. Consultez-le maintenant...',
- E'Un document a été partagé avec vous\n\nThomas Leclercq (t.leclercq@kestrel-partner.com) a partagé le document suivant avec vous :\n\n📄 Contrat-Cadre-2024.pdf\n\nLe lien expire dans 7 jours. Consultez le document pour conserver votre accès :\n\n{{link:0}}\n\nMicrosoft OneDrive',
+ E'LECLERCQ Thomas vous a invité à modifier un fichier\n\nVoici le document que LECLERCQ Thomas a partagé avec vous.\n\n📎 Contrat-Cadre-2024.pdf\n\nCette invitation ne fonctionne que pour vous et les personnes ayant déjà accès.\n\n{{link:0}}',
  '[{"label":"Ouvrir le document","real_url":"http://sharepoint-online-share.com/view?id=8a3f2","suspicious":true,"warning":"Ce n''est pas un domaine Microsoft. Les vrais liens SharePoint et OneDrive pointent vers votre propre tenant (p. ex. kestrel.sharepoint.com) ou vers onedrive.live.com. \"sharepoint-online-share.com\" est faux. De plus, Thomas utilise @kestrel-partner.com, pas @kestrel.be."}]'::jsonb,
  TRUE,
- '["Domaine expéditeur sharepoint-online-share.com — pas un domaine Microsoft ni Kestrel","Le \"partageur\" Thomas Leclercq utilise @kestrel-partner.com — pas notre @kestrel.be","Document inattendu sans contexte","Le lien mène à un domaine externe isolé, pas à kestrel.sharepoint.com","Pression temporelle artificielle (\"expire dans 7 jours\")"]'::jsonb,
+ '["Domaine expéditeur sharepoint-online-share.com — pas un domaine Microsoft ni Kestrel","Le \"partageur\" Thomas Leclercq utilise @kestrel-partner.com — pas notre @kestrel.be","Document inattendu sans contexte","Le lien mène à un domaine externe isolé, pas à kestrel.sharepoint.com"]'::jsonb,
  '[]'::jsonb,
  'C''est du hameçonnage qui imite un lien de partage SharePoint/OneDrive. Les vrais liens pointent vers votre tenant Microsoft 365 (p. ex. kestrel.sharepoint.com) ou vers onedrive.live.com. En cas de doute, ouvrez SharePoint ou Teams vous-même et vérifiez sous « Partagé avec moi » si le document y est.',
  40),
@@ -2159,7 +2159,7 @@ INSERT INTO inbox_messages
  'hier 09h00',
  'Marie Lemaire a partagé "Plan-Projet-Nord-v4.docx" avec vous',
  'Marie Lemaire a partagé un document avec vous : Plan-Projet-Nord-v4.docx...',
- E'Marie Lemaire (m.lemaire@kestrel.be) a partagé le document suivant avec vous :\n\n📄 Plan-Projet-Nord-v4.docx\n\nMessage de Marie :\n"Bonjour Pierre, voici la version pour la planification de jeudi. Dis-moi si quelque chose doit être modifié."\n\nOuvrez le document : {{link:0}}\n\nMicrosoft SharePoint',
+ E'LEMAIRE Marie vous a invité à modifier un fichier\n\n"Bonjour Pierre, voici la version pour la planification de jeudi. Dis-moi si quelque chose doit être modifié."\n\nVoici le document que LEMAIRE Marie a partagé avec vous.\n\n📎 Plan-Projet-Nord-v4.docx\n\nCette invitation ne fonctionne que pour vous et les personnes ayant déjà accès.\n\n{{link:0}}',
  '[{"label":"Ouvrir le document","real_url":"https://kestrel.sharepoint.com/:w:/s/ProjetNord/EYnRNcTq0/Plan-Projet-Nord-v4.docx","suspicious":false,"warning":"C''est un vrai lien SharePoint au sein de notre propre tenant (kestrel.sharepoint.com). Encore plus sûr : ouvrez SharePoint ou Teams vous-même et retrouvez le document sous « Partagé avec moi »."}]'::jsonb,
  FALSE,
  '[]'::jsonb,
@@ -2276,10 +2276,10 @@ INSERT INTO inbox_messages
  'heute 13:47',
  'Stefan Becker hat "Rahmenvertrag-2024.pdf" mit Ihnen geteilt',
  'Stefan Becker hat ein Dokument per OneDrive mit Ihnen geteilt. Jetzt ansehen...',
- E'Ein Dokument wurde mit Ihnen geteilt\n\nStefan Becker (s.becker@kestrel-partner.com) hat folgendes Dokument mit Ihnen geteilt:\n\n📄 Rahmenvertrag-2024.pdf\n\nDer Link läuft in 7 Tagen ab. Sehen Sie sich das Dokument an, um den Zugriff zu behalten:\n\n{{link:0}}\n\nMicrosoft OneDrive',
+ E'BECKER Stefan hat Sie eingeladen, eine Datei zu bearbeiten\n\nDies ist das Dokument, das BECKER Stefan mit Ihnen geteilt hat.\n\n📎 Rahmenvertrag-2024.pdf\n\nDiese Einladung funktioniert nur für Sie und Personen mit bestehendem Zugriff.\n\n{{link:0}}',
  '[{"label":"Dokument öffnen","real_url":"http://sharepoint-online-share.com/view?id=8a3f2","suspicious":true,"warning":"Dies ist keine Microsoft-Domain. Echte SharePoint- und OneDrive-Links führen zu Ihrem eigenen Tenant (z. B. kestrel.sharepoint.com) oder zu onedrive.live.com. \"sharepoint-online-share.com\" ist gefälscht. Außerdem nutzt Stefan @kestrel-partner.com statt @kestrel.de."}]'::jsonb,
  TRUE,
- '["Absenderdomain sharepoint-online-share.com — keine Microsoft- oder Kestrel-Domain","Der \"Freigebende\" Stefan Becker nutzt @kestrel-partner.com — nicht unser eigenes @kestrel.de","Unerwartetes Dokument ohne Kontext","Der Link führt zu einer separaten externen Domain, nicht zu kestrel.sharepoint.com","Künstlicher Zeitdruck (\"läuft in 7 Tagen ab\")"]'::jsonb,
+ '["Absenderdomain sharepoint-online-share.com — keine Microsoft- oder Kestrel-Domain","Der \"Freigebende\" Stefan Becker nutzt @kestrel-partner.com — nicht unser eigenes @kestrel.de","Unerwartetes Dokument ohne Kontext","Der Link führt zu einer separaten externen Domain, nicht zu kestrel.sharepoint.com"]'::jsonb,
  '[]'::jsonb,
  'Das ist Phishing, das einen SharePoint/OneDrive-Freigabelink nachahmt. Echte Freigabelinks führen zu Ihrem Microsoft 365-Tenant (z. B. kestrel.sharepoint.com) oder zu onedrive.live.com. Im Zweifel: Öffnen Sie SharePoint oder Teams selbst und prüfen Sie unter „Mit mir geteilt", ob das Dokument dort steht.',
  40),
@@ -2329,7 +2329,7 @@ INSERT INTO inbox_messages
  'gestern 09:00',
  'Anna Weber hat "Projektplan-Nord-v4.docx" mit Ihnen geteilt',
  'Anna Weber hat ein Dokument mit Ihnen geteilt: Projektplan-Nord-v4.docx...',
- E'Anna Weber (a.weber@kestrel.de) hat folgendes Dokument mit Ihnen geteilt:\n\n📄 Projektplan-Nord-v4.docx\n\nNachricht von Anna:\n"Hallo Martin, das ist die Version für die Planung am Donnerstag. Gib Bescheid, falls etwas geändert werden muss."\n\nDokument öffnen: {{link:0}}\n\nMicrosoft SharePoint',
+ E'WEBER Anna hat Sie eingeladen, eine Datei zu bearbeiten\n\n"Hallo Martin, das ist die Version für die Planung am Donnerstag. Gib Bescheid, falls etwas geändert werden muss."\n\nDies ist das Dokument, das WEBER Anna mit Ihnen geteilt hat.\n\n📎 Projektplan-Nord-v4.docx\n\nDiese Einladung funktioniert nur für Sie und Personen mit bestehendem Zugriff.\n\n{{link:0}}',
  '[{"label":"Dokument öffnen","real_url":"https://kestrel.sharepoint.com/:w:/s/ProjektNord/EYnRNcTq0/Projektplan-Nord-v4.docx","suspicious":false,"warning":"Dies ist ein echter SharePoint-Link innerhalb unseres eigenen Tenants (kestrel.sharepoint.com). Noch sicherer: Öffnen Sie SharePoint oder Teams selbst und suchen Sie das Dokument unter „Mit mir geteilt\"."}]'::jsonb,
  FALSE,
  '[]'::jsonb,
@@ -2423,13 +2423,13 @@ INSERT INTO examples (locale, audience, channel, sender, subject, body, annotati
 
 ('nl', 'business', 'email',
  'Microsoft OneDrive <no-reply@sharepoint-online-share.com>',
- 'Anna Bakker heeft "Raamovereenkomst-2024.pdf" met u gedeeld',
- E'Een document is met u gedeeld\n\nAnna Bakker (a.bakker@kestrel-partner.com) heeft het volgende document met u gedeeld:\n\nRaamovereenkomst-2024.pdf\n\nDe link verloopt over 7 dagen. Bekijk het document om toegang te behouden: http://sharepoint-online-share.com/view?id=8a3f2\n\nMicrosoft OneDrive',
+ 'BAKKER Anna heeft u uitgenodigd om "Raamovereenkomst-2024.pdf" te bewerken',
+ E'BAKKER Anna heeft u uitgenodigd om een bestand te bewerken\n\nDit is het document dat BAKKER Anna met u heeft gedeeld.\n\n📎 Raamovereenkomst-2024.pdf\n\nDeze uitnodiging werkt alleen voor u en personen met bestaande toegang.\n\nhttp://sharepoint-online-share.com/view?id=8a3f2',
  '[
-   {"quote": "no-reply@sharepoint-online-share.com", "note": "Echte SharePoint-berichten komen van @sharepointonline.com. \"sharepoint-online-share.com\" is geen Microsoft-domein."},
-   {"quote": "a.bakker@kestrel-partner.com", "note": "De \"deler\" gebruikt @kestrel-partner.com — niet ons eigen @kestrel.nl. Onbekend persoon zonder context."},
-   {"quote": "De link verloopt over 7 dagen", "note": "Kunstmatige tijdsdruk. Echte SharePoint-links werken gewoon zolang uw toegang geldt."},
-   {"quote": "http://sharepoint-online-share.com/view", "note": "Echte deellinks gaan naar uw eigen tenant (kestrel.sharepoint.com) of onedrive.live.com, nooit naar een los extern domein."}
+   {"quote":"no-reply@sharepoint-online-share.com","note":"Echte SharePoint-berichten komen van @sharepointonline.com. \"sharepoint-online-share.com\" is geen Microsoft-domein."},
+   {"quote":"BAKKER Anna heeft u uitgenodigd","note":"Kent u deze persoon? Uw collega''s gebruiken @kestrel.nl. Controleer het échte afzenderadres (hierboven) voordat u iets opent."},
+   {"quote":"Deze uitnodiging werkt alleen voor u en personen met bestaande toegang.","note":"Dit is Microsofts standaardtekst — phishers kopiëren hem één op één. De tekst zelf bewijst dus NIETS over de echtheid."},
+   {"quote":"http://sharepoint-online-share.com/view","note":"Echte SharePoint-links gaan naar uw eigen tenant (bijvoorbeeld kestrel.sharepoint.com) of naar onedrive.live.com — nooit naar een los extern domein."}
  ]'::jsonb,
  30),
 
@@ -2460,13 +2460,13 @@ INSERT INTO examples (locale, audience, channel, sender, subject, body, annotati
 
 ('nl-BE', 'business', 'email',
  'Microsoft OneDrive <no-reply@sharepoint-online-share.com>',
- 'Bart Claes heeft "Raamovereenkomst-2024.pdf" met u gedeeld',
- E'Een document is met u gedeeld\n\nBart Claes (b.claes@kestrel-partner.com) heeft het volgende document met u gedeeld:\n\nRaamovereenkomst-2024.pdf\n\nDe link verloopt over 7 dagen. Bekijk het document om toegang te behouden: http://sharepoint-online-share.com/view?id=8a3f2\n\nMicrosoft OneDrive',
+ 'CLAES Bart heeft u uitgenodigd om "Raamovereenkomst-2024.pdf" te bewerken',
+ E'CLAES Bart heeft u uitgenodigd om een bestand te bewerken\n\nDit is het document dat CLAES Bart met u heeft gedeeld.\n\n📎 Raamovereenkomst-2024.pdf\n\nDeze uitnodiging werkt alleen voor u en personen met bestaande toegang.\n\nhttp://sharepoint-online-share.com/view?id=8a3f2',
  '[
-   {"quote": "no-reply@sharepoint-online-share.com", "note": "Echte SharePoint-berichten komen van @sharepointonline.com. \"sharepoint-online-share.com\" is geen Microsoft-domein."},
-   {"quote": "b.claes@kestrel-partner.com", "note": "De \"deler\" gebruikt @kestrel-partner.com — niet ons eigen @kestrel.be."},
-   {"quote": "De link verloopt over 7 dagen", "note": "Kunstmatige tijdsdruk. Echte SharePoint-links werken zolang uw toegang geldt."},
-   {"quote": "http://sharepoint-online-share.com/view", "note": "Echte deellinks gaan naar uw eigen tenant (kestrel.sharepoint.com) of onedrive.live.com."}
+   {"quote":"no-reply@sharepoint-online-share.com","note":"Echte SharePoint-berichten komen van @sharepointonline.com. \"sharepoint-online-share.com\" is geen Microsoft-domein."},
+   {"quote":"CLAES Bart heeft u uitgenodigd","note":"Kent u deze persoon? Uw collega''s gebruiken @kestrel.be. Controleer het echte afzenderadres (hierboven) voordat u iets opent."},
+   {"quote":"Deze uitnodiging werkt alleen voor u en personen met bestaande toegang.","note":"Dit is Microsofts standaardtekst — phishers kopiëren hem één op één. De tekst zelf bewijst dus NIETS over de echtheid."},
+   {"quote":"http://sharepoint-online-share.com/view","note":"Echte SharePoint-links gaan naar uw eigen tenant (bijvoorbeeld kestrel.sharepoint.com) of naar onedrive.live.com — nooit naar een los extern domein."}
  ]'::jsonb,
  30);
 
@@ -2499,13 +2499,13 @@ INSERT INTO examples (locale, audience, channel, sender, subject, body, annotati
 
 ('en', 'business', 'email',
  'Microsoft OneDrive <no-reply@sharepoint-online-share.com>',
- 'Adam Baker shared "Framework-Agreement-2024.pdf" with you',
- E'A document has been shared with you\n\nAdam Baker (a.baker@kestrel-partner.com) has shared the following document with you:\n\nFramework-Agreement-2024.pdf\n\nThe link expires in 7 days. View the document to keep access: http://sharepoint-online-share.com/view?id=8a3f2\n\nMicrosoft OneDrive',
+ 'BAKER Adam has invited you to edit "Framework-Agreement-2024.pdf"',
+ E'BAKER Adam has invited you to edit a file\n\nThis is the document BAKER Adam shared with you.\n\n📎 Framework-Agreement-2024.pdf\n\nThis invitation only works for you and people with existing access.\n\nhttp://sharepoint-online-share.com/view?id=8a3f2',
  '[
-   {"quote": "no-reply@sharepoint-online-share.com", "note": "Real SharePoint notifications come from @sharepointonline.com. \"sharepoint-online-share.com\" is not a Microsoft domain."},
-   {"quote": "a.baker@kestrel-partner.com", "note": "The \"sharer\" uses @kestrel-partner.com — not our own @kestrel.co.uk. An unknown person with no context."},
-   {"quote": "The link expires in 7 days", "note": "Artificial time pressure. Real SharePoint links work as long as your access is valid."},
-   {"quote": "http://sharepoint-online-share.com/view", "note": "Real share links go to your own tenant (kestrel.sharepoint.com) or onedrive.live.com, never to a stand-alone external domain."}
+   {"quote":"no-reply@sharepoint-online-share.com","note":"Real SharePoint notifications come from @sharepointonline.com. \"sharepoint-online-share.com\" is not a Microsoft domain."},
+   {"quote":"BAKER Adam has invited you","note":"Do you know this person? Your colleagues use @kestrel.co.uk. Check the real sender address (above) before opening anything."},
+   {"quote":"This invitation only works for you and people with existing access.","note":"This is Microsoft''s stock text — phishers copy it word for word. The sentence itself proves NOTHING about authenticity."},
+   {"quote":"http://sharepoint-online-share.com/view","note":"Real SharePoint links go to your own tenant (for example kestrel.sharepoint.com) or to onedrive.live.com — never to a stand-alone external domain."}
  ]'::jsonb,
  30),
 
@@ -2536,13 +2536,13 @@ INSERT INTO examples (locale, audience, channel, sender, subject, body, annotati
 
 ('fr', 'business', 'email',
  'Microsoft OneDrive <no-reply@sharepoint-online-share.com>',
- 'Julien Martin a partagé "Contrat-Cadre-2024.pdf" avec vous',
- E'Un document a été partagé avec vous\n\nJulien Martin (j.martin@kestrel-partner.com) a partagé le document suivant avec vous :\n\nContrat-Cadre-2024.pdf\n\nLe lien expire dans 7 jours. Consultez le document pour conserver votre accès : http://sharepoint-online-share.com/view?id=8a3f2\n\nMicrosoft OneDrive',
+ 'MARTIN Julien vous a invité à modifier « Contrat-Cadre-2024.pdf »',
+ E'MARTIN Julien vous a invité à modifier un fichier\n\nVoici le document que MARTIN Julien a partagé avec vous.\n\n📎 Contrat-Cadre-2024.pdf\n\nCette invitation ne fonctionne que pour vous et les personnes ayant déjà accès.\n\nhttp://sharepoint-online-share.com/view?id=8a3f2',
  '[
-   {"quote": "no-reply@sharepoint-online-share.com", "note": "Les vraies notifications SharePoint viennent de @sharepointonline.com. \"sharepoint-online-share.com\" n''est pas un domaine Microsoft."},
-   {"quote": "j.martin@kestrel-partner.com", "note": "Le \"partageur\" utilise @kestrel-partner.com — pas notre @kestrel.fr. Personne inconnue sans contexte."},
-   {"quote": "Le lien expire dans 7 jours", "note": "Pression temporelle artificielle. Les vrais liens SharePoint fonctionnent tant que votre accès est valide."},
-   {"quote": "http://sharepoint-online-share.com/view", "note": "Les vrais liens de partage pointent vers votre propre tenant (kestrel.sharepoint.com) ou vers onedrive.live.com."}
+   {"quote":"no-reply@sharepoint-online-share.com","note":"Les vraies notifications SharePoint viennent de @sharepointonline.com. « sharepoint-online-share.com » n’est pas un domaine Microsoft."},
+   {"quote":"MARTIN Julien vous a invité","note":"Connaissez-vous cette personne ? Vos collègues utilisent @kestrel.fr. Vérifiez l’adresse réelle de l’expéditeur (ci-dessus) avant d’ouvrir quoi que ce soit."},
+   {"quote":"Cette invitation ne fonctionne que pour vous et les personnes ayant déjà accès.","note":"C’est le texte standard de Microsoft — les escrocs le copient mot pour mot. Cette phrase ne prouve donc RIEN sur l’authenticité."},
+   {"quote":"http://sharepoint-online-share.com/view","note":"Les vrais liens SharePoint pointent vers votre propre tenant (par exemple kestrel.sharepoint.com) ou vers onedrive.live.com — jamais vers un domaine externe isolé."}
  ]'::jsonb,
  30);
 
@@ -2575,13 +2575,13 @@ INSERT INTO examples (locale, audience, channel, sender, subject, body, annotati
 
 ('fr-BE', 'business', 'email',
  'Microsoft OneDrive <no-reply@sharepoint-online-share.com>',
- 'Thomas Leclercq a partagé "Contrat-Cadre-2024.pdf" avec vous',
- E'Un document a été partagé avec vous\n\nThomas Leclercq (t.leclercq@kestrel-partner.com) a partagé le document suivant avec vous :\n\nContrat-Cadre-2024.pdf\n\nLe lien expire dans 7 jours. Consultez le document pour conserver votre accès : http://sharepoint-online-share.com/view?id=8a3f2\n\nMicrosoft OneDrive',
+ 'LECLERCQ Thomas vous a invité à modifier « Contrat-Cadre-2024.pdf »',
+ E'LECLERCQ Thomas vous a invité à modifier un fichier\n\nVoici le document que LECLERCQ Thomas a partagé avec vous.\n\n📎 Contrat-Cadre-2024.pdf\n\nCette invitation ne fonctionne que pour vous et les personnes ayant déjà accès.\n\nhttp://sharepoint-online-share.com/view?id=8a3f2',
  '[
-   {"quote": "no-reply@sharepoint-online-share.com", "note": "Les vraies notifications SharePoint viennent de @sharepointonline.com."},
-   {"quote": "t.leclercq@kestrel-partner.com", "note": "Le \"partageur\" utilise @kestrel-partner.com — pas notre @kestrel.be."},
-   {"quote": "Le lien expire dans 7 jours", "note": "Pression temporelle artificielle."},
-   {"quote": "http://sharepoint-online-share.com/view", "note": "Les vrais liens de partage pointent vers votre propre tenant (kestrel.sharepoint.com)."}
+   {"quote":"no-reply@sharepoint-online-share.com","note":"Les vraies notifications SharePoint viennent de @sharepointonline.com. « sharepoint-online-share.com » n’est pas un domaine Microsoft."},
+   {"quote":"LECLERCQ Thomas vous a invité","note":"Connaissez-vous cette personne ? Vos collègues utilisent @kestrel.be. Vérifiez l’adresse réelle de l’expéditeur (ci-dessus) avant d’ouvrir quoi que ce soit."},
+   {"quote":"Cette invitation ne fonctionne que pour vous et les personnes ayant déjà accès.","note":"C’est le texte standard de Microsoft — les escrocs le copient mot pour mot. Cette phrase ne prouve donc RIEN sur l’authenticité."},
+   {"quote":"http://sharepoint-online-share.com/view","note":"Les vrais liens SharePoint pointent vers votre propre tenant (par exemple kestrel.sharepoint.com) ou vers onedrive.live.com — jamais vers un domaine externe isolé."}
  ]'::jsonb,
  30),
 
@@ -2612,12 +2612,12 @@ INSERT INTO examples (locale, audience, channel, sender, subject, body, annotati
 
 ('de', 'business', 'email',
  'Microsoft OneDrive <no-reply@sharepoint-online-share.com>',
- 'Stefan Becker hat "Rahmenvertrag-2024.pdf" mit Ihnen geteilt',
- E'Ein Dokument wurde mit Ihnen geteilt\n\nStefan Becker (s.becker@kestrel-partner.com) hat folgendes Dokument mit Ihnen geteilt:\n\nRahmenvertrag-2024.pdf\n\nDer Link läuft in 7 Tagen ab. Sehen Sie sich das Dokument an, um den Zugriff zu behalten: http://sharepoint-online-share.com/view?id=8a3f2\n\nMicrosoft OneDrive',
+ 'BECKER Stefan hat Sie eingeladen, "Rahmenvertrag-2024.pdf" zu bearbeiten',
+ E'BECKER Stefan hat Sie eingeladen, eine Datei zu bearbeiten\n\nDies ist das Dokument, das BECKER Stefan mit Ihnen geteilt hat.\n\n📎 Rahmenvertrag-2024.pdf\n\nDiese Einladung funktioniert nur für Sie und Personen mit bestehendem Zugriff.\n\nhttp://sharepoint-online-share.com/view?id=8a3f2',
  '[
-   {"quote": "no-reply@sharepoint-online-share.com", "note": "Echte SharePoint-Benachrichtigungen kommen von @sharepointonline.com. \"sharepoint-online-share.com\" ist keine Microsoft-Domain."},
-   {"quote": "s.becker@kestrel-partner.com", "note": "Der \"Freigebende\" nutzt @kestrel-partner.com — nicht unser eigenes @kestrel.de."},
-   {"quote": "Der Link läuft in 7 Tagen ab", "note": "Künstlicher Zeitdruck. Echte SharePoint-Links funktionieren, solange Ihr Zugriff gilt."},
-   {"quote": "http://sharepoint-online-share.com/view", "note": "Echte Freigabelinks führen zu Ihrem eigenen Tenant (kestrel.sharepoint.com) oder zu onedrive.live.com, nie zu einer separaten externen Domain."}
+   {"quote":"no-reply@sharepoint-online-share.com","note":"Echte SharePoint-Benachrichtigungen kommen von @sharepointonline.com. \"sharepoint-online-share.com\" ist keine Microsoft-Domain."},
+   {"quote":"BECKER Stefan hat Sie eingeladen","note":"Kennen Sie diese Person? Ihre Kolleginnen und Kollegen nutzen @kestrel.de. Prüfen Sie die tatsächliche Absenderadresse (oben), bevor Sie etwas öffnen."},
+   {"quote":"Diese Einladung funktioniert nur für Sie und Personen mit bestehendem Zugriff.","note":"Das ist Microsofts Standardtext — Phisher kopieren ihn Wort für Wort. Der Satz an sich beweist also NICHTS über die Echtheit."},
+   {"quote":"http://sharepoint-online-share.com/view","note":"Echte SharePoint-Links führen zu Ihrem eigenen Tenant (z. B. kestrel.sharepoint.com) oder zu onedrive.live.com — nie zu einer separaten externen Domain."}
  ]'::jsonb,
  30);
