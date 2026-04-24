@@ -1376,3 +1376,176 @@ body.device-iphone .device-homebar::after {
   width: 134px; height: 5px;
   background: #000; border-radius: 999px;
 }
+
+/* ========================================================
+   Gmail Android skin (privé + Android).
+   Materiaal-stijl: zoekbalk als topbar, ronde avatars,
+   FAB rechtsonder, geen titelbalk.
+   ======================================================== */
+.mob-gmail .mob-topbar {
+  background: #f6f8fc;
+  padding: 8px 10px;
+  display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid #e0e4ea;
+  min-height: 58px;
+  flex-shrink: 0;
+}
+.mob-gmail .mob-btn {
+  background: transparent; border: 0;
+  color: #5f6368;
+  font-size: 1.3rem; line-height: 1;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+.mob-gmail .mob-search {
+  flex: 1;
+  background: #ebeef3;
+  border-radius: 999px;
+  padding: 8px 14px;
+  color: #5f6368;
+  font-size: .9rem;
+  display: flex; align-items: center; gap: 8px;
+}
+.mob-gmail .mob-avatar {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: #d93025; color: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 600; font-size: .85rem;
+  flex-shrink: 0;
+}
+
+/* Lijst */
+.mob-gmail .mob-list {
+  list-style: none; margin: 0; padding: 0;
+  flex: 1; overflow-y: auto;
+  background: #fff;
+}
+.mob-gmail .mob-item {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 14px 16px 14px 14px;
+  cursor: pointer;
+  border-bottom: 1px solid transparent;
+}
+.mob-gmail .mob-item:active { background: #eef2f9; }
+.mob-gmail .mob-item.judged { opacity: .6; }
+.mob-gmail .mob-item-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: #1a73e8; color: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 600; font-size: 1rem;
+  flex-shrink: 0;
+}
+/* Subtle color rotation so niet elke avatar hetzelfde blauw is. */
+.mob-gmail .mob-item:nth-child(3n) .mob-item-avatar { background: #d93025; }
+.mob-gmail .mob-item:nth-child(3n+1) .mob-item-avatar { background: #f9ab00; }
+.mob-gmail .mob-item:nth-child(3n+2) .mob-item-avatar { background: #188038; }
+.mob-gmail .mob-item-body { flex: 1; min-width: 0; }
+.mob-gmail .mob-item-top {
+  display: flex; justify-content: space-between; gap: 8px;
+  margin-bottom: 2px;
+}
+.mob-gmail .mob-item-sender {
+  font-weight: 600; color: #202124; font-size: .95rem;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.mob-gmail .mob-item-time { font-size: .78rem; color: #5f6368; flex-shrink: 0; }
+.mob-gmail .mob-item-subject {
+  font-size: .88rem; color: #202124;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+.mob-gmail .mob-item-preview {
+  font-size: .82rem; color: #5f6368;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.mob-gmail .mob-item-status { margin-left: 6px; font-size: .8rem; }
+.mob-gmail .mob-item-status.good { color: #188038; }
+.mob-gmail .mob-item-status.bad { color: #d93025; }
+
+/* FAB — "Opstellen". Decoratief, niet klikbaar bedoeld. */
+.mob-gmail .mob-fab {
+  position: absolute; right: 22px; bottom: 44px;
+  width: 56px; height: 56px; border-radius: 16px;
+  background: #c2e7ff; color: #001d35;
+  border: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 1.3rem;
+  box-shadow: 0 3px 6px rgba(0,0,0,.2);
+  z-index: 4;
+  cursor: default;
+}
+
+/* Reader — Gmail stijl */
+.mob-gmail .mob-reader {
+  position: absolute; inset: 0;
+  background: #fff;
+  display: flex; flex-direction: column;
+  z-index: 5;
+}
+.mob-gmail .mob-reader[hidden] { display: none; }
+.mob-gmail .mob-reader-head {
+  background: #f6f8fc;
+  padding: 10px 4px;
+  display: flex; align-items: center; gap: 0;
+  flex-shrink: 0;
+  border-bottom: 1px solid #e0e4ea;
+  min-height: 54px;
+}
+.mob-gmail .mob-reader-head .mob-btn-back {
+  color: #5f6368;
+}
+.mob-gmail .mob-reader-head-spacer { flex: 1; }
+.mob-gmail .mob-reader-content { flex: 1; overflow-y: auto; padding: 16px; }
+.mob-gmail .mob-reader-subject {
+  font-size: 1.25rem; font-weight: 400; color: #202124;
+  margin: 0 0 14px; line-height: 1.35;
+}
+.mob-gmail .mob-reader-sender {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding-bottom: 14px; border-bottom: 1px solid #e0e4ea;
+  margin-bottom: 16px;
+}
+.mob-gmail .mob-reader-sender .mob-avatar {
+  width: 40px; height: 40px; font-size: 1rem;
+  background: #1a73e8;
+}
+.mob-gmail .mob-reader-name { font-weight: 600; color: #202124; font-size: .95rem; }
+.mob-gmail .mob-reader-addr { color: #5f6368; font-size: .82rem; word-break: break-all; }
+.mob-gmail .mob-reader-to { color: #5f6368; font-size: .78rem; margin-top: 2px; }
+.mob-gmail .mob-reader-body {
+  color: #202124; font-size: .94rem; line-height: 1.6;
+  word-wrap: break-word;
+}
+.mob-gmail .mob-reader-body p { margin: 0 0 .75em; }
+.mob-gmail .mob-reader-body a.ol-link { color: #1a73e8; }
+
+/* Verdict onder reader */
+.mob-gmail .mob-verdict {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 14px;
+  border-top: 1px solid #e0e4ea;
+  background: #f6f8fc;
+  flex-shrink: 0;
+}
+.mob-gmail .mob-verdict-q {
+  margin: 0 0 4px;
+  font-size: .95rem; font-weight: 600; color: #202124;
+  text-align: center;
+}
+.mob-gmail .mob-verdict button {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: .95rem; font-weight: 600;
+  cursor: pointer;
+}
+.mob-gmail .mob-verdict .btn-good {
+  background: #e6f4ea; color: #0d652d;
+  border-color: #81c995;
+}
+.mob-gmail .mob-verdict .btn-bad {
+  background: #fce8e6; color: #a50e0e;
+  border-color: #f28b82;
+}
+.mob-gmail .mob-verdict.judged { text-align: center; color: #5f6368; font-size: .85rem; padding: 14px; }

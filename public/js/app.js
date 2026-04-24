@@ -662,11 +662,23 @@
     }
   }
 
-  // Bouwt de DOM voor de juiste skin op basis van currentAudience
-  // (zakelijk = Outlook Mobile; later volgen Gmail / Apple Mail voor privé).
+  // Bouwt de DOM voor de juiste skin op basis van audience + device:
+  //   zakelijk                → Outlook Mobile (beide platforms)
+  //   privé + Android          → Gmail Android
+  //   privé + iPhone           → Apple Mail (M5 — nu nog Outlook-fallback)
   function buildMobSkin() {
     const app = document.getElementById('mob-app');
     if (!app) return;
+    if (currentAudience === 'business') {
+      buildMobOutlook(app);
+    } else if (currentDevice === 'android') {
+      buildMobGmail(app);
+    } else {
+      buildMobOutlook(app); // iPhone personal → todo: Apple Mail
+    }
+  }
+
+  function buildMobOutlook(app) {
     app.className = 'mob-app mob-outlook';
     app.innerHTML =
       '<header class="mob-topbar">' +
@@ -676,6 +688,19 @@
         '<div class="mob-avatar">' + escapeHtml(t('user.avatar')) + '</div>' +
       '</header>' +
       '<ol class="mob-list" id="mob-list-items"></ol>' +
+      '<div class="mob-reader" id="mob-reader" hidden></div>';
+  }
+
+  function buildMobGmail(app) {
+    app.className = 'mob-app mob-gmail';
+    app.innerHTML =
+      '<header class="mob-topbar">' +
+        '<button class="mob-btn mob-btn-menu" aria-label="Menu">☰</button>' +
+        '<div class="mob-search">🔍 ' + escapeHtml(t('sim.ol.search')) + '</div>' +
+        '<div class="mob-avatar">' + escapeHtml(t('user.avatar')) + '</div>' +
+      '</header>' +
+      '<ol class="mob-list" id="mob-list-items"></ol>' +
+      '<button class="mob-fab" aria-hidden="true" tabindex="-1">✏️</button>' +
       '<div class="mob-reader" id="mob-reader" hidden></div>';
   }
 
