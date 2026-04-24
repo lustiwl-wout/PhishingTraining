@@ -452,7 +452,13 @@
       simState = { messages, judgments: {}, current: null, interactions: {} };
       renderInboxList();
       updateProgress();
-      resetReader();
+      // Open het eerste bericht automatisch zodat de gebruiker meteen
+      // ziet wat er van hem/haar verwacht wordt (lezen + beoordelen).
+      if (messages.length > 0) {
+        openMessage(messages[0].id);
+      } else {
+        resetReader();
+      }
     } catch (err) {
       list.innerHTML = '<li class="ol-loading error">' + escapeHtml(t('sim.ol.loadError')) + '</li>';
     }
