@@ -27,10 +27,31 @@
 
   let currentLang = detectInitialLanguage() || 'nl';
 
+  // -------- audience (persoonlijk vs zakelijk) --------
+  const SUPPORTED_AUDIENCES = ['personal', 'business'];
+  function detectInitialAudience() {
+    const stored = localStorage.getItem('vo_audience');
+    return SUPPORTED_AUDIENCES.includes(stored) ? stored : 'personal';
+  }
+  let currentAudience = detectInitialAudience();
+  function setAudience(a) {
+    if (!SUPPORTED_AUDIENCES.includes(a)) return;
+    currentAudience = a;
+    localStorage.setItem('vo_audience', a);
+  }
+
   function t(key, vars) {
     const loc = (window.VO_LOCALES && window.VO_LOCALES[currentLang]) || {};
     const fallback = (window.VO_LOCALES && window.VO_LOCALES.nl) || {};
-    let s = loc[key] != null ? loc[key] : (fallback[key] != null ? fallback[key] : key);
+    // Doelgroep-specifieke variant (bv. user.email.business) heeft
+    // voorrang als de audience 'business' is en de variant bestaat.
+    const audienceKey = key + '.' + currentAudience;
+    let s;
+    if (loc[audienceKey] != null) s = loc[audienceKey];
+    else if (loc[key] != null) s = loc[key];
+    else if (fallback[audienceKey] != null) s = fallback[audienceKey];
+    else if (fallback[key] != null) s = fallback[key];
+    else s = key;
     if (vars) {
       s = s.replace(/\{(\w+)\}/g, (m, k) => (vars[k] != null ? vars[k] : m));
     }
@@ -143,11 +164,14 @@
       coldStartTimer = setTimeout(showColdStartHint, 4000);
     }
     try {
-      // Taal meegeven aan GET-requests zodat de database de juiste
-      // vertaling teruggeeft. POST-requests blijven ongewijzigd.
+      // Taal en doelgroep meegeven aan GET-requests zodat de database
+      // de juiste vertaling en variant teruggeeft. POST-requests
+      // blijven ongewijzigd.
       let url = '/api' + path;
       if (!opts || !opts.method || opts.method === 'GET') {
-        url += (path.includes('?') ? '&' : '?') + 'lang=' + encodeURIComponent(currentLang);
+        const sep = path.includes('?') ? '&' : '?';
+        url += sep + 'lang=' + encodeURIComponent(currentLang)
+             + '&audience=' + encodeURIComponent(currentAudience);
       }
       const res = await fetch(url, Object.assign({
         headers: { 'Content-Type': 'application/json' },
@@ -258,7 +282,10 @@
   }
 
   document.addEventListener('click', (e) => {
-    if (e.target.id === 'sim-start-btn') {
+    const btn = e.target.closest('[data-audience]');
+    if (btn && (btn.id === 'sim-start-personal' || btn.id === 'sim-start-business')) {
+      setAudience(btn.dataset.audience);
+      applyI18n(); // user.email kan per doelgroep anders zijn
       showSimPhase('login');
       runMicrosoftLoginAnimation().catch((err) => console.error(err));
     }

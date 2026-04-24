@@ -29,7 +29,9 @@ CREATE TABLE IF NOT EXISTS examples (
 
 -- Bestaande installaties: kolom achteraf toevoegen (idempotent).
 ALTER TABLE examples ADD COLUMN IF NOT EXISTS locale TEXT NOT NULL DEFAULT 'nl';
+ALTER TABLE examples ADD COLUMN IF NOT EXISTS audience TEXT NOT NULL DEFAULT 'personal';
 CREATE INDEX IF NOT EXISTS idx_examples_locale ON examples(locale);
+CREATE INDEX IF NOT EXISTS idx_examples_audience ON examples(audience);
 
 CREATE TABLE IF NOT EXISTS quiz_attempts (
   id            SERIAL PRIMARY KEY,
@@ -77,7 +79,9 @@ CREATE TABLE IF NOT EXISTS inbox_messages (
 );
 
 ALTER TABLE inbox_messages ADD COLUMN IF NOT EXISTS locale TEXT NOT NULL DEFAULT 'nl';
+ALTER TABLE inbox_messages ADD COLUMN IF NOT EXISTS audience TEXT NOT NULL DEFAULT 'personal';
 CREATE INDEX IF NOT EXISTS idx_inbox_messages_locale ON inbox_messages(locale);
+CREATE INDEX IF NOT EXISTS idx_inbox_messages_audience ON inbox_messages(audience);
 
 CREATE TABLE IF NOT EXISTS inbox_judgments (
   id              SERIAL PRIMARY KEY,

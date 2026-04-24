@@ -1254,11 +1254,13 @@ INSERT INTO inbox_messages
 -- tussen het pakketbericht (40) en de bibliotheek (50).
 -- ============================================================
 
+-- Booking.com werkt voor beide doelgroepen (audience = 'both'): zowel
+-- privé boekingen als zakelijke reizen gebruiken hetzelfde mailpatroon.
 INSERT INTO inbox_messages
-  (locale, sender_name, sender_address, sender_note, received_label, subject, preview, body, links, is_phishing, red_flags, green_flags, explanation, sort_order) VALUES
+  (locale, audience, sender_name, sender_address, sender_note, received_label, subject, preview, body, links, is_phishing, red_flags, green_flags, explanation, sort_order) VALUES
 
 -- NL
-('nl',
+('nl', 'both',
  'Booking.com',
  'confirmation@booking.com',
  'Het adres eindigt op @booking.com — het echte domein van het bedrijf.',
@@ -1274,7 +1276,7 @@ INSERT INTO inbox_messages
  45),
 
 -- nl-BE
-('nl-BE',
+('nl-BE', 'both',
  'Booking.com',
  'confirmation@booking.com',
  'Het adres eindigt op @booking.com — het echte domein van het bedrijf.',
@@ -1290,7 +1292,7 @@ INSERT INTO inbox_messages
  45),
 
 -- EN (UK)
-('en',
+('en', 'both',
  'Booking.com',
  'confirmation@booking.com',
  'The address ends in @booking.com — the company''s real domain.',
@@ -1306,7 +1308,7 @@ INSERT INTO inbox_messages
  45),
 
 -- FR
-('fr',
+('fr', 'both',
  'Booking.com',
  'confirmation@booking.com',
  'L''adresse se termine par @booking.com — le vrai domaine de l''entreprise.',
@@ -1322,7 +1324,7 @@ INSERT INTO inbox_messages
  45),
 
 -- fr-BE
-('fr-BE',
+('fr-BE', 'both',
  'Booking.com',
  'confirmation@booking.com',
  'L''adresse se termine par @booking.com — le vrai domaine de l''entreprise.',
@@ -1338,7 +1340,7 @@ INSERT INTO inbox_messages
  45),
 
 -- DE
-('de',
+('de', 'both',
  'Booking.com',
  'confirmation@booking.com',
  'Die Adresse endet auf @booking.com — die echte Domain des Unternehmens.',

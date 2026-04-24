@@ -822,6 +822,16 @@ body.sim-fullscreen .outlook {
 .sim-welcome-card .lead { margin-bottom: 1rem; }
 .sim-welcome-card .actions { justify-content: center; margin-top: 1.25rem; }
 
+/* Persoonlijk- vs zakelijk-keuzevraag + knoppen voor de simulator. */
+.sim-choice-q { margin-top: 1.25rem; margin-bottom: .5rem; font-weight: 600; }
+.actions-choice { flex-direction: column; gap: .6rem; align-items: stretch; }
+.actions-choice .big-btn { width: 100%; text-align: left; padding: .85rem 1rem; line-height: 1.4; }
+.actions-choice .big-btn small { display: block; font-weight: 400; opacity: .85; font-size: .9em; }
+@media (min-width: 640px) {
+  .actions-choice { flex-direction: row; }
+  .actions-choice .big-btn { flex: 1; }
+}
+
 /* Microsoft-login */
 .ms-login {
   background:

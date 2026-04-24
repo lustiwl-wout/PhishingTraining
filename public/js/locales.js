@@ -16,6 +16,7 @@ window.VO_LOCALES = {
     'skip.main': 'Ga naar de inhoud',
 
     'user.email': 'janssen@hotmail.com',
+    'user.email.business': 'j.janssen@kestrel.nl',
     'user.avatar': 'J',
 
     'brand.title': 'Veilig Online',
@@ -71,7 +72,9 @@ window.VO_LOCALES = {
     'sim.intro.li2': 'Niet alle knoppen werken — dat hoeft ook niet, het is maar een oefening.',
     'sim.intro.li3': 'U kunt niets stukmaken en er wordt niets verzonden.',
     'sim.intro.li4': 'Uw taak: kiezen of elke e‑mail <strong>vertrouwd</strong> is, of dat het <strong>phishing</strong> is.',
-    'sim.intro.start': 'Ik ben er klaar voor →',
+    'sim.intro.choose': 'Welk postvak wilt u oefenen?',
+    'sim.intro.start.personal': '📥 <strong>Privé‑postvak</strong> <small>— bank, overheid, pakketjes</small>',
+    'sim.intro.start.business': '💼 <strong>Werk‑postvak</strong> <small>— collega’s, IT, leveranciers</small>',
 
     'sim.coldstart': '⏳ De website wordt even opgestart. Een momentje geduld…',
 
@@ -183,6 +186,7 @@ window.VO_LOCALES = {
     'skip.main': 'Ga naar de inhoud',
 
     'user.email': 'peeters@hotmail.com',
+    'user.email.business': 'p.peeters@kestrel.be',
     'user.avatar': 'P',
 
     'brand.title': 'Veilig Online',
@@ -238,7 +242,9 @@ window.VO_LOCALES = {
     'sim.intro.li2': 'Niet alle knoppen werken — dat hoeft ook niet, het is maar een oefening.',
     'sim.intro.li3': 'U kunt niets stukmaken en er wordt niets verzonden.',
     'sim.intro.li4': 'Uw taak: kiezen of elke e‑mail <strong>betrouwbaar</strong> is, of dat het <strong>phishing</strong> is.',
-    'sim.intro.start': 'Ik ben er klaar voor →',
+    'sim.intro.choose': 'Welk postvak wilt u oefenen?',
+    'sim.intro.start.personal': '📥 <strong>Privé‑postvak</strong> <small>— bank, overheid, pakjes</small>',
+    'sim.intro.start.business': '💼 <strong>Werk‑postvak</strong> <small>— collega’s, IT, leveranciers</small>',
 
     'sim.coldstart': '⏳ De website wordt even opgestart. Een momentje geduld…',
 
@@ -350,6 +356,7 @@ window.VO_LOCALES = {
     'skip.main': 'Skip to main content',
 
     'user.email': 'smith@hotmail.com',
+    'user.email.business': 'j.smith@kestrel.co.uk',
     'user.avatar': 'S',
 
     'brand.title': 'Safe Online',
@@ -405,7 +412,9 @@ window.VO_LOCALES = {
     'sim.intro.li2': 'Not every button works — that’s fine, this is only practice.',
     'sim.intro.li3': 'You cannot break anything and nothing will be sent.',
     'sim.intro.li4': 'Your task: decide whether each email is <strong>trustworthy</strong> or <strong>phishing</strong>.',
-    'sim.intro.start': 'I’m ready →',
+    'sim.intro.choose': 'Which mailbox do you want to practise with?',
+    'sim.intro.start.personal': '📥 <strong>Personal mailbox</strong> <small>— bank, tax, parcels</small>',
+    'sim.intro.start.business': '💼 <strong>Work mailbox</strong> <small>— colleagues, IT, suppliers</small>',
 
     'sim.coldstart': '⏳ The website is starting up. Just a moment…',
 
@@ -517,6 +526,7 @@ window.VO_LOCALES = {
     'skip.main': 'Aller au contenu principal',
 
     'user.email': 'dupont@hotmail.com',
+    'user.email.business': 'p.dupont@kestrel.fr',
     'user.avatar': 'D',
 
     'brand.title': 'Sécurité en ligne',
@@ -572,7 +582,9 @@ window.VO_LOCALES = {
     'sim.intro.li2': 'Tous les boutons ne fonctionnent pas — c’est normal, c’est un entraînement.',
     'sim.intro.li3': 'Vous ne pouvez rien casser et rien ne sera envoyé.',
     'sim.intro.li4': 'Votre tâche : décider si chaque e‑mail est <strong>fiable</strong> ou s’il s’agit d’<strong>hameçonnage</strong>.',
-    'sim.intro.start': 'Je suis prêt(e) →',
+    'sim.intro.choose': 'Quelle boîte aux lettres voulez‑vous entraîner ?',
+    'sim.intro.start.personal': '📥 <strong>Boîte personnelle</strong> <small>— banque, impôts, colis</small>',
+    'sim.intro.start.business': '💼 <strong>Boîte professionnelle</strong> <small>— collègues, informatique, fournisseurs</small>',
 
     'sim.coldstart': '⏳ Le site démarre. Un instant s’il vous plaît…',
 
@@ -684,6 +696,7 @@ window.VO_LOCALES = {
     'skip.main': 'Aller au contenu principal',
 
     'user.email': 'dubois@hotmail.com',
+    'user.email.business': 'p.dubois@kestrel.be',
     'user.avatar': 'D',
 
     'brand.title': 'Sécurité en ligne',
@@ -739,7 +752,9 @@ window.VO_LOCALES = {
     'sim.intro.li2': 'Tous les boutons ne fonctionnent pas — c’est normal, c’est un entraînement.',
     'sim.intro.li3': 'Vous ne pouvez rien casser et rien ne sera envoyé.',
     'sim.intro.li4': 'Votre tâche : décider si chaque e‑mail est <strong>fiable</strong> ou s’il s’agit d’<strong>hameçonnage</strong>.',
-    'sim.intro.start': 'Je suis prêt(e) →',
+    'sim.intro.choose': 'Quelle boîte aux lettres voulez‑vous entraîner ?',
+    'sim.intro.start.personal': '📥 <strong>Boîte personnelle</strong> <small>— banque, impôts, colis</small>',
+    'sim.intro.start.business': '💼 <strong>Boîte professionnelle</strong> <small>— collègues, informatique, fournisseurs</small>',
 
     'sim.coldstart': '⏳ Le site démarre. Un instant s’il vous plaît…',
 
@@ -851,6 +866,7 @@ window.VO_LOCALES = {
     'skip.main': 'Zum Hauptinhalt springen',
 
     'user.email': 'mueller@hotmail.com',
+    'user.email.business': 'm.mueller@kestrel.de',
     'user.avatar': 'M',
 
     'brand.title': 'Sicher Online',
@@ -906,7 +922,9 @@ window.VO_LOCALES = {
     'sim.intro.li2': 'Nicht jede Schaltfläche funktioniert — das ist in Ordnung, es ist nur eine Übung.',
     'sim.intro.li3': 'Sie können nichts kaputtmachen, und es wird nichts gesendet.',
     'sim.intro.li4': 'Ihre Aufgabe: entscheiden, ob jede E‑Mail <strong>vertrauenswürdig</strong> ist oder ob es sich um <strong>Phishing</strong> handelt.',
-    'sim.intro.start': 'Ich bin bereit →',
+    'sim.intro.choose': 'Welches Postfach möchten Sie üben?',
+    'sim.intro.start.personal': '📥 <strong>Privates Postfach</strong> <small>— Bank, Behörden, Pakete</small>',
+    'sim.intro.start.business': '💼 <strong>Arbeitspostfach</strong> <small>— Kollegen, IT, Lieferanten</small>',
 
     'sim.coldstart': '⏳ Die Website wird gestartet. Einen Moment bitte…',
 

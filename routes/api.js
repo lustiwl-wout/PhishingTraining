@@ -14,6 +14,12 @@ function pickLocale(req) {
   return SUPPORTED_LOCALES.has(q) ? q : 'nl';
 }
 
+const SUPPORTED_AUDIENCES = new Set(['personal', 'business']);
+function pickAudience(req) {
+  const q = (req.query && req.query.audience) || '';
+  return SUPPORTED_AUDIENCES.has(q) ? q : 'personal';
+}
+
 // Voer `queryFn(locale)` uit voor de gevraagde taal en val terug op 'nl'
 // wanneer er nog geen vertaalde rijen bestaan. Zo breekt de UI niet bij
 // een nieuwe locale die nog niet in de seed zit.
@@ -33,16 +39,17 @@ router.get('/health', async (_req, res) => {
   }
 });
 
-// GET /api/examples?lang=nl|nl-BE|en|fr|fr-BE|de
+// GET /api/examples?lang=nl|nl-BE|en|fr|fr-BE|de&audience=personal|business
 router.get('/examples', async (req, res, next) => {
   try {
     const locale = pickLocale(req);
+    const audience = pickAudience(req);
     const result = await withFallback(locale, (loc) => db.query(
       `SELECT id, channel, sender, subject, body, annotations, sort_order
          FROM examples
-        WHERE locale = $1
+        WHERE locale = $1 AND audience IN ($2, 'both')
         ORDER BY sort_order, id`,
-      [loc]
+      [loc, audience]
     ));
     res.json(result.rows);
   } catch (err) { next(err); }
@@ -132,16 +139,18 @@ router.post('/attempts/:id/finish', async (req, res, next) => {
 
 // ======== INBOX-SIMULATOR ========
 
-// GET /api/inbox?lang=nl|nl-BE|en|fr|fr-BE|de — lijst berichten zonder spoilers
+// GET /api/inbox?lang=nl|nl-BE|en|fr|fr-BE|de&audience=personal|business
+// — lijst berichten zonder spoilers, gefilterd op taal en doelgroep.
 router.get('/inbox', async (req, res, next) => {
   try {
     const locale = pickLocale(req);
+    const audience = pickAudience(req);
     const result = await withFallback(locale, (loc) => db.query(
       `SELECT id, sender_name, sender_address, received_label, subject, preview
          FROM inbox_messages
-        WHERE active = TRUE AND locale = $1
+        WHERE active = TRUE AND locale = $1 AND audience IN ($2, 'both')
         ORDER BY sort_order, id`,
-      [loc]
+      [loc, audience]
     ));
     res.json(result.rows);
   } catch (err) { next(err); }
