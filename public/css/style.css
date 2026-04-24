@@ -1549,3 +1549,182 @@ body.device-iphone .device-homebar::after {
   border-color: #f28b82;
 }
 .mob-gmail .mob-verdict.judged { text-align: center; color: #5f6368; font-size: .85rem; padding: 14px; }
+
+/* ========================================================
+   Apple Mail iOS skin (privé + iPhone).
+   Grote sf-achtige titel, zoekbalk eronder, blauwe link-
+   kleuren, iOS-style verdict-knoppen.
+   ======================================================== */
+.mob-applemail {
+  font-family: -apple-system, "SF Pro Text", "SF Pro Display", system-ui, sans-serif;
+}
+.mob-applemail .mob-topbar {
+  background: #f6f6f6;
+  padding: 8px 16px 10px;
+  display: flex; flex-direction: column;
+  border-bottom: 0.5px solid #c6c6c8;
+  flex-shrink: 0;
+}
+.mob-applemail .mob-topbar-row {
+  display: flex; align-items: center; justify-content: space-between;
+  min-height: 32px;
+}
+.mob-applemail .mob-btn {
+  background: transparent; border: 0;
+  color: #007aff;
+  font-size: .95rem; font-weight: 400;
+  padding: 4px 0;
+  cursor: pointer;
+}
+.mob-applemail .mob-btn-back {
+  display: inline-flex; align-items: center; gap: 2px;
+  color: #007aff; font-size: 1rem;
+}
+.mob-applemail .mob-title {
+  font-size: 1.75rem; font-weight: 700; color: #000;
+  margin: 4px 0 8px;
+  letter-spacing: -.02em;
+}
+.mob-applemail .mob-search {
+  background: #e3e3e8;
+  border-radius: 10px;
+  padding: 7px 12px;
+  color: #8e8e93;
+  font-size: .92rem;
+  display: flex; align-items: center; gap: 6px;
+}
+
+/* Lijst — iOS stijl */
+.mob-applemail .mob-list {
+  list-style: none; margin: 0; padding: 0;
+  flex: 1; overflow-y: auto;
+  background: #fff;
+}
+.mob-applemail .mob-item {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 12px 16px 12px 16px;
+  cursor: pointer;
+  border-bottom: 0.5px solid #e5e5ea;
+  position: relative;
+}
+.mob-applemail .mob-item::before {
+  content: "";
+  position: absolute;
+  left: 6px; top: 50%;
+  transform: translateY(-50%);
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #007aff;
+}
+.mob-applemail .mob-item.judged::before {
+  background: transparent;
+}
+.mob-applemail .mob-item:active { background: #f2f2f7; }
+.mob-applemail .mob-item.judged { opacity: .55; }
+.mob-applemail .mob-item-avatar {
+  display: none;
+}
+.mob-applemail .mob-item-body { flex: 1; min-width: 0; padding-left: 14px; }
+.mob-applemail .mob-item-top {
+  display: flex; justify-content: space-between; gap: 8px;
+  margin-bottom: 2px;
+  align-items: baseline;
+}
+.mob-applemail .mob-item-sender {
+  font-weight: 700; color: #000; font-size: 1rem;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.mob-applemail .mob-item-time {
+  font-size: .82rem; color: #8e8e93; flex-shrink: 0;
+}
+.mob-applemail .mob-item-subject {
+  font-size: .92rem; color: #000;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-bottom: 1px;
+}
+.mob-applemail .mob-item-preview {
+  font-size: .88rem; color: #8e8e93;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.mob-applemail .mob-item-status { margin-left: 6px; font-size: .8rem; }
+.mob-applemail .mob-item-status.good { color: #34c759; }
+.mob-applemail .mob-item-status.bad { color: #ff3b30; }
+
+/* Reader — iOS style */
+.mob-applemail .mob-reader {
+  position: absolute; inset: 0;
+  background: #fff;
+  display: flex; flex-direction: column;
+  z-index: 5;
+}
+.mob-applemail .mob-reader[hidden] { display: none; }
+.mob-applemail .mob-reader-head {
+  background: #f6f6f6;
+  padding: 10px 12px;
+  display: flex; align-items: center; gap: 8px;
+  flex-shrink: 0;
+  border-bottom: 0.5px solid #c6c6c8;
+  min-height: 48px;
+}
+.mob-applemail .mob-reader-head .mob-btn-back {
+  font-size: 1.05rem;
+}
+.mob-applemail .mob-reader-content { flex: 1; overflow-y: auto; padding: 16px; }
+.mob-applemail .mob-reader-subject {
+  font-size: 1.4rem; font-weight: 700; color: #000;
+  margin: 0 0 14px; line-height: 1.3;
+  letter-spacing: -.01em;
+}
+.mob-applemail .mob-reader-sender {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding-bottom: 14px; border-bottom: 0.5px solid #e5e5ea;
+  margin-bottom: 16px;
+}
+.mob-applemail .mob-reader-sender .mob-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: #c7c7cc; color: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 600; font-size: .95rem;
+  flex-shrink: 0;
+}
+.mob-applemail .mob-reader-name { font-weight: 600; color: #000; font-size: .98rem; }
+.mob-applemail .mob-reader-addr { color: #8e8e93; font-size: .82rem; word-break: break-all; }
+.mob-applemail .mob-reader-to { color: #8e8e93; font-size: .78rem; margin-top: 2px; }
+.mob-applemail .mob-reader-body {
+  color: #000; font-size: .94rem; line-height: 1.6;
+  word-wrap: break-word;
+}
+.mob-applemail .mob-reader-body p { margin: 0 0 .75em; }
+.mob-applemail .mob-reader-body a.ol-link { color: #007aff; }
+
+/* Verdict-knoppen iOS style */
+.mob-applemail .mob-verdict {
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 14px;
+  border-top: 0.5px solid #c6c6c8;
+  background: #f6f6f6;
+  flex-shrink: 0;
+}
+.mob-applemail .mob-verdict-q {
+  margin: 0 0 4px;
+  font-size: .95rem; font-weight: 600; color: #000;
+  text-align: center;
+}
+.mob-applemail .mob-verdict button {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 0;
+  font-size: 1rem; font-weight: 600;
+  cursor: pointer;
+}
+.mob-applemail .mob-verdict .btn-good {
+  background: #34c759; color: #fff;
+}
+.mob-applemail .mob-verdict .btn-bad {
+  background: #ff3b30; color: #fff;
+}
+.mob-applemail .mob-verdict.judged { text-align: center; color: #8e8e93; font-size: .85rem; padding: 14px; }
