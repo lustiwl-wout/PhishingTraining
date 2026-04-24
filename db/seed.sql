@@ -1874,3 +1874,173 @@ INSERT INTO inbox_messages
  '[]'::jsonb,
  'This is phishing with a malicious attachment. Files with double extensions (.pdf.exe) are executable programs disguised as documents. NEVER open them. A real recruiter with a real role does not send stand-alone executable attachments. Report to IT or delete the email.',
  100);
+
+-- ============ FR — BUSINESS (1/2) ============
+
+INSERT INTO inbox_messages
+  (locale, audience, sender_name, sender_address, sender_note, received_label, subject, preview, body, links, is_phishing, red_flags, green_flags, explanation, sort_order) VALUES
+
+-- 1. PHISHING — CEO fraud
+('fr', 'business',
+ 'Jean-Philippe Moreau (CEO)',
+ 'jp.moreau@kestrel-group.com',
+ 'Le vrai domaine est @kestrel.fr. Ici c''est @kestrel-group.com — imitation.',
+ 'aujourd''hui 09:02',
+ 'Tu peux me rendre un service rapidement ?',
+ 'Pierre, je suis en réunion. Peux-tu régler quelque chose rapidement ? Ne m''appelle pas...',
+ E'Pierre,\n\nJe suis en réunion importante avec un client et je ne peux pas être dérangé au téléphone. J''ai besoin de quelque chose d''urgent.\n\nPeux-tu acheter 5 cartes cadeaux Amazon à 100 € chacune ? Envoie-moi les codes par retour de mail dès que tu les as, je demanderai à la comptabilité de te rembourser. Merci de ne pas en parler autour de toi — c''est confidentiel pour le moment.\n\nMerci,\nJean-Philippe',
+ '[]'::jsonb,
+ TRUE,
+ '["Expéditeur @kestrel-group.com, pas @kestrel.fr — domaine imitation","Demande des cartes cadeaux comme moyen de paiement (fraude au dirigeant classique)","Pression : \"ne m''appelle pas\", \"confidentiel\" — vise à vous isoler de vos collègues","Contourne la procédure normale — les dépenses passent par la comptabilité, pas par un salarié"]'::jsonb,
+ '[]'::jsonb,
+ 'C''est de la fraude au dirigeant. Les escrocs se font passer pour un responsable et réclament des cartes cadeaux ou un virement urgent, sous couvert de confidentialité. En cas de doute, rendez-vous au bureau de l''expéditeur ou appelez-le sur son numéro connu — jamais via les coordonnées de l''e-mail suspect.',
+ 10),
+
+-- 2. REAL — HR memo
+('fr', 'business',
+ 'RH Kestrel',
+ 'rh@kestrel.fr',
+ 'Domaine interne @kestrel.fr — correct.',
+ 'aujourd''hui 10:15',
+ 'Nouvelle page congés sur MonKestrel',
+ 'Chers collègues, à partir de cette semaine, la page congés actualisée est disponible sur MonKestrel...',
+ E'Chers collègues,\n\nÀ partir de cette semaine, la nouvelle page des congés est disponible sur MonKestrel. Vous y trouverez vos jours restants, un récapitulatif mensuel et le formulaire de demande.\n\nConnectez-vous comme d''habitude — rendez-vous vous-même sur MonKestrel via votre page de démarrage ou votre favori. Nous n''envoyons volontairement aucun lien direct.\n\nDes questions ? Passez aux RH ou écrivez à rh@kestrel.fr.\n\nCordialement,\nRH Kestrel',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Expéditeur @kestrel.fr, domaine interne officiel","Aucun lien cliquable — on vous demande d''aller VOUS-MÊME sur MonKestrel","Aucune demande de mot de passe ou d''informations personnelles","Communication concrète et plausible","Renvoie aux RH comme point de contact connu"]'::jsonb,
+ 'C''est une vraie communication RH. Le bon réflexe : AUCUN lien direct n''est envoyé, on vous demande de vous rendre vous-même sur MonKestrel. C''est ainsi que devrait ressembler une communication interne professionnelle.',
+ 20),
+
+-- 3. PHISHING — IT mot de passe
+('fr', 'business',
+ 'Support Informatique',
+ 'support-it@kestrel-helpdesk.com',
+ 'Pas @kestrel.fr mais @kestrel-helpdesk.com — un autre domaine qui imite l''entreprise. Suspect.',
+ 'aujourd''hui 11:30',
+ 'Votre mot de passe expire aujourd''hui à 17h — renouvelez maintenant',
+ 'Votre mot de passe Kestrel expire aujourd''hui. Renouvelez-le immédiatement pour éviter le blocage...',
+ E'Cher utilisateur,\n\nVotre mot de passe Kestrel expire aujourd''hui à 17h. Si vous ne le renouvelez pas, vous perdrez l''accès à la messagerie, SharePoint et Teams.\n\nUtilisez le lien ci-dessous pour renouveler votre mot de passe. Cela prend 30 secondes.\n\n{{link:0}}\n\nCordialement,\nSupport Informatique Kestrel',
+ '[{"label":"Renouveler le mot de passe","real_url":"http://kestrel-helpdesk.com/password-renew","suspicious":true,"warning":"Ce lien mène vers kestrel-helpdesk.com — PAS le domaine officiel de Kestrel. Votre vrai service informatique envoie les liens de renouvellement via le portail interne, pas via un domaine séparé."}]'::jsonb,
+ TRUE,
+ '["Expéditeur @kestrel-helpdesk.com, pas @kestrel.fr","Pression temporelle (\"expire aujourd''hui à 17h\") pour vous faire cliquer sans réfléchir","Menace de perte d''accès — ton anxiogène","Lien vers un domaine qui ressemble à l''entreprise mais n''en fait pas partie","Les vrais services informatiques vous font vous connecter via des portails internes, jamais via un lien isolé dans un e-mail"]'::jsonb,
+ '[]'::jsonb,
+ 'C''est du hameçonnage qui se fait passer pour votre service informatique. Votre vrai service informatique envoie rarement des liens de réinitialisation, et quand il le fait, c''est via le domaine interne et le portail officiel. Dans le doute, appelez un(e) collègue de l''informatique ou passez le voir — jamais via le numéro indiqué dans l''e-mail.',
+ 30),
+
+-- 4. PHISHING — DocuSign
+('fr', 'business',
+ 'DocuSign via Julien Martin',
+ 'dse@docusigne-delivery.com',
+ 'Le vrai DocuSign utilise @docusign.net ou @docusign.com. "docusigne" est une faute de frappe dans le domaine.',
+ 'aujourd''hui 13:47',
+ 'Julien Martin vous demande de signer un document',
+ 'Vous avez un document en attente sur DocuSign. Le document "Contrat-Cadre-2024.pdf"...',
+ E'DocuSign\n\nJulien Martin (j.martin@kestrel-group.com) vous demande de signer un document via DocuSign.\n\nDocument : Contrat-Cadre-2024.pdf\nEnvoyé : aujourd''hui à 13h47\n\nOuvrez le document : {{link:0}}\n\nMerci,\nDocuSign',
+ '[{"label":"Consulter le document","real_url":"http://docusigne-delivery.com/sign?id=78a2f","suspicious":true,"warning":"Le domaine est docusigne-delivery.com — une faute de frappe sur DocuSign. Le vrai domaine est docusign.net. De plus, Julien Martin utilise @kestrel-group.com, pas @kestrel.fr."}]'::jsonb,
+ TRUE,
+ '["Le domaine est \"docusigne-delivery.com\" (pas docusign.net/.com)","L''\"expéditeur\" Julien Martin utilise @kestrel-group.com — pas notre @kestrel.fr","Document inattendu d''un collègue que vous n''avez pas vu récemment","Les vraies notifications DocuSign contiennent un code de sécurité que vous pouvez saisir sur docusign.com pour retrouver le document"]'::jsonb,
+ '[]'::jsonb,
+ 'C''est du hameçonnage qui imite DocuSign. En cas de doute, ne cliquez jamais sur le lien : rendez-vous vous-même sur docusign.com et entrez le code de sécurité d''un vrai e-mail DocuSign. Ou appelez Julien directement pour vérifier s''il a vraiment envoyé quelque chose.',
+ 40),
+
+-- 5. REAL — Invitation réunion collègue
+('fr', 'business',
+ 'Claire Lambert',
+ 'c.lambert@kestrel.fr',
+ 'Domaine interne @kestrel.fr d''une collègue connue — correct.',
+ 'aujourd''hui 14:12',
+ 'Réunion jeudi 14h — planification Q2',
+ 'Bonjour Pierre, peux-tu te joindre à la planification Q2 jeudi à 14h ? Ordre du jour ci-dessous...',
+ E'Bonjour Pierre,\n\nPeux-tu te joindre à la planification Q2 jeudi à 14h ? On abordera :\n\n• Statut des projets en cours\n• Planning de mai et juin\n• Priorités pour l''équipe\n\nUne heure maximum. Salle Érable, ou via Teams si tu préfères. Confirme-moi ta présence.\n\nMerci !\nClaire',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Expéditeur @kestrel.fr, domaine interne officiel","Collègue connue avec qui vous travaillez","Contexte de travail concret et plausible","Aucun lien, aucune pièce jointe, aucune demande d''information","Ton informel et personnel — cohérent avec la communication interne"]'::jsonb,
+ 'C''est une invitation de réunion tout à fait normale d''une collègue. Aucune action à prendre en dehors d''une réponse sur le fond. Bonne leçon : un e-mail interne adressé personnellement, concret, sans lien ni pièce jointe, est en général un bon signe.',
+ 50);
+
+-- ============ FR — BUSINESS (2/2) ============
+
+INSERT INTO inbox_messages
+  (locale, audience, sender_name, sender_address, sender_note, received_label, subject, preview, body, links, is_phishing, red_flags, green_flags, explanation, sort_order) VALUES
+
+-- 6. PHISHING — Fake vendor invoice
+('fr', 'business',
+ 'Comptabilité — Atelier Impression SARL',
+ 'factures@imprimerie-services.com',
+ 'Fournisseur inconnu sur un domaine .com isolé. Les vrais fournisseurs de Kestrel figurent dans le système d''achats.',
+ 'hier 15:30',
+ 'Facture P-2024-0452 — délai de paiement dépassé',
+ 'Madame, Monsieur, veuillez trouver ci-joint la facture en souffrance. Merci de régler rapidement...',
+ E'Madame, Monsieur,\n\nVeuillez trouver ci-joint la facture P-2024-0452 pour la maintenance trimestrielle des imprimantes (Q1), d''un montant de 1 847,50 €.\n\nLe délai de paiement de 14 jours est désormais dépassé. Merci de régler immédiatement pour éviter les pénalités de retard. Les coordonnées de paiement sont dans la pièce jointe.\n\nPour régler rapidement : {{link:0}}\n\nCordialement,\nComptabilité — Atelier Impression SARL',
+ '[{"label":"Payer maintenant","real_url":"http://imprimerie-services.com/pay/P-2024-0452","suspicious":true,"warning":"Domaine de paiement inconnu. Chez Kestrel, les factures passent par le portail des achats — pas via un lien isolé dans un e-mail."}]'::jsonb,
+ TRUE,
+ '["Fournisseur inconnu — absent du système d''achats","Pression temporelle : \"délai dépassé\", \"régler immédiatement\"","Lien de paiement isolé au lieu du portail des achats","Formule générique \"Madame, Monsieur\" — devrait utiliser votre nom","Le montant (1 847,50 €) est juste assez élevé pour presser, assez bas pour ne pas attirer l''attention"]'::jsonb,
+ '[]'::jsonb,
+ 'C''est de la fraude à la fausse facture. Un fournisseur inconnu envoyant une facture inattendue doit d''abord être vérifié auprès du service Achats ou Comptabilité fournisseurs. Ne payez jamais via un lien dans un e-mail — toujours via votre propre portail d''achats ou après un nouvel examen de la facture.',
+ 60),
+
+-- 7. REAL — Newsletter interne
+('fr', 'business',
+ 'Communication Kestrel',
+ 'communication@kestrel.fr',
+ 'Domaine interne @kestrel.fr — correct.',
+ 'hier 09h00',
+ 'Lettre d''info T1 — Kestrel en bref',
+ 'Chers collègues, voici la lettre trimestrielle avec les nouvelles de chaque équipe...',
+ E'Chers collègues,\n\nVoici la lettre trimestrielle couvrant les trois premiers mois de 2024.\n\nFaits marquants :\n• Trois nouveaux projets clients lancés\n• L''équipe Opérations s''est agrandie de quatre personnes\n• Le nouveau plan des bureaux est disponible (voir MonKestrel)\n• Prochaine réunion générale : jeudi 16 mai, 16h, à la cafétéria\n\nLa lettre complète est sur MonKestrel. Connectez-vous comme d''habitude — nous n''envoyons volontairement aucun lien direct.\n\nQuestions ou idées ? Passez à la Communication (bureau 2.14) ou envoyez un message.\n\nÀ la prochaine !\nÉquipe Communication Kestrel',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Expéditeur @kestrel.fr, interne connue","Contenu interne concret et attendu","Aucun lien cliquable — on vous demande d''aller VOUS-MÊME sur MonKestrel","Aucune pression, aucune demande d''information","Renvoie à un endroit interne connu (bureau 2.14) comme point de contact"]'::jsonb,
+ 'C''est une newsletter interne classique. Le bon modèle : domaine interne, contenu attendu, aucun lien qui vous obligerait à vous connecter quelque part.',
+ 70),
+
+-- 8. PHISHING — Microsoft 365
+('fr', 'business',
+ 'Microsoft 365',
+ 'account-security@microsoft-365-secure.com',
+ 'Le vrai domaine Microsoft est microsoft.com. "microsoft-365-secure.com" est faux.',
+ 'il y a 2 jours 08h14',
+ 'Votre mot de passe Microsoft 365 expire aujourd''hui',
+ 'Votre mot de passe Microsoft 365 expire dans 24 heures. Conservez votre mot de passe actuel...',
+ E'Sécurité du compte Microsoft 365\n\nVotre mot de passe Microsoft 365 expire dans 24 heures. Passé ce délai, vous perdrez l''accès à la messagerie, à OneDrive et à Teams.\n\nCliquez ci-dessous pour conserver votre mot de passe actuel et éviter l''expiration :\n\n{{link:0}}\n\nCette action prend moins d''une minute. Si vous l''ignorez, votre compte sera temporairement verrouillé.\n\nÉquipe Sécurité Microsoft 365',
+ '[{"label":"Conserver le mot de passe","real_url":"http://microsoft-365-secure.com/keep-password","suspicious":true,"warning":"Microsoft n''utilise jamais de domaines avec des tirets comme microsoft-365-secure.com. C''est faux. Microsoft ne vous demande jamais non plus de \"conserver\" ou \"confirmer\" un mot de passe via un lien."}]'::jsonb,
+ TRUE,
+ '["Expéditeur @microsoft-365-secure.com (pas @microsoft.com)","Pression temporelle : \"dans 24 heures\", \"verrouillé\"","Concept absurde : \"conserver un mot de passe\" via un lien n''existe pas","Menace de perte d''accès","Si Microsoft 365 souhaite renouveler un mot de passe, cela se passe à la connexion — pas via un e-mail isolé"]'::jsonb,
+ '[]'::jsonb,
+ 'C''est l''une des variantes de hameçonnage les plus fréquentes en entreprise. Microsoft ne communique jamais ainsi sur les mots de passe. En cas de doute, fermez l''e-mail et rendez-vous vous-même sur portal.office.com ou ouvrez Teams pour voir s''il y a réellement un problème.',
+ 80),
+
+-- 9. REAL — Question courte d'un collègue
+('fr', 'business',
+ 'Claire Lambert',
+ 'c.lambert@kestrel.fr',
+ 'Domaine interne @kestrel.fr d''une collègue connue — correct.',
+ 'il y a 2 jours 14h45',
+ 'Tu peux jeter un œil au budget ?',
+ 'Bonjour Pierre, Marc demande si tu peux vérifier rapidement la ligne 14 du budget...',
+ E'Bonjour Pierre,\n\nMarc demande si tu peux vérifier rapidement que la ligne 14 du budget du projet Nord est correcte. Selon lui le montant est faux, mais je ne suis pas sûre qu''il regardait la bonne version.\n\nLe budget est sur le partage d''équipe sous /Projets/Nord/2024/.\n\nTu peux lui faire un retour ?\n\nMerci !\nClaire',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Expéditeur @kestrel.fr, collègue connue","Contexte interne concret (Marc, projet Nord, chemin du partage d''équipe)","Aucun lien vers un domaine externe","Aucune demande d''information, de mot de passe ou d''argent","Ton informel cohérent avec la communication interne normale"]'::jsonb,
+ 'C''est une question de travail tout à fait normale d''une collègue. Rien à faire sinon regarder et répondre. À retenir : un contexte de travail concret et personnalisé sur un domaine interne est en général un bon signe.',
+ 90),
+
+-- 10. PHISHING — Recruteur avec pièce jointe malveillante
+('fr', 'business',
+ 'Sophie Clément — Premium Talent',
+ 'sophie.clement@premium-talent-careers.info',
+ 'Domaine en ".info" et recruteuse isolée sans lien démontrable avec un cabinet connu. Schéma suspect.',
+ 'il y a 3 jours 17h20',
+ 'Opportunité exclusive chez un grand compte international — profil sélectionné',
+ 'Bonjour Pierre, j''ai examiné votre profil sur LinkedIn et j''ai un poste exclusif...',
+ E'Bonjour Pierre,\n\nJ''ai examiné votre profil et j''ai un poste senior exclusif chez un grand compte international qui correspond parfaitement à votre expérience, selon moi. Fourchette de rémunération : 85 000 € — 105 000 € brut.\n\nLe poste n''a pas été rendu public et il y a urgence. Le client veut une shortlist cette semaine.\n\nEn pièce jointe, vous trouverez la fiche de poste et l''accord de confidentialité (NDA) que je vous demande d''ouvrir et de signer avant que je puisse vous communiquer plus de détails.\n\nPièce jointe : Fiche_Poste_et_NDA.pdf.exe\n\nCordialement,\nSophie Clément\nPremium Talent — Executive Search',
+ '[]'::jsonb,
+ TRUE,
+ '["Expéditrice sur un domaine \".info\" sans cabinet reconnu","Contact non sollicité avec une pièce jointe","Le nom du fichier se termine par .pdf.exe — c''est un programme exécutable déguisé en PDF","Pression temporelle : \"shortlist cette semaine\"","Confidentialité demandée — vise à vous isoler","Rémunération utilisée comme appât, sans contexte vérifiable"]'::jsonb,
+ '[]'::jsonb,
+ 'C''est du hameçonnage avec une pièce jointe malveillante. Les fichiers à double extension (.pdf.exe) sont des programmes exécutables déguisés en document. Ne les ouvrez JAMAIS. Un(e) vrai(e) recruteur(se) sérieux(se) avec un vrai poste n''envoie pas de pièces jointes exécutables isolées. Signalez-le à l''informatique ou supprimez l''e-mail.',
+ 100);
