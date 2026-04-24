@@ -998,9 +998,6 @@ body.sim-fullscreen .outlook {
   margin: 0 0 1rem;
   color: #323130;
 }
-.ol-share-intro .hl {
-  background: #fff066; padding: 0 3px; border-radius: 1px;
-}
 .ol-share-file {
   display: flex; align-items: center; gap: .75rem;
   padding: .7rem .9rem;
