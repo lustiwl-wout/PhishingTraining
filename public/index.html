@@ -16,12 +16,16 @@
       <span class="brand-title" data-i18n="brand.title">Veilig Online</span>
     </div>
     <div class="topbar-tools">
+      <button id="device-switch" class="lang-switch" aria-label="Change device" hidden>
+        <span id="device-switch-icon">💻</span> <span id="device-switch-name">Desktop</span> ▾
+      </button>
       <button id="audience-switch" class="lang-switch" aria-label="Change mode">
         <span id="audience-switch-icon">📥</span> <span id="audience-switch-name">Privé</span> ▾
       </button>
       <button id="lang-switch" class="lang-switch" aria-label="Change language">
         <span id="lang-switch-flag">🇳🇱</span> <span id="lang-switch-name">Nederlands</span> ▾
       </button>
+      <button id="sim-exit-btn" class="btn btn-secondary sim-exit-btn" type="button" data-go="leren" hidden data-i18n="sim.ol.exit">✕ Sluit oefening</button>
     </div>
   </header>
 
@@ -41,6 +45,20 @@
           <span class="lang-flag">💼</span>
           <span class="lang-label" data-i18n="audience.business.title">Zakelijk</span>
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Apparaat-keuzescherm: verschijnt via de knop rechtsboven tijdens de
+       simulator. Zelfde visuele taal als de taal- en doelgroep-picker. -->
+  <div id="device-picker" class="lang-picker" hidden role="dialog" aria-modal="true" aria-labelledby="device-picker-title">
+    <div class="lang-picker-inner">
+      <h1 id="device-picker-title" data-i18n="device.picker.title">Kies een apparaat</h1>
+      <p class="lang-picker-sub" data-i18n="device.picker.sub">Schakelt meteen over naar de gekozen simulator.</p>
+      <div class="lang-grid lang-grid-3">
+        <button class="lang-card" data-device="desktop"><span class="lang-flag">💻</span><span class="lang-label">Desktop</span></button>
+        <button class="lang-card" data-device="android"><span class="lang-flag">📱</span><span class="lang-label">Android</span></button>
+        <button class="lang-card" data-device="iphone"><span class="lang-flag">🍏</span><span class="lang-label">iPhone</span></button>
       </div>
     </div>
   </div>
@@ -274,7 +292,6 @@
             <button class="ol-iconbtn" aria-label="Meldingen">🔔</button>
             <button class="ol-iconbtn" aria-label="Instellingen">⚙️</button>
             <span class="ol-avatar" aria-hidden="true" data-i18n="user.avatar">J</span>
-            <button class="ol-exit-btn" type="button" data-go="leren" aria-label="Sluit de oefen-Outlook" data-i18n="sim.ol.exit">✕ Sluit oefening</button>
           </div>
         </div>
 
@@ -359,7 +376,6 @@
             <div id="mob-app" class="mob-app"><!-- gevuld door JS per skin --></div>
           </div>
           <div class="device-homebar"></div>
-          <button class="device-exit-btn" type="button" data-go="leren" aria-label="Sluit de oefening" data-i18n="sim.ol.exit">✕</button>
         </div>
       </div>
 

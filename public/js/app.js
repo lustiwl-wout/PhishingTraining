@@ -30,13 +30,23 @@
   // -------- device (desktop / android / iphone) --------
   // Per sessie gekozen bij elke start van de simulator; niet opgeslagen.
   const SUPPORTED_DEVICES = ['desktop', 'android', 'iphone'];
+  const DEVICE_ICONS = { desktop: '💻', android: '📱', iphone: '🍏' };
   let currentDevice = 'desktop';
   function setDevice(d) {
     if (!SUPPORTED_DEVICES.includes(d)) return;
     currentDevice = d;
-    // Body-klasse zodat CSS per device kan stijlen.
     document.body.classList.remove('device-desktop', 'device-android', 'device-iphone');
     document.body.classList.add('device-' + d);
+    applyI18n(); // update topbar-knop
+  }
+
+  function showDevicePicker() {
+    const p = document.getElementById('device-picker');
+    if (p) p.hidden = false;
+  }
+  function hideDevicePicker() {
+    const p = document.getElementById('device-picker');
+    if (p) p.hidden = true;
   }
 
   // -------- audience (persoonlijk vs zakelijk) --------
@@ -116,6 +126,10 @@
     const audIcon = document.getElementById('audience-switch-icon');
     if (audName) audName.textContent = t('audience.' + currentAudience + '.title');
     if (audIcon) audIcon.textContent = AUDIENCE_ICONS[currentAudience] || '';
+    const devName = document.getElementById('device-switch-name');
+    const devIcon = document.getElementById('device-switch-icon');
+    if (devName) devName.textContent = t('device.' + currentDevice + '.title');
+    if (devIcon) devIcon.textContent = DEVICE_ICONS[currentDevice] || '';
   }
 
   function setLanguage(lang) {
@@ -174,13 +188,44 @@
       hideAudiencePicker();
       return;
     }
+    // Apparaat-picker kaart (💻 / 📱 / 🍏)
+    const devPickCard = e.target.closest('#device-picker [data-device]');
+    if (devPickCard) {
+      e.preventDefault();
+      hideDevicePicker();
+      switchDevice(devPickCard.dataset.device);
+      return;
+    }
     if (e.target.closest('#lang-switch')) {
       showLangPicker();
     }
     if (e.target.closest('#audience-switch')) {
       showAudiencePicker();
     }
+    if (e.target.closest('#device-switch')) {
+      showDevicePicker();
+    }
   });
+
+  // Wissel van apparaat midden in de sessie: zet het nieuwe device,
+  // herstart de simulator in de juiste skin als we nog in de simulator
+  // zitten. Buiten de simulator alleen de voorkeur bijwerken.
+  function switchDevice(d) {
+    const wasInSim = document.getElementById('simulator').classList.contains('active');
+    setDevice(d);
+    if (!wasInSim) return;
+    // Resultaat-kaart verbergen als die nog open stond
+    const result = document.getElementById('sim-result');
+    if (result) result.hidden = true;
+    document.body.classList.add('sim-fullscreen');
+    if (d === 'desktop') {
+      showSimPhase('login');
+      runMicrosoftLoginAnimation().catch((err) => console.error(err));
+    } else {
+      showSimPhase('mobile');
+      startMobileSimulator().catch((err) => console.error(err));
+    }
+  }
 
   // -------- session id (anoniem, alleen om de attempt te koppelen) --------
   function getSessionId() {
@@ -255,6 +300,12 @@
     });
     // Fullscreen voor de simulator: verberg trainings-chrome, laat Outlook het scherm vullen.
     document.body.classList.toggle('sim-fullscreen', step === 'simulator');
+    // Apparaat-wissel en "Sluit oefening" zijn alleen zinvol in de simulator.
+    const inSim = step === 'simulator';
+    const exitBtn = document.getElementById('sim-exit-btn');
+    const devBtn = document.getElementById('device-switch');
+    if (exitBtn) exitBtn.hidden = !inSim;
+    if (devBtn) devBtn.hidden = !inSim;
 
     const main = document.getElementById('hoofd');
     if (main) main.focus();

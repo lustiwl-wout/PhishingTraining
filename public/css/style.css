@@ -62,8 +62,18 @@ body {
 .brand-mark { font-size: 1.6rem; }
 .brand-title { font-size: 1.25rem; font-weight: 700; color: var(--primary-dark); }
 
-/* ---------- taalknop in topbar ---------- */
-.topbar-tools { display: flex; align-items: center; }
+/* ---------- topbar tools (taal/doelgroep/apparaat + sluit-knop) ---------- */
+.topbar-tools { display: flex; align-items: center; gap: .35rem; flex-wrap: wrap; justify-content: flex-end; }
+.sim-exit-btn {
+  background: var(--bad); color: #fff;
+  border: 1px solid var(--bad);
+  padding: .35rem .8rem;
+  border-radius: 999px;
+  font-weight: 600; font-size: .9rem;
+  cursor: pointer;
+}
+.sim-exit-btn:hover { filter: brightness(.9); }
+.sim-exit-btn[hidden] { display: none; }
 .lang-switch {
   background: var(--surface);
   border: 1px solid var(--line);
@@ -543,13 +553,6 @@ mark.phish-mark .dot, .annotation-list .dot {
   font: inherit; color: var(--ol-ink);
 }
 .ol-topright { display: flex; align-items: center; gap: .5rem; }
-.ol-exit-btn {
-  background: var(--bad); color: #fff; border: 0;
-  padding: .45rem .8rem; border-radius: 4px;
-  font-weight: 600; cursor: pointer; font-size: .9rem;
-  margin-left: .25rem;
-}
-.ol-exit-btn:hover { filter: brightness(.9); }
 .ol-avatar {
   background: var(--ol-blue); color: #fff;
   width: 2rem; height: 2rem; border-radius: 50%;
@@ -776,22 +779,31 @@ mark.phish-mark .dot, .annotation-list .dot {
   .ol-reader-inner { padding: 1rem; }
 }
 
-/* ---------- simulator fullscreen (volledig scherm) ---------- */
-body.sim-fullscreen .topbar,
+/* ---------- simulator fullscreen (volledig scherm) ----------
+   De topbar blijft zichtbaar: daarin staan de taal/doelgroep/
+   apparaat-wissel knoppen én de sluit-oefening-knop, net zoals
+   gebruikers die elders verwachten. De stepbar en footer gaan
+   weg om de simulator de breedte te geven. */
 body.sim-fullscreen .stepbar,
 body.sim-fullscreen .footer,
 body.sim-fullscreen .coldstart-bar { display: none !important; }
 
-body.sim-fullscreen { background: #fff; }
-
+body.sim-fullscreen {
+  background: #fff;
+  display: flex; flex-direction: column;
+  min-height: 100vh;
+}
 body.sim-fullscreen main {
+  flex: 1;
   max-width: 100vw !important;
   padding: 0 !important;
   margin: 0 !important;
+  min-height: 0;
 }
+body.sim-fullscreen #simulator { height: 100%; }
 body.sim-fullscreen .outlook {
-  min-height: 100vh;
-  max-height: 100vh;
+  height: 100%;
+  min-height: 0;
   border: 0;
   border-radius: 0;
 }
@@ -826,6 +838,10 @@ body.sim-fullscreen .outlook {
 /* Doelgroep-picker hergebruikt de styling van de taal-picker; alleen
    het 2-kolomsraster is nieuw. */
 .lang-grid-2 { grid-template-columns: 1fr 1fr; }
+.lang-grid-3 { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 480px) {
+  .lang-grid-3 { grid-template-columns: 1fr; }
+}
 @media (max-width: 480px) {
   .lang-grid-2 { grid-template-columns: 1fr; }
 }
@@ -1086,7 +1102,7 @@ body.sim-fullscreen .outlook {
 .device-frame {
   position: relative;
   width: 390px;
-  height: 780px;
+  height: min(780px, calc(100vh - 120px));
   background: #000;
   border-radius: 44px;
   box-shadow: 0 30px 60px rgba(0,0,0,.35), 0 0 0 2px #222;
@@ -1104,18 +1120,7 @@ body.sim-fullscreen .outlook {
 .device-speaker, .device-notch,
 .device-statusbar, .device-homebar { display: none; }
 
-/* Verlaten-knop, rechts-boven buiten het telefoon-scherm. */
-.device-exit-btn {
-  position: absolute; top: -6px; right: -6px;
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  background: #fff; color: #333;
-  border: 1px solid #d1d1d1;
-  font-size: 1rem; font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,.2);
-}
-.device-exit-btn:hover { background: #f5f5f5; }
+/* (de oude .device-exit-btn is verhuisd naar de site-topbar als #sim-exit-btn) */
 
 @media (max-width: 420px) {
   .device-frame {

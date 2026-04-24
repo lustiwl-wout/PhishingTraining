@@ -17,6 +17,12 @@ window.VO_LOCALES = {
     'audience.personal.title': 'Privé',
     'audience.business.title': 'Zakelijk',
 
+    'device.picker.title': 'Kies een apparaat',
+    'device.picker.sub': 'Schakelt meteen over naar de gekozen simulator.',
+    'device.desktop.title': 'Desktop',
+    'device.android.title': 'Android',
+    'device.iphone.title': 'iPhone',
+
     'meta.title': 'Veilig Online — Phishing herkennen',
     'skip.main': 'Ga naar de inhoud',
 
@@ -217,6 +223,12 @@ window.VO_LOCALES = {
     'audience.picker.sub': 'U kunt dit later aanpassen via de knop rechtsboven.',
     'audience.personal.title': 'Privé',
     'audience.business.title': 'Zakelijk',
+
+    'device.picker.title': 'Kies een apparaat',
+    'device.picker.sub': 'Schakelt meteen over naar de gekozen simulator.',
+    'device.desktop.title': 'Desktop',
+    'device.android.title': 'Android',
+    'device.iphone.title': 'iPhone',
 
     'meta.title': 'Veilig Online — Phishing herkennen',
     'skip.main': 'Ga naar de inhoud',
@@ -419,6 +431,12 @@ window.VO_LOCALES = {
     'audience.personal.title': 'Personal',
     'audience.business.title': 'Work',
 
+    'device.picker.title': 'Choose a device',
+    'device.picker.sub': 'Switches to the chosen simulator straight away.',
+    'device.desktop.title': 'Desktop',
+    'device.android.title': 'Android',
+    'device.iphone.title': 'iPhone',
+
     'meta.title': 'Safe Online — Spot phishing',
     'skip.main': 'Skip to main content',
 
@@ -619,6 +637,12 @@ window.VO_LOCALES = {
     'audience.picker.sub': 'Vous pouvez le modifier plus tard via le bouton en haut à droite.',
     'audience.personal.title': 'Personnel',
     'audience.business.title': 'Professionnel',
+
+    'device.picker.title': 'Choisissez un appareil',
+    'device.picker.sub': 'Bascule immédiatement vers le simulateur choisi.',
+    'device.desktop.title': 'Desktop',
+    'device.android.title': 'Android',
+    'device.iphone.title': 'iPhone',
 
     'meta.title': 'Sécurité en ligne — Reconnaître le hameçonnage',
     'skip.main': 'Aller au contenu principal',
@@ -821,6 +845,12 @@ window.VO_LOCALES = {
     'audience.personal.title': 'Personnel',
     'audience.business.title': 'Professionnel',
 
+    'device.picker.title': 'Choisissez un appareil',
+    'device.picker.sub': 'Bascule immédiatement vers le simulateur choisi.',
+    'device.desktop.title': 'Desktop',
+    'device.android.title': 'Android',
+    'device.iphone.title': 'iPhone',
+
     'meta.title': 'Sécurité en ligne — Reconnaître le hameçonnage',
     'skip.main': 'Aller au contenu principal',
 
@@ -1021,6 +1051,12 @@ window.VO_LOCALES = {
     'audience.picker.sub': 'Sie können dies später über die Schaltfläche oben rechts ändern.',
     'audience.personal.title': 'Privat',
     'audience.business.title': 'Beruflich',
+
+    'device.picker.title': 'Gerät wählen',
+    'device.picker.sub': 'Wechselt sofort zum gewählten Simulator.',
+    'device.desktop.title': 'Desktop',
+    'device.android.title': 'Android',
+    'device.iphone.title': 'iPhone',
 
     'meta.title': 'Sicher Online — Phishing erkennen',
     'skip.main': 'Zum Hauptinhalt springen',
