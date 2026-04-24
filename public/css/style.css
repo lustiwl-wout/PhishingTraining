@@ -1020,25 +1020,33 @@ body.sim-fullscreen .outlook {
   margin: 0 0 1.2rem;
 }
 .ol-share-actions {
-  display: flex; gap: .5rem; justify-content: flex-end;
-  flex-wrap: wrap;
+  display: flex; flex-direction: column; align-items: stretch;
+  gap: .45rem;
 }
-/* De renderBody-gegenereerde <a class="ol-link"> krijgt een
-   Teams-achtig knop-uiterlijk binnen de kaart. De URL-subregel
-   blijft zichtbaar voor de leerpiek: is het domein vertrouwd? */
+/* Binnen de share-kaart wordt de renderBody-link getoond als Teams-
+   knop: een blauw label. De URL staat eronder in kleine grijze tekst
+   zodat de gebruiker het domein nog steeds kan beoordelen. */
 .ol-share-actions .ol-link {
-  display: inline-flex; flex-direction: column;
-  padding: .5rem 1.1rem;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+.ol-share-actions .ol-link-label {
+  display: inline-block;
+  padding: .55rem 1.4rem;
   background: #0067c0; color: #fff;
   border-radius: 2px;
-  text-decoration: none;
   font-weight: 600;
+  font-size: .95rem;
 }
-.ol-share-actions .ol-link:hover {
-  background: #004e8c;
-}
+.ol-share-actions .ol-link:hover .ol-link-label { background: #004e8c; }
 .ol-share-actions .ol-link-url {
   display: block;
-  font-size: .75rem; font-weight: 400;
-  opacity: .85; margin-top: .15rem;
+  margin-top: .35rem;
+  color: #605e5c;
+  font-size: .78rem;
+  font-weight: 400;
+  word-break: break-all;
+  text-align: left;
+  opacity: 1;
 }

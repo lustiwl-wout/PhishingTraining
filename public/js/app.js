@@ -575,8 +575,9 @@
       const label = escapeHtml(link.label || 'link');
       const url = escapeHtml(link.real_url || '');
       return '<a href="#" class="ol-link" data-link-idx="' + idx + '" ' +
-             'title="' + escapeHtml(t('sim.reader.linkTo', { url: link.real_url || '' })) + '">' + label +
-             ' <span class="ol-link-url" aria-hidden="true">(' + url + ')</span></a>';
+             'title="' + escapeHtml(t('sim.reader.linkTo', { url: link.real_url || '' })) + '">' +
+             '<span class="ol-link-label">' + label + '</span>' +
+             ' <span class="ol-link-url" aria-hidden="true">' + url + '</span></a>';
     });
     return html;
   }
