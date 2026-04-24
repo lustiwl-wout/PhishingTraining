@@ -2214,3 +2214,173 @@ INSERT INTO inbox_messages
  '[]'::jsonb,
  'C''est du hameçonnage avec une pièce jointe malveillante. Les fichiers à double extension (.pdf.exe) sont des programmes exécutables déguisés en document. Ne les ouvrez JAMAIS. Signalez-le à l''informatique ou supprimez l''e-mail.',
  100);
+
+-- ============ DE — BUSINESS (1/2) ============
+
+INSERT INTO inbox_messages
+  (locale, audience, sender_name, sender_address, sender_note, received_label, subject, preview, body, links, is_phishing, red_flags, green_flags, explanation, sort_order) VALUES
+
+-- 1. PHISHING — CEO-Betrug
+('de', 'business',
+ 'Thomas Schneider (CEO)',
+ 't.schneider@kestrel-group.com',
+ 'Die echte Domain ist @kestrel.de. Hier steht @kestrel-group.com — eine Fälschung.',
+ 'heute 09:02',
+ 'Kannst du mir kurz einen Gefallen tun?',
+ 'Martin, ich bin in einer Besprechung. Kannst du schnell etwas für mich erledigen?',
+ E'Martin,\n\nIch bin in einer wichtigen Kundenbesprechung und kann nicht telefonieren. Ich brauche dringend etwas.\n\nKannst du für mich 5 Amazon-Gutscheine à 100 € kaufen? Schick mir die Codes per Mail, sobald du sie hast, dann sorgt die Buchhaltung für die Erstattung. Bitte sprich mit niemandem darüber — das ist vertraulich, bis ich es erklären kann.\n\nDanke,\nThomas',
+ '[]'::jsonb,
+ TRUE,
+ '["Absender @kestrel-group.com, nicht @kestrel.de — nachgemachte Domain","Bittet um Gutscheine als Zahlungsmittel (typischer CEO-Betrug)","Druck: \"nicht telefonieren\", \"vertraulich\" — soll Sie von Kollegen isolieren","Umgeht den normalen Prozess — Ausgaben laufen über die Buchhaltung, nicht über Mitarbeiter"]'::jsonb,
+ '[]'::jsonb,
+ 'Das ist CEO-Betrug. Betrüger geben sich als Führungsperson aus und bitten um Gutscheine oder eine dringende Überweisung, unter dem Vorwand der Vertraulichkeit. Gehen Sie im Zweifel persönlich beim Absender vorbei oder rufen Sie ihn/sie auf der bekannten Nummer an — nie über etwas aus der verdächtigen E-Mail.',
+ 10),
+
+-- 2. REAL — HR-Memo
+('de', 'business',
+ 'HR Kestrel',
+ 'hr@kestrel.de',
+ 'Eigene Domain @kestrel.de — korrekt.',
+ 'heute 10:15',
+ 'Neue Urlaubsseite in MeinKestrel',
+ 'Liebe Kolleginnen und Kollegen, ab dieser Woche ist die aktualisierte Urlaubsseite in MeinKestrel verfügbar...',
+ E'Liebe Kolleginnen und Kollegen,\n\nab dieser Woche ist die aktualisierte Urlaubsseite in MeinKestrel verfügbar. Sie finden dort Ihre verbleibenden Tage, eine monatliche Übersicht und das Antragsformular.\n\nMelden Sie sich wie gewohnt an — gehen Sie selbst auf MeinKestrel über Ihre Startseite oder Ihr Browser-Lesezeichen. Wir senden bewusst keinen Direktlink.\n\nFragen? Kommen Sie bei HR vorbei oder schreiben Sie an hr@kestrel.de.\n\nViele Grüße,\nHR Kestrel',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Absender @kestrel.de, die offizielle interne Domain","Kein anklickbarer Link — Sie werden gebeten, SELBST auf MeinKestrel zu gehen","Keine Abfrage von Passwort oder persönlichen Daten","Konkrete, plausible interne Ankündigung","Verweist auf HR als bekannten Ansprechpartner"]'::jsonb,
+ 'Das ist eine echte HR-Nachricht. Achten Sie auf das gute Muster: KEIN Direktlink, Sie navigieren selbst zu MeinKestrel. Genau so sollte professionelle interne Kommunikation aussehen.',
+ 20),
+
+-- 3. PHISHING — IT Passwort-Reset
+('de', 'business',
+ 'IT Support',
+ 'it-support@kestrel-helpdesk.com',
+ 'Nicht @kestrel.de, sondern @kestrel-helpdesk.com — eine separate, nachgemachte Domain. Verdächtig.',
+ 'heute 11:30',
+ 'Ihr Passwort läuft heute um 17:00 Uhr ab — jetzt verlängern',
+ 'Ihr Kestrel-Passwort läuft heute ab. Verlängern Sie es sofort, um eine Sperre zu vermeiden...',
+ E'Sehr geehrte/r Nutzer/in,\n\nIhr Kestrel-Passwort läuft heute um 17:00 Uhr ab. Wenn Sie es nicht verlängern, verlieren Sie den Zugriff auf E-Mail, SharePoint und Teams.\n\nVerwenden Sie den untenstehenden Link, um Ihr Passwort zu verlängern. Das dauert 30 Sekunden.\n\n{{link:0}}\n\nMit freundlichen Grüßen,\nIT Support Kestrel',
+ '[{"label":"Passwort verlängern","real_url":"http://kestrel-helpdesk.com/password-renew","suspicious":true,"warning":"Dieser Link führt zu kestrel-helpdesk.com — NICHT zur offiziellen Kestrel-Domain. Ihre echte IT verschickt Reset-Links über das interne Portal, nicht über eine separate Domain."}]'::jsonb,
+ TRUE,
+ '["Absender @kestrel-helpdesk.com, nicht @kestrel.de","Zeitdruck (\"läuft heute um 17:00 ab\"), damit Sie ohne Nachdenken klicken","Drohung mit Zugriffsverlust","Link zu einer Domain, die wie das Unternehmen aussieht, es aber nicht ist","Echte IT-Abteilungen lassen Sie sich über interne Portale anmelden, niemals über einen isolierten Link in einer E-Mail"]'::jsonb,
+ '[]'::jsonb,
+ 'Das ist Phishing, das Ihre eigene IT vortäuscht. Die echte IT verschickt selten Reset-Links, und wenn doch, dann über die interne Domain und das offizielle Portal. Im Zweifel: rufen Sie eine/n IT-Kollegin/Kollegen an oder gehen Sie persönlich vorbei — nie über die Nummer in der E-Mail.',
+ 30),
+
+-- 4. PHISHING — DocuSign
+('de', 'business',
+ 'DocuSign via Stefan Becker',
+ 'dse@docusigne-delivery.com',
+ 'Echtes DocuSign nutzt @docusign.net oder @docusign.com. "docusigne" ist ein Tippfehler in der Domain.',
+ 'heute 13:47',
+ 'Stefan Becker bittet Sie, ein Dokument zu unterschreiben',
+ 'Sie haben ein Dokument über DocuSign erhalten. Das Dokument "Rahmenvertrag-2024.pdf" wartet...',
+ E'DocuSign\n\nStefan Becker (s.becker@kestrel-group.com) bittet Sie, ein Dokument über DocuSign zu unterschreiben.\n\nDokument: Rahmenvertrag-2024.pdf\nGesendet: heute um 13:47\n\nDokument öffnen: {{link:0}}\n\nVielen Dank,\nDocuSign',
+ '[{"label":"Dokument prüfen","real_url":"http://docusigne-delivery.com/sign?id=78a2f","suspicious":true,"warning":"Die Domain ist docusigne-delivery.com — ein Tippfehler auf DocuSign. Die echte Domain ist docusign.net. Außerdem nutzt Stefan Becker @kestrel-group.com, nicht @kestrel.de."}]'::jsonb,
+ TRUE,
+ '["Domain ist \"docusigne-delivery.com\" (nicht docusign.net/.com)","Der \"Absender\" Stefan Becker nutzt @kestrel-group.com — nicht unser eigenes @kestrel.de","Unerwartetes Dokument von einem Kollegen, mit dem Sie nicht vor kurzem gesprochen haben","Echte DocuSign-Benachrichtigungen enthalten einen Sicherheitscode, den Sie auf docusign.com eingeben können, um das Dokument abzurufen"]'::jsonb,
+ '[]'::jsonb,
+ 'Das ist Phishing, das DocuSign nachahmt. Öffnen Sie im Zweifel niemals den Link — gehen Sie selbst zu docusign.com und geben Sie den Sicherheitscode aus einer echten DocuSign-Mail ein. Oder rufen Sie Stefan direkt an und fragen Sie, ob er wirklich etwas geschickt hat.',
+ 40),
+
+-- 5. REAL — Kalender-Einladung Kollegin
+('de', 'business',
+ 'Anna Weber',
+ 'a.weber@kestrel.de',
+ 'Eigene Domain @kestrel.de einer bekannten Kollegin — korrekt.',
+ 'heute 14:12',
+ 'Besprechung Donnerstag 14:00 — Quartalsplanung Q2',
+ 'Hallo Martin, kannst du am Donnerstag um 14:00 zur Quartalsplanung dazukommen?',
+ E'Hallo Martin,\n\nkannst du am Donnerstag um 14:00 zur Quartalsplanung Q2 dazukommen? Wir besprechen:\n\n• Status der laufenden Projekte\n• Planung für Mai und Juni\n• Prioritäten fürs Team\n\nMaximal eine Stunde. Besprechungsraum Linde, oder per Teams, falls dir das lieber ist. Gib kurz Bescheid.\n\nDanke!\nAnna',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Absender @kestrel.de, die offizielle interne Domain","Bekannte Kollegin, mit der Sie normalerweise sprechen","Konkreter, plausibler Arbeitskontext","Kein Link, kein Anhang, keine Datenabfrage","Informeller, persönlicher Ton — passt zur internen Kommunikation"]'::jsonb,
+ 'Das ist eine normale Kalender-Einladung einer Kollegin. Außer inhaltlich antworten ist nichts zu tun. Gute Lektion: Eine persönlich adressierte, konkrete interne Nachricht ohne Links oder Anhänge ist meist ein sicheres Zeichen.',
+ 50);
+
+-- ============ DE — BUSINESS (2/2) ============
+
+INSERT INTO inbox_messages
+  (locale, audience, sender_name, sender_address, sender_note, received_label, subject, preview, body, links, is_phishing, red_flags, green_flags, explanation, sort_order) VALUES
+
+-- 6. PHISHING — Fake-Rechnung vom Lieferanten
+('de', 'business',
+ 'Buchhaltung — Druckservice GmbH',
+ 'rechnungen@druckservice-de.com',
+ 'Unbekannter Lieferant auf einer separaten .com-Domain. Echte Lieferanten von Kestrel stehen in Ihrem Einkaufssystem.',
+ 'gestern 15:30',
+ 'Rechnung P-2024-0452 — Zahlungsfrist überschritten',
+ 'Sehr geehrte Damen und Herren, anbei die offene Rechnung für Druckerwartung. Bitte umgehend begleichen...',
+ E'Sehr geehrte Damen und Herren,\n\nim Anhang finden Sie Rechnung P-2024-0452 für die vierteljährliche Druckerwartung (Q1) über 1.847,50 €.\n\nDie Zahlungsfrist von 14 Tagen ist überschritten. Bitte begleichen Sie die Rechnung umgehend, um Mahngebühren zu vermeiden. Die Zahlungsdaten finden Sie im Anhang.\n\nFür eine schnelle Zahlung: {{link:0}}\n\nMit freundlichen Grüßen,\nBuchhaltung — Druckservice GmbH',
+ '[{"label":"Jetzt zahlen","real_url":"http://druckservice-de.com/pay/P-2024-0452","suspicious":true,"warning":"Unbekannte Zahlungsdomain. Bei Kestrel laufen Rechnungen über das Einkaufsportal — nicht über einen isolierten Link in einer E-Mail."}]'::jsonb,
+ TRUE,
+ '["Unbekannter Lieferant — nicht im Einkaufssystem","Zeitdruck: \"Frist überschritten\", \"umgehend begleichen\"","Separater Zahlungslink statt Einkaufsportal","Allgemeine Anrede \"Sehr geehrte Damen und Herren\" — sollte Ihren Namen nutzen","Der Betrag (1.847,50 €) ist gerade hoch genug, um Druck zu erzeugen, niedrig genug, um nicht aufzufallen"]'::jsonb,
+ '[]'::jsonb,
+ 'Das ist Rechnungsbetrug. Unbekannte Lieferanten mit unerwarteten Rechnungen sollten zuerst über den Einkauf oder die Kreditorenbuchhaltung geprüft werden. Zahlen Sie nie über einen Link in einer E-Mail, sondern immer über Ihr eigenes Einkaufsportal oder nach einer erneuten Rechnungsprüfung.',
+ 60),
+
+-- 7. REAL — Interner Newsletter
+('de', 'business',
+ 'Kestrel Kommunikation',
+ 'kommunikation@kestrel.de',
+ 'Eigene Domain @kestrel.de — korrekt.',
+ 'gestern 09:00',
+ 'Quartals-Update Q1 — Kestrel in Kürze',
+ 'Liebe Kolleginnen und Kollegen, hier das Quartals-Update mit Neuigkeiten aus allen Teams...',
+ E'Liebe Kolleginnen und Kollegen,\n\nhier das Quartals-Update für die ersten drei Monate von 2024.\n\nHighlights:\n• Drei neue Kundenprojekte gestartet\n• Das Operations-Team ist um vier Personen gewachsen\n• Der neue Bürogrundriss ist fertig (zu sehen auf MeinKestrel)\n• Nächstes All-Hands: Donnerstag, 16. Mai, 16:00 Uhr in der Kantine\n\nDas vollständige Update steht auf MeinKestrel. Melden Sie sich wie gewohnt an — wir verschicken bewusst keinen Direktlink.\n\nFragen oder Ideen? Kommen Sie bei Kommunikation vorbei (Büro 2.14) oder schicken Sie eine Nachricht.\n\nBis zum nächsten Quartal!\nTeam Kommunikation Kestrel',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Absender @kestrel.de, intern bekannt","Konkreter, erwarteter interner Inhalt","Kein anklickbarer Link — Sie werden gebeten, SELBST zu MeinKestrel zu gehen","Kein Druck, keine Datenabfrage","Verweist auf einen bekannten internen Ort (Büro 2.14) als Ansprechpunkt"]'::jsonb,
+ 'Das ist ein normaler interner Newsletter. Gutes Muster: interne Domain, erwarteter Inhalt und kein Link, der Sie dazu drängt, sich irgendwo anzumelden.',
+ 70),
+
+-- 8. PHISHING — Microsoft 365
+('de', 'business',
+ 'Microsoft 365',
+ 'account-security@microsoft-365-secure.com',
+ 'Die echte Microsoft-Domain ist microsoft.com. "microsoft-365-secure.com" ist gefälscht.',
+ 'vor 2 Tagen 08:14',
+ 'Ihr Microsoft 365-Passwort läuft heute ab',
+ 'Ihr Passwort für Microsoft 365 läuft innerhalb von 24 Stunden ab. Behalten Sie Ihr aktuelles Passwort...',
+ E'Microsoft 365 Kontosicherheit\n\nIhr Passwort für Microsoft 365 läuft innerhalb von 24 Stunden ab. Danach verlieren Sie den Zugriff auf E-Mail, OneDrive und Teams.\n\nKlicken Sie unten, um Ihr aktuelles Passwort zu behalten und den Ablauf zu verhindern:\n\n{{link:0}}\n\nDiese Aktion dauert weniger als eine Minute. Wenn Sie dies ignorieren, wird Ihr Konto vorübergehend gesperrt.\n\nMicrosoft 365 Security Team',
+ '[{"label":"Passwort behalten","real_url":"http://microsoft-365-secure.com/keep-password","suspicious":true,"warning":"Microsoft verwendet nie Domains mit Bindestrichen wie microsoft-365-secure.com. Das ist gefälscht. Microsoft fordert Sie auch nie dazu auf, ein Passwort per Link zu \"behalten\" oder zu \"bestätigen\"."}]'::jsonb,
+ TRUE,
+ '["Absender @microsoft-365-secure.com (nicht @microsoft.com)","Zeitdruck: \"innerhalb von 24 Stunden\", \"gesperrt\"","Unsinniges Konzept: \"Passwort behalten\" per Link gibt es nicht","Drohung mit Zugriffsverlust","Wenn Microsoft 365 ein Passwort erneuern will, passiert das beim Login — nicht über eine separate E-Mail"]'::jsonb,
+ '[]'::jsonb,
+ 'Das ist eine der häufigsten Phishing-Varianten im Unternehmen. Microsoft kommuniziert Passwortänderungen nie so. Im Zweifel: Schließen Sie die E-Mail und gehen Sie selbst zu portal.office.com oder öffnen Sie Teams, um zu sehen, ob wirklich ein Problem vorliegt.',
+ 80),
+
+-- 9. REAL — Kurze Frage einer Kollegin
+('de', 'business',
+ 'Anna Weber',
+ 'a.weber@kestrel.de',
+ 'Eigene Domain @kestrel.de einer bekannten Kollegin — korrekt.',
+ 'vor 2 Tagen 14:45',
+ 'Kannst du kurz auf das Budget schauen?',
+ 'Hallo Martin, Markus hat gefragt, ob du kurz prüfen kannst, ob Zeile 14 im Budget stimmt...',
+ E'Hallo Martin,\n\nMarkus hat gefragt, ob du kurz prüfen kannst, ob Zeile 14 im Budget des Projekts Nord stimmt. Seiner Meinung nach ist der Betrag falsch, aber ich bin nicht sicher, ob er die aktuelle Version angesehen hat.\n\nDas Budget liegt auf dem Team-Share unter /Projekte/Nord/2024/.\n\nKannst du ihm kurz Bescheid geben?\n\nDanke!\nAnna',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Absender @kestrel.de, bekannte Kollegin","Konkreter interner Kontext (Markus, Projekt Nord, Team-Share-Pfad)","Kein Link zu einer externen Domain","Keine Datenabfrage, kein Passwort, kein Geld","Informeller Ton passt zur normalen internen Kommunikation"]'::jsonb,
+ 'Das ist eine ganz normale Arbeitsfrage einer Kollegin. Außer nachsehen und antworten ist nichts zu tun. Merke: Ein persönlich adressierter, konkreter Arbeitskontext auf der internen Domain ist in der Regel ein gutes Zeichen.',
+ 90),
+
+-- 10. PHISHING — Recruiter mit gefährlichem Anhang
+('de', 'business',
+ 'Sophie Hoffmann — Premium Talent',
+ 'sophie.hoffmann@premium-talent-careers.info',
+ '".info"-Domain und einzelne Recruiterin ohne nachvollziehbare Verbindung zu einer bekannten Agentur. Verdächtiges Muster.',
+ 'vor 3 Tagen 17:20',
+ 'Exklusive Chance bei internationalem Kunden — Profil ausgewählt',
+ 'Sehr geehrter Herr Müller, ich habe Ihr LinkedIn-Profil gesehen und habe eine exklusive Position...',
+ E'Sehr geehrter Herr Müller,\n\nich habe Ihr Profil gesehen und habe eine exklusive Senior-Position bei einem internationalen Kunden, die meiner Meinung nach perfekt zu Ihrer Erfahrung passt. Gehaltsrahmen: 85.000 € — 105.000 € brutto.\n\nDie Rolle ist noch nicht öffentlich, und es eilt. Der Kunde möchte diese Woche eine Shortlist.\n\nIm Anhang finden Sie die Stellenbeschreibung und die Geheimhaltungsvereinbarung (NDA), die ich Sie bitte zu öffnen und zu unterzeichnen, bevor ich weitere Details teilen kann.\n\nAnhang: Stellenbeschreibung_und_NDA.pdf.exe\n\nMit freundlichen Grüßen,\nSophie Hoffmann\nPremium Talent — Executive Search',
+ '[]'::jsonb,
+ TRUE,
+ '["Absenderin auf einer \".info\"-Domain ohne bekannte Agentur","Unerwartete Kontaktaufnahme mit Anhang","Der Dateiname endet auf .pdf.exe — das ist ein ausführbares Programm, getarnt als PDF","Zeitdruck: \"diese Woche Shortlist\"","Vertraulichkeit gefordert — soll Sie isolieren","Gehalt als Köder ohne überprüfbaren Kontext"]'::jsonb,
+ '[]'::jsonb,
+ 'Das ist Phishing mit einem bösartigen Anhang. Dateien mit doppelten Endungen (.pdf.exe) sind ausführbare Programme, getarnt als Dokument. Öffnen Sie diese NIE. Eine seriöse Recruiterin mit einer seriösen Rolle schickt keine einzelnen ausführbaren Anhänge. Melden Sie das der IT oder löschen Sie die E-Mail.',
+ 100);
