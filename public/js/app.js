@@ -562,7 +562,12 @@
   }
 
   function renderBody(text, links) {
-    let html = escapeHtml(text).replace(/\n/g, '<br>');
+    // Als de body met HTML begint (bv. een SharePoint/OneDrive share-kaart
+    // uit de seed) dan trust'en we de markup — de seed is onder onze
+    // controle, dus geen XSS-risico. Anders: platte-tekst rendering met
+    // HTML-escaping en \n -> <br>.
+    const isHtml = /^\s*<[a-z][\s\S]*>/i.test(text);
+    let html = isHtml ? text : escapeHtml(text).replace(/\n/g, '<br>');
     html = html.replace(/\{\{link:(\d+)\}\}/g, (_m, n) => {
       const idx = parseInt(n, 10);
       const link = links[idx];

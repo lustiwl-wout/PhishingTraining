@@ -947,3 +947,98 @@ body.sim-fullscreen .outlook {
   body { background: #fff; }
   .card { box-shadow: none; border: 1px solid #aaa; page-break-inside: avoid; }
 }
+
+/* ========================================================
+   Nagebootste Microsoft Teams / OneDrive deel-kaart.
+   Wordt gerenderd binnen .ol-msg-body wanneer de seed-body
+   HTML bevat (begint met een '<'-teken). Voor SharePoint-
+   scenario's zodat het voelt als een echte share-uitnodiging.
+   ======================================================== */
+.ol-msg-body .ol-share-card {
+  max-width: 520px;
+  margin: 1rem auto;
+  background: #fff;
+  border: 1px solid #d1d1d1;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.06);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  overflow: hidden;
+}
+.ol-share-head {
+  padding: 1.75rem 1.5rem 1.25rem;
+  text-align: center;
+  background: #fff;
+  border-bottom: 1px solid #ebebeb;
+}
+.ol-share-icon {
+  display: inline-block;
+  font-size: 1.6rem;
+  color: #0067c0;
+  margin-bottom: .6rem;
+}
+.ol-share-heading {
+  font-size: 1.15rem; font-weight: 600; color: #201f1e;
+  margin: 0; line-height: 1.4;
+}
+.ol-share-body {
+  padding: 1.25rem 1.5rem;
+  background: #faf9f8;
+}
+.ol-share-msg {
+  margin: 0 0 1rem;
+  padding: .6rem .8rem;
+  background: #fff;
+  border-left: 3px solid #0067c0;
+  border-radius: 2px;
+  color: #323130;
+  font-style: italic;
+}
+.ol-share-intro {
+  margin: 0 0 1rem;
+  color: #323130;
+}
+.ol-share-intro .hl {
+  background: #fff066; padding: 0 3px; border-radius: 1px;
+}
+.ol-share-file {
+  display: flex; align-items: center; gap: .75rem;
+  padding: .7rem .9rem;
+  background: #fff;
+  border: 1px solid #d1d1d1;
+  border-radius: 4px;
+  margin: 0 0 1rem;
+}
+.ol-share-file-ico {
+  font-size: 1.6rem; line-height: 1;
+}
+.ol-share-file-name {
+  font-weight: 600; color: #201f1e;
+}
+.ol-share-protection {
+  display: flex; align-items: center; gap: .4rem;
+  font-size: .85rem; color: #605e5c;
+  margin: 0 0 1.2rem;
+}
+.ol-share-actions {
+  display: flex; gap: .5rem; justify-content: flex-end;
+  flex-wrap: wrap;
+}
+/* De renderBody-gegenereerde <a class="ol-link"> krijgt een
+   Teams-achtig knop-uiterlijk binnen de kaart. De URL-subregel
+   blijft zichtbaar voor de leerpiek: is het domein vertrouwd? */
+.ol-share-actions .ol-link {
+  display: inline-flex; flex-direction: column;
+  padding: .5rem 1.1rem;
+  background: #0067c0; color: #fff;
+  border-radius: 2px;
+  text-decoration: none;
+  font-weight: 600;
+}
+.ol-share-actions .ol-link:hover {
+  background: #004e8c;
+}
+.ol-share-actions .ol-link-url {
+  display: block;
+  font-size: .75rem; font-weight: 400;
+  opacity: .85; margin-top: .15rem;
+}
