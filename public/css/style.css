@@ -1126,10 +1126,30 @@ body.sim-fullscreen .outlook {
 
 /* (de oude .device-exit-btn is verhuisd naar de site-topbar als #sim-exit-btn) */
 
-@media (max-width: 420px) {
+/* Op een echte telefoon (smal viewport) heeft een telefoon-in-telefoon
+   geen zin: laat de mail-client gewoon het volledige scherm vullen.
+   Het echte besturingssysteem levert al een statusbalk + home-indicator. */
+@media (max-width: 600px) {
+  #sim-phase-mobile { padding: 0; align-items: stretch; }
   .device-frame {
-    width: 100%; max-width: 390px;
-    height: calc(100vh - 100px);
+    width: 100% !important;
+    max-width: none !important;
+    height: 100% !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+  .device-screen {
+    inset: 0 !important;
+    border-radius: 0 !important;
+  }
+  body.device-iphone .device-notch,
+  body.device-iphone .device-statusbar,
+  body.device-iphone .device-homebar,
+  body.device-android .device-statusbar,
+  body.device-android .device-homebar {
+    display: none !important;
   }
 }
 
