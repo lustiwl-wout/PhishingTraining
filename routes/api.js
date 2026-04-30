@@ -58,7 +58,7 @@ router.get('/examples', async (req, res, next) => {
 // GET /api/quiz?limit=5
 router.get('/quiz', async (req, res, next) => {
   try {
-    const limit = Math.min(parseInt(req.query.limit, 10) || 5, 20);
+    const limit = Math.min(Number.parseInt(req.query.limit, 10) || 5, 20);
     const { rows } = await db.query(
       `SELECT id, channel, sender, subject, body, is_phishing, explanation, signs, difficulty
        FROM quiz_questions
@@ -89,7 +89,7 @@ router.post('/attempts', async (req, res, next) => {
 // POST /api/attempts/:id/answers  { question_id, answered_phishing }
 router.post('/attempts/:id/answers', async (req, res, next) => {
   try {
-    const attemptId = parseInt(req.params.id, 10);
+    const attemptId = Number.parseInt(req.params.id, 10);
     if (!Number.isInteger(attemptId)) return res.status(400).json({ error: 'ongeldige attempt id' });
 
     const { question_id, answered_phishing } = req.body || {};
@@ -123,7 +123,7 @@ router.post('/attempts/:id/answers', async (req, res, next) => {
 // POST /api/attempts/:id/finish
 router.post('/attempts/:id/finish', async (req, res, next) => {
   try {
-    const attemptId = parseInt(req.params.id, 10);
+    const attemptId = Number.parseInt(req.params.id, 10);
     if (!Number.isInteger(attemptId)) return res.status(400).json({ error: 'ongeldige attempt id' });
 
     const { rows } = await db.query(
@@ -181,7 +181,7 @@ router.get('/print', async (req, res, next) => {
 // GET /api/inbox/:id — volledig bericht, MAAR zonder uitslag/uitleg/rode vlaggen
 router.get('/inbox/:id', async (req, res, next) => {
   try {
-    const id = parseInt(req.params.id, 10);
+    const id = Number.parseInt(req.params.id, 10);
     if (!Number.isInteger(id)) return res.status(400).json({ error: 'ongeldig id' });
     const { rows } = await db.query(
       `SELECT id, sender_name, sender_address, received_label, subject, body, links, attachments
@@ -196,7 +196,7 @@ router.get('/inbox/:id', async (req, res, next) => {
 // POST /api/inbox/:id/judge  { session_id, verdict, clicked_link?, revealed_sender? }
 router.post('/inbox/:id/judge', async (req, res, next) => {
   try {
-    const id = parseInt(req.params.id, 10);
+    const id = Number.parseInt(req.params.id, 10);
     if (!Number.isInteger(id)) return res.status(400).json({ error: 'ongeldig id' });
 
     const { session_id, verdict, clicked_link = false, revealed_sender = false } = req.body || {};

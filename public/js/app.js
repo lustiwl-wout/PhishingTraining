@@ -1114,7 +1114,7 @@
       verdictBlock;
     reader.querySelector('.mob-btn-back').addEventListener('click', closeMobReader);
     reader.querySelectorAll('[data-link-idx]').forEach((a) => {
-      const idx = parseInt(a.dataset.linkIdx, 10);
+      const idx = Number.parseInt(a.dataset.linkIdx, 10);
       const link = (m.links || [])[idx];
       a.addEventListener('click', (e) => {
         e.preventDefault();
@@ -1195,7 +1195,7 @@
                 '</div>');
 
     reader.querySelectorAll('[data-link-idx]').forEach((a) => {
-      const idx = parseInt(a.dataset.linkIdx, 10);
+      const idx = Number.parseInt(a.dataset.linkIdx, 10);
       const link = (m.links || [])[idx];
       a.addEventListener('click', (e) => {
         e.preventDefault();
@@ -1217,7 +1217,7 @@
     const isHtml = /^\s*<[a-z][\s\S]*>/i.test(text);
     let html = isHtml ? text : escapeHtml(text).replace(/\n/g, '<br>');
     html = html.replace(/\{\{link:(\d+)\}\}/g, (_m, n) => {
-      const idx = parseInt(n, 10);
+      const idx = Number.parseInt(n, 10);
       const link = links[idx];
       if (!link) return '';
       const label = escapeHtml(link.label || 'link');
