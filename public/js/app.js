@@ -104,7 +104,7 @@
     else if (fallback[key] != null) s = fallback[key];
     else s = key;
     if (vars) {
-      s = s.replace(/\{(\w+)\}/g, (m, k) => (vars[k] != null ? vars[k] : m));
+      s = s.replaceAll(/\{(\w+)\}/g, (m, k) => (vars[k] != null ? vars[k] : m));
     }
     return s;
   }
@@ -635,7 +635,7 @@
   }
 
   function annotateText(text, annotations) {
-    let html = escapeHtml(text).replace(/\n/g, '<br>');
+    let html = escapeHtml(text).replaceAll('\n', '<br>');
     annotations.forEach((a, i) => {
       const q = escapeHtml(a.quote);
       const re = new RegExp(escapeRegExp(q), 'i');
@@ -1215,8 +1215,8 @@
     // controle, dus geen XSS-risico. Anders: platte-tekst rendering met
     // HTML-escaping en \n -> <br>.
     const isHtml = /^\s*<[a-z][\s\S]*>/i.test(text);
-    let html = isHtml ? text : escapeHtml(text).replace(/\n/g, '<br>');
-    html = html.replace(/\{\{link:(\d+)\}\}/g, (_m, n) => {
+    let html = isHtml ? text : escapeHtml(text).replaceAll('\n', '<br>');
+    html = html.replaceAll(/\{\{link:(\d+)\}\}/g, (_m, n) => {
       const idx = Number.parseInt(n, 10);
       const link = links[idx];
       if (!link) return '';
@@ -1414,10 +1414,10 @@
   }
   function escapeHtml(s) {
     return String(s)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;').replaceAll("'", '&#39;');
   }
   function escapeRegExp(s) {
-    return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return String(s).replaceAll(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 })();

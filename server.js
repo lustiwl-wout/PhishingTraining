@@ -13,7 +13,7 @@ const PUBLIC_DIR = path.join(__dirname, 'public');
 // een unieke versie per deploy/herstart, zodat browsers verse CSS/JS pakken.
 const ASSET_VER = String(Date.now());
 const INDEX_HTML = fs.readFileSync(path.join(PUBLIC_DIR, 'index.html'), 'utf8')
-  .replace(/__VER__/g, ASSET_VER);
+  .replaceAll('__VER__', ASSET_VER);
 
 app.disable('x-powered-by');
 app.use(express.json({ limit: '64kb' }));

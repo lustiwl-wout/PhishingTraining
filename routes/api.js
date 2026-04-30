@@ -34,7 +34,7 @@ router.get('/health', async (_req, res) => {
   try {
     const { rows } = await db.query('SELECT NOW() AS now');
     res.json({ ok: true, db_time: rows[0].now });
-  } catch (err) {
+  } catch {
     res.status(503).json({ ok: false, error: 'database niet bereikbaar' });
   }
 });
