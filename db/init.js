@@ -54,7 +54,10 @@ async function initDb({ force = false } = {}) {
     const hashChanged = previousHash !== seedHash;
 
     if (force || anyEmpty || hashChanged) {
-      const reason = force ? 'force' : (anyEmpty ? 'lege tabel' : 'seed-inhoud gewijzigd');
+      let reason;
+      if (force) reason = 'force';
+      else if (anyEmpty) reason = 'lege tabel';
+      else reason = 'seed-inhoud gewijzigd';
       console.log(`[init-db] seed laden (${reason}). hash: ${previousHash || 'none'} -> ${seedHash}`);
       await client.query(seed);
       await client.query(

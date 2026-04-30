@@ -10,42 +10,27 @@ TRUNCATE quiz_answers, quiz_attempts, quiz_questions, examples,
 
 -- ============ VOORBEELDEN (geannoteerd) ============
 
-INSERT INTO examples (channel, sender, subject, body, annotations, sort_order) VALUES
-('email',
- 'ING Service <service@ing-betaling-secure.com>',
+INSERT INTO examples (channel, sender, subject, body, annotations, sort_order)
+SELECT 'email', sender, subject, body, annotations::jsonb, sort_order
+FROM (VALUES
+('ING Service <service@ing-betaling-secure.com>',
  'Belangrijk: uw rekening wordt geblokkeerd',
  E'Geachte klant,\n\nWij hebben een verdachte transactie op uw rekening opgemerkt. Binnen 24 uur wordt uw rekening GEBLOKKEERD als u uw gegevens niet bevestigt.\n\nKlik hier om uw rekening te beveiligen: http://ing-beveiliging.net/login\n\nMet vriendelijke groet,\nING Beveiligingsteam',
- '[
-   {"quote": "service@ing-betaling-secure.com", "note": "Kijk naar wat NA de @ staat: ing-betaling-secure.com. Dat is niet ING. De echte ING gebruikt altijd @ing.nl. Het deel vóór de @ (\"service\") mag de oplichter zelf verzinnen."},
-   {"quote": "GEBLOKKEERD als u uw gegevens niet bevestigt", "note": "Angst maken en haast. Een echte bank doet dit nooit."},
-   {"quote": "Geachte klant", "note": "Geen naam. Uw bank kent uw naam."},
-   {"quote": "http://ing-beveiliging.net/login", "note": "Vreemde link die niet van ING is. Niet op klikken!"}
- ]'::jsonb,
+ '[{"quote": "service@ing-betaling-secure.com", "note": "Kijk naar wat NA de @ staat: ing-betaling-secure.com. Dat is niet ING. De echte ING gebruikt altijd @ing.nl. Het deel vóór de @ (\"service\") mag de oplichter zelf verzinnen."}, {"quote": "GEBLOKKEERD als u uw gegevens niet bevestigt", "note": "Angst maken en haast. Een echte bank doet dit nooit."}, {"quote": "Geachte klant", "note": "Geen naam. Uw bank kent uw naam."}, {"quote": "http://ing-beveiliging.net/login", "note": "Vreemde link die niet van ING is. Niet op klikken!"}]',
  10),
 
-('email',
- 'Belastingdienst <noreply@belasting-teruggave.nl>',
+('Belastingdienst <noreply@belasting-teruggave.nl>',
  'U heeft recht op € 423,50 teruggave',
  E'Beste burger,\n\nNa controle blijkt u recht te hebben op een belastingteruggave van € 423,50. Vul snel uw gegevens in om het bedrag te ontvangen.\n\nKlik hier: http://belasting-teruggave.nl/claim\n\nBelastingdienst',
- '[
-   {"quote": "noreply@belasting-teruggave.nl", "note": "Kijk na de @: belasting-teruggave.nl. Dat is NIET de Belastingdienst. Het echte domein is belastingdienst.nl."},
-   {"quote": "Beste burger", "note": "Algemene aanhef zonder uw naam. De Belastingdienst weet wie u bent."},
-   {"quote": "recht te hebben op een belastingteruggave van € 423,50", "note": "Belofte van geld is een klassieke lokker. De Belastingdienst mailt nooit over teruggaven."},
-   {"quote": "http://belasting-teruggave.nl/claim", "note": "Vreemde link, niet mijn.belastingdienst.nl. Niet op klikken."}
- ]'::jsonb,
+ '[{"quote": "noreply@belasting-teruggave.nl", "note": "Kijk na de @: belasting-teruggave.nl. Dat is NIET de Belastingdienst. Het echte domein is belastingdienst.nl."}, {"quote": "Beste burger", "note": "Algemene aanhef zonder uw naam. De Belastingdienst weet wie u bent."}, {"quote": "recht te hebben op een belastingteruggave van € 423,50", "note": "Belofte van geld is een klassieke lokker. De Belastingdienst mailt nooit over teruggaven."}, {"quote": "http://belasting-teruggave.nl/claim", "note": "Vreemde link, niet mijn.belastingdienst.nl. Niet op klikken."}]',
  20),
 
-('email',
- 'DigiD <info@digid-controle.org>',
+('DigiD <info@digid-controle.org>',
  'Bevestig uw DigiD-gegevens',
  E'Geachte heer/mevrouw,\n\nWij vragen u om uw DigiD opnieuw te bevestigen. Klik op onderstaande link en log in met uw gebruikersnaam en wachtwoord.\n\nhttp://digid-controle.org/inloggen\n\nBedankt,\nDigiD',
- '[
-   {"quote": "info@digid-controle.org", "note": "Kijk na de @: digid-controle.org. Het echte domein is digid.nl — niets anders."},
-   {"quote": "Geachte heer/mevrouw", "note": "Algemene aanhef. Een echte organisatie kent uw naam."},
-   {"quote": "log in met uw gebruikersnaam en wachtwoord", "note": "DigiD vraagt NOOIT per e-mail om uw wachtwoord. Altijd phishing."},
-   {"quote": "http://digid-controle.org/inloggen", "note": "Vreemde link. Open DigiD alleen via digid.nl of de officiële app."}
- ]'::jsonb,
- 30);
+ '[{"quote": "info@digid-controle.org", "note": "Kijk na de @: digid-controle.org. Het echte domein is digid.nl — niets anders."}, {"quote": "Geachte heer/mevrouw", "note": "Algemene aanhef. Een echte organisatie kent uw naam."}, {"quote": "log in met uw gebruikersnaam en wachtwoord", "note": "DigiD vraagt NOOIT per e-mail om uw wachtwoord. Altijd phishing."}, {"quote": "http://digid-controle.org/inloggen", "note": "Vreemde link. Open DigiD alleen via digid.nl of de officiële app."}]',
+ 30)
+) AS t(sender, subject, body, annotations, sort_order);
 
 -- (De `quiz_questions`-tabel blijft in het schema bestaan voor toekomstig
 -- gebruik, maar wordt niet meer gevuld: de simulator draait op
@@ -221,36 +206,21 @@ INSERT INTO examples (locale, channel, sender, subject, body, annotations, sort_
  'Barclays Service <service@barclays-secure-login.com>',
  'Important: your account will be blocked',
  E'Dear customer,\n\nWe have noticed a suspicious transaction on your account. Your account will be BLOCKED within 24 hours unless you confirm your details.\n\nClick here to secure your account: http://barclays-secure-login.com/verify\n\nKind regards,\nBarclays Security Team',
- '[
-   {"quote": "service@barclays-secure-login.com", "note": "Look at what comes AFTER the @: barclays-secure-login.com. That is not Barclays. Real Barclays always uses @barclays.co.uk. The part BEFORE the @ (\"service\") can be anything the scammer wants."},
-   {"quote": "BLOCKED within 24 hours unless you confirm your details", "note": "Creating fear and urgency. A real bank never does this."},
-   {"quote": "Dear customer", "note": "No name. Your bank knows your name."},
-   {"quote": "http://barclays-secure-login.com/verify", "note": "Odd link that is not from Barclays. Do not click!"}
- ]'::jsonb,
+ '[{"quote": "service@barclays-secure-login.com", "note": "Look at what comes AFTER the @: barclays-secure-login.com. That is not Barclays. Real Barclays always uses @barclays.co.uk. The part BEFORE the @ (\"service\") can be anything the scammer wants."}, {"quote": "BLOCKED within 24 hours unless you confirm your details", "note": "Creating fear and urgency. A real bank never does this."}, {"quote": "Dear customer", "note": "No name. Your bank knows your name."}, {"quote": "http://barclays-secure-login.com/verify", "note": "Odd link that is not from Barclays. Do not click!"}]'::jsonb,
  10),
 
 ('en', 'email',
  'HMRC <noreply@hmrc-refund.co.uk>',
  'You are entitled to a £423.50 tax refund',
  E'Dear taxpayer,\n\nAfter a review, you are entitled to a tax refund of £423.50. Please fill in your details quickly to receive the amount.\n\nClick here: http://hmrc-refund.co.uk/claim\n\nHMRC',
- '[
-   {"quote": "noreply@hmrc-refund.co.uk", "note": "Look after the @: hmrc-refund.co.uk. That is NOT HMRC. The real HMRC domain is hmrc.gov.uk."},
-   {"quote": "Dear taxpayer", "note": "Generic greeting without your name. HMRC addresses you by name."},
-   {"quote": "entitled to a tax refund of £423.50", "note": "A promise of money is a classic bait. HMRC never emails to announce refunds with a link."},
-   {"quote": "http://hmrc-refund.co.uk/claim", "note": "Odd link, not gov.uk. Do not click."}
- ]'::jsonb,
+ '[{"quote": "noreply@hmrc-refund.co.uk", "note": "Look after the @: hmrc-refund.co.uk. That is NOT HMRC. The real HMRC domain is hmrc.gov.uk."}, {"quote": "Dear taxpayer", "note": "Generic greeting without your name. HMRC addresses you by name."}, {"quote": "entitled to a tax refund of £423.50", "note": "A promise of money is a classic bait. HMRC never emails to announce refunds with a link."}, {"quote": "http://hmrc-refund.co.uk/claim", "note": "Odd link, not gov.uk. Do not click."}]'::jsonb,
  20),
 
 ('en', 'email',
  'NHS login <info@nhs-verify.org>',
  'Please confirm your NHS login details',
  E'Dear Sir/Madam,\n\nWe kindly ask you to confirm your NHS login details. Click the link below and sign in with your username and password.\n\nhttp://nhs-verify.org/signin\n\nThank you,\nNHS Digital',
- '[
-   {"quote": "info@nhs-verify.org", "note": "Look after the @: nhs-verify.org. The real domain is nhs.uk — nothing else."},
-   {"quote": "Dear Sir/Madam", "note": "Generic greeting. A real organisation knows your name."},
-   {"quote": "sign in with your username and password", "note": "The NHS NEVER asks for your password by email. Always phishing."},
-   {"quote": "http://nhs-verify.org/signin", "note": "Odd link. Only open NHS services via nhs.uk or the official NHS app."}
- ]'::jsonb,
+ '[{"quote": "info@nhs-verify.org", "note": "Look after the @: nhs-verify.org. The real domain is nhs.uk — nothing else."}, {"quote": "Dear Sir/Madam", "note": "Generic greeting. A real organisation knows your name."}, {"quote": "sign in with your username and password", "note": "The NHS NEVER asks for your password by email. Always phishing."}, {"quote": "http://nhs-verify.org/signin", "note": "Odd link. Only open NHS services via nhs.uk or the official NHS app."}]'::jsonb,
  30);
 
 -- ======== INBOX (EN) ========
@@ -428,36 +398,21 @@ INSERT INTO examples (locale, channel, sender, subject, body, annotations, sort_
  'Crédit Agricole <service@credit-agricole-securite.com>',
  'Important : votre compte va être bloqué',
  E'Cher client,\n\nNous avons détecté une transaction suspecte sur votre compte. Votre compte sera BLOQUÉ sous 24 heures si vous ne confirmez pas vos informations.\n\nCliquez ici pour sécuriser votre compte : http://credit-agricole-securite.com/verifier\n\nCordialement,\nService Sécurité Crédit Agricole',
- '[
-   {"quote": "service@credit-agricole-securite.com", "note": "Regardez ce qui vient APRÈS le @ : credit-agricole-securite.com. Ce n''est pas le Crédit Agricole. Le vrai Crédit Agricole utilise toujours @credit-agricole.fr. Ce qui est AVANT le @ (« service ») peut être choisi par l''escroc."},
-   {"quote": "BLOQUÉ sous 24 heures si vous ne confirmez pas vos informations", "note": "On vous fait peur et on vous presse. Une vraie banque ne fait jamais cela."},
-   {"quote": "Cher client", "note": "Pas de nom. Votre banque connaît votre nom."},
-   {"quote": "http://credit-agricole-securite.com/verifier", "note": "Lien étrange qui n''est pas du Crédit Agricole. Ne cliquez pas !"}
- ]'::jsonb,
+ '[{"quote": "service@credit-agricole-securite.com", "note": "Regardez ce qui vient APRÈS le @ : credit-agricole-securite.com. Ce n''est pas le Crédit Agricole. Le vrai Crédit Agricole utilise toujours @credit-agricole.fr. Ce qui est AVANT le @ (« service ») peut être choisi par l''escroc."}, {"quote": "BLOQUÉ sous 24 heures si vous ne confirmez pas vos informations", "note": "On vous fait peur et on vous presse. Une vraie banque ne fait jamais cela."}, {"quote": "Cher client", "note": "Pas de nom. Votre banque connaît votre nom."}, {"quote": "http://credit-agricole-securite.com/verifier", "note": "Lien étrange qui n''est pas du Crédit Agricole. Ne cliquez pas !"}]'::jsonb,
  10),
 
 ('fr', 'email',
  'Impôts <noreply@impots-remboursement.fr>',
  'Vous avez droit à un remboursement de 423,50 €',
  E'Cher contribuable,\n\nAprès vérification, vous avez droit à un remboursement d''impôts de 423,50 €. Remplissez vite vos informations pour recevoir le montant.\n\nCliquez ici : http://impots-remboursement.fr/reclamer\n\nDirection Générale des Finances Publiques',
- '[
-   {"quote": "noreply@impots-remboursement.fr", "note": "Regardez après le @ : impots-remboursement.fr. Ce n''est PAS la DGFiP. Le vrai domaine est dgfip.finances.gouv.fr."},
-   {"quote": "Cher contribuable", "note": "Salutation générique sans votre nom. La DGFiP connaît votre identité."},
-   {"quote": "droit à un remboursement d''impôts de 423,50 €", "note": "La promesse d''argent est un appât classique. Les impôts ne communiquent jamais un remboursement par e-mail avec un lien."},
-   {"quote": "http://impots-remboursement.fr/reclamer", "note": "Lien étrange, ce n''est pas impots.gouv.fr. Ne cliquez pas."}
- ]'::jsonb,
+ '[{"quote": "noreply@impots-remboursement.fr", "note": "Regardez après le @ : impots-remboursement.fr. Ce n''est PAS la DGFiP. Le vrai domaine est dgfip.finances.gouv.fr."}, {"quote": "Cher contribuable", "note": "Salutation générique sans votre nom. La DGFiP connaît votre identité."}, {"quote": "droit à un remboursement d''impôts de 423,50 €", "note": "La promesse d''argent est un appât classique. Les impôts ne communiquent jamais un remboursement par e-mail avec un lien."}, {"quote": "http://impots-remboursement.fr/reclamer", "note": "Lien étrange, ce n''est pas impots.gouv.fr. Ne cliquez pas."}]'::jsonb,
  20),
 
 ('fr', 'email',
  'Ameli <info@ameli-controle.org>',
  'Confirmez vos informations Ameli',
  E'Madame, Monsieur,\n\nNous vous demandons de confirmer à nouveau vos informations Ameli. Cliquez sur le lien ci-dessous et connectez-vous avec votre identifiant et votre mot de passe.\n\nhttp://ameli-controle.org/connexion\n\nMerci,\nAssurance Maladie',
- '[
-   {"quote": "info@ameli-controle.org", "note": "Regardez après le @ : ameli-controle.org. Le vrai domaine est ameli.fr — rien d''autre."},
-   {"quote": "Madame, Monsieur", "note": "Salutation générique. Une vraie organisation connaît votre nom."},
-   {"quote": "connectez-vous avec votre identifiant et votre mot de passe", "note": "Ameli ne demande JAMAIS votre mot de passe par e-mail. Toujours du hameçonnage."},
-   {"quote": "http://ameli-controle.org/connexion", "note": "Lien étrange. Ouvrez Ameli uniquement via ameli.fr ou l''application officielle."}
- ]'::jsonb,
+ '[{"quote": "info@ameli-controle.org", "note": "Regardez après le @ : ameli-controle.org. Le vrai domaine est ameli.fr — rien d''autre."}, {"quote": "Madame, Monsieur", "note": "Salutation générique. Une vraie organisation connaît votre nom."}, {"quote": "connectez-vous avec votre identifiant et votre mot de passe", "note": "Ameli ne demande JAMAIS votre mot de passe par e-mail. Toujours du hameçonnage."}, {"quote": "http://ameli-controle.org/connexion", "note": "Lien étrange. Ouvrez Ameli uniquement via ameli.fr ou l''application officielle."}]'::jsonb,
  30);
 
 -- ======== INBOX (FR) ========
@@ -635,36 +590,21 @@ INSERT INTO examples (locale, channel, sender, subject, body, annotations, sort_
  'Sparkasse <service@sparkasse-sicher-login.com>',
  'Wichtig: Ihr Konto wird gesperrt',
  E'Sehr geehrter Kunde,\n\nWir haben eine verdächtige Transaktion auf Ihrem Konto festgestellt. Innerhalb von 24 Stunden wird Ihr Konto GESPERRT, wenn Sie Ihre Daten nicht bestätigen.\n\nKlicken Sie hier, um Ihr Konto zu sichern: http://sparkasse-sicher-login.com/verify\n\nMit freundlichen Grüßen,\nSparkasse Sicherheitsteam',
- '[
-   {"quote": "service@sparkasse-sicher-login.com", "note": "Achten Sie darauf, was NACH dem @ steht: sparkasse-sicher-login.com. Das ist nicht die Sparkasse. Die echte Sparkasse nutzt immer @sparkasse.de. Der Teil VOR dem @ („service“) kann vom Betrüger frei gewählt werden."},
-   {"quote": "GESPERRT, wenn Sie Ihre Daten nicht bestätigen", "note": "Angst und Eile erzeugen. Eine echte Bank macht das nie."},
-   {"quote": "Sehr geehrter Kunde", "note": "Kein Name. Ihre Bank kennt Ihren Namen."},
-   {"quote": "http://sparkasse-sicher-login.com/verify", "note": "Verdächtiger Link, der nicht von der Sparkasse ist. Nicht anklicken!"}
- ]'::jsonb,
+ '[{"quote": "service@sparkasse-sicher-login.com", "note": "Achten Sie darauf, was NACH dem @ steht: sparkasse-sicher-login.com. Das ist nicht die Sparkasse. Die echte Sparkasse nutzt immer @sparkasse.de. Der Teil VOR dem @ („service“) kann vom Betrüger frei gewählt werden."}, {"quote": "GESPERRT, wenn Sie Ihre Daten nicht bestätigen", "note": "Angst und Eile erzeugen. Eine echte Bank macht das nie."}, {"quote": "Sehr geehrter Kunde", "note": "Kein Name. Ihre Bank kennt Ihren Namen."}, {"quote": "http://sparkasse-sicher-login.com/verify", "note": "Verdächtiger Link, der nicht von der Sparkasse ist. Nicht anklicken!"}]'::jsonb,
  10),
 
 ('de', 'email',
  'Finanzamt <noreply@finanzamt-erstattung.de>',
  'Sie haben Anspruch auf 423,50 € Rückerstattung',
  E'Sehr geehrter Steuerzahler,\n\nNach unserer Prüfung haben Sie Anspruch auf eine Steuererstattung in Höhe von 423,50 €. Geben Sie schnell Ihre Daten ein, um den Betrag zu erhalten.\n\nKlicken Sie hier: http://finanzamt-erstattung.de/anfordern\n\nFinanzamt',
- '[
-   {"quote": "noreply@finanzamt-erstattung.de", "note": "Achten Sie auf den Teil nach dem @: finanzamt-erstattung.de. Das ist NICHT das Finanzamt. Echte Kommunikation läuft über @elster.de oder Briefpost."},
-   {"quote": "Sehr geehrter Steuerzahler", "note": "Allgemeine Anrede ohne Ihren Namen. Das Finanzamt kennt Sie."},
-   {"quote": "Anspruch auf eine Steuererstattung in Höhe von 423,50 €", "note": "Ein Geldversprechen ist ein klassischer Köder. Das Finanzamt kündigt Erstattungen nie per E-Mail mit Link an."},
-   {"quote": "http://finanzamt-erstattung.de/anfordern", "note": "Verdächtiger Link, nicht elster.de. Nicht anklicken."}
- ]'::jsonb,
+ '[{"quote": "noreply@finanzamt-erstattung.de", "note": "Achten Sie auf den Teil nach dem @: finanzamt-erstattung.de. Das ist NICHT das Finanzamt. Echte Kommunikation läuft über @elster.de oder Briefpost."}, {"quote": "Sehr geehrter Steuerzahler", "note": "Allgemeine Anrede ohne Ihren Namen. Das Finanzamt kennt Sie."}, {"quote": "Anspruch auf eine Steuererstattung in Höhe von 423,50 €", "note": "Ein Geldversprechen ist ein klassischer Köder. Das Finanzamt kündigt Erstattungen nie per E-Mail mit Link an."}, {"quote": "http://finanzamt-erstattung.de/anfordern", "note": "Verdächtiger Link, nicht elster.de. Nicht anklicken."}]'::jsonb,
  20),
 
 ('de', 'email',
  'ELSTER <info@elster-sicher.org>',
  'Bitte bestätigen Sie Ihre ELSTER-Daten',
  E'Sehr geehrte Damen und Herren,\n\nWir bitten Sie, Ihre ELSTER-Daten erneut zu bestätigen. Klicken Sie auf den untenstehenden Link und melden Sie sich mit Ihrem Benutzernamen und Passwort an.\n\nhttp://elster-sicher.org/anmelden\n\nMit freundlichen Grüßen,\nELSTER',
- '[
-   {"quote": "info@elster-sicher.org", "note": "Achten Sie auf den Teil nach dem @: elster-sicher.org. Die echte Domain ist elster.de — nichts anderes."},
-   {"quote": "Sehr geehrte Damen und Herren", "note": "Allgemeine Anrede. Eine echte Organisation kennt Ihren Namen."},
-   {"quote": "melden Sie sich mit Ihrem Benutzernamen und Passwort an", "note": "ELSTER fragt NIEMALS per E-Mail nach Ihrem Passwort. Immer Phishing."},
-   {"quote": "http://elster-sicher.org/anmelden", "note": "Verdächtiger Link. Öffnen Sie ELSTER nur über elster.de oder die offizielle App."}
- ]'::jsonb,
+ '[{"quote": "info@elster-sicher.org", "note": "Achten Sie auf den Teil nach dem @: elster-sicher.org. Die echte Domain ist elster.de — nichts anderes."}, {"quote": "Sehr geehrte Damen und Herren", "note": "Allgemeine Anrede. Eine echte Organisation kennt Ihren Namen."}, {"quote": "melden Sie sich mit Ihrem Benutzernamen und Passwort an", "note": "ELSTER fragt NIEMALS per E-Mail nach Ihrem Passwort. Immer Phishing."}, {"quote": "http://elster-sicher.org/anmelden", "note": "Verdächtiger Link. Öffnen Sie ELSTER nur über elster.de oder die offizielle App."}]'::jsonb,
  30);
 
 -- ======== INBOX (DE) ========
@@ -842,36 +782,21 @@ INSERT INTO examples (locale, channel, sender, subject, body, annotations, sort_
  'BNP Paribas Fortis <service@bnp-veilig-login.com>',
  'Belangrijk: uw rekening wordt geblokkeerd',
  E'Geachte klant,\n\nWij hebben een verdachte transactie op uw rekening opgemerkt. Binnen 24 uur wordt uw rekening GEBLOKKEERD als u uw gegevens niet bevestigt.\n\nKlik hier om uw rekening te beveiligen: http://bnp-veilig-login.com/login\n\nMet vriendelijke groeten,\nBNP Paribas Fortis Beveiligingsteam',
- '[
-   {"quote": "service@bnp-veilig-login.com", "note": "Kijk naar wat NA de @ staat: bnp-veilig-login.com. Dat is niet BNP Paribas Fortis. De echte bank gebruikt altijd @bnpparibasfortis.com. Het deel vóór de @ (\"service\") mag de oplichter zelf verzinnen."},
-   {"quote": "GEBLOKKEERD als u uw gegevens niet bevestigt", "note": "Angst maken en haast. Een echte bank doet dit nooit."},
-   {"quote": "Geachte klant", "note": "Geen naam. Uw bank kent uw naam."},
-   {"quote": "http://bnp-veilig-login.com/login", "note": "Vreemde link die niet van BNP Paribas Fortis is. Niet op klikken!"}
- ]'::jsonb,
+ '[{"quote": "service@bnp-veilig-login.com", "note": "Kijk naar wat NA de @ staat: bnp-veilig-login.com. Dat is niet BNP Paribas Fortis. De echte bank gebruikt altijd @bnpparibasfortis.com. Het deel vóór de @ (\"service\") mag de oplichter zelf verzinnen."}, {"quote": "GEBLOKKEERD als u uw gegevens niet bevestigt", "note": "Angst maken en haast. Een echte bank doet dit nooit."}, {"quote": "Geachte klant", "note": "Geen naam. Uw bank kent uw naam."}, {"quote": "http://bnp-veilig-login.com/login", "note": "Vreemde link die niet van BNP Paribas Fortis is. Niet op klikken!"}]'::jsonb,
  10),
 
 ('nl-BE', 'email',
  'FOD Financiën <noreply@minfin-teruggave.be>',
  'U heeft recht op € 423,50 terugbetaling',
  E'Beste burger,\n\nNa controle blijkt u recht te hebben op een belastingteruggave van € 423,50. Vul snel uw gegevens in om het bedrag te ontvangen.\n\nKlik hier: http://minfin-teruggave.be/claim\n\nFOD Financiën',
- '[
-   {"quote": "noreply@minfin-teruggave.be", "note": "Kijk na de @: minfin-teruggave.be. Dat is NIET de FOD Financiën. Het echte domein is minfin.fed.be."},
-   {"quote": "Beste burger", "note": "Algemene aanspreking zonder uw naam. De FOD Financiën kent u."},
-   {"quote": "recht te hebben op een belastingteruggave van € 423,50", "note": "Belofte van geld is een klassieke lokker. De FOD Financiën mailt nooit over teruggaven."},
-   {"quote": "http://minfin-teruggave.be/claim", "note": "Vreemde link, niet myminfin.be. Niet op klikken."}
- ]'::jsonb,
+ '[{"quote": "noreply@minfin-teruggave.be", "note": "Kijk na de @: minfin-teruggave.be. Dat is NIET de FOD Financiën. Het echte domein is minfin.fed.be."}, {"quote": "Beste burger", "note": "Algemene aanspreking zonder uw naam. De FOD Financiën kent u."}, {"quote": "recht te hebben op een belastingteruggave van € 423,50", "note": "Belofte van geld is een klassieke lokker. De FOD Financiën mailt nooit over teruggaven."}, {"quote": "http://minfin-teruggave.be/claim", "note": "Vreemde link, niet myminfin.be. Niet op klikken."}]'::jsonb,
  20),
 
 ('nl-BE', 'email',
  'itsme <info@itsme-controle.org>',
  'Bevestig uw itsme-gegevens',
  E'Geachte heer/mevrouw,\n\nWij vragen u om uw itsme opnieuw te bevestigen. Klik op onderstaande link en meld u aan met uw gebruikersnaam en paswoord.\n\nhttp://itsme-controle.org/aanmelden\n\nBedankt,\nitsme',
- '[
-   {"quote": "info@itsme-controle.org", "note": "Kijk na de @: itsme-controle.org. Het echte domein is itsme.be — niets anders."},
-   {"quote": "Geachte heer/mevrouw", "note": "Algemene aanspreking. Een echte organisatie kent uw naam."},
-   {"quote": "meld u aan met uw gebruikersnaam en paswoord", "note": "itsme werkt via uw eigen app en vraagt NOOIT uw paswoord per e-mail. Altijd phishing."},
-   {"quote": "http://itsme-controle.org/aanmelden", "note": "Vreemde link. Gebruik itsme alleen via de officiële app of via itsme.be."}
- ]'::jsonb,
+ '[{"quote": "info@itsme-controle.org", "note": "Kijk na de @: itsme-controle.org. Het echte domein is itsme.be — niets anders."}, {"quote": "Geachte heer/mevrouw", "note": "Algemene aanspreking. Een echte organisatie kent uw naam."}, {"quote": "meld u aan met uw gebruikersnaam en paswoord", "note": "itsme werkt via uw eigen app en vraagt NOOIT uw paswoord per e-mail. Altijd phishing."}, {"quote": "http://itsme-controle.org/aanmelden", "note": "Vreemde link. Gebruik itsme alleen via de officiële app of via itsme.be."}]'::jsonb,
  30);
 
 -- ======== INBOX (nl-BE) ========
@@ -1049,36 +974,21 @@ INSERT INTO examples (locale, channel, sender, subject, body, annotations, sort_
  'Belfius <service@belfius-securise.com>',
  'Important : votre compte va être bloqué',
  E'Cher client,\n\nNous avons détecté une transaction suspecte sur votre compte. Votre compte sera BLOQUÉ sous 24 heures si vous ne confirmez pas vos informations.\n\nCliquez ici pour sécuriser votre compte : http://belfius-securise.com/verifier\n\nCordialement,\nService Sécurité Belfius',
- '[
-   {"quote": "service@belfius-securise.com", "note": "Regardez ce qui vient APRÈS le @ : belfius-securise.com. Ce n''est pas Belfius. La vraie banque utilise toujours @belfius.be. Ce qui est AVANT le @ (« service ») peut être choisi par l''escroc."},
-   {"quote": "BLOQUÉ sous 24 heures si vous ne confirmez pas vos informations", "note": "On vous fait peur et on vous presse. Une vraie banque ne fait jamais cela."},
-   {"quote": "Cher client", "note": "Pas de nom. Votre banque connaît votre nom."},
-   {"quote": "http://belfius-securise.com/verifier", "note": "Lien étrange qui n''est pas de Belfius. Ne cliquez pas !"}
- ]'::jsonb,
+ '[{"quote": "service@belfius-securise.com", "note": "Regardez ce qui vient APRÈS le @ : belfius-securise.com. Ce n''est pas Belfius. La vraie banque utilise toujours @belfius.be. Ce qui est AVANT le @ (« service ») peut être choisi par l''escroc."}, {"quote": "BLOQUÉ sous 24 heures si vous ne confirmez pas vos informations", "note": "On vous fait peur et on vous presse. Une vraie banque ne fait jamais cela."}, {"quote": "Cher client", "note": "Pas de nom. Votre banque connaît votre nom."}, {"quote": "http://belfius-securise.com/verifier", "note": "Lien étrange qui n''est pas de Belfius. Ne cliquez pas !"}]'::jsonb,
  10),
 
 ('fr-BE', 'email',
  'SPF Finances <noreply@minfin-remboursement.be>',
  'Vous avez droit à un remboursement de 423,50 €',
  E'Cher contribuable,\n\nAprès vérification, vous avez droit à un remboursement d''impôts de 423,50 €. Remplissez vite vos informations pour recevoir le montant.\n\nCliquez ici : http://minfin-remboursement.be/reclamer\n\nSPF Finances',
- '[
-   {"quote": "noreply@minfin-remboursement.be", "note": "Regardez après le @ : minfin-remboursement.be. Ce n''est PAS le SPF Finances. Le vrai domaine est minfin.fed.be."},
-   {"quote": "Cher contribuable", "note": "Salutation générique sans votre nom. Le SPF Finances connaît votre identité."},
-   {"quote": "droit à un remboursement d''impôts de 423,50 €", "note": "La promesse d''argent est un appât classique. Le SPF Finances ne communique jamais un remboursement par e-mail avec un lien."},
-   {"quote": "http://minfin-remboursement.be/reclamer", "note": "Lien étrange, ce n''est pas myminfin.be. Ne cliquez pas."}
- ]'::jsonb,
+ '[{"quote": "noreply@minfin-remboursement.be", "note": "Regardez après le @ : minfin-remboursement.be. Ce n''est PAS le SPF Finances. Le vrai domaine est minfin.fed.be."}, {"quote": "Cher contribuable", "note": "Salutation générique sans votre nom. Le SPF Finances connaît votre identité."}, {"quote": "droit à un remboursement d''impôts de 423,50 €", "note": "La promesse d''argent est un appât classique. Le SPF Finances ne communique jamais un remboursement par e-mail avec un lien."}, {"quote": "http://minfin-remboursement.be/reclamer", "note": "Lien étrange, ce n''est pas myminfin.be. Ne cliquez pas."}]'::jsonb,
  20),
 
 ('fr-BE', 'email',
  'itsme <info@itsme-controle.org>',
  'Confirmez vos informations itsme',
  E'Madame, Monsieur,\n\nNous vous demandons de confirmer à nouveau vos informations itsme. Cliquez sur le lien ci-dessous et connectez-vous avec votre identifiant et votre mot de passe.\n\nhttp://itsme-controle.org/connexion\n\nMerci,\nitsme',
- '[
-   {"quote": "info@itsme-controle.org", "note": "Regardez après le @ : itsme-controle.org. Le vrai domaine est itsme.be — rien d''autre."},
-   {"quote": "Madame, Monsieur", "note": "Salutation générique. Une vraie organisation connaît votre nom."},
-   {"quote": "connectez-vous avec votre identifiant et votre mot de passe", "note": "itsme fonctionne via votre application personnelle et ne demande JAMAIS votre mot de passe par e-mail. Toujours du hameçonnage."},
-   {"quote": "http://itsme-controle.org/connexion", "note": "Lien étrange. Utilisez itsme uniquement via l''application officielle ou via itsme.be."}
- ]'::jsonb,
+ '[{"quote": "info@itsme-controle.org", "note": "Regardez après le @ : itsme-controle.org. Le vrai domaine est itsme.be — rien d''autre."}, {"quote": "Madame, Monsieur", "note": "Salutation générique. Une vraie organisation connaît votre nom."}, {"quote": "connectez-vous avec votre identifiant et votre mot de passe", "note": "itsme fonctionne via votre application personnelle et ne demande JAMAIS votre mot de passe par e-mail. Toujours du hameçonnage."}, {"quote": "http://itsme-controle.org/connexion", "note": "Lien étrange. Utilisez itsme uniquement via l''application officielle ou via itsme.be."}]'::jsonb,
  30);
 
 -- ======== INBOX (fr-BE) ========
@@ -2401,36 +2311,21 @@ INSERT INTO examples (locale, audience, channel, sender, subject, body, annotati
  'Peter van Dijk (CEO) <p.vandijk@kestrel-group.com>',
  'Kun je iets snel voor mij regelen?',
  E'Jan,\n\nIk zit in een belangrijk overleg en kan niet bellen. Kun je voor mij 5 iTunes-cadeaubonnen van € 100 halen en mij de codes mailen? Ik regel de terugbetaling achteraf via de boekhouding. Bel niemand hierover — het is vertrouwelijk.\n\nDank,\nPeter',
- '[
-   {"quote": "p.vandijk@kestrel-group.com", "note": "Kijk wat NA de @ staat: kestrel-group.com. Het echte Kestrel gebruikt @kestrel.nl. De naam van de directeur kan de oplichter vrij invullen."},
-   {"quote": "5 iTunes-cadeaubonnen van € 100", "note": "Cadeaubonnen als betaalmiddel is dé klassieke CEO-fraude. Echte bedrijven betalen nooit zo."},
-   {"quote": "Bel niemand hierover — het is vertrouwelijk", "note": "Bedoeld om u te isoleren van collega''s die de fraude zouden herkennen. Een echte leidinggevende vraagt dit nooit."},
-   {"quote": "Ik regel de terugbetaling achteraf", "note": "Past niet bij normale procedures. Uitgaven lopen via de boekhouding, niet via medewerkers."}
- ]'::jsonb,
+ '[{"quote": "p.vandijk@kestrel-group.com", "note": "Kijk wat NA de @ staat: kestrel-group.com. Het echte Kestrel gebruikt @kestrel.nl. De naam van de directeur kan de oplichter vrij invullen."}, {"quote": "5 iTunes-cadeaubonnen van € 100", "note": "Cadeaubonnen als betaalmiddel is dé klassieke CEO-fraude. Echte bedrijven betalen nooit zo."}, {"quote": "Bel niemand hierover — het is vertrouwelijk", "note": "Bedoeld om u te isoleren van collega''s die de fraude zouden herkennen. Een echte leidinggevende vraagt dit nooit."}, {"quote": "Ik regel de terugbetaling achteraf", "note": "Past niet bij normale procedures. Uitgaven lopen via de boekhouding, niet via medewerkers."}]'::jsonb,
  10),
 
 ('nl', 'business', 'email',
  'IT Support <it-support@kestrel-helpdesk.com>',
  'Uw wachtwoord verloopt vandaag om 17:00 — verleng nu',
  E'Beste gebruiker,\n\nUw Kestrel-wachtwoord verloopt vandaag om 17:00. Als u het niet verlengt, verliest u toegang tot e-mail, SharePoint en Teams.\n\nGebruik de onderstaande link om uw wachtwoord te verlengen: http://kestrel-helpdesk.com/password-renew\n\nMet vriendelijke groet,\nIT Support Kestrel',
- '[
-   {"quote": "it-support@kestrel-helpdesk.com", "note": "Niet @kestrel.nl maar @kestrel-helpdesk.com — een apart domein met streepje dat op het bedrijf lijkt. Uw echte IT-afdeling gebruikt het eigen Kestrel-domein."},
-   {"quote": "verloopt vandaag om 17:00", "note": "Kunstmatige tijdsdruk om u zonder nadenken te laten klikken. Echte wachtwoordverlopen kondigt u dagen van tevoren aan — en meestal verandert u ze zelf via portal.office.com."},
-   {"quote": "verliest u toegang tot e-mail, SharePoint en Teams", "note": "Dreigen met verlies van toegang is een standaard phishing-truc om angst op te wekken."},
-   {"quote": "http://kestrel-helpdesk.com/password-renew", "note": "Losse link naar een domein dat niet van Kestrel is. Echte IT laat u aanmelden via het interne portaal, nooit via een losse link."}
- ]'::jsonb,
+ '[{"quote": "it-support@kestrel-helpdesk.com", "note": "Niet @kestrel.nl maar @kestrel-helpdesk.com — een apart domein met streepje dat op het bedrijf lijkt. Uw echte IT-afdeling gebruikt het eigen Kestrel-domein."}, {"quote": "verloopt vandaag om 17:00", "note": "Kunstmatige tijdsdruk om u zonder nadenken te laten klikken. Echte wachtwoordverlopen kondigt u dagen van tevoren aan — en meestal verandert u ze zelf via portal.office.com."}, {"quote": "verliest u toegang tot e-mail, SharePoint en Teams", "note": "Dreigen met verlies van toegang is een standaard phishing-truc om angst op te wekken."}, {"quote": "http://kestrel-helpdesk.com/password-renew", "note": "Losse link naar een domein dat niet van Kestrel is. Echte IT laat u aanmelden via het interne portaal, nooit via een losse link."}]'::jsonb,
  20),
 
 ('nl', 'business', 'email',
  'Microsoft OneDrive <no-reply@sharepoint-online-share.com>',
  'BAKKER Anna heeft u uitgenodigd om "Raamovereenkomst-2024.pdf" te bewerken',
  E'BAKKER Anna heeft u uitgenodigd om een bestand te bewerken\n\nDit is het document dat BAKKER Anna met u heeft gedeeld.\n\n📎 Raamovereenkomst-2024.pdf\n\nDeze uitnodiging werkt alleen voor u en personen met bestaande toegang.\n\nhttp://sharepoint-online-share.com/view?id=8a3f2',
- '[
-   {"quote":"no-reply@sharepoint-online-share.com","note":"Echte SharePoint-berichten komen van @sharepointonline.com. \"sharepoint-online-share.com\" is geen Microsoft-domein."},
-   {"quote":"BAKKER Anna heeft u uitgenodigd","note":"Kent u deze persoon? Uw collega''s gebruiken @kestrel.nl. Controleer het échte afzenderadres (hierboven) voordat u iets opent."},
-   {"quote":"Deze uitnodiging werkt alleen voor u en personen met bestaande toegang.","note":"Dit is Microsofts standaardtekst — phishers kopiëren hem één op één. De tekst zelf bewijst dus NIETS over de echtheid."},
-   {"quote":"http://sharepoint-online-share.com/view","note":"Echte SharePoint-links gaan naar uw eigen tenant (bijvoorbeeld kestrel.sharepoint.com) of naar onedrive.live.com — nooit naar een los extern domein."}
- ]'::jsonb,
+ '[{"quote":"no-reply@sharepoint-online-share.com","note":"Echte SharePoint-berichten komen van @sharepointonline.com. \"sharepoint-online-share.com\" is geen Microsoft-domein."}, {"quote":"BAKKER Anna heeft u uitgenodigd","note":"Kent u deze persoon? Uw collega''s gebruiken @kestrel.nl. Controleer het échte afzenderadres (hierboven) voordat u iets opent."}, {"quote":"Deze uitnodiging werkt alleen voor u en personen met bestaande toegang.","note":"Dit is Microsofts standaardtekst — phishers kopiëren hem één op één. De tekst zelf bewijst dus NIETS over de echtheid."}, {"quote":"http://sharepoint-online-share.com/view","note":"Echte SharePoint-links gaan naar uw eigen tenant (bijvoorbeeld kestrel.sharepoint.com) of naar onedrive.live.com — nooit naar een los extern domein."}]'::jsonb,
  30),
 
 -- ======== nl-BE (business) ========
@@ -2438,36 +2333,21 @@ INSERT INTO examples (locale, audience, channel, sender, subject, body, annotati
  'Luc Vermeulen (CEO) <l.vermeulen@kestrel-group.com>',
  'Kun je iets snel voor mij regelen?',
  E'Peter,\n\nIk zit in een belangrijk overleg en kan niet bellen. Kun je voor mij 5 iTunes-cadeaubonnen van € 100 halen en mij de codes mailen? Ik regel de terugbetaling achteraf via de boekhouding. Bel niemand hierover — het is vertrouwelijk.\n\nDank,\nLuc',
- '[
-   {"quote": "l.vermeulen@kestrel-group.com", "note": "Kijk wat NA de @ staat: kestrel-group.com. Het echte Kestrel gebruikt @kestrel.be. De naam van de directeur kan de oplichter vrij invullen."},
-   {"quote": "5 iTunes-cadeaubonnen van € 100", "note": "Cadeaubonnen als betaalmiddel is dé klassieke CEO-fraude. Echte bedrijven betalen nooit zo."},
-   {"quote": "Bel niemand hierover — het is vertrouwelijk", "note": "Bedoeld om u te isoleren van collega''s die de fraude zouden herkennen."},
-   {"quote": "Ik regel de terugbetaling achteraf", "note": "Past niet bij normale procedures. Uitgaven lopen via de boekhouding."}
- ]'::jsonb,
+ '[{"quote": "l.vermeulen@kestrel-group.com", "note": "Kijk wat NA de @ staat: kestrel-group.com. Het echte Kestrel gebruikt @kestrel.be. De naam van de directeur kan de oplichter vrij invullen."}, {"quote": "5 iTunes-cadeaubonnen van € 100", "note": "Cadeaubonnen als betaalmiddel is dé klassieke CEO-fraude. Echte bedrijven betalen nooit zo."}, {"quote": "Bel niemand hierover — het is vertrouwelijk", "note": "Bedoeld om u te isoleren van collega''s die de fraude zouden herkennen."}, {"quote": "Ik regel de terugbetaling achteraf", "note": "Past niet bij normale procedures. Uitgaven lopen via de boekhouding."}]'::jsonb,
  10),
 
 ('nl-BE', 'business', 'email',
  'IT Support <it-support@kestrel-helpdesk.com>',
  'Uw paswoord verloopt vandaag om 17u — verleng nu',
  E'Beste gebruiker,\n\nUw Kestrel-paswoord verloopt vandaag om 17u. Als u het niet verlengt, verliest u toegang tot e-mail, SharePoint en Teams.\n\nGebruik de onderstaande link om uw paswoord te verlengen: http://kestrel-helpdesk.com/password-renew\n\nMet vriendelijke groeten,\nIT Support Kestrel',
- '[
-   {"quote": "it-support@kestrel-helpdesk.com", "note": "Niet @kestrel.be maar @kestrel-helpdesk.com — een apart domein dat op het bedrijf lijkt."},
-   {"quote": "verloopt vandaag om 17u", "note": "Kunstmatige tijdsdruk. Echte paswoordverlopen kondigt u dagen van tevoren aan."},
-   {"quote": "verliest u toegang tot e-mail, SharePoint en Teams", "note": "Dreigen met verlies van toegang is een standaard phishing-truc."},
-   {"quote": "http://kestrel-helpdesk.com/password-renew", "note": "Losse link naar een domein dat niet van Kestrel is. Echte IT laat u aanmelden via het interne portaal."}
- ]'::jsonb,
+ '[{"quote": "it-support@kestrel-helpdesk.com", "note": "Niet @kestrel.be maar @kestrel-helpdesk.com — een apart domein dat op het bedrijf lijkt."}, {"quote": "verloopt vandaag om 17u", "note": "Kunstmatige tijdsdruk. Echte paswoordverlopen kondigt u dagen van tevoren aan."}, {"quote": "verliest u toegang tot e-mail, SharePoint en Teams", "note": "Dreigen met verlies van toegang is een standaard phishing-truc."}, {"quote": "http://kestrel-helpdesk.com/password-renew", "note": "Losse link naar een domein dat niet van Kestrel is. Echte IT laat u aanmelden via het interne portaal."}]'::jsonb,
  20),
 
 ('nl-BE', 'business', 'email',
  'Microsoft OneDrive <no-reply@sharepoint-online-share.com>',
  'CLAES Bart heeft u uitgenodigd om "Raamovereenkomst-2024.pdf" te bewerken',
  E'CLAES Bart heeft u uitgenodigd om een bestand te bewerken\n\nDit is het document dat CLAES Bart met u heeft gedeeld.\n\n📎 Raamovereenkomst-2024.pdf\n\nDeze uitnodiging werkt alleen voor u en personen met bestaande toegang.\n\nhttp://sharepoint-online-share.com/view?id=8a3f2',
- '[
-   {"quote":"no-reply@sharepoint-online-share.com","note":"Echte SharePoint-berichten komen van @sharepointonline.com. \"sharepoint-online-share.com\" is geen Microsoft-domein."},
-   {"quote":"CLAES Bart heeft u uitgenodigd","note":"Kent u deze persoon? Uw collega''s gebruiken @kestrel.be. Controleer het echte afzenderadres (hierboven) voordat u iets opent."},
-   {"quote":"Deze uitnodiging werkt alleen voor u en personen met bestaande toegang.","note":"Dit is Microsofts standaardtekst — phishers kopiëren hem één op één. De tekst zelf bewijst dus NIETS over de echtheid."},
-   {"quote":"http://sharepoint-online-share.com/view","note":"Echte SharePoint-links gaan naar uw eigen tenant (bijvoorbeeld kestrel.sharepoint.com) of naar onedrive.live.com — nooit naar een los extern domein."}
- ]'::jsonb,
+ '[{"quote":"no-reply@sharepoint-online-share.com","note":"Echte SharePoint-berichten komen van @sharepointonline.com. \"sharepoint-online-share.com\" is geen Microsoft-domein."}, {"quote":"CLAES Bart heeft u uitgenodigd","note":"Kent u deze persoon? Uw collega''s gebruiken @kestrel.be. Controleer het echte afzenderadres (hierboven) voordat u iets opent."}, {"quote":"Deze uitnodiging werkt alleen voor u en personen met bestaande toegang.","note":"Dit is Microsofts standaardtekst — phishers kopiëren hem één op één. De tekst zelf bewijst dus NIETS over de echtheid."}, {"quote":"http://sharepoint-online-share.com/view","note":"Echte SharePoint-links gaan naar uw eigen tenant (bijvoorbeeld kestrel.sharepoint.com) of naar onedrive.live.com — nooit naar een los extern domein."}]'::jsonb,
  30);
 
 INSERT INTO examples (locale, audience, channel, sender, subject, body, annotations, sort_order) VALUES
@@ -2477,36 +2357,21 @@ INSERT INTO examples (locale, audience, channel, sender, subject, body, annotati
  'Thomas Richardson (CEO) <t.richardson@kestrel-group.com>',
  'Quick favour — are you in?',
  E'Jane,\n\nI''m in an important client meeting and can''t take calls. Could you pick up 5 Amazon gift cards at £100 each and email me the codes? I''ll have Finance reimburse you afterwards. Please keep this between us — it''s confidential until I can explain.\n\nThanks,\nThomas',
- '[
-   {"quote": "t.richardson@kestrel-group.com", "note": "Look at what comes AFTER the @: kestrel-group.com. Real Kestrel uses @kestrel.co.uk. The CEO''s name is easy for a scammer to pick."},
-   {"quote": "5 Amazon gift cards at £100 each", "note": "Gift cards as a form of payment is textbook CEO fraud. Real companies never pay this way."},
-   {"quote": "Please keep this between us — it''s confidential", "note": "Designed to isolate you from colleagues who would spot the fraud. A real manager never asks for this."},
-   {"quote": "I''ll have Finance reimburse you afterwards", "note": "Bypasses the normal process. Expenses go through Finance, not via an employee buying gift cards."}
- ]'::jsonb,
+ '[{"quote": "t.richardson@kestrel-group.com", "note": "Look at what comes AFTER the @: kestrel-group.com. Real Kestrel uses @kestrel.co.uk. The CEO''s name is easy for a scammer to pick."}, {"quote": "5 Amazon gift cards at £100 each", "note": "Gift cards as a form of payment is textbook CEO fraud. Real companies never pay this way."}, {"quote": "Please keep this between us — it''s confidential", "note": "Designed to isolate you from colleagues who would spot the fraud. A real manager never asks for this."}, {"quote": "I''ll have Finance reimburse you afterwards", "note": "Bypasses the normal process. Expenses go through Finance, not via an employee buying gift cards."}]'::jsonb,
  10),
 
 ('en', 'business', 'email',
  'IT Support <it-support@kestrel-helpdesk.com>',
  'Your password expires today at 17:00 — renew now',
  E'Dear user,\n\nYour Kestrel password expires today at 17:00. If you don''t renew it, you''ll lose access to email, SharePoint and Teams.\n\nUse the link below to renew your password: http://kestrel-helpdesk.com/password-renew\n\nKind regards,\nIT Support Kestrel',
- '[
-   {"quote": "it-support@kestrel-helpdesk.com", "note": "Not @kestrel.co.uk but @kestrel-helpdesk.com — a separate hyphenated domain that looks like the company. Your real IT team uses the company''s own domain."},
-   {"quote": "expires today at 17:00", "note": "Artificial time pressure to make you click without thinking. Real password expiries are announced days in advance — and you usually rotate them yourself via portal.office.com."},
-   {"quote": "you''ll lose access to email, SharePoint and Teams", "note": "Threatening loss of access is a standard phishing trick designed to create anxiety."},
-   {"quote": "http://kestrel-helpdesk.com/password-renew", "note": "Stand-alone link to a domain that is not Kestrel''s. Real IT has you sign in via the internal portal, never via a one-off link."}
- ]'::jsonb,
+ '[{"quote": "it-support@kestrel-helpdesk.com", "note": "Not @kestrel.co.uk but @kestrel-helpdesk.com — a separate hyphenated domain that looks like the company. Your real IT team uses the company''s own domain."}, {"quote": "expires today at 17:00", "note": "Artificial time pressure to make you click without thinking. Real password expiries are announced days in advance — and you usually rotate them yourself via portal.office.com."}, {"quote": "you''ll lose access to email, SharePoint and Teams", "note": "Threatening loss of access is a standard phishing trick designed to create anxiety."}, {"quote": "http://kestrel-helpdesk.com/password-renew", "note": "Stand-alone link to a domain that is not Kestrel''s. Real IT has you sign in via the internal portal, never via a one-off link."}]'::jsonb,
  20),
 
 ('en', 'business', 'email',
  'Microsoft OneDrive <no-reply@sharepoint-online-share.com>',
  'BAKER Adam has invited you to edit "Framework-Agreement-2024.pdf"',
  E'BAKER Adam has invited you to edit a file\n\nThis is the document BAKER Adam shared with you.\n\n📎 Framework-Agreement-2024.pdf\n\nThis invitation only works for you and people with existing access.\n\nhttp://sharepoint-online-share.com/view?id=8a3f2',
- '[
-   {"quote":"no-reply@sharepoint-online-share.com","note":"Real SharePoint notifications come from @sharepointonline.com. \"sharepoint-online-share.com\" is not a Microsoft domain."},
-   {"quote":"BAKER Adam has invited you","note":"Do you know this person? Your colleagues use @kestrel.co.uk. Check the real sender address (above) before opening anything."},
-   {"quote":"This invitation only works for you and people with existing access.","note":"This is Microsoft''s stock text — phishers copy it word for word. The sentence itself proves NOTHING about authenticity."},
-   {"quote":"http://sharepoint-online-share.com/view","note":"Real SharePoint links go to your own tenant (for example kestrel.sharepoint.com) or to onedrive.live.com — never to a stand-alone external domain."}
- ]'::jsonb,
+ '[{"quote":"no-reply@sharepoint-online-share.com","note":"Real SharePoint notifications come from @sharepointonline.com. \"sharepoint-online-share.com\" is not a Microsoft domain."}, {"quote":"BAKER Adam has invited you","note":"Do you know this person? Your colleagues use @kestrel.co.uk. Check the real sender address (above) before opening anything."}, {"quote":"This invitation only works for you and people with existing access.","note":"This is Microsoft''s stock text — phishers copy it word for word. The sentence itself proves NOTHING about authenticity."}, {"quote":"http://sharepoint-online-share.com/view","note":"Real SharePoint links go to your own tenant (for example kestrel.sharepoint.com) or to onedrive.live.com — never to a stand-alone external domain."}]'::jsonb,
  30),
 
 -- ======== FR (business) ========
@@ -2514,36 +2379,21 @@ INSERT INTO examples (locale, audience, channel, sender, subject, body, annotati
  'Jean-Philippe Moreau (CEO) <jp.moreau@kestrel-group.com>',
  'Tu peux me rendre un service rapidement ?',
  E'Pierre,\n\nJe suis en réunion importante avec un client et je ne peux pas être dérangé au téléphone. Peux-tu acheter 5 cartes cadeaux Amazon à 100 € chacune et m''envoyer les codes par retour de mail ? Je demanderai à la comptabilité de te rembourser. Merci de ne pas en parler autour de toi — c''est confidentiel.\n\nMerci,\nJean-Philippe',
- '[
-   {"quote": "jp.moreau@kestrel-group.com", "note": "Regardez ce qui vient APRÈS le @ : kestrel-group.com. Le vrai Kestrel utilise @kestrel.fr. Le nom du dirigeant est facile à trouver pour un escroc."},
-   {"quote": "5 cartes cadeaux Amazon à 100 € chacune", "note": "Les cartes cadeaux comme moyen de paiement, c''est la fraude au dirigeant classique. Les vraies entreprises ne paient jamais ainsi."},
-   {"quote": "Merci de ne pas en parler autour de toi — c''est confidentiel", "note": "Vise à vous isoler des collègues qui reconnaîtraient la fraude. Un(e) vrai(e) manager ne demande jamais cela."},
-   {"quote": "Je demanderai à la comptabilité de te rembourser", "note": "Contourne la procédure normale. Les dépenses passent par la comptabilité, pas par un(e) salarié(e)."}
- ]'::jsonb,
+ '[{"quote": "jp.moreau@kestrel-group.com", "note": "Regardez ce qui vient APRÈS le @ : kestrel-group.com. Le vrai Kestrel utilise @kestrel.fr. Le nom du dirigeant est facile à trouver pour un escroc."}, {"quote": "5 cartes cadeaux Amazon à 100 € chacune", "note": "Les cartes cadeaux comme moyen de paiement, c''est la fraude au dirigeant classique. Les vraies entreprises ne paient jamais ainsi."}, {"quote": "Merci de ne pas en parler autour de toi — c''est confidentiel", "note": "Vise à vous isoler des collègues qui reconnaîtraient la fraude. Un(e) vrai(e) manager ne demande jamais cela."}, {"quote": "Je demanderai à la comptabilité de te rembourser", "note": "Contourne la procédure normale. Les dépenses passent par la comptabilité, pas par un(e) salarié(e)."}]'::jsonb,
  10),
 
 ('fr', 'business', 'email',
  'Support Informatique <support-it@kestrel-helpdesk.com>',
  'Votre mot de passe expire aujourd''hui à 17h — renouvelez maintenant',
  E'Cher utilisateur,\n\nVotre mot de passe Kestrel expire aujourd''hui à 17h. Si vous ne le renouvelez pas, vous perdrez l''accès à la messagerie, SharePoint et Teams.\n\nUtilisez le lien ci-dessous pour renouveler votre mot de passe : http://kestrel-helpdesk.com/password-renew\n\nCordialement,\nSupport Informatique Kestrel',
- '[
-   {"quote": "support-it@kestrel-helpdesk.com", "note": "Pas @kestrel.fr mais @kestrel-helpdesk.com — un domaine séparé avec tiret qui imite l''entreprise. Votre vrai service informatique utilise le domaine propre de l''entreprise."},
-   {"quote": "expire aujourd''hui à 17h", "note": "Pression temporelle artificielle pour vous faire cliquer sans réfléchir. Les vraies expirations sont annoncées des jours à l''avance."},
-   {"quote": "vous perdrez l''accès à la messagerie, SharePoint et Teams", "note": "La menace de perte d''accès est un classique pour créer de l''angoisse."},
-   {"quote": "http://kestrel-helpdesk.com/password-renew", "note": "Lien isolé vers un domaine qui n''est pas celui de Kestrel. Le vrai service informatique vous fait vous connecter via le portail interne."}
- ]'::jsonb,
+ '[{"quote": "support-it@kestrel-helpdesk.com", "note": "Pas @kestrel.fr mais @kestrel-helpdesk.com — un domaine séparé avec tiret qui imite l''entreprise. Votre vrai service informatique utilise le domaine propre de l''entreprise."}, {"quote": "expire aujourd''hui à 17h", "note": "Pression temporelle artificielle pour vous faire cliquer sans réfléchir. Les vraies expirations sont annoncées des jours à l''avance."}, {"quote": "vous perdrez l''accès à la messagerie, SharePoint et Teams", "note": "La menace de perte d''accès est un classique pour créer de l''angoisse."}, {"quote": "http://kestrel-helpdesk.com/password-renew", "note": "Lien isolé vers un domaine qui n''est pas celui de Kestrel. Le vrai service informatique vous fait vous connecter via le portail interne."}]'::jsonb,
  20),
 
 ('fr', 'business', 'email',
  'Microsoft OneDrive <no-reply@sharepoint-online-share.com>',
  'MARTIN Julien vous a invité à modifier « Contrat-Cadre-2024.pdf »',
  E'MARTIN Julien vous a invité à modifier un fichier\n\nVoici le document que MARTIN Julien a partagé avec vous.\n\n📎 Contrat-Cadre-2024.pdf\n\nCette invitation ne fonctionne que pour vous et les personnes ayant déjà accès.\n\nhttp://sharepoint-online-share.com/view?id=8a3f2',
- '[
-   {"quote":"no-reply@sharepoint-online-share.com","note":"Les vraies notifications SharePoint viennent de @sharepointonline.com. « sharepoint-online-share.com » n’est pas un domaine Microsoft."},
-   {"quote":"MARTIN Julien vous a invité","note":"Connaissez-vous cette personne ? Vos collègues utilisent @kestrel.fr. Vérifiez l’adresse réelle de l’expéditeur (ci-dessus) avant d’ouvrir quoi que ce soit."},
-   {"quote":"Cette invitation ne fonctionne que pour vous et les personnes ayant déjà accès.","note":"C’est le texte standard de Microsoft — les escrocs le copient mot pour mot. Cette phrase ne prouve donc RIEN sur l’authenticité."},
-   {"quote":"http://sharepoint-online-share.com/view","note":"Les vrais liens SharePoint pointent vers votre propre tenant (par exemple kestrel.sharepoint.com) ou vers onedrive.live.com — jamais vers un domaine externe isolé."}
- ]'::jsonb,
+ '[{"quote":"no-reply@sharepoint-online-share.com","note":"Les vraies notifications SharePoint viennent de @sharepointonline.com. « sharepoint-online-share.com » n’est pas un domaine Microsoft."}, {"quote":"MARTIN Julien vous a invité","note":"Connaissez-vous cette personne ? Vos collègues utilisent @kestrel.fr. Vérifiez l’adresse réelle de l’expéditeur (ci-dessus) avant d’ouvrir quoi que ce soit."}, {"quote":"Cette invitation ne fonctionne que pour vous et les personnes ayant déjà accès.","note":"C’est le texte standard de Microsoft — les escrocs le copient mot pour mot. Cette phrase ne prouve donc RIEN sur l’authenticité."}, {"quote":"http://sharepoint-online-share.com/view","note":"Les vrais liens SharePoint pointent vers votre propre tenant (par exemple kestrel.sharepoint.com) ou vers onedrive.live.com — jamais vers un domaine externe isolé."}]'::jsonb,
  30);
 
 INSERT INTO examples (locale, audience, channel, sender, subject, body, annotations, sort_order) VALUES
@@ -2553,36 +2403,21 @@ INSERT INTO examples (locale, audience, channel, sender, subject, body, annotati
  'Philippe Vermeulen (CEO) <p.vermeulen@kestrel-group.com>',
  'Tu peux me rendre un service rapidement ?',
  E'Pierre,\n\nJe suis en réunion importante avec un client et je ne peux pas être dérangé au téléphone. Peux-tu acheter 5 cartes cadeaux Bol.com à 100 € chacune et m''envoyer les codes par retour de mail ? Je demanderai à la comptabilité de te rembourser. Merci de ne pas en parler autour de toi — c''est confidentiel.\n\nMerci,\nPhilippe',
- '[
-   {"quote": "p.vermeulen@kestrel-group.com", "note": "Regardez ce qui vient APRÈS le @ : kestrel-group.com. Le vrai Kestrel utilise @kestrel.be."},
-   {"quote": "5 cartes cadeaux Bol.com à 100 € chacune", "note": "Les cartes cadeaux comme moyen de paiement, c''est la fraude au dirigeant classique."},
-   {"quote": "Merci de ne pas en parler autour de toi — c''est confidentiel", "note": "Vise à vous isoler des collègues qui reconnaîtraient la fraude."},
-   {"quote": "Je demanderai à la comptabilité de te rembourser", "note": "Contourne la procédure normale. Les dépenses passent par la comptabilité."}
- ]'::jsonb,
+ '[{"quote": "p.vermeulen@kestrel-group.com", "note": "Regardez ce qui vient APRÈS le @ : kestrel-group.com. Le vrai Kestrel utilise @kestrel.be."}, {"quote": "5 cartes cadeaux Bol.com à 100 € chacune", "note": "Les cartes cadeaux comme moyen de paiement, c''est la fraude au dirigeant classique."}, {"quote": "Merci de ne pas en parler autour de toi — c''est confidentiel", "note": "Vise à vous isoler des collègues qui reconnaîtraient la fraude."}, {"quote": "Je demanderai à la comptabilité de te rembourser", "note": "Contourne la procédure normale. Les dépenses passent par la comptabilité."}]'::jsonb,
  10),
 
 ('fr-BE', 'business', 'email',
  'Support Informatique <support-it@kestrel-helpdesk.com>',
  'Votre mot de passe expire aujourd''hui à 17h — renouvelez maintenant',
  E'Cher utilisateur,\n\nVotre mot de passe Kestrel expire aujourd''hui à 17h. Si vous ne le renouvelez pas, vous perdrez l''accès à la messagerie, SharePoint et Teams.\n\nUtilisez le lien ci-dessous pour renouveler votre mot de passe : http://kestrel-helpdesk.com/password-renew\n\nBien à vous,\nSupport Informatique Kestrel',
- '[
-   {"quote": "support-it@kestrel-helpdesk.com", "note": "Pas @kestrel.be mais @kestrel-helpdesk.com — un domaine séparé qui imite l''entreprise."},
-   {"quote": "expire aujourd''hui à 17h", "note": "Pression temporelle artificielle. Les vraies expirations sont annoncées des jours à l''avance."},
-   {"quote": "vous perdrez l''accès à la messagerie, SharePoint et Teams", "note": "La menace de perte d''accès est un classique pour créer de l''angoisse."},
-   {"quote": "http://kestrel-helpdesk.com/password-renew", "note": "Lien isolé vers un domaine qui n''est pas celui de Kestrel. Le vrai service informatique passe par le portail interne."}
- ]'::jsonb,
+ '[{"quote": "support-it@kestrel-helpdesk.com", "note": "Pas @kestrel.be mais @kestrel-helpdesk.com — un domaine séparé qui imite l''entreprise."}, {"quote": "expire aujourd''hui à 17h", "note": "Pression temporelle artificielle. Les vraies expirations sont annoncées des jours à l''avance."}, {"quote": "vous perdrez l''accès à la messagerie, SharePoint et Teams", "note": "La menace de perte d''accès est un classique pour créer de l''angoisse."}, {"quote": "http://kestrel-helpdesk.com/password-renew", "note": "Lien isolé vers un domaine qui n''est pas celui de Kestrel. Le vrai service informatique passe par le portail interne."}]'::jsonb,
  20),
 
 ('fr-BE', 'business', 'email',
  'Microsoft OneDrive <no-reply@sharepoint-online-share.com>',
  'LECLERCQ Thomas vous a invité à modifier « Contrat-Cadre-2024.pdf »',
  E'LECLERCQ Thomas vous a invité à modifier un fichier\n\nVoici le document que LECLERCQ Thomas a partagé avec vous.\n\n📎 Contrat-Cadre-2024.pdf\n\nCette invitation ne fonctionne que pour vous et les personnes ayant déjà accès.\n\nhttp://sharepoint-online-share.com/view?id=8a3f2',
- '[
-   {"quote":"no-reply@sharepoint-online-share.com","note":"Les vraies notifications SharePoint viennent de @sharepointonline.com. « sharepoint-online-share.com » n’est pas un domaine Microsoft."},
-   {"quote":"LECLERCQ Thomas vous a invité","note":"Connaissez-vous cette personne ? Vos collègues utilisent @kestrel.be. Vérifiez l’adresse réelle de l’expéditeur (ci-dessus) avant d’ouvrir quoi que ce soit."},
-   {"quote":"Cette invitation ne fonctionne que pour vous et les personnes ayant déjà accès.","note":"C’est le texte standard de Microsoft — les escrocs le copient mot pour mot. Cette phrase ne prouve donc RIEN sur l’authenticité."},
-   {"quote":"http://sharepoint-online-share.com/view","note":"Les vrais liens SharePoint pointent vers votre propre tenant (par exemple kestrel.sharepoint.com) ou vers onedrive.live.com — jamais vers un domaine externe isolé."}
- ]'::jsonb,
+ '[{"quote":"no-reply@sharepoint-online-share.com","note":"Les vraies notifications SharePoint viennent de @sharepointonline.com. « sharepoint-online-share.com » n’est pas un domaine Microsoft."}, {"quote":"LECLERCQ Thomas vous a invité","note":"Connaissez-vous cette personne ? Vos collègues utilisent @kestrel.be. Vérifiez l’adresse réelle de l’expéditeur (ci-dessus) avant d’ouvrir quoi que ce soit."}, {"quote":"Cette invitation ne fonctionne que pour vous et les personnes ayant déjà accès.","note":"C’est le texte standard de Microsoft — les escrocs le copient mot pour mot. Cette phrase ne prouve donc RIEN sur l’authenticité."}, {"quote":"http://sharepoint-online-share.com/view","note":"Les vrais liens SharePoint pointent vers votre propre tenant (par exemple kestrel.sharepoint.com) ou vers onedrive.live.com — jamais vers un domaine externe isolé."}]'::jsonb,
  30),
 
 -- ======== DE (business) ========
@@ -2590,34 +2425,19 @@ INSERT INTO examples (locale, audience, channel, sender, subject, body, annotati
  'Thomas Schneider (CEO) <t.schneider@kestrel-group.com>',
  'Kannst du mir kurz einen Gefallen tun?',
  E'Martin,\n\nich bin in einer wichtigen Kundenbesprechung und kann nicht telefonieren. Kannst du für mich 5 Amazon-Gutscheine à 100 € kaufen und mir die Codes per Mail schicken? Die Buchhaltung erstattet dir das Geld danach. Bitte sprich mit niemandem darüber — das ist vertraulich, bis ich es erklären kann.\n\nDanke,\nThomas',
- '[
-   {"quote": "t.schneider@kestrel-group.com", "note": "Achten Sie darauf, was NACH dem @ steht: kestrel-group.com. Das echte Kestrel nutzt @kestrel.de. Den Namen der Geschäftsleitung kann jeder Betrüger leicht finden."},
-   {"quote": "5 Amazon-Gutscheine à 100 €", "note": "Gutscheine als Zahlungsmittel ist typischer CEO-Betrug. Echte Unternehmen zahlen nie so."},
-   {"quote": "Bitte sprich mit niemandem darüber — das ist vertraulich", "note": "Soll Sie von Kolleginnen und Kollegen isolieren, die den Betrug erkennen würden. Eine echte Führungskraft bittet darum nie."},
-   {"quote": "Die Buchhaltung erstattet dir das Geld danach", "note": "Umgeht den normalen Prozess. Ausgaben laufen über die Buchhaltung, nicht über Mitarbeitende, die Gutscheine kaufen."}
- ]'::jsonb,
+ '[{"quote": "t.schneider@kestrel-group.com", "note": "Achten Sie darauf, was NACH dem @ steht: kestrel-group.com. Das echte Kestrel nutzt @kestrel.de. Den Namen der Geschäftsleitung kann jeder Betrüger leicht finden."}, {"quote": "5 Amazon-Gutscheine à 100 €", "note": "Gutscheine als Zahlungsmittel ist typischer CEO-Betrug. Echte Unternehmen zahlen nie so."}, {"quote": "Bitte sprich mit niemandem darüber — das ist vertraulich", "note": "Soll Sie von Kolleginnen und Kollegen isolieren, die den Betrug erkennen würden. Eine echte Führungskraft bittet darum nie."}, {"quote": "Die Buchhaltung erstattet dir das Geld danach", "note": "Umgeht den normalen Prozess. Ausgaben laufen über die Buchhaltung, nicht über Mitarbeitende, die Gutscheine kaufen."}]'::jsonb,
  10),
 
 ('de', 'business', 'email',
  'IT Support <it-support@kestrel-helpdesk.com>',
  'Ihr Passwort läuft heute um 17:00 Uhr ab — jetzt verlängern',
  E'Sehr geehrte/r Nutzer/in,\n\nIhr Kestrel-Passwort läuft heute um 17:00 Uhr ab. Wenn Sie es nicht verlängern, verlieren Sie den Zugriff auf E-Mail, SharePoint und Teams.\n\nVerwenden Sie den untenstehenden Link, um Ihr Passwort zu verlängern: http://kestrel-helpdesk.com/password-renew\n\nMit freundlichen Grüßen,\nIT Support Kestrel',
- '[
-   {"quote": "it-support@kestrel-helpdesk.com", "note": "Nicht @kestrel.de, sondern @kestrel-helpdesk.com — eine separate Domain mit Bindestrich, die wie das Unternehmen aussieht. Ihre echte IT nutzt die eigene Firmen-Domain."},
-   {"quote": "läuft heute um 17:00 Uhr ab", "note": "Künstlicher Zeitdruck, damit Sie ohne Nachdenken klicken. Echte Passwortabläufe werden Tage vorher angekündigt."},
-   {"quote": "verlieren Sie den Zugriff auf E-Mail, SharePoint und Teams", "note": "Die Drohung mit Zugriffsverlust ist ein Standardtrick, um Angst zu erzeugen."},
-   {"quote": "http://kestrel-helpdesk.com/password-renew", "note": "Einzelner Link zu einer Domain, die nicht zu Kestrel gehört. Die echte IT lässt Sie sich über das interne Portal anmelden, nie über einen losen Link."}
- ]'::jsonb,
+ '[{"quote": "it-support@kestrel-helpdesk.com", "note": "Nicht @kestrel.de, sondern @kestrel-helpdesk.com — eine separate Domain mit Bindestrich, die wie das Unternehmen aussieht. Ihre echte IT nutzt die eigene Firmen-Domain."}, {"quote": "läuft heute um 17:00 Uhr ab", "note": "Künstlicher Zeitdruck, damit Sie ohne Nachdenken klicken. Echte Passwortabläufe werden Tage vorher angekündigt."}, {"quote": "verlieren Sie den Zugriff auf E-Mail, SharePoint und Teams", "note": "Die Drohung mit Zugriffsverlust ist ein Standardtrick, um Angst zu erzeugen."}, {"quote": "http://kestrel-helpdesk.com/password-renew", "note": "Einzelner Link zu einer Domain, die nicht zu Kestrel gehört. Die echte IT lässt Sie sich über das interne Portal anmelden, nie über einen losen Link."}]'::jsonb,
  20),
 
 ('de', 'business', 'email',
  'Microsoft OneDrive <no-reply@sharepoint-online-share.com>',
  'BECKER Stefan hat Sie eingeladen, "Rahmenvertrag-2024.pdf" zu bearbeiten',
  E'BECKER Stefan hat Sie eingeladen, eine Datei zu bearbeiten\n\nDies ist das Dokument, das BECKER Stefan mit Ihnen geteilt hat.\n\n📎 Rahmenvertrag-2024.pdf\n\nDiese Einladung funktioniert nur für Sie und Personen mit bestehendem Zugriff.\n\nhttp://sharepoint-online-share.com/view?id=8a3f2',
- '[
-   {"quote":"no-reply@sharepoint-online-share.com","note":"Echte SharePoint-Benachrichtigungen kommen von @sharepointonline.com. \"sharepoint-online-share.com\" ist keine Microsoft-Domain."},
-   {"quote":"BECKER Stefan hat Sie eingeladen","note":"Kennen Sie diese Person? Ihre Kolleginnen und Kollegen nutzen @kestrel.de. Prüfen Sie die tatsächliche Absenderadresse (oben), bevor Sie etwas öffnen."},
-   {"quote":"Diese Einladung funktioniert nur für Sie und Personen mit bestehendem Zugriff.","note":"Das ist Microsofts Standardtext — Phisher kopieren ihn Wort für Wort. Der Satz an sich beweist also NICHTS über die Echtheit."},
-   {"quote":"http://sharepoint-online-share.com/view","note":"Echte SharePoint-Links führen zu Ihrem eigenen Tenant (z. B. kestrel.sharepoint.com) oder zu onedrive.live.com — nie zu einer separaten externen Domain."}
- ]'::jsonb,
+ '[{"quote":"no-reply@sharepoint-online-share.com","note":"Echte SharePoint-Benachrichtigungen kommen von @sharepointonline.com. \"sharepoint-online-share.com\" ist keine Microsoft-Domain."}, {"quote":"BECKER Stefan hat Sie eingeladen","note":"Kennen Sie diese Person? Ihre Kolleginnen und Kollegen nutzen @kestrel.de. Prüfen Sie die tatsächliche Absenderadresse (oben), bevor Sie etwas öffnen."}, {"quote":"Diese Einladung funktioniert nur für Sie und Personen mit bestehendem Zugriff.","note":"Das ist Microsofts Standardtext — Phisher kopieren ihn Wort für Wort. Der Satz an sich beweist also NICHTS über die Echtheit."}, {"quote":"http://sharepoint-online-share.com/view","note":"Echte SharePoint-Links führen zu Ihrem eigenen Tenant (z. B. kestrel.sharepoint.com) oder zu onedrive.live.com — nie zu einer separaten externen Domain."}]'::jsonb,
  30);
