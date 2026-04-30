@@ -790,20 +790,17 @@ body.sim-fullscreen .coldstart-bar { display: none !important; }
 
 body.sim-fullscreen {
   background: #fff;
-  display: flex; flex-direction: column;
-  min-height: 100vh;
+  --topbar-h: 64px;
 }
 body.sim-fullscreen main {
-  flex: 1;
   max-width: 100vw !important;
   padding: 0 !important;
   margin: 0 !important;
-  min-height: 0;
 }
-body.sim-fullscreen #simulator { height: 100%; }
+body.sim-fullscreen #simulator { min-height: calc(100dvh - var(--topbar-h)); }
 body.sim-fullscreen .outlook {
-  height: 100%;
-  min-height: 0;
+  min-height: calc(100dvh - var(--topbar-h));
+  max-height: calc(100dvh - var(--topbar-h));
   border: 0;
   border-radius: 0;
 }
@@ -1129,12 +1126,25 @@ body.sim-fullscreen .outlook {
 /* Op een echte telefoon (smal viewport) heeft een telefoon-in-telefoon
    geen zin: laat de mail-client gewoon het volledige scherm vullen.
    Het echte besturingssysteem levert al een statusbalk + home-indicator. */
+/* Op een echte telefoon (smal viewport) heeft een telefoon-in-telefoon
+   geen zin: laat de mail-client gewoon het volledige scherm vullen.
+   Het echte besturingssysteem levert al een statusbalk + home-indicator. */
 @media (max-width: 600px) {
-  #sim-phase-mobile { padding: 0; align-items: stretch; }
+  body.sim-fullscreen { --topbar-h: 52px; }
+  #sim-phase-mobile {
+    padding: 0;
+    min-height: calc(100dvh - var(--topbar-h, 52px));
+    background: transparent;
+    align-items: stretch;
+    justify-content: stretch;
+  }
+  /* sim-phase-center default heeft min-height:100vh — overrulen voor de
+     ingewikkelde layout-keten op een echte telefoon. */
+  .sim-phase-center#sim-phase-mobile { min-height: calc(100dvh - var(--topbar-h, 52px)); }
   .device-frame {
     width: 100% !important;
     max-width: none !important;
-    height: 100% !important;
+    height: calc(100dvh - var(--topbar-h, 52px)) !important;
     background: transparent !important;
     border-radius: 0 !important;
     box-shadow: none !important;
@@ -1151,6 +1161,13 @@ body.sim-fullscreen .outlook {
   body.device-android .device-homebar {
     display: none !important;
   }
+  /* Topbar compacter op smal viewport zodat hij niet wraps. */
+  .topbar { padding: .35rem .65rem; }
+  .topbar-tools { gap: .25rem; }
+  .lang-switch { padding: .25rem .5rem; font-size: .78rem; }
+  .sim-exit-btn { padding: .25rem .55rem; font-size: .78rem; }
+  .brand-title { font-size: 1rem; }
+  .brand-mark { font-size: 1.2rem; }
 }
 
 /* ========================================================

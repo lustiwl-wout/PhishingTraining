@@ -16,9 +16,6 @@
       <span class="brand-title" data-i18n="brand.title">Veilig Online</span>
     </div>
     <div class="topbar-tools">
-      <button id="device-switch" class="lang-switch" aria-label="Change device" hidden>
-        <span id="device-switch-icon">💻</span> <span id="device-switch-name">Desktop</span> ▾
-      </button>
       <button id="audience-switch" class="lang-switch" aria-label="Change mode">
         <span id="audience-switch-icon">📥</span> <span id="audience-switch-name">Privé</span> ▾
       </button>
@@ -45,20 +42,6 @@
           <span class="lang-flag">💼</span>
           <span class="lang-label" data-i18n="audience.business.title">Zakelijk</span>
         </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Apparaat-keuzescherm: verschijnt via de knop rechtsboven tijdens de
-       simulator. Zelfde visuele taal als de taal- en doelgroep-picker. -->
-  <div id="device-picker" class="lang-picker" hidden role="dialog" aria-modal="true" aria-labelledby="device-picker-title">
-    <div class="lang-picker-inner">
-      <h1 id="device-picker-title" data-i18n="device.picker.title">Kies een apparaat</h1>
-      <p class="lang-picker-sub" data-i18n="device.picker.sub">Schakelt meteen over naar de gekozen simulator.</p>
-      <div class="lang-grid lang-grid-3">
-        <button class="lang-card" data-device="desktop"><span class="lang-flag">💻</span><span class="lang-label">Desktop</span></button>
-        <button class="lang-card" data-device="android"><span class="lang-flag">📱</span><span class="lang-label">Android</span></button>
-        <button class="lang-card" data-device="iphone"><span class="lang-flag">🍏</span><span class="lang-label">iPhone</span></button>
       </div>
     </div>
   </div>
@@ -230,12 +213,7 @@
             <li data-i18n-html="sim.intro.li4">Uw taak: kiezen of elke e‑mail <strong>vertrouwd</strong> is, of dat het <strong>phishing</strong> is.</li>
           </ul>
           <div class="actions">
-            <p class="sim-choice-q" data-i18n="sim.intro.pickDevice">Op welk apparaat wilt u oefenen?</p>
-            <div class="sim-device-grid">
-              <button class="btn btn-primary big-btn sim-device-btn" data-device="desktop" data-i18n-html="sim.intro.start.desktop"><span class="sim-device-ico">💻</span><span>Desktop</span></button>
-              <button class="btn btn-primary big-btn sim-device-btn" data-device="android" data-i18n-html="sim.intro.start.android"><span class="sim-device-ico">📱</span><span>Android</span></button>
-              <button class="btn btn-primary big-btn sim-device-btn" data-device="iphone" data-i18n-html="sim.intro.start.iphone"><span class="sim-device-ico">🍏</span><span>iPhone</span></button>
-            </div>
+            <button id="sim-start-btn" class="btn btn-primary big-btn" data-i18n="sim.intro.start">Ik ben er klaar voor →</button>
             <p class="sim-print-or" data-i18n="sim.intro.orPrint">Of liever op papier?</p>
             <button id="sim-print-btn" class="btn btn-secondary sim-print-btn" data-i18n-html="sim.intro.printBtn">📄 <strong>Print de training</strong></button>
           </div>

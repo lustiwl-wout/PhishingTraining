@@ -28,25 +28,22 @@
   let currentLang = detectInitialLanguage() || 'nl';
 
   // -------- device (desktop / android / iphone) --------
-  // Per sessie gekozen bij elke start van de simulator; niet opgeslagen.
-  const SUPPORTED_DEVICES = ['desktop', 'android', 'iphone'];
-  const DEVICE_ICONS = { desktop: '💻', android: '📱', iphone: '🍏' };
+  // Auto-bepaald bij start van de simulator op basis van het viewport
+  // en het besturingssysteem. Onder 600px is het een telefoon-skin;
+  // op iOS rendert Apple Mail (privé) of Outlook Mobile (zakelijk),
+  // anders Gmail / Outlook Mobile.
   let currentDevice = 'desktop';
   function setDevice(d) {
-    if (!SUPPORTED_DEVICES.includes(d)) return;
     currentDevice = d;
     document.body.classList.remove('device-desktop', 'device-android', 'device-iphone');
     document.body.classList.add('device-' + d);
-    applyI18n(); // update topbar-knop
   }
-
-  function showDevicePicker() {
-    const p = document.getElementById('device-picker');
-    if (p) p.hidden = false;
-  }
-  function hideDevicePicker() {
-    const p = document.getElementById('device-picker');
-    if (p) p.hidden = true;
+  function detectDevice() {
+    const isMobile = window.matchMedia('(max-width: 600px)').matches;
+    if (!isMobile) return 'desktop';
+    const ua = (navigator.userAgent || '') + ' ' + (navigator.platform || '');
+    if (/iPad|iPhone|iPod|Macintosh.*Mobile/i.test(ua)) return 'iphone';
+    return 'android';
   }
 
   // -------- audience (persoonlijk vs zakelijk) --------
@@ -188,11 +185,11 @@
       hideAudiencePicker();
       return;
     }
-    // Apparaat-picker kaart (💻 / 📱 / 🍏)
+    // Apparaat-picker kaart (💻 / 📱 / 🍏) — niet meer in de UI, maar
+    // we laten de hook staan voor mogelijke toekomstige debug/preview.
     const devPickCard = e.target.closest('#device-picker [data-device]');
     if (devPickCard) {
       e.preventDefault();
-      hideDevicePicker();
       switchDevice(devPickCard.dataset.device);
       return;
     }
@@ -201,9 +198,6 @@
     }
     if (e.target.closest('#audience-switch')) {
       showAudiencePicker();
-    }
-    if (e.target.closest('#device-switch')) {
-      showDevicePicker();
     }
   });
 
@@ -498,16 +492,15 @@
   }
 
   document.addEventListener('click', (e) => {
-    const devBtn = e.target.closest('.sim-device-btn[data-device]');
-    if (devBtn) {
+    if (e.target.closest('#sim-start-btn')) {
       e.preventDefault();
-      setDevice(devBtn.dataset.device);
+      setDevice(detectDevice());
       if (currentDevice === 'desktop') {
         showSimPhase('login');
         runMicrosoftLoginAnimation().catch((err) => console.error(err));
       } else {
-        // Mobiel: geen MS-login-animatie, de "je bent al ingelogd"-situatie
-        // van een telefoon simuleren. Direct naar de inbox.
+        // Op een echte telefoon slaan we de Microsoft-login-animatie over
+        // ("je bent al ingelogd"-gevoel). Direct naar de inbox-skin.
         showSimPhase('mobile');
         startMobileSimulator().catch((err) => console.error(err));
       }
