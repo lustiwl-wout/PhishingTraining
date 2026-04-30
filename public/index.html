@@ -236,6 +236,8 @@
               <button class="btn btn-primary big-btn sim-device-btn" data-device="android" data-i18n-html="sim.intro.start.android"><span class="sim-device-ico">📱</span><span>Android</span></button>
               <button class="btn btn-primary big-btn sim-device-btn" data-device="iphone" data-i18n-html="sim.intro.start.iphone"><span class="sim-device-ico">🍏</span><span>iPhone</span></button>
             </div>
+            <p class="sim-print-or" data-i18n="sim.intro.orPrint">Of liever op papier?</p>
+            <button id="sim-print-btn" class="btn btn-secondary sim-print-btn" data-i18n-html="sim.intro.printBtn">📄 <strong>Print de training</strong></button>
           </div>
         </div>
       </div>
@@ -443,6 +445,11 @@
   <footer class="footer">
     <p data-i18n="footer.tagline">Veilig Online · Een gratis training om phishing te herkennen.</p>
   </footer>
+
+  <!-- Container voor de print-versie. Wordt door JS gevuld voordat
+       window.print() wordt aangeroepen. Standaard verborgen; alleen
+       zichtbaar via @media print zodat hij de gewone pagina niet stoort. -->
+  <div id="print-view" class="print-view" aria-hidden="true"></div>
 
   <script src="js/locales.js?v=__VER__"></script>
   <script src="js/app.js?v=__VER__"></script>

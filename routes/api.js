@@ -156,6 +156,28 @@ router.get('/inbox', async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
+// GET /api/print?lang=&audience=
+// — alle inhoud (subject, body, links, sender_note, is_phishing,
+//   red_flags, green_flags, explanation) zodat een printbare versie
+//   van de training gegenereerd kan worden waarop het antwoord op
+//   de volgende bladzijde staat.
+router.get('/print', async (req, res, next) => {
+  try {
+    const locale = pickLocale(req);
+    const audience = pickAudience(req);
+    const result = await withFallback(locale, (loc) => db.query(
+      `SELECT id, sender_name, sender_address, sender_note, received_label,
+              subject, body, links, is_phishing, red_flags, green_flags,
+              explanation, sort_order
+         FROM inbox_messages
+        WHERE active = TRUE AND locale = $1 AND audience IN ($2, 'both')
+        ORDER BY sort_order, id`,
+      [loc, audience]
+    ));
+    res.json(result.rows);
+  } catch (err) { next(err); }
+});
+
 // GET /api/inbox/:id — volledig bericht, MAAR zonder uitslag/uitleg/rode vlaggen
 router.get('/inbox/:id', async (req, res, next) => {
   try {

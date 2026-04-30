@@ -315,6 +315,88 @@
     if (step === 'simulator') showSimPhase('intro');
   }
 
+  // -------- Print-versie van de training -----------------------
+  // Bouwt een statische HTML-versie van alle inbox-scenario's met
+  // op iedere bladzijde de e-mail en op de volgende bladzijde het
+  // antwoord. Activeert via window.print() het systeem-printvenster.
+  async function printTraining() {
+    const btn = document.getElementById('sim-print-btn');
+    if (btn) btn.disabled = true;
+    let messages;
+    try {
+      messages = await api('/print');
+    } catch (err) {
+      console.error('print fetch failed', err);
+      if (btn) btn.disabled = false;
+      return;
+    }
+    renderPrintView(messages);
+    if (btn) btn.disabled = false;
+    // Geef de browser een tick om het DOM te updaten voordat we printen.
+    setTimeout(() => window.print(), 50);
+  }
+
+  function renderPrintView(messages) {
+    const view = document.getElementById('print-view');
+    if (!view) return;
+    const total = messages.length;
+    const audienceLabel = t('audience.' + currentAudience + '.title');
+    const langLabel = t('lang.name');
+    const pages = [];
+
+    // Voorpagina
+    pages.push(
+      '<section class="print-page print-cover">' +
+        '<h1>' + escapeHtml(t('brand.title')) + ' — ' + escapeHtml(t('sim.print.coverTitle')) + '</h1>' +
+        '<p class="print-meta">' +
+          escapeHtml(audienceLabel) + ' · ' + escapeHtml(langLabel) + ' · ' +
+          escapeHtml(t('sim.print.messageCount', { n: total })) +
+        '</p>' +
+        '<p class="print-instructions">' + t('sim.print.coverInstructions', { n: total }) + '</p>' +
+      '</section>'
+    );
+
+    messages.forEach((m, idx) => {
+      const num = idx + 1;
+      // E-mail-pagina
+      pages.push(
+        '<section class="print-page print-email">' +
+          '<p class="print-counter">' + escapeHtml(t('sim.print.messageOf', { n: num, total })) + '</p>' +
+          '<div class="print-email-card">' +
+            '<div class="print-email-meta">' +
+              '<div><strong>' + escapeHtml(t('sim.print.from')) + ':</strong> ' +
+                escapeHtml(m.sender_name) + ' &lt;' + escapeHtml(m.sender_address) + '&gt;</div>' +
+              '<div><strong>' + escapeHtml(t('sim.print.received')) + ':</strong> ' +
+                escapeHtml(m.received_label || '') + '</div>' +
+              '<div><strong>' + escapeHtml(t('sim.print.subject')) + ':</strong> ' +
+                escapeHtml(m.subject) + '</div>' +
+            '</div>' +
+            '<div class="print-email-body">' + renderBody(m.body, m.links || []) + '</div>' +
+          '</div>' +
+          '<p class="print-question">' + escapeHtml(t('sim.print.question')) + '</p>' +
+        '</section>'
+      );
+      // Antwoord-pagina
+      const verdictClass = m.is_phishing ? 'phish' : 'real';
+      const verdictText = m.is_phishing ? t('sim.print.is.phishing') : t('sim.print.is.real');
+      const reds = (m.red_flags || []).map((s) => '<li>' + escapeHtml(s) + '</li>').join('');
+      const greens = (m.green_flags || []).map((s) => '<li>' + escapeHtml(s) + '</li>').join('');
+      pages.push(
+        '<section class="print-page print-answer">' +
+          '<p class="print-counter">' + escapeHtml(t('sim.print.answerOf', { n: num, total })) + '</p>' +
+          '<h2>' + escapeHtml(m.subject) + '</h2>' +
+          '<div class="print-verdict ' + verdictClass + '">' + escapeHtml(verdictText) + '</div>' +
+          '<p class="print-explanation">' + escapeHtml(m.explanation || '') + '</p>' +
+          (m.sender_note ? '<p class="print-sender-note"><strong>' + escapeHtml(t('sim.verdict.senderNote')) + '</strong> ' + escapeHtml(m.sender_note) + '</p>' : '') +
+          (reds   ? '<h3>' + escapeHtml(t('sim.verdict.redFlags'))   + '</h3><ul>' + reds   + '</ul>' : '') +
+          (greens ? '<h3>' + escapeHtml(t('sim.verdict.greenFlags')) + '</h3><ul>' + greens + '</ul>' : '') +
+        '</section>'
+      );
+    });
+
+    view.innerHTML = pages.join('');
+  }
+
   // -------- Simulator fases (intro -> login -> inbox | mobile) --------
   function showSimPhase(name) {
     ['intro', 'login', 'inbox', 'mobile'].forEach((p) => {
@@ -429,6 +511,11 @@
         showSimPhase('mobile');
         startMobileSimulator().catch((err) => console.error(err));
       }
+      return;
+    }
+    if (e.target.closest('#sim-print-btn')) {
+      e.preventDefault();
+      printTraining();
     }
   });
 

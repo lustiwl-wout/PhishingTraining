@@ -1831,3 +1831,143 @@ body.device-iphone .device-homebar::after {
   border-top: 1px solid #e0e4ea;
   color: #5f6368;
 }
+
+/* ========================================================
+   Print-versie van de training. Standaard verborgen; alleen
+   zichtbaar tijdens window.print() via @media print.
+   ======================================================== */
+.print-view { display: none; }
+.sim-print-or {
+  margin: 1.25rem 0 .5rem;
+  font-size: .9rem; color: var(--ink-soft);
+  text-align: center;
+}
+.sim-print-btn { font-size: .95rem; }
+.sim-print-btn[data-i18n-html] strong { font-weight: 700; }
+
+@media print {
+  /* Sla alles wat niet de print-view is over. */
+  body > *:not(.print-view) { display: none !important; }
+  .print-view { display: block !important; }
+  body { background: #fff !important; color: #000; }
+
+  .print-page {
+    page-break-after: always;
+    break-after: page;
+    padding: 1.8cm 1.6cm;
+    max-width: 100%;
+    color: #000;
+  }
+  .print-page:last-child { page-break-after: auto; break-after: auto; }
+
+  .print-cover h1 {
+    font-size: 22pt; margin: 0 0 .5em;
+  }
+  .print-cover .print-meta {
+    font-size: 11pt; color: #555; margin: 0 0 1.5em;
+  }
+  .print-cover .print-instructions {
+    font-size: 11pt; line-height: 1.6;
+  }
+
+  .print-counter {
+    font-size: 9pt; color: #777; text-transform: uppercase;
+    letter-spacing: .08em; margin: 0 0 .8em;
+  }
+
+  .print-email-card {
+    border: 1px solid #999;
+    border-radius: 4px;
+    padding: .9cm 1cm;
+    background: #fff;
+  }
+  .print-email-meta {
+    font-size: 10pt;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: .5em;
+    margin-bottom: .8em;
+    color: #333;
+  }
+  .print-email-meta div { margin-bottom: 2pt; }
+  .print-email-meta strong { display: inline-block; min-width: 60pt; }
+  .print-email-subject {
+    font-size: 14pt; font-weight: 700;
+    margin: 0 0 .8em;
+  }
+  .print-email-body {
+    font-size: 11pt; line-height: 1.5;
+  }
+  .print-email-body p { margin: 0 0 .7em; }
+  .print-email-body a { color: #000; text-decoration: underline; }
+  .print-email-body a::after {
+    content: " [" attr(href) "]";
+    font-size: 9pt; color: #555;
+  }
+  /* SharePoint-card vereenvoudigen voor print. */
+  .print-email-body .ol-share-card {
+    border: 1px solid #999;
+    padding: .6cm;
+    margin: .8em 0;
+  }
+  .print-email-body .ol-share-head { text-align: center; margin-bottom: .5em; }
+  .print-email-body .ol-share-icon { font-size: 14pt; }
+  .print-email-body .ol-share-heading { font-size: 12pt; margin: .3em 0 0; }
+  .print-email-body .ol-share-msg {
+    font-style: italic; padding: .4em .6em;
+    border-left: 2pt solid #555; margin: 0 0 .8em;
+  }
+  .print-email-body .ol-share-file {
+    border: 1px solid #ccc; padding: .4em .6em;
+    margin: .8em 0; font-weight: 600;
+  }
+  .print-email-body .ol-share-file::before { content: "📄  "; }
+  .print-email-body .ol-share-protection {
+    font-size: 9pt; color: #555;
+  }
+  .print-email-body .ol-share-actions { display: none; }
+
+  .print-question {
+    margin-top: 1.2em;
+    padding: .5cm;
+    border: 2pt solid #000;
+    font-size: 12pt; font-weight: 700;
+    text-align: center;
+  }
+
+  .print-answer h2 {
+    font-size: 16pt; margin: 0 0 .8em;
+  }
+  .print-answer .print-verdict {
+    font-size: 14pt; font-weight: 700; margin: 0 0 .8em;
+    padding: .35em .7em;
+    border-radius: 4px;
+    display: inline-block;
+  }
+  .print-answer .print-verdict.phish {
+    background: #f7d4d4; color: #7a1313;
+  }
+  .print-answer .print-verdict.real {
+    background: #d4f0dc; color: #0c4a1f;
+  }
+  .print-answer .print-explanation {
+    font-size: 11pt; line-height: 1.55; margin: 0 0 1em;
+  }
+  .print-answer h3 {
+    font-size: 12pt; margin: 1em 0 .4em;
+  }
+  .print-answer ul {
+    margin: 0; padding-left: 1.2em;
+    font-size: 10.5pt; line-height: 1.5;
+  }
+  .print-answer ul li { margin-bottom: .25em; }
+  .print-answer .print-sender-note {
+    margin-top: 1em;
+    font-size: 10pt; color: #444;
+    padding: .4em .6em;
+    border-left: 2pt solid #888;
+    background: #f5f5f5;
+  }
+
+  /* Gewoon zwart-wit, links altijd zichtbaar in URL-vorm. */
+  a { color: #000; }
+}
