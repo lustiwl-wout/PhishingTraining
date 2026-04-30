@@ -926,17 +926,8 @@ body.sim-fullscreen .outlook {
   font-size: .85rem;
   margin: .5rem 0 .25rem;
 }
-.ms-link-row a,
-.ms-link-row .ms-link-btn { color: #0067b8; text-decoration: none; }
-.ms-link-row a:hover,
-.ms-link-row .ms-link-btn:hover { text-decoration: underline; }
-.ms-link-row .ms-link-btn {
-  background: none;
-  border: 0;
-  padding: 0;
-  font: inherit;
-  cursor: pointer;
-}
+.ms-link-row a { color: #0067b8; text-decoration: none; }
+.ms-link-row a:hover { text-decoration: underline; }
 
 .ms-actions {
   display: flex; justify-content: flex-end; gap: .5rem;
