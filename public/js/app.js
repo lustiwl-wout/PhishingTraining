@@ -172,6 +172,23 @@
     if (savedPage && pages.includes(savedPage) && savedPage !== 'welkom') {
       go(savedPage);
     }
+    // Als de gebruiker midden in de simulator zat, herstellen we apparaat,
+    // beoordelingen en het laatst geopende bericht zodat ze niet opnieuw
+    // hoeven te beginnen.
+    if (savedPage === 'simulator') {
+      const saved = loadPersistedSimState();
+      if (saved && saved.device) {
+        setDevice(saved.device);
+        document.body.classList.add('sim-fullscreen');
+        if (saved.device === 'desktop') {
+          showSimPhase('inbox');
+          startSimulator({ restore: true }).catch((err) => console.error(err));
+        } else {
+          showSimPhase('mobile');
+          startMobileSimulator({ restore: true }).catch((err) => console.error(err));
+        }
+      }
+    }
     if (!localStorage.getItem('vo_lang')) {
       showLangPicker();
     } else if (!localStorage.getItem('vo_audience')) {
@@ -401,6 +418,36 @@
     view.innerHTML = pages.join('');
   }
 
+  // -------- simulator state persistence --------
+  // Bewaart tussen refreshes welk apparaat, welke beoordelingen, welk
+  // bericht openstond. Wordt geschreven na elke verandering (oordeel,
+  // bericht openen) en gewist bij een verse start of als de simulator
+  // klaar is.
+  const SIM_STATE_KEY = 'vo_sim_state';
+  function persistSimState() {
+    if (!simState) return;
+    try {
+      localStorage.setItem(SIM_STATE_KEY, JSON.stringify({
+        device: currentDevice,
+        audience: currentAudience,
+        lang: currentLang,
+        judgments: simState.judgments,
+        interactions: simState.interactions,
+        current: simState.current,
+        savedAt: Date.now(),
+      }));
+    } catch (_) {}
+  }
+  function loadPersistedSimState() {
+    try {
+      const raw = localStorage.getItem(SIM_STATE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (_) { return null; }
+  }
+  function clearPersistedSimState() {
+    try { localStorage.removeItem(SIM_STATE_KEY); } catch (_) {}
+  }
+
   // -------- Simulator fases (intro -> login -> inbox | mobile) --------
   function showSimPhase(name) {
     ['intro', 'login', 'inbox', 'mobile'].forEach((p) => {
@@ -602,23 +649,36 @@
   // -------- Outlook-simulator --------
   let simState = null;
 
-  async function startSimulator() {
+  async function startSimulator(opts) {
+    opts = opts || {};
     const list = document.getElementById('ol-list-items');
     const result = document.getElementById('sim-result');
     result.hidden = true;
     currentFolder = 'inbox';
     setActiveFolderLi('inbox');
+    if (!opts.restore) clearPersistedSimState();
     list.innerHTML = '<li class="ol-loading">' + escapeHtml(t('sim.ol.loading')) + '</li>';
 
     try {
       const messages = await api('/inbox');
-      simState = { messages, judgments: {}, current: null, interactions: {} };
+      const saved = opts.restore ? loadPersistedSimState() : null;
+      simState = {
+        messages,
+        judgments: (saved && saved.judgments) || {},
+        interactions: (saved && saved.interactions) || {},
+        current: (saved && saved.current) || null,
+      };
       renderInboxList();
       updateProgress();
-      // Open het eerste bericht automatisch zodat de gebruiker meteen
-      // ziet wat er van hem/haar verwacht wordt (lezen + beoordelen).
+      // Open het bericht waar de gebruiker gebleven was, anders het
+      // eerste nog niet beoordeelde, anders het allereerste.
       if (messages.length > 0) {
-        openMessage(messages[0].id);
+        let openId = simState.current;
+        if (!openId || !messages.find((m) => m.id === openId)) {
+          const next = messages.find((m) => !simState.judgments[m.id]) || messages[0];
+          openId = next.id;
+        }
+        openMessage(openId);
       } else {
         resetReader();
       }
@@ -789,19 +849,34 @@
   // Mobiele folder-state: 'inbox' is normaal, 'junk' toont de easter egg.
   let currentMobFolder = 'inbox';
 
-  async function startMobileSimulator() {
+  async function startMobileSimulator(opts) {
+    opts = opts || {};
     const result = document.getElementById('sim-result');
     result.hidden = true;
     currentFolder = 'inbox';
     currentMobFolder = 'inbox';
+    if (!opts.restore) clearPersistedSimState();
     buildMobSkin();
     const list = document.getElementById('mob-list-items');
     if (list) list.innerHTML = '<li class="mob-item" style="justify-content:center"><em>' + escapeHtml(t('sim.ol.loading')) + '</em></li>';
     try {
       const messages = await api('/inbox');
-      simState = { messages, judgments: {}, current: null, interactions: {} };
+      const saved = opts.restore ? loadPersistedSimState() : null;
+      simState = {
+        messages,
+        judgments: (saved && saved.judgments) || {},
+        interactions: (saved && saved.interactions) || {},
+        current: (saved && saved.current) || null,
+      };
       renderMobList();
-      if (messages.length > 0) openMobMessage(messages[0].id);
+      if (messages.length > 0) {
+        let openId = simState.current;
+        if (!openId || !messages.find((m) => m.id === openId)) {
+          const next = messages.find((m) => !simState.judgments[m.id]) || messages[0];
+          openId = next.id;
+        }
+        openMobMessage(openId);
+      }
     } catch (err) {
       if (list) list.innerHTML = '<li class="mob-item" style="justify-content:center;color:#b3261e">' + escapeHtml(t('sim.ol.loadError')) + '</li>';
     }
@@ -989,6 +1064,7 @@
   async function openMobMessage(id) {
     simState.current = id;
     if (!simState.interactions[id]) simState.interactions[id] = { clicked_link: false, revealed_sender: false };
+    persistSimState();
     const reader = document.getElementById('mob-reader');
     if (!reader) return;
     reader.hidden = false;
@@ -1082,6 +1158,7 @@
   async function openMessage(id) {
     simState.current = id;
     if (!simState.interactions[id]) simState.interactions[id] = { clicked_link: false, revealed_sender: false };
+    persistSimState();
     renderInboxList();
     const reader = document.getElementById('ol-reader');
     reader.innerHTML = '<p class="muted">' + escapeHtml(t('sim.ol.loading')) + '</p>';
@@ -1201,6 +1278,7 @@
     if (currentDevice === 'desktop') renderInboxList();
     else renderMobList();
     updateProgress();
+    persistSimState();
     showVerdictFeedback(m, res);
   }
 
@@ -1247,6 +1325,9 @@
       const reader = document.getElementById('mob-reader');
       if (reader) reader.hidden = true;
     }
+    // Persisted state hoeft niet meer — sessie is afgerond. Refresh
+    // op de result-pagina laat de gebruiker dan weer fris beginnen.
+    clearPersistedSimState();
     // Verberg alle simulator-fases en verlaat fullscreen zodat
     // het resultaat en de stap-navigatie weer zichtbaar zijn.
     showSimPhase(null);
