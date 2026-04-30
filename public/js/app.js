@@ -84,11 +84,11 @@
 
   function showAudiencePicker() {
     const p = document.getElementById('audience-picker');
-    if (p) p.hidden = false;
+    if (p && !p.open) p.show();
   }
   function hideAudiencePicker() {
     const p = document.getElementById('audience-picker');
-    if (p) p.hidden = true;
+    if (p && p.open) p.close();
   }
 
   function t(key, vars) {
@@ -154,11 +154,11 @@
 
   function showLangPicker() {
     const p = document.getElementById('lang-picker');
-    if (p) p.hidden = false;
+    if (p && !p.open) p.show();
   }
   function hideLangPicker() {
     const p = document.getElementById('lang-picker');
-    if (p) p.hidden = true;
+    if (p && p.open) p.close();
   }
 
   // Bij eerste bezoek: eerst taal kiezen, daarna doelgroep (privé/zakelijk).
@@ -1393,13 +1393,13 @@
       });
       actionsWrap.appendChild(b);
     });
-    modal.hidden = false;
+    if (!modal.open) modal.show();
     const firstBtn = actionsWrap.querySelector('button');
     if (firstBtn) firstBtn.focus();
   }
   function closeModal() {
     const modal = document.getElementById('sim-modal');
-    if (modal) modal.hidden = true;
+    if (modal && modal.open) modal.close();
   }
   document.addEventListener('click', (e) => {
     if (e.target.closest && e.target.closest('[data-close-modal]')) closeModal();

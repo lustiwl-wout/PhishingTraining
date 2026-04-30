@@ -29,7 +29,7 @@
   <!-- Doelgroep-keuzescherm: verschijnt na de taalkeuze bij een eerste bezoek
        en via de knop rechtsboven. Bepaalt of de training de privé- of
        zakelijke variant laat zien. -->
-  <div id="audience-picker" class="lang-picker" hidden role="dialog" aria-modal="true" aria-labelledby="audience-picker-title">
+  <dialog id="audience-picker" class="lang-picker" aria-labelledby="audience-picker-title">
     <div class="lang-picker-inner">
       <h1 id="audience-picker-title" data-i18n="audience.picker.title">Kies uw situatie</h1>
       <p class="lang-picker-sub" data-i18n="audience.picker.sub">U kunt dit later aanpassen via de knop rechtsboven.</p>
@@ -44,10 +44,10 @@
         </button>
       </div>
     </div>
-  </div>
+  </dialog>
 
   <!-- Taalkeuzescherm: verschijnt bij eerste bezoek en bij klikken op taal-knop. -->
-  <div id="lang-picker" class="lang-picker" hidden role="dialog" aria-modal="true" aria-labelledby="lang-picker-title">
+  <dialog id="lang-picker" class="lang-picker" aria-labelledby="lang-picker-title">
     <div class="lang-picker-inner">
       <h1 id="lang-picker-title" data-i18n="lang.picker.title">Kies uw taal · Choose your language · Choisissez votre langue · Wählen Sie Ihre Sprache</h1>
       <p class="lang-picker-sub" data-i18n="lang.picker.sub">U kunt dit later aanpassen via de knop rechtsboven.</p>
@@ -60,7 +60,7 @@
         <button class="lang-card" data-lang="de"><span class="lang-flag">🇩🇪</span><span class="lang-label">Deutsch</span></button>
       </div>
     </div>
-  </div>
+  </dialog>
 
   <nav class="stepbar" aria-label="Stappen van de training">
     <ol id="stepbar-list">
@@ -362,14 +362,14 @@
       <div id="sim-result" class="card result-card" hidden></div>
 
       <!-- Modal voor linkwaarschuwing / sender-uitleg / feedback -->
-      <div id="sim-modal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="sim-modal-title">
+      <dialog id="sim-modal" class="modal" aria-labelledby="sim-modal-title">
         <div class="modal-backdrop" data-close-modal></div>
-        <div class="modal-card" role="document">
+        <div class="modal-card">
           <h2 id="sim-modal-title"></h2>
           <div id="sim-modal-body"></div>
           <div id="sim-modal-actions" class="modal-actions"></div>
         </div>
-      </div>
+      </dialog>
     </section>
 
     <!-- 5. HULP -->
