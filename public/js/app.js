@@ -61,14 +61,24 @@
     currentAudience = a;
     localStorage.setItem('vo_audience', a);
     applyI18n();
-    // Data-gedreven views opnieuw laden in de nieuwe variant.
+    refreshActiveData();
+  }
+
+  // Centraal: herlaad de actieve data-gedreven view in de huidige taal +
+  // doelgroep. Gebruikt door zowel setLanguage als setAudience zodat zowel
+  // de desktop-Outlook als de mobiele skin meeschakelen op een wissel.
+  function refreshActiveData() {
     if (document.getElementById('voorbeelden').classList.contains('active')) {
       loadExamples();
     }
+    const sim = document.getElementById('simulator');
+    if (!sim || !sim.classList.contains('active')) return;
     const inboxPhase = document.getElementById('sim-phase-inbox');
-    const simActive = document.getElementById('simulator').classList.contains('active');
-    if (simActive && inboxPhase && !inboxPhase.hidden) {
+    const mobilePhase = document.getElementById('sim-phase-mobile');
+    if (inboxPhase && !inboxPhase.hidden) {
       startSimulator();
+    } else if (mobilePhase && !mobilePhase.hidden) {
+      startMobileSimulator().catch((err) => console.error(err));
     }
   }
 
@@ -139,15 +149,7 @@
     if (!localStorage.getItem('vo_audience')) {
       showAudiencePicker();
     }
-    // Data-gedreven views opnieuw ophalen in de nieuwe taal.
-    if (document.getElementById('voorbeelden').classList.contains('active')) {
-      loadExamples();
-    }
-    const simActive = document.getElementById('simulator').classList.contains('active');
-    const inboxPhase = document.getElementById('sim-phase-inbox');
-    if (simActive && inboxPhase && !inboxPhase.hidden) {
-      startSimulator();
-    }
+    refreshActiveData();
   }
 
   function showLangPicker() {
@@ -162,8 +164,14 @@
   // Bij eerste bezoek: eerst taal kiezen, daarna doelgroep (privé/zakelijk).
   // setLanguage() (hieronder) zorgt dat na het sluiten van de taal-picker
   // de doelgroep-picker automatisch volgt als die nog niet gekozen is.
+  // Herstel ook de laatst-bezochte stap zodat een refresh niet altijd
+  // op de welkom-pagina belandt.
   document.addEventListener('DOMContentLoaded', () => {
     applyI18n();
+    const savedPage = localStorage.getItem('vo_page');
+    if (savedPage && pages.includes(savedPage) && savedPage !== 'welkom') {
+      go(savedPage);
+    }
     if (!localStorage.getItem('vo_lang')) {
       showLangPicker();
     } else if (!localStorage.getItem('vo_audience')) {
@@ -292,6 +300,8 @@
     document.querySelectorAll('#stepbar-list li').forEach((li) => {
       li.classList.toggle('active', li.dataset.step === step);
     });
+    // Onthoud welke stap actief is, zodat een refresh op dezelfde pagina belandt.
+    try { localStorage.setItem('vo_page', step); } catch (_) {}
     // Fullscreen voor de simulator: verberg trainings-chrome, laat Outlook het scherm vullen.
     document.body.classList.toggle('sim-fullscreen', step === 'simulator');
     // Apparaat-wissel en "Sluit oefening" zijn alleen zinvol in de simulator.
