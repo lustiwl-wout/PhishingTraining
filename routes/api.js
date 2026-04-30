@@ -10,13 +10,13 @@ function isUuidLike(s) {
 
 const SUPPORTED_LOCALES = new Set(['nl', 'nl-BE', 'en', 'fr', 'fr-BE', 'de']);
 function pickLocale(req) {
-  const q = (req.query && req.query.lang) || '';
+  const q = req.query?.lang || '';
   return SUPPORTED_LOCALES.has(q) ? q : 'nl';
 }
 
 const SUPPORTED_AUDIENCES = new Set(['personal', 'business']);
 function pickAudience(req) {
-  const q = (req.query && req.query.audience) || '';
+  const q = req.query?.audience || '';
   return SUPPORTED_AUDIENCES.has(q) ? q : 'personal';
 }
 
@@ -74,7 +74,7 @@ router.get('/quiz', async (req, res, next) => {
 // POST /api/attempts  { session_id }
 router.post('/attempts', async (req, res, next) => {
   try {
-    const sessionId = (req.body && req.body.session_id) || '';
+    const sessionId = req.body?.session_id || '';
     if (!isUuidLike(sessionId)) {
       return res.status(400).json({ error: 'ongeldig session_id' });
     }
