@@ -3,7 +3,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 const express = require('express');
 const rateLimit = require('express-rate-limit');
+const session = require('express-session');
 const apiRouter = require('./routes/api');
+const adminRouter = require('./routes/admin');
 const { initDbWithRetry } = require('./db/init');
 
 const app = express();
@@ -18,6 +20,13 @@ const INDEX_HTML = fs.readFileSync(path.join(PUBLIC_DIR, 'index.html'), 'utf8')
 
 app.disable('x-powered-by');
 app.use(express.json({ limit: '64kb' }));
+
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'verander-dit-in-productie',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { httpOnly: true, sameSite: 'lax', maxAge: 8 * 60 * 60 * 1000 },
+}));
 
 // HTML zelf nooit cachen (kort), assets daarentegen lang (URL is versie-gestempeld).
 function sendIndex(_req, res) {
@@ -47,6 +56,9 @@ function sameOriginOnly(req, res, next) {
 // max 30 per minuut voor schrijf-endpoints (POST).
 const readLimit = rateLimit({ windowMs: 60_000, max: 120, standardHeaders: true, legacyHeaders: false });
 const writeLimit = rateLimit({ windowMs: 60_000, max: 30, standardHeaders: true, legacyHeaders: false });
+
+// Admin (voor /admin/login mag je altijd komen, de rest checkt de sessie zelf)
+app.use('/admin', adminRouter);
 
 // API
 app.use('/api', sameOriginOnly);
