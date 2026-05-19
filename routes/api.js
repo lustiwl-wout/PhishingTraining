@@ -4,6 +4,11 @@ const db = require('../db');
 const router = express.Router();
 
 // --- helpers ---
+function clientIp(req) {
+  const fwd = req.headers['x-forwarded-for'];
+  return (fwd ? fwd.split(',')[0] : req.socket?.remoteAddress || '').trim();
+}
+
 function isUuidLike(s) {
   return typeof s === 'string' && /^[a-zA-Z0-9_-]{8,64}$/.test(s);
 }
@@ -79,8 +84,8 @@ router.post('/attempts', async (req, res, next) => {
       return res.status(400).json({ error: 'ongeldig session_id' });
     }
     const { rows } = await db.query(
-      'INSERT INTO quiz_attempts (session_id) VALUES ($1) RETURNING id, started_at',
-      [sessionId]
+      'INSERT INTO quiz_attempts (session_id, ip_address) VALUES ($1, $2) RETURNING id, started_at',
+      [sessionId, clientIp(req)]
     );
     res.status(201).json(rows[0]);
   } catch (err) { next(err); }
@@ -216,9 +221,9 @@ router.post('/inbox/:id/judge', async (req, res, next) => {
     const isCorrect = verdict === (msg.is_phishing ? 'phish' : 'trust');
 
     await db.query(
-      `INSERT INTO inbox_judgments (session_id, message_id, verdict, is_correct, clicked_link, revealed_sender)
-       VALUES ($1, $2, $3, $4, $5, $6)`,
-      [session_id, id, verdict, isCorrect, !!clicked_link, !!revealed_sender]
+      `INSERT INTO inbox_judgments (session_id, message_id, verdict, is_correct, clicked_link, revealed_sender, ip_address)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [session_id, id, verdict, isCorrect, !!clicked_link, !!revealed_sender, clientIp(req)]
     );
 
     res.json({

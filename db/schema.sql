@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS quiz_attempts (
   correct       INTEGER     NOT NULL DEFAULT 0
 );
 
+ALTER TABLE quiz_attempts ADD COLUMN IF NOT EXISTS ip_address TEXT;
 CREATE INDEX IF NOT EXISTS idx_quiz_attempts_session ON quiz_attempts(session_id);
 
 CREATE TABLE IF NOT EXISTS quiz_answers (
@@ -94,4 +95,5 @@ CREATE TABLE IF NOT EXISTS inbox_judgments (
   answered_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+ALTER TABLE inbox_judgments ADD COLUMN IF NOT EXISTS ip_address TEXT;
 CREATE INDEX IF NOT EXISTS idx_inbox_judgments_session ON inbox_judgments(session_id);

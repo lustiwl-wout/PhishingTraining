@@ -38,7 +38,7 @@ router.post('/logout', (req, res) => {
 // GET /sitrep
 router.get('/', requireLogin, async (req, res, next) => {
   try {
-    const [quiz, inbox, recent] = await Promise.all([
+    const [quiz, inbox, recent, ips] = await Promise.all([
       db.query(`
         SELECT
           COUNT(*)::int                                                          AS pogingen,
@@ -59,6 +59,7 @@ router.get('/', requireLogin, async (req, res, next) => {
       db.query(`
         SELECT
           TO_CHAR(a.started_at AT TIME ZONE 'Europe/Amsterdam', 'DD-MM-YYYY HH24:MI') AS tijdstip,
+          COALESCE(a.ip_address, '—')                                           AS ip,
           a.total,
           a.correct,
           CASE WHEN a.finished_at IS NOT NULL THEN 'Afgerond' ELSE 'Bezig' END  AS status
@@ -66,9 +67,23 @@ router.get('/', requireLogin, async (req, res, next) => {
         ORDER BY a.started_at DESC
         LIMIT 20
       `),
+      db.query(`
+        SELECT ip_address AS ip, COUNT(*)::int AS bezoeken,
+               MAX(answered_at) AS laatste
+        FROM inbox_judgments
+        WHERE ip_address IS NOT NULL
+        GROUP BY ip_address
+        UNION ALL
+        SELECT ip_address, COUNT(*)::int, MAX(started_at)
+        FROM quiz_attempts
+        WHERE ip_address IS NOT NULL
+        GROUP BY ip_address
+        ORDER BY laatste DESC
+        LIMIT 30
+      `),
     ]);
 
-    res.type('html').send(dashboardPage(quiz.rows[0], inbox.rows[0], recent.rows));
+    res.type('html').send(dashboardPage(quiz.rows[0], inbox.rows[0], recent.rows, ips.rows));
   } catch (err) { next(err); }
 });
 
@@ -109,13 +124,21 @@ function loginPage(error = '') {
 </html>`;
 }
 
-function dashboardPage(quiz, inbox, recent) {
+function dashboardPage(quiz, inbox, recent, ips) {
   const rows = recent.map(r => `
     <tr>
       <td>${r.tijdstip}</td>
+      <td><code>${r.ip}</code></td>
       <td>${r.status}</td>
       <td>${r.total}</td>
       <td>${r.total > 0 ? Math.round(r.correct / r.total * 100) : '—'}%</td>
+    </tr>`).join('');
+
+  const ipRows = ips.map(r => `
+    <tr>
+      <td><code>${r.ip}</code></td>
+      <td>${r.bezoeken}</td>
+      <td>${new Date(r.laatste).toLocaleString('nl-NL', { timeZone: 'Europe/Amsterdam' })}</td>
     </tr>`).join('');
 
   return `<!doctype html>
@@ -162,8 +185,17 @@ function dashboardPage(quiz, inbox, recent) {
     <h2>Laatste 20 quiz-sessies</h2>
     ${recent.length === 0 ? '<p style="color:#9ca3af">Nog geen sessies.</p>' : `
     <table>
-      <thead><tr><th>Tijdstip</th><th>Status</th><th>Vragen</th><th>Score</th></tr></thead>
+      <thead><tr><th>Tijdstip</th><th>IP-adres</th><th>Status</th><th>Vragen</th><th>Score</th></tr></thead>
       <tbody>${rows}</tbody>
+    </table>`}
+  </div>
+
+  <div class="section" style="margin-top:1.5rem">
+    <h2>IP-adressen (uniek, meest recent)</h2>
+    ${ips.length === 0 ? '<p style="color:#9ca3af">Nog geen data.</p>' : `
+    <table>
+      <thead><tr><th>IP-adres</th><th>Acties</th><th>Laatste activiteit</th></tr></thead>
+      <tbody>${ipRows}</tbody>
     </table>`}
   </div>
 </body>
