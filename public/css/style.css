@@ -448,6 +448,13 @@ mark.phish-mark .dot, .annotation-list .dot {
   padding: 1.5rem 1rem 2rem;
   font-size: .95rem;
 }
+.footer-contact {
+  margin-top: .4rem;
+  font-size: .85rem;
+}
+.footer-contact a {
+  color: var(--ink-soft);
+}
 
 /* ---------- cold-start banner (Render Free spin-up) ---------- */
 .coldstart-bar {
