@@ -5,16 +5,16 @@ const router = express.Router();
 
 function requireLogin(req, res, next) {
   if (req.session?.admin) return next();
-  res.redirect('/admin/login');
+  res.redirect('/sitrep/login');
 }
 
-// GET /admin/login
+// GET /sitrep/login
 router.get('/login', (req, res) => {
-  if (req.session?.admin) return res.redirect('/admin');
+  if (req.session?.admin) return res.redirect('/sitrep');
   res.type('html').send(loginPage());
 });
 
-// POST /admin/login
+// POST /sitrep/login
 router.post('/login', express.urlencoded({ extended: false }), (req, res) => {
   const { username, password } = req.body || {};
   const validUser = process.env.ADMIN_USER;
@@ -25,17 +25,17 @@ router.post('/login', express.urlencoded({ extended: false }), (req, res) => {
   }
   if (username === validUser && password === validPass) {
     req.session.admin = true;
-    return res.redirect('/admin');
+    return res.redirect('/sitrep');
   }
   res.type('html').send(loginPage('Onjuiste gebruikersnaam of wachtwoord.'));
 });
 
-// POST /admin/logout
+// POST /sitrep/logout
 router.post('/logout', (req, res) => {
-  req.session.destroy(() => res.redirect('/admin/login'));
+  req.session.destroy(() => res.redirect('/sitrep/login'));
 });
 
-// GET /admin
+// GET /sitrep
 router.get('/', requireLogin, async (req, res, next) => {
   try {
     const [quiz, inbox, recent] = await Promise.all([
@@ -96,7 +96,7 @@ function loginPage(error = '') {
 <body>
   <div class="card">
     <h1>🛡️ Veilig Online — Beheer</h1>
-    <form method="POST" action="/admin/login">
+    <form method="POST" action="/sitrep/login">
       <label for="u">Gebruikersnaam</label>
       <input id="u" name="username" type="text" autocomplete="username" required autofocus />
       <label for="p">Wachtwoord</label>
@@ -146,7 +146,7 @@ function dashboardPage(quiz, inbox, recent) {
 <body>
   <div class="topbar">
     <h1>🛡️ Veilig Online — Beheer</h1>
-    <form method="POST" action="/admin/logout"><button type="submit">Uitloggen</button></form>
+    <form method="POST" action="/sitrep/logout"><button type="submit">Uitloggen</button></form>
   </div>
 
   <div class="grid">

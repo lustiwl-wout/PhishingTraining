@@ -57,8 +57,8 @@ function sameOriginOnly(req, res, next) {
 const readLimit = rateLimit({ windowMs: 60_000, max: 120, standardHeaders: true, legacyHeaders: false });
 const writeLimit = rateLimit({ windowMs: 60_000, max: 30, standardHeaders: true, legacyHeaders: false });
 
-// Admin (voor /admin/login mag je altijd komen, de rest checkt de sessie zelf)
-app.use('/admin', adminRouter);
+// Beheer (voor /sitrep/login mag je altijd komen, de rest checkt de sessie zelf)
+app.use('/sitrep', adminRouter);
 
 // API
 app.use('/api', sameOriginOnly);
