@@ -2,6 +2,7 @@ require('dotenv').config();
 const fs = require('node:fs');
 const path = require('node:path');
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const apiRouter = require('./routes/api');
 const { initDbWithRetry } = require('./db/init');
 
@@ -31,7 +32,25 @@ app.use(express.static(PUBLIC_DIR, {
   maxAge: process.env.NODE_ENV === 'production' ? '1h' : 0,
 }));
 
+// Sta alleen requests toe die afkomstig zijn van de eigen site.
+// Directe aanroepen (curl, scripts) hebben geen Origin/Referer en worden geblokkeerd.
+function sameOriginOnly(req, res, next) {
+  const origin = req.headers['origin'] || req.headers['referer'] || '';
+  const host = req.headers['host'] || '';
+  // Laat requests door als: geen Origin (server-to-server op zelfde machine),
+  // of Origin/Referer bevat dezelfde host als de request.
+  if (!origin || origin.includes(host)) return next();
+  return res.status(403).json({ error: 'toegang geweigerd' });
+}
+
+// Beperk het aantal API-requests per IP: max 120 per minuut voor lees-endpoints,
+// max 30 per minuut voor schrijf-endpoints (POST).
+const readLimit = rateLimit({ windowMs: 60_000, max: 120, standardHeaders: true, legacyHeaders: false });
+const writeLimit = rateLimit({ windowMs: 60_000, max: 30, standardHeaders: true, legacyHeaders: false });
+
 // API
+app.use('/api', sameOriginOnly);
+app.use('/api', (req, res, next) => req.method === 'GET' ? readLimit(req, res, next) : writeLimit(req, res, next));
 app.use('/api', apiRouter);
 
 // Fallback voor onbekende routes -> SPA-startpagina
