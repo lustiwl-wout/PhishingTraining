@@ -2,11 +2,10 @@
 -- in vier talen (nl, en, fr, de). Elke taal gebruikt organisaties die voor
 -- dat land herkenbaar zijn (NL: ING/Belastingdienst, UK: Barclays/HMRC,
 -- FR: Crédit Agricole/Impôts, DE: Sparkasse/Finanzamt, ...).
--- Verwijder eerst bestaande rijen zodat seed herhaalbaar is.
+-- Verwijder eerst bestaande content zodat seed herhaalbaar is.
+-- Gebruikersdata wordt bewaard door init.js (save/restore rondom deze seed).
 
-TRUNCATE quiz_answers, quiz_attempts, quiz_questions, examples,
-         inbox_judgments, inbox_messages
-         RESTART IDENTITY CASCADE;
+TRUNCATE quiz_questions, examples, inbox_messages RESTART IDENTITY CASCADE;
 
 -- ============ VOORBEELDEN (geannoteerd) ============
 

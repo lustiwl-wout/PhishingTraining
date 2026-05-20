@@ -59,7 +59,44 @@ async function initDb({ force = false } = {}) {
       else if (anyEmpty) reason = 'lege tabel';
       else reason = 'seed-inhoud gewijzigd';
       console.log(`[init-db] seed laden (${reason}). hash: ${previousHash || 'none'} -> ${seedHash}`);
+
+      // Bewaar gebruikersdata vóór de seed (die truncate+cascade doet op content-tabellen).
+      const [judgments, eggs] = await Promise.all([
+        client.query('SELECT * FROM inbox_judgments').catch(() => ({ rows: [] })),
+        client.query('SELECT * FROM easter_egg_views').catch(() => ({ rows: [] })),
+      ]);
+      console.log(`[init-db] ${judgments.rows.length} oordelen en ${eggs.rows.length} easter-egg views opgeslagen.`);
+
       await client.query(seed);
+
+      // Zet gebruikersdata terug. message_id-referenties zijn geldig zolang de
+      // seed dezelfde berichten in dezelfde volgorde invoegt (RESTART IDENTITY).
+      if (judgments.rows.length > 0) {
+        for (const r of judgments.rows) {
+          await client.query(
+            `INSERT INTO inbox_judgments
+               (id, session_id, message_id, verdict, is_correct, clicked_link, revealed_sender, ip_address, answered_at)
+             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+             ON CONFLICT (id) DO NOTHING`,
+            [r.id, r.session_id, r.message_id, r.verdict, r.is_correct,
+             r.clicked_link, r.revealed_sender, r.ip_address, r.answered_at]
+          );
+        }
+        await client.query(`SELECT setval('inbox_judgments_id_seq', MAX(id)) FROM inbox_judgments`);
+        console.log(`[init-db] ${judgments.rows.length} oordelen teruggezet.`);
+      }
+      if (eggs.rows.length > 0) {
+        for (const r of eggs.rows) {
+          await client.query(
+            `INSERT INTO easter_egg_views (id, session_id, ip_address, viewed_at)
+             VALUES ($1,$2,$3,$4) ON CONFLICT (id) DO NOTHING`,
+            [r.id, r.session_id, r.ip_address, r.viewed_at]
+          );
+        }
+        await client.query(`SELECT setval('easter_egg_views_id_seq', MAX(id)) FROM easter_egg_views`);
+        console.log(`[init-db] ${eggs.rows.length} easter-egg views teruggezet.`);
+      }
+
       await client.query(
         `INSERT INTO schema_meta (key, value, updated_at)
          VALUES ('seed_hash', $1, NOW())
