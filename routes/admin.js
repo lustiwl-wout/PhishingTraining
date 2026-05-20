@@ -38,33 +38,27 @@ router.post('/logout', (req, res) => {
 // GET /sitrep
 router.get('/', requireLogin, async (req, res, next) => {
   try {
-    const [quiz, inbox, recent, ips, egg] = await Promise.all([
+    const [overzicht, recent, ips, egg] = await Promise.all([
       db.query(`
         SELECT
-          COUNT(*)::int                                                          AS pogingen,
-          COUNT(*) FILTER (WHERE finished_at IS NOT NULL)::int                  AS afgerond,
-          COALESCE(ROUND(AVG(
-            CASE WHEN finished_at IS NOT NULL AND total > 0
-                 THEN correct::numeric / total * 100 END
-          )), 0)::int                                                            AS gemiddeld_pct
-        FROM quiz_attempts
-      `),
-      db.query(`
-        SELECT
+          COUNT(DISTINCT session_id)::int                                        AS gestart,
           COUNT(*)::int                                                          AS oordelen,
           COUNT(*) FILTER (WHERE is_correct)::int                               AS correct,
-          COUNT(*) FILTER (WHERE clicked_link)::int                             AS link_geklikt
+          COUNT(*) FILTER (WHERE clicked_link)::int                             AS link_geklikt,
+          COALESCE(ROUND(
+            COUNT(*) FILTER (WHERE is_correct)::numeric / NULLIF(COUNT(*), 0) * 100
+          ), 0)::int                                                             AS gemiddeld_pct
         FROM inbox_judgments
       `),
       db.query(`
         SELECT
-          TO_CHAR(a.started_at AT TIME ZONE 'Europe/Amsterdam', 'DD-MM-YYYY HH24:MI') AS tijdstip,
-          COALESCE(a.ip_address, '—')                                           AS ip,
-          a.total,
-          a.correct,
-          CASE WHEN a.finished_at IS NOT NULL THEN 'Afgerond' ELSE 'Bezig' END  AS status
-        FROM quiz_attempts a
-        ORDER BY a.started_at DESC
+          TO_CHAR(MIN(j.answered_at) AT TIME ZONE 'Europe/Amsterdam', 'DD-MM-YYYY HH24:MI') AS tijdstip,
+          COALESCE(MAX(j.ip_address), '—')                                      AS ip,
+          COUNT(*)::int                                                          AS oordelen,
+          COUNT(*) FILTER (WHERE j.is_correct)::int                             AS correct
+        FROM inbox_judgments j
+        GROUP BY j.session_id
+        ORDER BY MIN(j.answered_at) DESC
         LIMIT 20
       `),
       db.query(`
@@ -73,18 +67,13 @@ router.get('/', requireLogin, async (req, res, next) => {
         FROM inbox_judgments
         WHERE ip_address IS NOT NULL
         GROUP BY ip_address
-        UNION ALL
-        SELECT ip_address, COUNT(*)::int, MAX(started_at)
-        FROM quiz_attempts
-        WHERE ip_address IS NOT NULL
-        GROUP BY ip_address
         ORDER BY laatste DESC
         LIMIT 30
       `),
       db.query('SELECT COUNT(*)::int AS totaal FROM easter_egg_views'),
     ]);
 
-    res.type('html').send(dashboardPage(quiz.rows[0], inbox.rows[0], recent.rows, ips.rows, egg.rows[0].totaal));
+    res.type('html').send(dashboardPage(overzicht.rows[0], recent.rows, ips.rows, egg.rows[0].totaal));
   } catch (err) { next(err); }
 });
 
@@ -125,14 +114,13 @@ function loginPage(error = '') {
 </html>`;
 }
 
-function dashboardPage(quiz, inbox, recent, ips, easterEggCount) {
+function dashboardPage(overzicht, recent, ips, easterEggCount) {
   const rows = recent.map(r => `
     <tr>
       <td>${r.tijdstip}</td>
       <td><code>${r.ip}</code></td>
-      <td>${r.status}</td>
-      <td>${r.total}</td>
-      <td>${r.total > 0 ? Math.round(r.correct / r.total * 100) : '—'}%</td>
+      <td>${r.oordelen}</td>
+      <td>${r.oordelen > 0 ? Math.round(r.correct / r.oordelen * 100) : '—'}%</td>
     </tr>`).join('');
 
   const ipRows = ips.map(r => `
@@ -174,12 +162,11 @@ function dashboardPage(quiz, inbox, recent, ips, easterEggCount) {
   </div>
 
   <div class="grid">
-    <div class="stat"><div class="val">${quiz.pogingen}</div><div class="lbl">Quiz gestart</div></div>
-    <div class="stat"><div class="val">${quiz.afgerond}</div><div class="lbl">Quiz afgerond</div></div>
-    <div class="stat"><div class="val">${quiz.gemiddeld_pct}%</div><div class="lbl">Gemiddelde score (quiz)</div></div>
-    <div class="stat"><div class="val">${inbox.oordelen}</div><div class="lbl">Inbox beoordeeld</div></div>
-    <div class="stat"><div class="val">${inbox.correct}</div><div class="lbl">Inbox correct</div></div>
-    <div class="stat"><div class="val">${inbox.link_geklikt}</div><div class="lbl">Link geklikt (inbox)</div></div>
+    <div class="stat"><div class="val">${overzicht.gestart}</div><div class="lbl">Unieke deelnemers</div></div>
+    <div class="stat"><div class="val">${overzicht.oordelen}</div><div class="lbl">Berichten beoordeeld</div></div>
+    <div class="stat"><div class="val">${overzicht.correct}</div><div class="lbl">Correct beoordeeld</div></div>
+    <div class="stat"><div class="val">${overzicht.gemiddeld_pct}%</div><div class="lbl">Gemiddelde score</div></div>
+    <div class="stat"><div class="val">${overzicht.link_geklikt}</div><div class="lbl">Link geklikt</div></div>
     <div class="stat"><div class="val">${easterEggCount}</div><div class="lbl">Easter egg gezien 👑</div></div>
   </div>
 
@@ -187,7 +174,7 @@ function dashboardPage(quiz, inbox, recent, ips, easterEggCount) {
     <h2>Laatste 20 quiz-sessies</h2>
     ${recent.length === 0 ? '<p style="color:#9ca3af">Nog geen sessies.</p>' : `
     <table>
-      <thead><tr><th>Tijdstip</th><th>IP-adres</th><th>Status</th><th>Vragen</th><th>Score</th></tr></thead>
+      <thead><tr><th>Tijdstip</th><th>IP-adres</th><th>Oordelen</th><th>Score</th></tr></thead>
       <tbody>${rows}</tbody>
     </table>`}
   </div>
