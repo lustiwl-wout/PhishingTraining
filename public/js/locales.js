@@ -24,6 +24,7 @@ window.VO_LOCALES = {
     'device.iphone.title': 'iPhone',
 
     'meta.title': 'Veilig Online — Phishing herkennen',
+    'meta.description': 'Leer phishing herkennen in 10 minuten. Gratis training met realistische voorbeelden voor particulieren en bedrijven.',
     'skip.main': 'Ga naar de inhoud',
 
     'user.email': 'janssen@hotmail.com',
@@ -241,6 +242,7 @@ window.VO_LOCALES = {
     'device.iphone.title': 'iPhone',
 
     'meta.title': 'Veilig Online — Phishing herkennen',
+    'meta.description': 'Leer phishing herkennen in 10 minuten. Gratis training met realistische voorbeelden voor particulieren en bedrijven.',
     'skip.main': 'Ga naar de inhoud',
 
     'user.email': 'peeters@hotmail.com',
@@ -458,6 +460,7 @@ window.VO_LOCALES = {
     'device.iphone.title': 'iPhone',
 
     'meta.title': 'Safe Online — Spot phishing',
+    'meta.description': 'Learn to spot phishing in 10 minutes. Free training with realistic examples for individuals and businesses.',
     'skip.main': 'Skip to main content',
 
     'user.email': 'smith@hotmail.com',
@@ -675,6 +678,7 @@ window.VO_LOCALES = {
     'device.iphone.title': 'iPhone',
 
     'meta.title': 'Sécurité en ligne — Reconnaître le hameçonnage',
+    'meta.description': 'Apprenez à reconnaître le hameçonnage en 10 minutes. Formation gratuite avec des exemples réalistes pour particuliers et entreprises.',
     'skip.main': 'Aller au contenu principal',
 
     'user.email': 'dupont@hotmail.com',
@@ -892,6 +896,7 @@ window.VO_LOCALES = {
     'device.iphone.title': 'iPhone',
 
     'meta.title': 'Sécurité en ligne — Reconnaître le hameçonnage',
+    'meta.description': 'Apprenez à reconnaître le hameçonnage en 10 minutes. Formation gratuite avec des exemples réalistes pour particuliers et entreprises.',
     'skip.main': 'Aller au contenu principal',
 
     'user.email': 'dubois@hotmail.com',
@@ -1109,6 +1114,7 @@ window.VO_LOCALES = {
     'device.iphone.title': 'iPhone',
 
     'meta.title': 'Sicher Online — Phishing erkennen',
+    'meta.description': 'Lernen Sie Phishing in 10 Minuten zu erkennen. Kostenloses Training mit realistischen Beispielen für Privatpersonen und Unternehmen.',
     'skip.main': 'Zum Hauptinhalt springen',
 
     'user.email': 'mueller@hotmail.com',

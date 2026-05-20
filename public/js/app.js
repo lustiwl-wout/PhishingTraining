@@ -120,6 +120,10 @@
     document.documentElement.lang = currentLang;
     const titleEl = document.querySelector('title[data-i18n]');
     if (titleEl) document.title = t(titleEl.getAttribute('data-i18n'));
+    const desc = t('meta.description');
+    document.querySelector('meta[name="description"]')?.setAttribute('content', desc);
+    document.querySelector('meta[property="og:description"]')?.setAttribute('content', desc);
+    document.querySelector('meta[property="og:title"]')?.setAttribute('content', document.title);
     const search = document.getElementById('ol-search-input');
     if (search) {
       search.placeholder = t('sim.ol.search');
