@@ -14,6 +14,9 @@
   };
 
   function detectInitialLanguage() {
+    // URL-parameter heeft hoogste prioriteit (hreflang-links gebruiken ?lang=)
+    const urlLang = new URLSearchParams(location.search).get('lang');
+    if (urlLang && SUPPORTED_LANGS.includes(urlLang)) return urlLang;
     const stored = localStorage.getItem('vo_lang');
     if (stored && SUPPORTED_LANGS.includes(stored)) return stored;
     // Match browser preference — e.g. "nl-BE" maps to nl-BE, "fr-CH" falls
@@ -147,6 +150,9 @@
     if (!SUPPORTED_LANGS.includes(lang)) return;
     currentLang = lang;
     localStorage.setItem('vo_lang', lang);
+    const url = new URL(location.href);
+    url.searchParams.set('lang', lang);
+    history.replaceState(null, '', url);
     applyI18n();
     hideLangPicker();
     // Na taalkeuze bij eerste bezoek: direct door naar de doelgroep-keuze.

@@ -15,8 +15,10 @@ const PUBLIC_DIR = path.join(__dirname, 'public');
 // Cache-bust token: alle <link>/<script> die "?v=__VER__" gebruiken krijgen
 // een unieke versie per deploy/herstart, zodat browsers verse CSS/JS pakken.
 const ASSET_VER = String(Date.now());
+const CANONICAL = process.env.CANONICAL_URL || '';
 const INDEX_HTML = fs.readFileSync(path.join(PUBLIC_DIR, 'index.html'), 'utf8')
-  .replaceAll('__VER__', ASSET_VER);
+  .replaceAll('__VER__', ASSET_VER)
+  .replaceAll('__CANONICAL__', CANONICAL);
 
 app.disable('x-powered-by');
 app.use(express.json({ limit: '64kb' }));
