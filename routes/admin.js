@@ -38,7 +38,7 @@ router.post('/logout', (req, res) => {
 // GET /sitrep
 router.get('/', requireLogin, async (req, res, next) => {
   try {
-    const [quiz, inbox, recent, ips] = await Promise.all([
+    const [quiz, inbox, recent, ips, egg] = await Promise.all([
       db.query(`
         SELECT
           COUNT(*)::int                                                          AS pogingen,
@@ -81,9 +81,10 @@ router.get('/', requireLogin, async (req, res, next) => {
         ORDER BY laatste DESC
         LIMIT 30
       `),
+      db.query('SELECT COUNT(*)::int AS totaal FROM easter_egg_views'),
     ]);
 
-    res.type('html').send(dashboardPage(quiz.rows[0], inbox.rows[0], recent.rows, ips.rows));
+    res.type('html').send(dashboardPage(quiz.rows[0], inbox.rows[0], recent.rows, ips.rows, egg.rows[0].totaal));
   } catch (err) { next(err); }
 });
 
@@ -124,7 +125,7 @@ function loginPage(error = '') {
 </html>`;
 }
 
-function dashboardPage(quiz, inbox, recent, ips) {
+function dashboardPage(quiz, inbox, recent, ips, easterEggCount) {
   const rows = recent.map(r => `
     <tr>
       <td>${r.tijdstip}</td>
@@ -179,6 +180,7 @@ function dashboardPage(quiz, inbox, recent, ips) {
     <div class="stat"><div class="val">${inbox.oordelen}</div><div class="lbl">Inbox beoordeeld</div></div>
     <div class="stat"><div class="val">${inbox.correct}</div><div class="lbl">Inbox correct</div></div>
     <div class="stat"><div class="val">${inbox.link_geklikt}</div><div class="lbl">Link geklikt (inbox)</div></div>
+    <div class="stat"><div class="val">${easterEggCount}</div><div class="lbl">Easter egg gezien 👑</div></div>
   </div>
 
   <div class="section">

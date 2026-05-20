@@ -256,6 +256,17 @@
     return id;
   }
 
+  let easterEggTracked = false;
+  function trackEasterEgg() {
+    if (easterEggTracked) return;
+    easterEggTracked = true;
+    fetch('/api/easter-egg', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: getSessionId() }),
+    }).catch(() => {});
+  }
+
   // -------- API helpers --------
   // Render Free zet de service na 15 min stil; eerste request kan 30-60s duren.
   // We tonen daarom een vriendelijke "wordt opgestart..." melding na 4s.
@@ -761,6 +772,7 @@
     if (folderName === 'junk') {
       if (headerEl) headerEl.textContent = t('sim.ol.junk').replace(/^[^\w]+\s*/, '');
       if (hintEl)   hintEl.textContent = t('sim.ol.inbox.hint');
+      trackEasterEgg();
       renderJunkList();
       resetReader();
     } else {
@@ -983,6 +995,7 @@
     const reader = document.getElementById('mob-reader');
     if (reader) reader.hidden = true;
     if (folder === 'junk') {
+      trackEasterEgg();
       renderMobJunkList();
     } else {
       renderMobList();

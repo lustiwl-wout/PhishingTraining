@@ -97,3 +97,10 @@ CREATE TABLE IF NOT EXISTS inbox_judgments (
 
 ALTER TABLE inbox_judgments ADD COLUMN IF NOT EXISTS ip_address TEXT;
 CREATE INDEX IF NOT EXISTS idx_inbox_judgments_session ON inbox_judgments(session_id);
+
+CREATE TABLE IF NOT EXISTS easter_egg_views (
+  id          SERIAL PRIMARY KEY,
+  session_id  TEXT        NOT NULL,
+  ip_address  TEXT,
+  viewed_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
