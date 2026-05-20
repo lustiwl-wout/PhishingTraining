@@ -214,6 +214,7 @@ window.VO_LOCALES = {
     'hulp.print': 'Tips afdrukken 🖨️',
 
     'footer.tagline': 'Veilig Online · Een gratis training om phishing te herkennen.',
+    'footer.contact': 'Vragen over deze training? <a href="mailto:wouter.lustig@outlook.com">Wouter Lustig</a>',
 
     'common.back': '← Terug',
     'common.close': 'Sluiten',
@@ -430,6 +431,7 @@ window.VO_LOCALES = {
     'hulp.print': 'Tips afdrukken 🖨️',
 
     'footer.tagline': 'Veilig Online · Een gratis opleiding om phishing te herkennen.',
+    'footer.contact': 'Vragen over deze training? <a href="mailto:wouter.lustig@outlook.com">Wouter Lustig</a>',
 
     'common.back': '← Terug',
     'common.close': 'Sluiten',
@@ -646,6 +648,7 @@ window.VO_LOCALES = {
     'hulp.print': 'Print tips 🖨️',
 
     'footer.tagline': 'Safe Online · A free training to help you spot phishing.',
+    'footer.contact': 'Questions about this training? <a href="mailto:wouter.lustig@outlook.com">Wouter Lustig</a>',
 
     'common.back': '← Back',
     'common.close': 'Close',
@@ -857,11 +860,12 @@ window.VO_LOCALES = {
     'hulp.geklikt.li3': 'Prenez une capture d’écran du message et conservez‑la, afin de pouvoir en discuter plus tard sereinement — par exemple avec votre banque ou avec un(e) collègue de l’informatique.',
     'hulp.geklikt.li3.business': 'Conservez le message (faites une capture d’écran si besoin) tant que vous êtes en contact avec l’informatique. Ils pourront ainsi vérifier si d’autres collègues ont reçu le même e‑mail.',
     'hulp.onthoud.h': 'Retenez bien',
-    'hulp.onthoud.p': '🛑 <strong>Une banque, l’administration ou un livreur ne vous demandera jamais votre code secret ou votre mot de passe.</strong> En cas de doute : <strong>ne cliquez pas, appelez d’abord.</strong>',
-    'hulp.back': '← Retour au début',
-    'hulp.print': 'Imprimer les conseils 🖨️',
+    ‘hulp.onthoud.p’: ‘🛑 <strong>Une banque, l’administration ou un livreur ne vous demandera jamais votre code secret ou votre mot de passe.</strong> En cas de doute : <strong>ne cliquez pas, appelez d’abord.</strong>’,
+    ‘hulp.back’: ‘← Retour au début’,
+    ‘hulp.print’: ‘Imprimer les conseils 🖨️’,
 
-    'footer.tagline': 'Sécurité en ligne · Une formation gratuite pour reconnaître le hameçonnage.',
+    ‘footer.tagline’: ‘Sécurité en ligne · Une formation gratuite pour reconnaître le hameçonnage.’,
+    ‘footer.contact’: ‘Des questions sur cette formation ? <a href="mailto:wouter.lustig@outlook.com">Wouter Lustig</a>’,
 
     'common.back': '← Retour',
     'common.close': 'Fermer',
@@ -1073,11 +1077,12 @@ window.VO_LOCALES = {
     'hulp.geklikt.li3': 'Prenez une capture d’écran du message et conservez‑la, afin de pouvoir en discuter plus tard sereinement — par exemple avec votre banque ou avec un(e) collègue de l’informatique.',
     'hulp.geklikt.li3.business': 'Conservez le message (faites une capture d’écran si besoin) tant que vous êtes en contact avec l’informatique. Ils pourront ainsi vérifier si d’autres collègues ont reçu le même e‑mail.',
     'hulp.onthoud.h': 'Retenez bien',
-    'hulp.onthoud.p': '🛑 <strong>Une banque, l’administration ou un livreur ne vous demandera jamais votre code secret ou votre mot de passe.</strong> En cas de doute : <strong>ne cliquez pas, appelez d’abord.</strong>',
-    'hulp.back': '← Retour au début',
-    'hulp.print': 'Imprimer les conseils 🖨️',
+    ‘hulp.onthoud.p’: ‘🛑 <strong>Une banque, l’administration ou un livreur ne vous demandera jamais votre code secret ou votre mot de passe.</strong> En cas de doute : <strong>ne cliquez pas, appelez d’abord.</strong>’,
+    ‘hulp.back’: ‘← Retour au début’,
+    ‘hulp.print’: ‘Imprimer les conseils 🖨️’,
 
-    'footer.tagline': 'Sécurité en ligne · Une formation gratuite pour reconnaître le hameçonnage.',
+    ‘footer.tagline’: ‘Sécurité en ligne · Une formation gratuite pour reconnaître le hameçonnage.’,
+    ‘footer.contact’: ‘Des questions sur cette formation ? <a href="mailto:wouter.lustig@outlook.com">Wouter Lustig</a>’,
 
     'common.back': '← Retour',
     'common.close': 'Fermer',
@@ -1294,6 +1299,7 @@ window.VO_LOCALES = {
     'hulp.print': 'Tipps drucken 🖨️',
 
     'footer.tagline': 'Sicher Online · Eine kostenlose Schulung, um Phishing zu erkennen.',
+    'footer.contact': 'Fragen zu dieser Schulung? <a href="mailto:wouter.lustig@outlook.com">Wouter Lustig</a>',
 
     'common.back': '← Zurück',
     'common.close': 'Schließen',
