@@ -8,6 +8,20 @@ function requireLogin(req, res, next) {
   res.redirect('/sitrep/login');
 }
 
+const PERIODES = { vandaag: 1, week: 7, maand: 30, alles: null };
+
+function periodeFilter(periode) {
+  const days = PERIODES[periode] ?? null;
+  if (!days) return '';
+  return `AND answered_at >= NOW() - INTERVAL '${days} days'`;
+}
+
+function periodeFilterCol(periode, col) {
+  const days = PERIODES[periode] ?? null;
+  if (!days) return '';
+  return `AND ${col} >= NOW() - INTERVAL '${days} days'`;
+}
+
 // GET /sitrep/login
 router.get('/login', (req, res) => {
   if (req.session?.admin) return res.redirect('/sitrep');
@@ -35,9 +49,12 @@ router.post('/logout', (req, res) => {
   req.session.destroy(() => res.redirect('/sitrep/login'));
 });
 
-// GET /sitrep
+// GET /sitrep?periode=vandaag|week|maand|alles
 router.get('/', requireLogin, async (req, res, next) => {
   try {
+    const periode = Object.keys(PERIODES).includes(req.query.periode) ? req.query.periode : 'alles';
+    const jf = periodeFilter(periode);
+
     const [overzicht, recent, ips, egg] = await Promise.all([
       db.query(`
         SELECT
@@ -49,6 +66,7 @@ router.get('/', requireLogin, async (req, res, next) => {
             COUNT(*) FILTER (WHERE is_correct)::numeric / NULLIF(COUNT(*), 0) * 100
           ), 0)::int                                                             AS gemiddeld_pct
         FROM inbox_judgments
+        WHERE TRUE ${jf}
       `),
       db.query(`
         SELECT
@@ -57,6 +75,7 @@ router.get('/', requireLogin, async (req, res, next) => {
           COUNT(*)::int                                                          AS oordelen,
           COUNT(*) FILTER (WHERE j.is_correct)::int                             AS correct
         FROM inbox_judgments j
+        WHERE TRUE ${jf}
         GROUP BY j.session_id
         ORDER BY MIN(j.answered_at) DESC
         LIMIT 20
@@ -65,15 +84,18 @@ router.get('/', requireLogin, async (req, res, next) => {
         SELECT ip_address AS ip, COUNT(*)::int AS bezoeken,
                MAX(answered_at) AS laatste
         FROM inbox_judgments
-        WHERE ip_address IS NOT NULL
+        WHERE ip_address IS NOT NULL ${jf}
         GROUP BY ip_address
         ORDER BY laatste DESC
         LIMIT 30
       `),
-      db.query('SELECT COUNT(*)::int AS totaal FROM easter_egg_views'),
+      db.query(`
+        SELECT COUNT(*)::int AS totaal FROM easter_egg_views
+        WHERE TRUE ${periodeFilterCol(periode, 'viewed_at')}
+      `),
     ]);
 
-    res.type('html').send(dashboardPage(overzicht.rows[0], recent.rows, ips.rows, egg.rows[0].totaal));
+    res.type('html').send(dashboardPage(overzicht.rows[0], recent.rows, ips.rows, egg.rows[0].totaal, periode));
   } catch (err) { next(err); }
 });
 
@@ -114,7 +136,7 @@ function loginPage(error = '') {
 </html>`;
 }
 
-function dashboardPage(overzicht, recent, ips, easterEggCount) {
+function dashboardPage(overzicht, recent, ips, easterEggCount, periode) {
   const rows = recent.map(r => `
     <tr>
       <td>${r.tijdstip}</td>
@@ -130,6 +152,15 @@ function dashboardPage(overzicht, recent, ips, easterEggCount) {
       <td>${new Date(r.laatste).toLocaleString('nl-NL', { timeZone: 'Europe/Amsterdam' })}</td>
     </tr>`).join('');
 
+  const filterLinks = [
+    ['vandaag', 'Vandaag'],
+    ['week',    '7 dagen'],
+    ['maand',   '30 dagen'],
+    ['alles',   'Alles'],
+  ].map(([key, label]) => `
+    <a href="/sitrep?periode=${key}" class="filter-btn ${periode === key ? 'active' : ''}">${label}</a>
+  `).join('');
+
   return `<!doctype html>
 <html lang="nl">
 <head>
@@ -139,15 +170,20 @@ function dashboardPage(overzicht, recent, ips, easterEggCount) {
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: system-ui, sans-serif; background: #f4f6f9; color: #1a1a2e; padding: 2rem 1rem; }
-    .topbar { display: flex; justify-content: space-between; align-items: center; max-width: 860px; margin: 0 auto 2rem; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; max-width: 860px; margin: 0 auto 1.5rem; }
     h1 { font-size: 1.3rem; }
-    form button { padding: .4rem .9rem; background: #e5e7eb; border: none; border-radius: 6px; cursor: pointer; font-size: .9rem; }
-    form button:hover { background: #d1d5db; }
+    .logout button { padding: .4rem .9rem; background: #e5e7eb; border: none; border-radius: 6px; cursor: pointer; font-size: .9rem; }
+    .logout button:hover { background: #d1d5db; }
+    .filters { display: flex; gap: .5rem; max-width: 860px; margin: 0 auto 1.5rem; }
+    .filter-btn { padding: .4rem 1rem; border-radius: 6px; text-decoration: none; font-size: .9rem; background: #fff; color: #374151; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+    .filter-btn:hover { background: #f3f4f6; }
+    .filter-btn.active { background: #2563eb; color: #fff; }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; max-width: 860px; margin: 0 auto 2rem; }
     .stat { background: #fff; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,.07); padding: 1.25rem 1.5rem; }
     .stat .val { font-size: 2rem; font-weight: 700; color: #2563eb; }
     .stat .lbl { font-size: .85rem; color: #6b7280; margin-top: .25rem; }
     .section { max-width: 860px; margin: 0 auto; background: #fff; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,.07); padding: 1.5rem; }
+    .section + .section { margin-top: 1.5rem; }
     h2 { font-size: 1rem; margin-bottom: 1rem; color: #374151; }
     table { width: 100%; border-collapse: collapse; font-size: .9rem; }
     th { text-align: left; padding: .5rem .75rem; border-bottom: 2px solid #e5e7eb; color: #6b7280; font-weight: 600; }
@@ -158,8 +194,10 @@ function dashboardPage(overzicht, recent, ips, easterEggCount) {
 <body>
   <div class="topbar">
     <h1>🛡️ Veilig Online — Beheer</h1>
-    <form method="POST" action="/sitrep/logout"><button type="submit">Uitloggen</button></form>
+    <form class="logout" method="POST" action="/sitrep/logout"><button type="submit">Uitloggen</button></form>
   </div>
+
+  <div class="filters">${filterLinks}</div>
 
   <div class="grid">
     <div class="stat"><div class="val">${overzicht.gestart}</div><div class="lbl">Unieke deelnemers</div></div>
@@ -171,17 +209,17 @@ function dashboardPage(overzicht, recent, ips, easterEggCount) {
   </div>
 
   <div class="section">
-    <h2>Laatste 20 quiz-sessies</h2>
-    ${recent.length === 0 ? '<p style="color:#9ca3af">Nog geen sessies.</p>' : `
+    <h2>Laatste 20 sessies</h2>
+    ${recent.length === 0 ? '<p style="color:#9ca3af">Geen sessies in deze periode.</p>' : `
     <table>
       <thead><tr><th>Tijdstip</th><th>IP-adres</th><th>Oordelen</th><th>Score</th></tr></thead>
       <tbody>${rows}</tbody>
     </table>`}
   </div>
 
-  <div class="section" style="margin-top:1.5rem">
+  <div class="section">
     <h2>IP-adressen (uniek, meest recent)</h2>
-    ${ips.length === 0 ? '<p style="color:#9ca3af">Nog geen data.</p>' : `
+    ${ips.length === 0 ? '<p style="color:#9ca3af">Geen data in deze periode.</p>' : `
     <table>
       <thead><tr><th>IP-adres</th><th>Acties</th><th>Laatste activiteit</th></tr></thead>
       <tbody>${ipRows}</tbody>
