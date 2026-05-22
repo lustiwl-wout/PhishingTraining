@@ -71,9 +71,6 @@
   // doelgroep. Gebruikt door zowel setLanguage als setAudience zodat zowel
   // de desktop-Outlook als de mobiele skin meeschakelen op een wissel.
   function refreshActiveData() {
-    if (document.getElementById('voorbeelden').classList.contains('active')) {
-      loadExamples();
-    }
     const sim = document.getElementById('simulator');
     if (!sim || !sim.classList.contains('active')) return;
     const inboxPhase = document.getElementById('sim-phase-inbox');
@@ -328,7 +325,7 @@
   }
 
   // -------- navigatie tussen pagina's --------
-  const pages = ['welkom', 'leren', 'voorbeelden', 'simulator', 'hulp'];
+  const pages = ['welkom', 'leren', 'simulator', 'hulp'];
 
   function go(step) {
     pages.forEach((p) => {
@@ -353,7 +350,6 @@
     if (main) main.focus();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    if (step === 'voorbeelden') loadExamples();
     if (step === 'simulator') showSimPhase('intro');
   }
 
@@ -595,57 +591,6 @@
     if (t) { e.preventDefault(); go(t.dataset.go); }
   });
 
-
-  // -------- voorbeelden --------
-  async function loadExamples() {
-    const container = document.getElementById('voorbeelden-lijst');
-    container.innerHTML = '<p class="muted">' + escapeHtml(t('voorbeelden.loading')) + '</p>';
-    try {
-      const items = await api('/examples');
-      container.innerHTML = '';
-      items.forEach((ex) => container.appendChild(renderExample(ex)));
-    } catch (err) {
-      container.innerHTML = '<p class="error">' + escapeHtml(t('voorbeelden.error')) + '</p>';
-    }
-  }
-
-  function renderExample(ex) {
-    const wrap = document.createElement('article');
-    wrap.className = 'example-outlook';
-
-    const parsed = parseSender(ex.sender);
-    const addrHtml = parsed.addr ? annotateText(parsed.addr, ex.annotations || []) : '';
-    const subjectHtml = ex.subject ? annotateText(ex.subject, ex.annotations || []) : '';
-    const bodyHtml = annotateText(ex.body || '', ex.annotations || []);
-
-    wrap.innerHTML =
-      '<header class="ol-msg-head">' +
-        (subjectHtml ? '<h2 class="ol-msg-subject">' + subjectHtml + '</h2>' : '') +
-        '<div class="ol-msg-sender-row">' +
-          '<div class="ol-avatar ol-avatar-lg" aria-hidden="true">' + escapeHtml(initials(parsed.name)) + '</div>' +
-          '<div class="ol-msg-sender-info">' +
-            '<div class="ol-msg-sender-line">' +
-              '<strong class="ol-msg-sender-name">' + escapeHtml(parsed.name || parsed.addr) + '</strong>' +
-            '</div>' +
-            (addrHtml ? '<div class="ol-example-addr">&lt;' + addrHtml + '&gt;</div>' : '') +
-            '<div class="ol-msg-time">' + escapeHtml(t('voorbeelden.to')) + '</div>' +
-          '</div>' +
-        '</div>' +
-      '</header>' +
-      '<div class="ol-msg-body">' + bodyHtml + '</div>';
-
-    if (ex.annotations && ex.annotations.length) {
-      const list = document.createElement('ol');
-      list.className = 'annotation-list';
-      ex.annotations.forEach((a, i) => {
-        const li = document.createElement('li');
-        li.innerHTML = '<span class="dot">' + (i + 1) + '</span> ' + escapeHtml(a.note);
-        list.appendChild(li);
-      });
-      wrap.appendChild(list);
-    }
-    return wrap;
-  }
 
   function parseSender(s) {
     const str = String(s || '').trim();
