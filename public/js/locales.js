@@ -48,7 +48,7 @@ window.VO_LOCALES = {
     'welkom.learn.li1': 'Hoe een phishing‑bericht eruitziet',
     'welkom.learn.li2': 'Welke woorden en trucs oplichters gebruiken',
     'welkom.learn.li3': 'Wat u moet doen als u twijfelt',
-    'welkom.learn.li4': '<em>Waar u terecht kunt voor hulp</em> — <small>(demo‑inhoud; in een eigen versie aangevuld met de contactpersonen van uw organisatie)</small>',
+    'welkom.learn.li4': 'Waar u terecht kunt voor hulp, en wat u doet als u twijfelt of per ongeluk hebt geklikt',
     'welkom.start': 'Start de training →',
 
     'leren.h1': '7 dingen waar u op let',
@@ -272,7 +272,7 @@ window.VO_LOCALES = {
     'welkom.learn.li1': 'Hoe een phishing‑bericht eruitziet',
     'welkom.learn.li2': 'Welke woorden en trucs oplichters gebruiken',
     'welkom.learn.li3': 'Wat u moet doen als u twijfelt',
-    'welkom.learn.li4': '<em>Waar u terechtkunt voor hulp</em> — <small>(demo‑inhoud; in een eigen versie aangevuld met de contactpersonen van uw organisatie)</small>',
+    'welkom.learn.li4': 'Waar u terecht kunt voor hulp, en wat u doet als u twijfelt of per ongeluk hebt geklikt',
     'welkom.start': 'Start de opleiding →',
 
     'leren.h1': '7 dingen waar u op let',
@@ -496,7 +496,7 @@ window.VO_LOCALES = {
     'welkom.learn.li1': 'What a phishing message looks like',
     'welkom.learn.li2': 'Which words and tricks scammers use',
     'welkom.learn.li3': 'What to do if you are unsure',
-    'welkom.learn.li4': '<em>Where to go for help</em> — <small>(demo content; in your own edition this can be populated with the contacts for your organisation)</small>',
+    'welkom.learn.li4': 'Where to get help, and what to do if you are unsure or have accidentally clicked',
     'welkom.start': 'Start the training →',
 
     'leren.h1': '7 things to watch out for',
@@ -720,7 +720,7 @@ window.VO_LOCALES = {
     'welkom.learn.li1': 'À quoi ressemble un message d’hameçonnage',
     'welkom.learn.li2': 'Quels mots et astuces utilisent les escrocs',
     'welkom.learn.li3': 'Que faire en cas de doute',
-    'welkom.learn.li4': '<em>À qui s’adresser pour obtenir de l’aide</em> — <small>(contenu de démonstration ; dans votre propre édition, à compléter avec les contacts de votre organisation)</small>',
+    'welkom.learn.li4': 'Où obtenir de l’aide, et que faire si vous hésitez ou avez cliqué par accident',
     'welkom.start': 'Commencer la formation →',
 
     'leren.h1': '7 points à surveiller',
@@ -944,7 +944,7 @@ window.VO_LOCALES = {
     'welkom.learn.li1': 'À quoi ressemble un message d’hameçonnage',
     'welkom.learn.li2': 'Quels mots et astuces utilisent les escrocs',
     'welkom.learn.li3': 'Que faire en cas de doute',
-    'welkom.learn.li4': '<em>À qui vous adresser pour obtenir de l’aide</em> — <small>(contenu de démonstration ; dans votre propre édition, à compléter avec les contacts de votre organisation)</small>',
+    'welkom.learn.li4': 'Où obtenir de l’aide, et que faire si vous hésitez ou avez cliqué par accident',
     'welkom.start': 'Commencer la formation →',
 
     'leren.h1': '7 points à surveiller',
@@ -1168,7 +1168,7 @@ window.VO_LOCALES = {
     'welkom.learn.li1': 'Wie eine Phishing‑Nachricht aussieht',
     'welkom.learn.li2': 'Welche Wörter und Tricks Betrüger verwenden',
     'welkom.learn.li3': 'Was Sie bei Zweifeln tun sollten',
-    'welkom.learn.li4': '<em>An wen Sie sich für Hilfe wenden können</em> — <small>(Demo‑Inhalt; in Ihrer eigenen Ausgabe um die Ansprechpartner Ihrer Organisation ergänzbar)</small>',
+    'welkom.learn.li4': 'Wo Sie Hilfe bekommen und was Sie tun, wenn Sie unsicher sind oder versehentlich geklickt haben',
     'welkom.start': 'Schulung starten →',
 
     'leren.h1': '7 Dinge, auf die Sie achten sollten',
