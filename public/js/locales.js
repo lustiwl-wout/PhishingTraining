@@ -79,7 +79,7 @@ window.VO_LOCALES = {
     'leren.it6.p': 'Staat er “Beste klant”, “Geachte gebruiker” of “Geachte heer/mevrouw” in plaats van uw naam? Wees dan extra alert. Uw bank en de overheid weten wie u bent — en spreken u bij naam aan.',
     'leren.it6.p.business': 'Staat er “Geachte medewerker” of “Dear user” in plaats van uw naam? Wees dan extra alert. Interne berichten van uw IT‑afdeling of HR gebruiken altijd uw naam of uw persoonlijke werkmailadres.',
     'leren.it7.h': 'U verwachtte dit bericht niet',
-    'leren.it7.p': 'Een pakket aangemeld terwijl u niets besteld hebt? Een factuur voor iets dat u niet kent? Een bericht dat u een prijs gewonnen hebt? Stel uzelf de vraag: <strong>verwacht ik dit?</strong> Bij twijfel: niet klikken, eerst bellen.',
+    'leren.it7.p': 'Een pakket aangemeld terwijl u niets besteld hebt? Een factuur voor iets dat u niet kent? Een bericht dat u een prijs gewonnen hebt? Stel uzelf de vraag: <strong>verwacht ik dit?</strong> Bij twijfel: niet klikken. Zoek zelf het telefoonnummer op van de afzender — via hun website, niet via het bericht.',
     'leren.it7.p.business': 'Een melding over een document dat een collega gedeeld zou hebben, terwijl u niets verwachtte? Een factuur die u “dringend” moet goedkeuren? Stel uzelf de vraag: <strong>verwacht ik dit?</strong> Bel de afzender op via een nummer dat u zelf opzoekt.',
     'leren.examples': 'Bekijk voorbeelden →',
 
@@ -303,7 +303,7 @@ window.VO_LOCALES = {
     'leren.it6.p': 'Staat er “Beste klant”, “Geachte gebruiker” of “Geachte heer/mevrouw” in plaats van uw naam? Wees dan extra alert. Uw bank en de overheid weten wie u bent — en spreken u bij naam aan.',
     'leren.it6.p.business': 'Staat er “Geachte medewerker” of “Dear user” in plaats van uw naam? Wees dan extra alert. Interne berichten van uw IT‑afdeling of HR gebruiken altijd uw naam of uw persoonlijke werkmailadres.',
     'leren.it7.h': 'U verwachtte dit bericht niet',
-    'leren.it7.p': 'Een pakket aangemeld terwijl u niets besteld hebt? Een factuur voor iets dat u niet kent? Een bericht dat u een prijs gewonnen hebt? Stel uzelf de vraag: <strong>verwacht ik dit?</strong> Bij twijfel: niet klikken, eerst bellen.',
+    'leren.it7.p': 'Een pakket aangemeld terwijl u niets besteld hebt? Een factuur voor iets dat u niet kent? Een bericht dat u een prijs gewonnen hebt? Stel uzelf de vraag: <strong>verwacht ik dit?</strong> Bij twijfel: niet klikken. Zoek zelf het telefoonnummer op van de afzender — via hun website, niet via het bericht.',
     'leren.it7.p.business': 'Een melding over een document dat een collega gedeeld zou hebben, terwijl u niets verwachtte? Een factuur die u “dringend” moet goedkeuren? Stel uzelf de vraag: <strong>verwacht ik dit?</strong> Bel de afzender op via een nummer dat u zelf opzoekt.',
     'leren.examples': 'Bekijk voorbeelden →',
 
@@ -527,7 +527,7 @@ window.VO_LOCALES = {
     'leren.it6.p': 'Does the message say “Dear customer”, “Dear user” or “Dear Sir/Madam” instead of your name? Be extra careful. Your bank and government agencies know who you are — and will address you by name.',
     'leren.it6.p.business': 'Does it say “Dear employee” or “Dear user” instead of your name? Be extra careful. Internal messages from IT or HR always use your name or your personal work email address.',
     'leren.it7.h': 'You weren’t expecting this message',
-    'leren.it7.p': 'A parcel notification for something you didn’t order? An invoice for a service you don’t recognise? A message saying you’ve won a prize? Ask yourself: <strong>was I expecting this?</strong> If in doubt, don’t click — call instead.',
+    'leren.it7.p': 'A parcel notification for something you didn’t order? An invoice for a service you don’t recognise? A message saying you’ve won a prize? Ask yourself: <strong>was I expecting this?</strong> If in doubt, don’t click. Look up the sender’s phone number yourself — on their official website, not in the message.',
     'leren.it7.p.business': 'A notification about a document a colleague supposedly shared, out of nowhere? An invoice you “urgently” need to approve? Ask yourself: <strong>was I expecting this?</strong> Call the sender on a number you look up yourself.',
     'leren.examples': 'View examples →',
 
@@ -751,7 +751,7 @@ window.VO_LOCALES = {
     'leren.it6.p': 'Le message dit « Cher client », « Cher utilisateur » ou « Madame, Monsieur » plutôt que votre nom ? Soyez vigilant. Votre banque et les organismes officiels connaissent votre identité — et s’adressent à vous personnellement.',
     'leren.it6.p.business': 'Le message dit « Cher collègue » ou « Cher utilisateur » au lieu de votre nom ? Soyez vigilant. Les messages internes de votre service informatique ou des RH utilisent toujours votre nom ou votre adresse e‑mail professionnelle.',
     'leren.it7.h': 'Vous n’attendiez pas ce message',
-    'leren.it7.p': 'Une livraison annoncée sans avoir rien commandé ? Une facture pour un service que vous ne connaissez pas ? Un message disant que vous avez gagné un prix ? Posez‑vous la question : <strong>est‑ce que j’attendais ce message ?</strong> En cas de doute : n’appuyez pas, appelez d’abord.',
+    'leren.it7.p': 'Une livraison annoncée sans avoir rien commandé ? Une facture pour un service que vous ne connaissez pas ? Un message disant que vous avez gagné un prix ? Posez‑vous la question : <strong>est‑ce que j’attendais ce message ?</strong> En cas de doute : ne cliquez pas. Cherchez vous‑même le numéro de téléphone de l’expéditeur — sur son site officiel, pas dans le message.',
     'leren.it7.p.business': 'Une notification pour un document qu’un collègue aurait partagé, sans que vous l’attendiez ? Une facture à approuver “d’urgence” ? Posez‑vous la question : <strong>est‑ce que j’attendais ce message ?</strong> Appelez l’expéditeur via un numéro que vous cherchez vous‑même.',
     'leren.examples': 'Voir les exemples →',
 
@@ -975,7 +975,7 @@ window.VO_LOCALES = {
     'leren.it6.p': 'Le message dit « Cher client », « Cher utilisateur » ou « Madame, Monsieur » plutôt que votre nom ? Soyez vigilant. Votre banque et les organismes officiels connaissent votre identité — et s’adressent à vous personnellement.',
     'leren.it6.p.business': 'Le message dit « Cher collègue » ou « Cher utilisateur » au lieu de votre nom ? Soyez vigilant. Les messages internes de votre service informatique ou des RH utilisent toujours votre nom ou votre adresse e‑mail professionnelle.',
     'leren.it7.h': 'Vous n’attendiez pas ce message',
-    'leren.it7.p': 'Une livraison annoncée sans avoir rien commandé ? Une facture pour un service que vous ne connaissez pas ? Un message disant que vous avez gagné un prix ? Posez‑vous la question : <strong>est‑ce que j’attendais ce message ?</strong> En cas de doute : n’appuyez pas, appelez d’abord.',
+    'leren.it7.p': 'Une livraison annoncée sans avoir rien commandé ? Une facture pour un service que vous ne connaissez pas ? Un message disant que vous avez gagné un prix ? Posez‑vous la question : <strong>est‑ce que j’attendais ce message ?</strong> En cas de doute : ne cliquez pas. Cherchez vous‑même le numéro de téléphone de l’expéditeur — sur son site officiel, pas dans le message.',
     'leren.it7.p.business': 'Une notification pour un document qu’un collègue aurait partagé, sans que vous l’attendiez ? Une facture à approuver “d’urgence” ? Posez‑vous la question : <strong>est‑ce que j’attendais ce message ?</strong> Appelez l’expéditeur via un numéro que vous cherchez vous‑même.',
     'leren.examples': 'Voir les exemples →',
 
@@ -1199,7 +1199,7 @@ window.VO_LOCALES = {
     'leren.it6.p': 'Steht da „Sehr geehrter Kunde“, „Lieber Nutzer“ oder „Sehr geehrte Damen und Herren“ statt Ihres Namens? Seien Sie vorsichtig. Ihre Bank und Behörden kennen Ihren Namen — und sprechen Sie persönlich an.',
     'leren.it6.p.business': 'Steht da „Lieber Mitarbeiter“ oder „Sehr geehrter Nutzer“ statt Ihres Namens? Seien Sie vorsichtig. Interne Nachrichten von IT oder HR verwenden immer Ihren Namen oder Ihre persönliche Arbeits‑E‑Mail‑Adresse.',
     'leren.it7.h': 'Diese Nachricht haben Sie nicht erwartet',
-    'leren.it7.p': 'Eine Paketzustellung, obwohl Sie nichts bestellt haben? Eine Rechnung für einen Dienst, den Sie nicht kennen? Eine Nachricht, dass Sie einen Preis gewonnen haben? Fragen Sie sich: <strong>Habe ich diese Nachricht erwartet?</strong> Im Zweifel: nicht klicken, lieber anrufen.',
+    'leren.it7.p': 'Eine Paketzustellung, obwohl Sie nichts bestellt haben? Eine Rechnung für einen Dienst, den Sie nicht kennen? Eine Nachricht, dass Sie einen Preis gewonnen haben? Fragen Sie sich: <strong>Habe ich diese Nachricht erwartet?</strong> Im Zweifel: nicht klicken. Suchen Sie die Telefonnummer des Absenders selbst heraus — auf der offiziellen Website, nicht aus der Nachricht.',
     'leren.it7.p.business': 'Eine Benachrichtigung über ein Dokument, das ein Kollege angeblich geteilt hat, ohne dass Sie es erwarteten? Eine Rechnung, die Sie „dringend“ genehmigen sollen? Fragen Sie sich: <strong>Habe ich diese Nachricht erwartet?</strong> Rufen Sie den Absender über eine Nummer an, die Sie selbst recherchieren.',
     'leren.examples': 'Beispiele ansehen →',
 
