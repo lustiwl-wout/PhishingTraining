@@ -55,7 +55,7 @@ router.get('/', requireLogin, async (req, res, next) => {
     const periode = Object.keys(PERIODES).includes(req.query.periode) ? req.query.periode : 'alles';
     const jf = periodeFilter(periode);
 
-    const [overzicht, recent, ips, egg] = await Promise.all([
+    const [overzicht, recent, ips, egg, starts] = await Promise.all([
       db.query(`
         SELECT
           COUNT(DISTINCT session_id)::int                                        AS gestart,
@@ -93,9 +93,13 @@ router.get('/', requireLogin, async (req, res, next) => {
         SELECT COUNT(*)::int AS totaal FROM easter_egg_views
         WHERE TRUE ${periodeFilterCol(periode, 'viewed_at')}
       `),
+      db.query(`
+        SELECT COUNT(DISTINCT session_id)::int AS totaal FROM simulator_starts
+        WHERE TRUE ${periodeFilterCol(periode, 'started_at')}
+      `),
     ]);
 
-    res.type('html').send(dashboardPage(overzicht.rows[0], recent.rows, ips.rows, egg.rows[0].totaal, periode));
+    res.type('html').send(dashboardPage(overzicht.rows[0], recent.rows, ips.rows, egg.rows[0].totaal, starts.rows[0].totaal, periode));
   } catch (err) { next(err); }
 });
 
@@ -136,7 +140,7 @@ function loginPage(error = '') {
 </html>`;
 }
 
-function dashboardPage(overzicht, recent, ips, easterEggCount, periode) {
+function dashboardPage(overzicht, recent, ips, easterEggCount, simulatorStartCount, periode) {
   const rows = recent.map(r => `
     <tr>
       <td>${r.tijdstip}</td>
@@ -200,7 +204,8 @@ function dashboardPage(overzicht, recent, ips, easterEggCount, periode) {
   <div class="filters">${filterLinks}</div>
 
   <div class="grid">
-    <div class="stat"><div class="val">${overzicht.gestart}</div><div class="lbl">Unieke deelnemers</div></div>
+    <div class="stat"><div class="val">${simulatorStartCount}</div><div class="lbl">Simulator gestart</div></div>
+    <div class="stat"><div class="val">${overzicht.gestart}</div><div class="lbl">Berichten beoordeeld (uniek)</div></div>
     <div class="stat"><div class="val">${overzicht.oordelen}</div><div class="lbl">Berichten beoordeeld</div></div>
     <div class="stat"><div class="val">${overzicht.correct}</div><div class="lbl">Correct beoordeeld</div></div>
     <div class="stat"><div class="val">${overzicht.gemiddeld_pct}%</div><div class="lbl">Gemiddelde score</div></div>

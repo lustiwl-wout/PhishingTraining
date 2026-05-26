@@ -61,11 +61,12 @@ async function initDb({ force = false } = {}) {
       console.log(`[init-db] seed laden (${reason}). hash: ${previousHash || 'none'} -> ${seedHash}`);
 
       // Bewaar gebruikersdata vóór de seed (die truncate+cascade doet op content-tabellen).
-      const [judgments, eggs] = await Promise.all([
+      const [judgments, eggs, simStarts] = await Promise.all([
         client.query('SELECT * FROM inbox_judgments').catch(() => ({ rows: [] })),
         client.query('SELECT * FROM easter_egg_views').catch(() => ({ rows: [] })),
+        client.query('SELECT * FROM simulator_starts').catch(() => ({ rows: [] })),
       ]);
-      console.log(`[init-db] ${judgments.rows.length} oordelen en ${eggs.rows.length} easter-egg views opgeslagen.`);
+      console.log(`[init-db] ${judgments.rows.length} oordelen, ${eggs.rows.length} easter-egg views en ${simStarts.rows.length} simulator-starts opgeslagen.`);
 
       await client.query(seed);
 
@@ -95,6 +96,17 @@ async function initDb({ force = false } = {}) {
         }
         await client.query(`SELECT setval('easter_egg_views_id_seq', MAX(id)) FROM easter_egg_views`);
         console.log(`[init-db] ${eggs.rows.length} easter-egg views teruggezet.`);
+      }
+      if (simStarts.rows.length > 0) {
+        for (const r of simStarts.rows) {
+          await client.query(
+            `INSERT INTO simulator_starts (id, session_id, ip_address, started_at)
+             VALUES ($1,$2,$3,$4) ON CONFLICT (id) DO NOTHING`,
+            [r.id, r.session_id, r.ip_address, r.started_at]
+          );
+        }
+        await client.query(`SELECT setval('simulator_starts_id_seq', MAX(id)) FROM simulator_starts`);
+        console.log(`[init-db] ${simStarts.rows.length} simulator-starts teruggezet.`);
       }
 
       await client.query(

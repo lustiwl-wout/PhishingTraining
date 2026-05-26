@@ -263,6 +263,17 @@
     return id;
   }
 
+  let simulatorStartTracked = false;
+  function trackSimulatorStart() {
+    if (simulatorStartTracked) return;
+    simulatorStartTracked = true;
+    fetch('/api/simulator/start', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: getSessionId() }),
+    }).catch(() => {});
+  }
+
   let easterEggTracked = false;
   function trackEasterEgg() {
     if (easterEggTracked) return;
@@ -568,6 +579,7 @@
   document.addEventListener('click', (e) => {
     if (e.target.closest('#sim-start-btn')) {
       e.preventDefault();
+      trackSimulatorStart();
       setDevice(detectDevice());
       if (currentDevice === 'desktop') {
         showSimPhase('login');

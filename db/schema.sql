@@ -104,3 +104,10 @@ CREATE TABLE IF NOT EXISTS easter_egg_views (
   ip_address  TEXT,
   viewed_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+CREATE TABLE IF NOT EXISTS simulator_starts (
+  id          SERIAL PRIMARY KEY,
+  session_id  TEXT        NOT NULL,
+  ip_address  TEXT,
+  started_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);

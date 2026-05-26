@@ -251,6 +251,19 @@ router.get('/stats', async (_req, res, next) => {
   } catch (err) { next(err); }
 });
 
+// POST /api/simulator/start  { session_id }
+router.post('/simulator/start', async (req, res, next) => {
+  try {
+    const sessionId = req.body?.session_id || '';
+    if (!isUuidLike(sessionId)) return res.status(400).json({ error: 'ongeldig session_id' });
+    await db.query(
+      'INSERT INTO simulator_starts (session_id, ip_address) VALUES ($1, $2)',
+      [sessionId, clientIp(req)]
+    );
+    res.status(201).json({ ok: true });
+  } catch (err) { next(err); }
+});
+
 // POST /api/easter-egg  { session_id }
 router.post('/easter-egg', async (req, res, next) => {
   try {
