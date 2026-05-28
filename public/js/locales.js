@@ -91,7 +91,7 @@ window.VO_LOCALES = {
     'voorbeelden.to': 'Aan: u',
 
     'sim.intro.h': 'U gaat zo een oefening starten',
-    'sim.intro.lead': 'We openen straks een <strong>nepversie van Outlook</strong>. Alles wat u ziet is voor de oefening gemaakt.',
+    'sim.intro.lead': 'We openen straks een <strong>nep-e-mailomgeving</strong>. Alles wat u ziet is voor de oefening gemaakt.',
     'sim.intro.li1': 'De e‑mails zien er echt uit, maar zijn niet echt.',
     'sim.intro.li2': 'Niet alle knoppen werken — dat hoeft ook niet, het is maar een oefening.',
     'sim.intro.li3': 'U kunt niets stukmaken en er wordt niets verzonden.',
@@ -118,7 +118,7 @@ window.VO_LOCALES = {
     'sim.coldstart': '⏳ De website wordt even opgestart. Een momentje geduld…',
 
     'sim.ms.title': 'Aanmelden',
-    'sim.ms.subtitle': 'om door te gaan naar Outlook',
+    'sim.ms.subtitle': 'om u aan te melden',
     'sim.ms.next': 'Volgende',
     'sim.ms.back': 'Vorige',
     'sim.ms.pwTitle': 'Wachtwoord invoeren',
@@ -129,10 +129,11 @@ window.VO_LOCALES = {
     'sim.ms.forgot': 'Hebt u geen toegang tot het account?',
 
     'sim.ms.mfa.title': 'Aanmeldverzoek goedkeuren',
-    'sim.ms.mfa.lead': 'Open uw Microsoft Authenticator-app en voer dit getal in om u aan te melden.',
-    'sim.ms.mfa.waiting': 'Wachten op goedkeuring in de Authenticator-app…',
+    'sim.ms.mfa.lead': 'Open de verificatie-app en voer dit getal in om u aan te melden.',
+    'sim.ms.mfa.waiting': 'Wachten op goedkeuring in de verificatie-app…',
     'sim.ms.mfa.approved': 'Goedgekeurd',
 
+    'sim.ol.brand': 'E-mail',
     'sim.ol.search': 'Zoeken',
     'sim.ol.new': '✉️ Nieuw bericht',
     'sim.ol.tab.file': 'Bestand',
@@ -319,7 +320,7 @@ window.VO_LOCALES = {
     'voorbeelden.to': 'Aan: u',
 
     'sim.intro.h': 'U gaat zo een oefening starten',
-    'sim.intro.lead': 'We openen straks een <strong>nepversie van Outlook</strong>. Alles wat u ziet is voor de oefening gemaakt.',
+    'sim.intro.lead': 'We openen straks een <strong>nep-e-mailomgeving</strong>. Alles wat u ziet is voor de oefening gemaakt.',
     'sim.intro.li1': 'De e‑mails zien er echt uit, maar zijn niet echt.',
     'sim.intro.li2': 'Niet alle knoppen werken — dat hoeft ook niet, het is maar een oefening.',
     'sim.intro.li3': 'U kunt niets stukmaken en er wordt niets verzonden.',
@@ -346,7 +347,7 @@ window.VO_LOCALES = {
     'sim.coldstart': '⏳ De website wordt even opgestart. Een momentje geduld…',
 
     'sim.ms.title': 'Aanmelden',
-    'sim.ms.subtitle': 'om door te gaan naar Outlook',
+    'sim.ms.subtitle': 'om u aan te melden',
     'sim.ms.next': 'Volgende',
     'sim.ms.back': 'Vorige',
     'sim.ms.pwTitle': 'Paswoord invoeren',
@@ -357,10 +358,11 @@ window.VO_LOCALES = {
     'sim.ms.forgot': 'Hebt u geen toegang tot uw account?',
 
     'sim.ms.mfa.title': 'Aanmeldverzoek goedkeuren',
-    'sim.ms.mfa.lead': 'Open uw Microsoft Authenticator-app en voer dit getal in om u aan te melden.',
-    'sim.ms.mfa.waiting': 'Wachten op goedkeuring in de Authenticator-app…',
+    'sim.ms.mfa.lead': 'Open de verificatie-app en voer dit getal in om u aan te melden.',
+    'sim.ms.mfa.waiting': 'Wachten op goedkeuring in de verificatie-app…',
     'sim.ms.mfa.approved': 'Goedgekeurd',
 
+    'sim.ol.brand': 'E-mail',
     'sim.ol.search': 'Zoeken',
     'sim.ol.new': '✉️ Nieuw bericht',
     'sim.ol.tab.file': 'Bestand',
@@ -547,7 +549,7 @@ window.VO_LOCALES = {
     'voorbeelden.to': 'To: you',
 
     'sim.intro.h': 'You’re about to start an exercise',
-    'sim.intro.lead': 'We will now open a <strong>fake version of Outlook</strong>. Everything you see was made for this exercise.',
+    'sim.intro.lead': 'We will now open a <strong>fake email environment</strong>. Everything you see was made for this exercise.',
     'sim.intro.li1': 'The emails look real, but they are not.',
     'sim.intro.li2': 'Not every button works — that’s fine, this is only practice.',
     'sim.intro.li3': 'You cannot break anything and nothing will be sent.',
@@ -574,7 +576,7 @@ window.VO_LOCALES = {
     'sim.coldstart': '⏳ The website is starting up. Just a moment…',
 
     'sim.ms.title': 'Sign in',
-    'sim.ms.subtitle': 'to continue to Outlook',
+    'sim.ms.subtitle': 'to sign in to your mailbox',
     'sim.ms.next': 'Next',
     'sim.ms.back': 'Back',
     'sim.ms.pwTitle': 'Enter password',
@@ -585,10 +587,11 @@ window.VO_LOCALES = {
     'sim.ms.forgot': 'Can’t access your account?',
 
     'sim.ms.mfa.title': 'Approve sign-in request',
-    'sim.ms.mfa.lead': 'Open your Microsoft Authenticator app and enter this number to sign in.',
-    'sim.ms.mfa.waiting': 'Waiting for approval in the Authenticator app…',
+    'sim.ms.mfa.lead': 'Open the authenticator app and enter this number to sign in.',
+    'sim.ms.mfa.waiting': 'Waiting for approval in the authenticator app…',
     'sim.ms.mfa.approved': 'Approved',
 
+    'sim.ol.brand': 'Mail',
     'sim.ol.search': 'Search',
     'sim.ol.new': '✉️ New message',
     'sim.ol.tab.file': 'File',
@@ -775,7 +778,7 @@ window.VO_LOCALES = {
     'voorbeelden.to': 'À : vous',
 
     'sim.intro.h': 'Vous allez commencer un exercice',
-    'sim.intro.lead': 'Nous allons ouvrir une <strong>fausse version d’Outlook</strong>. Tout ce que vous voyez a été créé pour cet exercice.',
+    'sim.intro.lead': 'Nous allons ouvrir une <strong>faux environnement de messagerie</strong>. Tout ce que vous voyez a été créé pour cet exercice.',
     'sim.intro.li1': 'Les e‑mails paraissent réels, mais ne le sont pas.',
     'sim.intro.li2': 'Tous les boutons ne fonctionnent pas — c’est normal, c’est un entraînement.',
     'sim.intro.li3': 'Vous ne pouvez rien casser et rien ne sera envoyé.',
@@ -802,7 +805,7 @@ window.VO_LOCALES = {
     'sim.coldstart': '⏳ Le site démarre. Un instant s’il vous plaît…',
 
     'sim.ms.title': 'Se connecter',
-    'sim.ms.subtitle': 'pour continuer vers Outlook',
+    'sim.ms.subtitle': 'pour vous connecter à votre messagerie',
     'sim.ms.next': 'Suivant',
     'sim.ms.back': 'Précédent',
     'sim.ms.pwTitle': 'Saisir le mot de passe',
@@ -813,10 +816,11 @@ window.VO_LOCALES = {
     'sim.ms.forgot': 'Vous n’arrivez pas à accéder à votre compte ?',
 
     'sim.ms.mfa.title': 'Approuver la demande de connexion',
-    'sim.ms.mfa.lead': 'Ouvrez votre application Microsoft Authenticator et saisissez ce numéro pour vous connecter.',
-    'sim.ms.mfa.waiting': 'En attente d’approbation dans l’application Authenticator…',
+    'sim.ms.mfa.lead': 'Ouvrez l\'application d\'authentification et saisissez ce numéro pour vous connecter.',
+    'sim.ms.mfa.waiting': 'En attente d’approbation dans l’application d’authentification…',
     'sim.ms.mfa.approved': 'Approuvé',
 
+    'sim.ol.brand': 'Messagerie',
     'sim.ol.search': 'Rechercher',
     'sim.ol.new': '✉️ Nouveau message',
     'sim.ol.tab.file': 'Fichier',
@@ -1003,7 +1007,7 @@ window.VO_LOCALES = {
     'voorbeelden.to': 'À : vous',
 
     'sim.intro.h': 'Vous allez commencer un exercice',
-    'sim.intro.lead': 'Nous allons ouvrir une <strong>fausse version d’Outlook</strong>. Tout ce que vous voyez a été créé pour cet exercice.',
+    'sim.intro.lead': 'Nous allons ouvrir une <strong>faux environnement de messagerie</strong>. Tout ce que vous voyez a été créé pour cet exercice.',
     'sim.intro.li1': 'Les e‑mails paraissent réels, mais ne le sont pas.',
     'sim.intro.li2': 'Tous les boutons ne fonctionnent pas — c’est normal, c’est un entraînement.',
     'sim.intro.li3': 'Vous ne pouvez rien casser et rien ne sera envoyé.',
@@ -1030,7 +1034,7 @@ window.VO_LOCALES = {
     'sim.coldstart': '⏳ Le site démarre. Un instant s’il vous plaît…',
 
     'sim.ms.title': 'Se connecter',
-    'sim.ms.subtitle': 'pour continuer vers Outlook',
+    'sim.ms.subtitle': 'pour vous connecter à votre messagerie',
     'sim.ms.next': 'Suivant',
     'sim.ms.back': 'Précédent',
     'sim.ms.pwTitle': 'Saisir le mot de passe',
@@ -1041,10 +1045,11 @@ window.VO_LOCALES = {
     'sim.ms.forgot': 'Vous n’arrivez pas à accéder à votre compte ?',
 
     'sim.ms.mfa.title': 'Approuver la demande de connexion',
-    'sim.ms.mfa.lead': 'Ouvrez votre application Microsoft Authenticator et saisissez ce numéro pour vous connecter.',
-    'sim.ms.mfa.waiting': 'En attente d’approbation dans l’application Authenticator…',
+    'sim.ms.mfa.lead': 'Ouvrez l\'application d\'authentification et saisissez ce numéro pour vous connecter.',
+    'sim.ms.mfa.waiting': 'En attente d’approbation dans l’application d’authentification…',
     'sim.ms.mfa.approved': 'Approuvé',
 
+    'sim.ol.brand': 'Messagerie',
     'sim.ol.search': 'Rechercher',
     'sim.ol.new': '✉️ Nouveau message',
     'sim.ol.tab.file': 'Fichier',
@@ -1231,7 +1236,7 @@ window.VO_LOCALES = {
     'voorbeelden.to': 'An: Sie',
 
     'sim.intro.h': 'Sie starten gleich eine Übung',
-    'sim.intro.lead': 'Wir öffnen gleich eine <strong>gefälschte Version von Outlook</strong>. Alles, was Sie sehen, wurde für die Übung erstellt.',
+    'sim.intro.lead': 'Wir öffnen gleich eine <strong>simulierte E-Mail-Umgebung</strong>. Alles, was Sie sehen, wurde für die Übung erstellt.',
     'sim.intro.li1': 'Die E‑Mails sehen echt aus, sind es aber nicht.',
     'sim.intro.li2': 'Nicht jede Schaltfläche funktioniert — das ist in Ordnung, es ist nur eine Übung.',
     'sim.intro.li3': 'Sie können nichts kaputtmachen, und es wird nichts gesendet.',
@@ -1258,7 +1263,7 @@ window.VO_LOCALES = {
     'sim.coldstart': '⏳ Die Website wird gestartet. Einen Moment bitte…',
 
     'sim.ms.title': 'Anmelden',
-    'sim.ms.subtitle': 'um bei Outlook fortzufahren',
+    'sim.ms.subtitle': 'um sich bei Ihrer E-Mail anzumelden',
     'sim.ms.next': 'Weiter',
     'sim.ms.back': 'Zurück',
     'sim.ms.pwTitle': 'Kennwort eingeben',
@@ -1269,10 +1274,11 @@ window.VO_LOCALES = {
     'sim.ms.forgot': 'Sie haben keinen Zugriff auf Ihr Konto?',
 
     'sim.ms.mfa.title': 'Anmeldung bestätigen',
-    'sim.ms.mfa.lead': 'Öffnen Sie Ihre Microsoft Authenticator-App und geben Sie diese Zahl ein, um sich anzumelden.',
-    'sim.ms.mfa.waiting': 'Warten auf Bestätigung in der Authenticator-App…',
+    'sim.ms.mfa.lead': 'Öffnen Sie die Authentifizierungs-App und geben Sie diese Zahl ein, um sich anzumelden.',
+    'sim.ms.mfa.waiting': 'Warten auf Bestätigung in der Authentifizierungs-App…',
     'sim.ms.mfa.approved': 'Bestätigt',
 
+    'sim.ol.brand': 'E-Mail',
     'sim.ol.search': 'Suchen',
     'sim.ol.new': '✉️ Neue Nachricht',
     'sim.ol.tab.file': 'Datei',
