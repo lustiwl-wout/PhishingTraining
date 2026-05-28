@@ -1864,6 +1864,45 @@ body.device-iphone .device-homebar::after {
    zichtbaar tijdens window.print() via @media print.
    ======================================================== */
 .print-view { display: none; }
+.difficulty-toggle {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 1.25rem 0 .4rem;
+}
+.difficulty-label {
+  font-size: .9rem;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.difficulty-btn {
+  padding: .35rem .85rem;
+  border: 1.5px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--ink-soft);
+  font-size: .9rem;
+  cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.difficulty-btn:hover {
+  background: var(--bg);
+}
+.difficulty-btn.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  font-weight: 600;
+}
+.difficulty-hint {
+  text-align: center;
+  font-size: .85rem;
+  color: var(--ink-soft);
+  margin: 0 0 .5rem;
+  min-height: 1.2em;
+}
 .sim-print-or {
   margin: 1.25rem 0 .5rem;
   font-size: .9rem; color: var(--ink-soft);

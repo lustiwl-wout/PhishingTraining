@@ -25,6 +25,12 @@ function pickAudience(req) {
   return SUPPORTED_AUDIENCES.has(q) ? q : 'personal';
 }
 
+const SUPPORTED_DIFFICULTIES = new Set(['normal', 'advanced']);
+function pickDifficulty(req) {
+  const q = req.query?.difficulty || '';
+  return SUPPORTED_DIFFICULTIES.has(q) ? q : 'normal';
+}
+
 // Voer `queryFn(locale)` uit voor de gevraagde taal en val terug op 'nl'
 // wanneer er nog geen vertaalde rijen bestaan. Zo breekt de UI niet bij
 // een nieuwe locale die nog niet in de seed zit.
@@ -144,24 +150,25 @@ router.post('/attempts/:id/finish', async (req, res, next) => {
 
 // ======== INBOX-SIMULATOR ========
 
-// GET /api/inbox?lang=nl|nl-BE|en|fr|fr-BE|de&audience=personal|business
-// — lijst berichten zonder spoilers, gefilterd op taal en doelgroep.
+// GET /api/inbox?lang=nl|nl-BE|en|fr|fr-BE|de&audience=personal|business&difficulty=normal|advanced
+// — lijst berichten zonder spoilers, gefilterd op taal, doelgroep en moeilijkheid.
 router.get('/inbox', async (req, res, next) => {
   try {
     const locale = pickLocale(req);
     const audience = pickAudience(req);
+    const difficulty = pickDifficulty(req);
     const result = await withFallback(locale, (loc) => db.query(
       `SELECT id, sender_name, sender_address, received_label, subject, preview
          FROM inbox_messages
-        WHERE active = TRUE AND locale = $1 AND audience IN ($2, 'both')
+        WHERE active = TRUE AND locale = $1 AND audience IN ($2, 'both') AND difficulty = $3
         ORDER BY sort_order, id`,
-      [loc, audience]
+      [loc, audience, difficulty]
     ));
     res.json(result.rows);
   } catch (err) { next(err); }
 });
 
-// GET /api/print?lang=&audience=
+// GET /api/print?lang=&audience=&difficulty=normal|advanced
 // — alle inhoud (subject, body, links, sender_note, is_phishing,
 //   red_flags, green_flags, explanation) zodat een printbare versie
 //   van de training gegenereerd kan worden waarop het antwoord op
@@ -170,14 +177,15 @@ router.get('/print', async (req, res, next) => {
   try {
     const locale = pickLocale(req);
     const audience = pickAudience(req);
+    const difficulty = pickDifficulty(req);
     const result = await withFallback(locale, (loc) => db.query(
       `SELECT id, sender_name, sender_address, sender_note, received_label,
               subject, body, links, is_phishing, red_flags, green_flags,
               explanation, sort_order
          FROM inbox_messages
-        WHERE active = TRUE AND locale = $1 AND audience IN ($2, 'both')
+        WHERE active = TRUE AND locale = $1 AND audience IN ($2, 'both') AND difficulty = $3
         ORDER BY sort_order, id`,
-      [loc, audience]
+      [loc, audience, difficulty]
     ));
     res.json(result.rows);
   } catch (err) { next(err); }

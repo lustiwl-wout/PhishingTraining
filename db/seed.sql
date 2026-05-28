@@ -2440,3 +2440,365 @@ INSERT INTO examples (locale, audience, channel, sender, subject, body, annotati
  E'BECKER Stefan hat Sie eingeladen, eine Datei zu bearbeiten\n\nDies ist das Dokument, das BECKER Stefan mit Ihnen geteilt hat.\n\n📎 Rahmenvertrag-2024.pdf\n\nDiese Einladung funktioniert nur für Sie und Personen mit bestehendem Zugriff.\n\nhttp://sharepoint-online-share.com/view?id=8a3f2',
  '[{"quote":"no-reply@sharepoint-online-share.com","note":"Echte SharePoint-Benachrichtigungen kommen von @sharepointonline.com. \"sharepoint-online-share.com\" ist keine Microsoft-Domain."}, {"quote":"BECKER Stefan hat Sie eingeladen","note":"Kennen Sie diese Person? Ihre Kolleginnen und Kollegen nutzen @kestrel.de. Prüfen Sie die tatsächliche Absenderadresse (oben), bevor Sie etwas öffnen."}, {"quote":"Diese Einladung funktioniert nur für Sie und Personen mit bestehendem Zugriff.","note":"Das ist Microsofts Standardtext — Phisher kopieren ihn Wort für Wort. Der Satz an sich beweist also NICHTS über die Echtheit."}, {"quote":"http://sharepoint-online-share.com/view","note":"Echte SharePoint-Links führen zu Ihrem eigenen Tenant (z. B. kestrel.sharepoint.com) oder zu onedrive.live.com — nie zu einer separaten externen Domain."}]'::jsonb,
  30);
+
+
+-- ============================================================
+-- GEVORDERD (advanced difficulty) — subtiele phishing
+-- Professionele opmaak, geen spelfouten, bijna-correcte domeinen.
+-- Bedoeld voor gebruikers die de basis al beheersen.
+-- ============================================================
+
+INSERT INTO inbox_messages
+  (locale, audience, sender_name, sender_address, sender_note, received_label,
+   subject, preview, body, links, is_phishing, red_flags, green_flags,
+   explanation, sort_order, difficulty) VALUES
+
+-- ======== NL — gevorderd ========
+
+-- 1. PHISHING: Rabobank Rabo Scanner verloopt
+('nl', 'both',
+ 'Rabobank',
+ 'noreply@rabobank-authenticatie.com',
+ 'Kijk goed na de @: rabobank-authenticatie.com. De echte Rabobank stuurt altijd vanuit @rabobank.nl.',
+ 'vandaag 09:15',
+ 'Uw Rabo Scanner verloopt over 3 dagen — verleng nu',
+ 'Beste klant, uw Rabo Scanner-koppeling verloopt binnenkort. Zonder actie kunt u...',
+ E'Beste klant,\n\nUw Rabo Scanner-koppeling verloopt over 3 dagen. Na het verlopen kunt u niet meer inloggen in Mobiel Bankieren of betalingen goedkeuren.\n\nVerleng uw Rabo Scanner via {{link:0}}. Het duurt minder dan 2 minuten.\n\nMet vriendelijke groet,\nRabobank Klantendienst',
+ '[{"label":"Rabo Scanner verlengen","real_url":"http://rabobank-authenticatie.com/scanner/verleng","suspicious":true,"warning":"Deze link gaat naar rabobank-authenticatie.com, niet naar rabobank.nl. Typ altijd zelf rabobank.nl in uw browser of open de Rabo-app."}]'::jsonb,
+ TRUE,
+ '["Afzender eindigt op .com in plaats van @rabobank.nl","De link gaat naar rabobank-authenticatie.com, geen Rabobank-domein","Tijdsdruk: \"over 3 dagen\" — maar de bank belt u altijd persoonlijk voor dit soort zaken","De echte Rabo-app toont uw koppelstatus — daar kunt u het zelf controleren"]'::jsonb,
+ '[]'::jsonb,
+ 'Dit is phishing. Het domein rabobank-authenticatie.com lijkt op Rabobank, maar is het niet. De echte Rabobank gebruikt altijd @rabobank.nl. Open de Rabo-app rechtstreeks — nooit via een link in een e-mail.',
+ 100, 'advanced'),
+
+-- 2. PHISHING: PostNL douanekosten
+('nl', 'both',
+ 'PostNL',
+ 'noreply@postnl-pakket.com',
+ 'Let op het domein: postnl-pakket.com. PostNL gebruikt @postnl.nl voor e-mails.',
+ 'gisteren 16:03',
+ 'Uw pakket wordt aangehouden — betaal €2,45 douanekosten',
+ 'Uw pakket met trackingnummer 3SPBR123456789 wordt aangehouden bij de douane...',
+ E'Geachte afzender,\n\nUw pakket met trackingnummer 3SPBR123456789 wordt aangehouden bij de douane. Om uw pakket vrij te geven, dient u een bedrag van €2,45 aan douanekosten te voldoen.\n\nBetaal eenvoudig via {{link:0}}. Na betaling wordt uw pakket binnen 1-2 werkdagen bezorgd.\n\nMet vriendelijke groet,\nPostNL Bezorgservice',
+ '[{"label":"Douanekosten betalen","real_url":"http://postnl-pakket.com/betalen?id=3SPBR123456789","suspicious":true,"warning":"Deze link gaat naar postnl-pakket.com, niet naar postnl.nl. Het is een namaakwebsite om uw betaalgegevens te stelen."}]'::jsonb,
+ TRUE,
+ '["Domein postnl-pakket.com is niet van PostNL — het echte adres is @postnl.nl","Kleine betaling om u snel te laten klikken zonder veel nadenken","Trackingnummers van PostNL beginnen met een letter-patroon — controleer dit op postnl.nl","Bij echte douanekosten ontvangt u een fysieke brief, geen e-mail met betaallink"]'::jsonb,
+ '[]'::jsonb,
+ 'Dit is phishing. De domeinnaam postnl-pakket.com lijkt op PostNL maar is het niet. Echte PostNL-e-mails komen van @postnl.nl. Bij werkelijke douanekosten ontvangt u een brief van de Douane zelf, nooit een e-mail met een betaallink.',
+ 110, 'advanced'),
+
+-- 3. PHISHING: Belastingdienst teruggave
+('nl', 'both',
+ 'Belastingdienst',
+ 'mijn@belasting-terugave.nl',
+ 'Domein belasting-terugave.nl is niet van de overheid. De Belastingdienst gebruikt belastingdienst.nl.',
+ 'gisteren 11:47',
+ 'Uw belastingteruggave van €387,00 staat klaar',
+ 'Geachte belastingplichtige, wij hebben uw aangifte verwerkt en een teruggave...',
+ E'Geachte belastingplichtige,\n\nWij hebben uw aangifte inkomstenbelasting verwerkt en vastgesteld dat u recht heeft op een teruggave van €387,00.\n\nOm de teruggave te ontvangen, bevestig uw rekeningnummer via {{link:0}}. Zonder bevestiging kunnen wij het bedrag niet uitbetalen.\n\nMet vriendelijke groet,\nBelastingdienst Nederland',
+ '[{"label":"Rekeningnummer bevestigen","real_url":"http://belasting-terugave.nl/bevestig","suspicious":true,"warning":"Dit is geen officieel overheidsdomein. De echte Belastingdienst bereikt u via belastingdienst.nl of MijnOverheid. Vul nooit uw bankgegevens in via een link in een e-mail."}]'::jsonb,
+ TRUE,
+ '["Domein belasting-terugave.nl is geen overheidsdomein — let op de koppeltekens en ontbrekende \"dienst\"","De Belastingdienst kent uw rekeningnummer al uit eerdere aangiften","Teruggave-berichten komen via MijnBelastingdienst of een brief, nooit met een betaallink","Controleer altijd via mijn.belastingdienst.nl of er werkelijk een teruggave is"]'::jsonb,
+ '[]'::jsonb,
+ 'Dit is phishing. De Belastingdienst stuurt geen e-mails met een link om uw rekeningnummer te bevestigen — zij kennen dit al. Controleer teruggaven altijd via mijn.belastingdienst.nl, nooit via een link in een e-mail.',
+ 120, 'advanced'),
+
+-- 4. ECHT: ABN AMRO maandoverzicht
+('nl', 'both',
+ 'ABN AMRO',
+ 'noreply@abnamro.nl',
+ 'Het adres eindigt op @abnamro.nl — het officiële domein van de bank.',
+ 'gisteren 07:30',
+ 'Uw maandoverzicht van april 2025 staat klaar',
+ 'Beste mevrouw Janssen, uw maandoverzicht van april is beschikbaar in...',
+ E'Beste mevrouw Janssen,\n\nUw maandoverzicht van april 2025 is beschikbaar in Mijn ABN AMRO en in de ABN AMRO-app.\n\nU vindt het overzicht onder Documenten → Rekeningafschriften.\n\nHeeft u vragen? Bel ons op 0900-0024 (lokaal tarief).\n\nMet vriendelijke groet,\nABN AMRO Bank',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Afzender @abnamro.nl is het officiële domein van de bank","Geen link in het bericht — de bank vraagt u zelf de app te openen","Persoonlijke aanhef met uw eigen naam","Geen vraag om wachtwoord, pincode of andere gegevens","Verwijst naar het officiële telefoonnummer van de bank"]'::jsonb,
+ 'Dit is een echt bericht. Let op hoe de bank nooit vraagt om op een link te klikken — ze verwijzen u naar de app of het officiële telefoonnummer. De afzender eindigt correct op @abnamro.nl.',
+ 130, 'advanced'),
+
+-- 5. ECHT: LinkedIn verbindingsaanvraag
+('nl', 'both',
+ 'LinkedIn',
+ 'messages-noreply@linkedin.com',
+ 'Het adres eindigt op @linkedin.com — het officiële domein van LinkedIn.',
+ 'vandaag 08:52',
+ 'Jan de Vries wil graag met u connecten op LinkedIn',
+ 'Jan de Vries (Senior Accountmanager bij Philips) wil graag met u connecten...',
+ E'Jan de Vries wil graag met u connecten op LinkedIn.\n\nJan de Vries\nSenior Accountmanager bij Philips\n32 connecties\n\nU kunt deze uitnodiging bekijken en accepteren of negeren in uw LinkedIn-profiel. Log daarvoor zelf in op linkedin.com.\n\nU ontvangt dit bericht omdat u e-mailberichten van LinkedIn heeft ingeschakeld.',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Afzender @linkedin.com is het officiële domein","Geen dringende vraag of betaalverzoek","Bericht bevat geen links die u ergens anders naartoe sturen","LinkedIn raadt aan zelf in te loggen op linkedin.com, niet via een link"]'::jsonb,
+ 'Dit is een echt LinkedIn-bericht. Tip: ook al is dit echt, het is nog veiliger om zelf naar linkedin.com te gaan dan op een link in de e-mail te klikken — zo weet u altijd zeker dat u op de echte site bent.',
+ 140, 'advanced'),
+
+-- ======== EN — advanced ========
+
+-- 1. PHISHING: HMRC tax refund
+('en', 'both',
+ 'HM Revenue & Customs',
+ 'refunds@hmrc-gov-refund.com',
+ 'Note the domain: hmrc-gov-refund.com. Real HMRC emails come from @hmrc.gov.uk.',
+ 'yesterday 14:22',
+ 'Your tax refund of £312.00 is ready to process',
+ 'Dear taxpayer, we have calculated that you are entitled to a tax refund of...',
+ E'Dear taxpayer,\n\nFollowing a review of your tax records, we have calculated that you are entitled to a refund of £312.00 for the 2024-2025 tax year.\n\nTo receive your refund, please verify your bank details via {{link:0}}. Refunds not claimed within 14 days will be returned to HMRC.\n\nYours faithfully,\nHM Revenue & Customs',
+ '[{"label":"Claim your refund","real_url":"http://hmrc-gov-refund.com/claim","suspicious":true,"warning":"This link goes to hmrc-gov-refund.com, not hmrc.gov.uk. Real HMRC communications always use hmrc.gov.uk — never a .com address."}]'::jsonb,
+ TRUE,
+ '["Domain hmrc-gov-refund.com ends in .com, not .gov.uk — UK government sites always use .gov.uk","HMRC already holds your bank details from previous returns","Artificial deadline (\"14 days\") creates pressure to act without thinking","Real HMRC refunds are processed automatically — they never ask you to verify bank details by email"]'::jsonb,
+ '[]'::jsonb,
+ 'This is phishing. HMRC never asks you to verify bank details via email. Any refund is paid automatically to the account on record. Check your tax position directly at gov.uk/personal-tax-account.',
+ 100, 'advanced'),
+
+-- 2. PHISHING: Royal Mail customs fee
+('en', 'both',
+ 'Royal Mail',
+ 'delivery@royalmail-parcel.co.uk',
+ 'Note: royalmail-parcel.co.uk is not Royal Mail. The official domain is royalmail.com.',
+ 'today 10:41',
+ 'Your parcel is being held — customs fee of £1.99 required',
+ 'We attempted to deliver your parcel but it requires a customs payment before...',
+ E'We attempted to deliver your parcel (reference RL123456789GB) but it is currently being held at our depot.\n\nA customs fee of £1.99 is required before we can release your parcel for delivery. Once paid, your parcel will be delivered within 2 working days.\n\nPay the fee via {{link:0}}.\n\nRoyal Mail Customer Services',
+ '[{"label":"Pay customs fee","real_url":"http://royalmail-parcel.co.uk/pay?ref=RL123456789GB","suspicious":true,"warning":"This link goes to royalmail-parcel.co.uk, not royalmail.com. This is a fake site designed to steal your payment details."}]'::jsonb,
+ TRUE,
+ '["Domain royalmail-parcel.co.uk is not Royal Mail — the official site is royalmail.com","Small fee amount (£1.99) designed to make you pay without thinking","Real customs charges come as physical cards through your letterbox, not email payment links","Check any Royal Mail reference on royalmail.com/track-your-item directly"]'::jsonb,
+ '[]'::jsonb,
+ 'This is phishing. Royal Mail never requests customs payments via email. Genuine customs charges are delivered as physical notices. Check any parcel on royalmail.com directly.',
+ 110, 'advanced'),
+
+-- 3. PHISHING: Microsoft unusual sign-in
+('en', 'both',
+ 'Microsoft account team',
+ 'account-security@microsoft-accounts.net',
+ 'The real Microsoft uses @microsoft.com or @accountprotection.microsoft.com — never microsoft-accounts.net.',
+ 'today 07:18',
+ 'Unusual sign-in activity detected on your Microsoft account',
+ 'We detected an unusual sign-in to your Microsoft account from an unrecognised device...',
+ E'We detected an unusual sign-in to your Microsoft account.\n\nDate: Today at 06:47\nLocation: Frankfurt, Germany\nDevice: Windows PC (unrecognised)\n\nIf this was you, you can ignore this message. If this wasn''t you, your account may be at risk.\n\nSecure your account immediately via {{link:0}}.\n\nThe Microsoft account team',
+ '[{"label":"Review recent activity","real_url":"http://microsoft-accounts.net/security","suspicious":true,"warning":"This link goes to microsoft-accounts.net, not microsoft.com. Real Microsoft security alerts link to account.microsoft.com only."}]'::jsonb,
+ TRUE,
+ '["Domain microsoft-accounts.net is not Microsoft — the real domain is microsoft.com","Mentions a foreign location to trigger concern, making you act fast","Real Microsoft alerts link to account.microsoft.com, not third-party domains","Go directly to account.microsoft.com to check your sign-in history without clicking any link"]'::jsonb,
+ '[]'::jsonb,
+ 'This is phishing. Microsoft security emails always come from @microsoft.com domains and link to account.microsoft.com. Check your account directly at account.microsoft.com — never via a link in a suspicious email.',
+ 120, 'advanced'),
+
+-- 4. REAL: GitHub security notification
+('en', 'both',
+ 'GitHub',
+ 'noreply@github.com',
+ 'The address ends in @github.com — GitHub''s official domain.',
+ 'yesterday 22:05',
+ 'A new public key was added to your account',
+ 'A new SSH key was added to your GitHub account. If you did not add this key...',
+ E'A new public key was added to your GitHub account.\n\nKey fingerprint: SHA256:AbCdEf1234...\nAdded: yesterday at 21:58\n\nIf you added this key, no action is needed.\n\nIf you did not add this key, visit your account security settings to remove it and consider changing your password.\n\nThe GitHub Team',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Sender is @github.com — GitHub''s official domain","No link asking you to click — you are told to go to your settings yourself","Informational tone: tells you what happened, not demands you act immediately","Explains what to do if it wasn''t you, without creating panic"]'::jsonb,
+ 'This is a genuine GitHub notification. Notice it contains no links — it tells you to visit your settings yourself. This is how legitimate security notifications should work.',
+ 130, 'advanced'),
+
+-- 5. REAL: Spotify payment confirmation
+('en', 'both',
+ 'Spotify',
+ 'no-reply@spotify.com',
+ 'The address ends in @spotify.com — Spotify''s official domain.',
+ '3 days ago',
+ 'Your Spotify Premium subscription has been renewed',
+ 'Hi there, your monthly Spotify Premium subscription has been renewed...',
+ E'Hi there,\n\nYour monthly Spotify Premium subscription has been renewed.\n\nAmount charged: £10.99\nDate: 3 days ago\nPayment method: Visa ending in 4242\n\nYou can manage your subscription and view past invoices in your account settings at spotify.com/account.\n\nThanks for being a Premium member.\nThe Spotify Team',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Sender @spotify.com is Spotify''s official domain","Shows the exact amount and last 4 digits of card — matches what you''d expect","No link demanding immediate action","Refers you to account settings at spotify.com, not a separate domain"]'::jsonb,
+ 'This is a genuine Spotify renewal receipt. The email shows exactly what was charged and tells you to manage your account at spotify.com. No suspicious links or urgent demands.',
+ 140, 'advanced'),
+
+-- ======== FR — avancé ========
+
+-- 1. PHISHING: Crédit Agricole accès suspendu
+('fr', 'both',
+ 'Crédit Agricole',
+ 'securite@credit-agricole-services.com',
+ 'Domaine credit-agricole-services.com : ce n'est pas Crédit Agricole. Le vrai domaine est credit-agricole.fr.',
+ 'hier 15:33',
+ 'Votre accès à votre espace client est temporairement suspendu',
+ 'Cher client, nous avons détecté une activité inhabituelle sur votre compte...',
+ E'Cher client,\n\nNous avons détecté une activité inhabituelle sur votre compte Crédit Agricole. Par mesure de sécurité, votre accès a été temporairement suspendu.\n\nPour rétablir votre accès, veuillez vérifier votre identité via {{link:0}}. Sans action de votre part sous 48 heures, votre compte sera définitivement bloqué.\n\nCordialement,\nLe Service Sécurité Crédit Agricole',
+ '[{"label":"Vérifier mon identité","real_url":"http://credit-agricole-services.com/verifier","suspicious":true,"warning":"Ce lien mène vers credit-agricole-services.com, pas vers credit-agricole.fr. C'est un faux site qui imite votre banque."}]'::jsonb,
+ TRUE,
+ '["Le domaine credit-agricole-services.com n'est pas celui de la banque — le vrai est credit-agricole.fr","La menace de blocage définitif en 48 h crée une pression artificielle","Le Crédit Agricole ne demande jamais de vérifier votre identité par e-mail","Connectez-vous directement sur credit-agricole.fr ou appelez le numéro au dos de votre carte"]'::jsonb,
+ '[]'::jsonb,
+ 'Il s'agit de phishing. Le Crédit Agricole ne suspend pas les comptes par e-mail et ne vous demande pas de vérifier votre identité via un lien. Connectez-vous directement sur credit-agricole.fr ou appelez le numéro inscrit au dos de votre carte.',
+ 100, 'advanced'),
+
+-- 2. PHISHING: La Poste frais de douane
+('fr', 'both',
+ 'La Poste',
+ 'suivi@laposte-livraison.fr',
+ 'Domaine laposte-livraison.fr : ce n'est pas La Poste. L'adresse officielle est @laposte.fr.',
+ 'aujourd'hui 11:08',
+ 'Votre colis est retenu — réglez les frais de douane (2,99 €)',
+ 'Votre colis (référence LP123456789FR) est actuellement retenu en douane...',
+ E'Votre colis (référence LP123456789FR) est actuellement retenu en douane.\n\nPour procéder à la livraison, des frais de douane d'un montant de 2,99 € doivent être réglés.\n\nEffectuez le paiement via {{link:0}}. Après validation, votre colis sera livré sous 2 jours ouvrés.\n\nLa Poste — Service Clients',
+ '[{"label":"Payer les frais","real_url":"http://laposte-livraison.fr/payer?ref=LP123456789FR","suspicious":true,"warning":"Ce lien mène vers laposte-livraison.fr, pas vers laposte.fr. C'est un faux site conçu pour voler vos données bancaires."}]'::jsonb,
+ TRUE,
+ '["Le domaine laposte-livraison.fr n'est pas celui de La Poste — le vrai est @laposte.fr","Un petit montant (2,99 €) pour que vous payiez sans réfléchir","Les vrais frais de douane sont notifiés par un avis papier dans votre boîte aux lettres, jamais par un lien e-mail","Vérifiez tout colis directement sur laposte.fr/outils/suivi-de-courrier-et-colis"]'::jsonb,
+ '[]'::jsonb,
+ 'Il s'agit de phishing. La Poste ne demande pas le règlement de frais de douane par e-mail avec un lien de paiement. Les vrais frais de douane sont notifiés par courrier physique. Vérifiez votre colis directement sur laposte.fr.',
+ 110, 'advanced'),
+
+-- 3. PHISHING: Impôts remboursement
+('fr', 'both',
+ 'Direction Générale des Finances Publiques',
+ 'remboursement@impots-gouv.net',
+ 'impots-gouv.net n'est pas un domaine officiel. Le vrai service utilise impots.gouv.fr.',
+ 'hier 09:55',
+ 'Votre remboursement d''impôts de 274 € est disponible',
+ 'Madame, Monsieur, suite au traitement de votre déclaration, vous bénéficiez...',
+ E'Madame, Monsieur,\n\nSuite au traitement de votre déclaration de revenus, vous bénéficiez d''un remboursement de 274,00 €.\n\nAfin de procéder au virement, veuillez confirmer votre relevé d''identité bancaire (RIB) via {{link:0}}. Passé un délai de 15 jours, le remboursement sera annulé.\n\nCordialement,\nDirection Générale des Finances Publiques',
+ '[{"label":"Confirmer mon RIB","real_url":"http://impots-gouv.net/confirmer-rib","suspicious":true,"warning":"Ce lien mène vers impots-gouv.net — pas impots.gouv.fr. Les sites officiels français utilisent toujours le domaine .gouv.fr."}]'::jsonb,
+ TRUE,
+ '["impots-gouv.net n'est pas un site gouvernemental — les sites officiels français utilisent .gouv.fr","La DGFiP connaît déjà votre RIB et rembourse automatiquement — elle ne vous le demande jamais par e-mail","L'échéance de 15 jours crée une pression artificielle","Vérifiez votre situation fiscale directement sur impots.gouv.fr, rubrique « Mes remboursements »"]'::jsonb,
+ '[]'::jsonb,
+ 'Il s'agit de phishing. Les remboursements d'impôts sont effectués automatiquement sur le compte connu du fisc. La DGFiP ne demande jamais de confirmer un RIB par e-mail. Vérifiez toujours sur impots.gouv.fr.',
+ 120, 'advanced'),
+
+-- 4. RÉEL: Doctolib rappel rendez-vous
+('fr', 'both',
+ 'Doctolib',
+ 'notification@doctolib.fr',
+ 'L'adresse se termine par @doctolib.fr — le domaine officiel de la plateforme.',
+ 'aujourd'hui 08:00',
+ 'Rappel : votre rendez-vous demain à 10h30 — Dr Martin',
+ 'Bonjour, voici un rappel pour votre rendez-vous de demain avec le Dr Martin...',
+ E'Bonjour,\n\nVoici un rappel pour votre rendez-vous de demain :\n\n• Praticien : Dr Sophie Martin — Médecin généraliste\n• Date : demain à 10h30\n• Adresse : 12 rue des Lilas, 75011 Paris\n\nPour annuler ou reporter, connectez-vous à votre espace Doctolib sur doctolib.fr.\n\nDoctolib',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["L'expéditeur @doctolib.fr est le domaine officiel","Pas de lien à cliquer — vous êtes renvoyé vers doctolib.fr pour gérer le rendez-vous","Informations concrètes et attendues (praticien, date, adresse)","Aucune demande de paiement ni d'informations personnelles"]'::jsonb,
+ 'Il s'agit d'un vrai rappel Doctolib. Notez qu'il ne contient aucun lien de paiement ou demande d'informations sensibles — seulement les détails du rendez-vous et une invitation à gérer cela sur doctolib.fr.',
+ 130, 'advanced'),
+
+-- 5. RÉEL: Amazon expédition
+('fr', 'both',
+ 'Amazon',
+ 'shipment-tracking@amazon.fr',
+ 'L'adresse se termine par @amazon.fr — le domaine officiel d'Amazon France.',
+ 'avant-hier 17:45',
+ 'Votre commande a été expédiée — livraison prévue vendredi',
+ 'Bonjour, bonne nouvelle : votre commande est en route. Voici les détails...',
+ E'Bonjour,\n\nBonne nouvelle : votre commande est en route !\n\n📦 Commande n° 406-1234567-8901234\nLivraison estimée : vendredi entre 14h et 18h\nTransporteur : Amazon Logistics\n\nVous pouvez suivre votre colis dans la rubrique « Mes commandes » de votre compte Amazon sur amazon.fr.\n\nMerci de votre confiance.\nAmazon',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["L'expéditeur @amazon.fr est le domaine officiel d'Amazon France","Numéro de commande concret — vérifiable dans votre compte","Pas de demande de paiement ou d'informations bancaires","Vous êtes renvoyé vers amazon.fr pour le suivi, pas vers un domaine externe"]'::jsonb,
+ 'Il s'agit d'un vrai e-mail d'Amazon. Il contient un numéro de commande concret et vous renvoie vers amazon.fr pour le suivi. Aucune demande de paiement ni d'informations personnelles.',
+ 140, 'advanced'),
+
+-- ======== DE — fortgeschritten ========
+
+-- 1. PHISHING: Sparkasse Sicherheitsüberprüfung
+('de', 'both',
+ 'Sparkasse',
+ 'sicherheit@sparkasse-online.de',
+ 'Achtung: sparkasse-online.de ist nicht die echte Sparkasse. Das offizielle Domain ist sparkasse.de.',
+ 'gestern 16:21',
+ 'Wichtige Sicherheitsüberprüfung Ihres Kontos erforderlich',
+ 'Sehr geehrte/r Kundin/Kunde, im Rahmen unserer Sicherheitsmaßnahmen...',
+ E'Sehr geehrte/r Kundin/Kunde,\n\nim Rahmen unserer Sicherheitsmaßnahmen bitten wir Sie, Ihre Online-Banking-Zugangsdaten einmalig zu bestätigen. Ohne diese Bestätigung wird Ihr Konto in 48 Stunden eingeschränkt.\n\nBestätigen Sie Ihre Daten über {{link:0}}.\n\nMit freundlichen Grüßen,\nIhr Sparkassen-Sicherheitsteam',
+ '[{"label":"Zugangsdaten bestätigen","real_url":"http://sparkasse-online.de/sicherheit/bestaetigen","suspicious":true,"warning":"Dieser Link führt zu sparkasse-online.de, nicht zu sparkasse.de. Das ist eine gefälschte Website."}]'::jsonb,
+ TRUE,
+ '["sparkasse-online.de ist nicht das offizielle Domain — das echte ist sparkasse.de","Drohung mit Kontosperrung nach 48 Stunden erzeugt künstlichen Druck","Keine Sparkasse bittet per E-Mail um Bestätigung von Zugangsdaten","Melden Sie sich immer direkt über sparkasse.de an, nie über einen E-Mail-Link"]'::jsonb,
+ '[]'::jsonb,
+ 'Dies ist Phishing. Kein Kreditinstitut fordert Sie per E-Mail auf, Zugangsdaten zu bestätigen. Loggen Sie sich direkt über sparkasse.de ein oder rufen Sie die Nummer auf Ihrer Bankkarte an.',
+ 100, 'advanced'),
+
+-- 2. PHISHING: DHL Zollgebühr
+('de', 'both',
+ 'DHL Paket',
+ 'tracking@dhl-pakete.com',
+ 'dhl-pakete.com ist nicht DHL. Die offizielle E-Mail-Domain von DHL lautet @dhl.de.',
+ 'heute 09:37',
+ 'Ihr Paket wird zurückgehalten — Zollgebühr von 2,99 € erforderlich',
+ 'Ihr Paket (Sendungsnummer 1Z999AA10123456784) befindet sich derzeit im Zoll...',
+ E'Ihr Paket (Sendungsnummer 1Z999AA10123456784) befindet sich derzeit beim Zoll und kann erst nach Zahlung einer Zollgebühr von 2,99 € zugestellt werden.\n\nBitte begleichen Sie die Gebühr über {{link:0}}. Nach erfolgreicher Zahlung wird Ihr Paket innerhalb von 1-2 Werktagen zugestellt.\n\nMit freundlichen Grüßen,\nDHL Kundenservice',
+ '[{"label":"Zollgebühr bezahlen","real_url":"http://dhl-pakete.com/zahlen?id=1Z999AA10123456784","suspicious":true,"warning":"Dieser Link führt zu dhl-pakete.com, nicht zu dhl.de. Es handelt sich um eine gefälschte Website."}]'::jsonb,
+ TRUE,
+ '["dhl-pakete.com ist nicht die offizielle DHL-Domain — das echte ist @dhl.de","Kleiner Betrag (2,99 €) soll dazu verleiten, ohne Nachdenken zu zahlen","Echte Zollgebühren werden durch einen physischen Benachrichtigungszettel angekündigt, nicht per E-Mail","Prüfen Sie Sendungen immer direkt auf dhl.de/de/privatkunden/pakete-empfangen/verfolgen.html"]'::jsonb,
+ '[]'::jsonb,
+ 'Dies ist Phishing. DHL fordert keine Zollgebühren per E-Mail mit Zahlungslink. Echte Zollbenachrichtigungen kommen als Papierzettel. Verfolgen Sie Sendungen direkt auf dhl.de.',
+ 110, 'advanced'),
+
+-- 3. PHISHING: Steuererstattung
+('de', 'both',
+ 'Bundeszentralamt für Steuern',
+ 'erstattung@steuer-rueckzahlung.de',
+ 'steuer-rueckzahlung.de ist keine Behörden-Website. Offizielle Finanzämter nutzen die Domain bzst.de oder Ihr zuständiges Finanzamt.',
+ 'gestern 10:12',
+ 'Ihre Steuererstattung von 412 € steht zur Auszahlung bereit',
+ 'Sehr geehrte/r Steuerpflichtige/r, nach Prüfung Ihrer Einkommensteuererklärung...',
+ E'Sehr geehrte/r Steuerpflichtige/r,\n\nnach Prüfung Ihrer Einkommensteuererklärung für das Steuerjahr 2024 steht Ihnen eine Steuererstattung von 412,00 € zu.\n\nZur Auszahlung bestätigen Sie bitte Ihre Bankverbindung über {{link:0}}. Ohne Bestätigung innerhalb von 14 Tagen kann der Betrag nicht ausgezahlt werden.\n\nMit freundlichen Grüßen,\nBundeszentralamt für Steuern',
+ '[{"label":"Bankverbindung bestätigen","real_url":"http://steuer-rueckzahlung.de/bestaetigen","suspicious":true,"warning":"steuer-rueckzahlung.de ist keine offizielle Behörden-Website. Deutsche Behörden nutzen immer .de-Domains wie bzst.de oder finanzamt.de."}]'::jsonb,
+ TRUE,
+ '["steuer-rueckzahlung.de ist kein offizielles Behörden-Domain — Finanzämter nutzen finanzamt.de oder ihr jeweiliges Landes-Domain","Das Finanzamt kennt Ihre Bankverbindung bereits aus früheren Steuerbescheiden","Die 14-Tage-Frist erzeugt künstlichen Druck","Erstattungen werden automatisch ausgezahlt — das Finanzamt fragt nie per E-Mail nach einer Bankverbindung"]'::jsonb,
+ '[]'::jsonb,
+ 'Dies ist Phishing. Steuererstattungen werden automatisch an die bekannte Bankverbindung ausgezahlt. Das Finanzamt bittet nie per E-Mail um Bestätigung der Bankverbindung. Prüfen Sie Bescheide über Ihr ELSTER-Konto auf elster.de.',
+ 120, 'advanced'),
+
+-- 4. ECHT: Amazon.de Versandbestätigung
+('de', 'both',
+ 'Amazon.de',
+ 'shipment-tracking@amazon.de',
+ 'Die Adresse endet auf @amazon.de — die offizielle Domain von Amazon Deutschland.',
+ 'vorgestern 18:30',
+ 'Ihre Bestellung wurde versandt — Lieferung voraussichtlich Freitag',
+ 'Hallo, Ihre Bestellung ist auf dem Weg zu Ihnen. Hier sind die Details...',
+ E'Hallo,\n\nIhre Bestellung ist auf dem Weg zu Ihnen!\n\n📦 Bestellnummer: 302-1234567-8901234\nVoraussichtliche Lieferung: Freitag zwischen 14 und 18 Uhr\nVersanddienstleister: Amazon Logistics\n\nSie können Ihre Sendung im Bereich „Meine Bestellungen" in Ihrem Amazon-Konto auf amazon.de verfolgen.\n\nVielen Dank für Ihren Einkauf.\nAmazon',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Absender @amazon.de ist die offizielle Domain von Amazon Deutschland","Konkrete Bestellnummer — in Ihrem Konto nachprüfbar","Keine Zahlungsaufforderung oder Anfrage nach persönlichen Daten","Verweist auf amazon.de für die Sendungsverfolgung, nicht auf eine externe Domain"]'::jsonb,
+ 'Dies ist eine echte Amazon-Versandbestätigung. Sie enthält eine nachprüfbare Bestellnummer und verweist auf amazon.de. Keine verdächtigen Links, keine Zahlungsaufforderung.',
+ 130, 'advanced'),
+
+-- 5. ECHT: LinkedIn Kontaktanfrage
+('de', 'both',
+ 'LinkedIn',
+ 'messages-noreply@linkedin.com',
+ 'Die Adresse endet auf @linkedin.com — die offizielle Domain von LinkedIn.',
+ 'heute 08:14',
+ 'Markus Weber möchte sich mit Ihnen auf LinkedIn vernetzen',
+ 'Markus Weber (Senior Berater bei Deloitte) möchte sich mit Ihnen vernetzen...',
+ E'Markus Weber möchte sich mit Ihnen auf LinkedIn vernetzen.\n\nMarkus Weber\nSenior Berater bei Deloitte\n148 Kontakte\n\nSie können die Einladung in Ihrem LinkedIn-Profil annehmen oder ablehnen. Melden Sie sich dafür direkt auf linkedin.com an.\n\nSie erhalten diese Nachricht, weil Sie E-Mail-Benachrichtigungen von LinkedIn aktiviert haben.',
+ '[]'::jsonb,
+ FALSE,
+ '[]'::jsonb,
+ '["Absender @linkedin.com ist die offizielle Domain","Keine dringende Aufforderung und keine Zahlungsanfrage","LinkedIn empfiehlt, sich direkt auf linkedin.com anzumelden, statt auf einen Link zu klicken","Keine externen Domains oder verdächtigen Links im Text"]'::jsonb,
+ 'Dies ist eine echte LinkedIn-Kontaktanfrage. Tipp: Auch wenn diese E-Mail echt ist, ist es noch sicherer, direkt auf linkedin.com zu gehen, statt auf einen Link in der E-Mail zu klicken.',
+ 140, 'advanced');
+
+-- nl-BE en fr-BE: kopieën van nl/fr advanced-berichten met aangepaste locale.
+-- Zo krijgen Belgische gebruikers de juiste taal te zien ook in advanced mode.
+INSERT INTO inbox_messages
+  (locale, audience, sender_name, sender_address, sender_note, received_label,
+   subject, preview, body, links, is_phishing, red_flags, green_flags,
+   explanation, sort_order, difficulty)
+SELECT 'nl-BE', audience, sender_name, sender_address, sender_note, received_label,
+       subject, preview, body, links, is_phishing, red_flags, green_flags,
+       explanation, sort_order, difficulty
+FROM inbox_messages
+WHERE locale = 'nl' AND difficulty = 'advanced';
+
+INSERT INTO inbox_messages
+  (locale, audience, sender_name, sender_address, sender_note, received_label,
+   subject, preview, body, links, is_phishing, red_flags, green_flags,
+   explanation, sort_order, difficulty)
+SELECT 'fr-BE', audience, sender_name, sender_address, sender_note, received_label,
+       subject, preview, body, links, is_phishing, red_flags, green_flags,
+       explanation, sort_order, difficulty
+FROM inbox_messages
+WHERE locale = 'fr' AND difficulty = 'advanced';

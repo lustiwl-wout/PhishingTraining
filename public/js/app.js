@@ -49,6 +49,19 @@
     return 'android';
   }
 
+  // -------- difficulty (normaal vs gevorderd) --------
+  const SUPPORTED_DIFFICULTIES = ['normal', 'advanced'];
+  let currentDifficulty = 'normal';
+  function setDifficulty(d) {
+    if (!SUPPORTED_DIFFICULTIES.includes(d)) return;
+    currentDifficulty = d;
+    document.querySelectorAll('#sim-difficulty-toggle [data-difficulty]').forEach((el) => {
+      el.classList.toggle('active', el.dataset.difficulty === d);
+    });
+    const hint = document.getElementById('sim-difficulty-hint');
+    if (hint) hint.textContent = t('sim.difficulty.hint.' + d);
+  }
+
   // -------- audience (persoonlijk vs zakelijk) --------
   const SUPPORTED_AUDIENCES = ['personal', 'business'];
   const AUDIENCE_ICONS = { personal: '📥', business: '💼' };
@@ -141,6 +154,8 @@
     const devIcon = document.getElementById('device-switch-icon');
     if (devName) devName.textContent = t('device.' + currentDevice + '.title');
     if (devIcon) devIcon.textContent = DEVICE_ICONS[currentDevice] || '';
+    const diffHint = document.getElementById('sim-difficulty-hint');
+    if (diffHint) diffHint.textContent = t('sim.difficulty.hint.' + currentDifficulty);
   }
 
   function setLanguage(lang) {
@@ -175,6 +190,7 @@
   // op de welkom-pagina belandt.
   document.addEventListener('DOMContentLoaded', () => {
     applyI18n();
+    setDifficulty(currentDifficulty);
     const savedPage = localStorage.getItem('vo_page');
     if (savedPage && pages.includes(savedPage) && savedPage !== 'welkom') {
       go(savedPage);
@@ -215,6 +231,12 @@
       e.preventDefault();
       setAudience(audCard.dataset.audience);
       hideAudiencePicker();
+      return;
+    }
+    const diffBtn = e.target.closest('[data-difficulty]');
+    if (diffBtn && diffBtn.closest('#sim-difficulty-toggle')) {
+      e.preventDefault();
+      setDifficulty(diffBtn.dataset.difficulty);
       return;
     }
     // Apparaat-picker kaart (💻 / 📱 / 🍏) — niet meer in de UI, maar
@@ -322,7 +344,8 @@
       if (!opts || !opts.method || opts.method === 'GET') {
         const sep = path.includes('?') ? '&' : '?';
         url += sep + 'lang=' + encodeURIComponent(currentLang)
-             + '&audience=' + encodeURIComponent(currentAudience);
+             + '&audience=' + encodeURIComponent(currentAudience)
+             + '&difficulty=' + encodeURIComponent(currentDifficulty);
       }
       const res = await fetch(url, Object.assign({
         headers: { 'Content-Type': 'application/json' },
