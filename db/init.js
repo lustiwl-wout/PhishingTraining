@@ -60,15 +60,13 @@ async function initDb({ force = false } = {}) {
       else reason = 'seed-inhoud gewijzigd';
       console.log(`[init-db] seed laden (${reason}). hash: ${previousHash || 'none'} -> ${seedHash}`);
 
-      // Bewaar gebruikersdata vóór de seed (die truncate+cascade doet op content-tabellen).
-      const [judgments, eggs, simStarts, orgs, orgUsers, orgSessions] = await Promise.all([
-        client.query('SELECT * FROM inbox_judgments').catch(() => ({ rows: [] })),
-        client.query('SELECT * FROM easter_egg_views').catch(() => ({ rows: [] })),
-        client.query('SELECT * FROM simulator_starts').catch(() => ({ rows: [] })),
-        client.query('SELECT * FROM organisations').catch(() => ({ rows: [] })),
-        client.query('SELECT * FROM org_users').catch(() => ({ rows: [] })),
-        client.query('SELECT * FROM org_sessions').catch(() => ({ rows: [] })),
-      ]);
+      // Bewaar gebruikersdata vóór de seed — sequentieel op dezelfde client.
+      const judgments  = await client.query('SELECT * FROM inbox_judgments').catch(() => ({ rows: [] }));
+      const eggs       = await client.query('SELECT * FROM easter_egg_views').catch(() => ({ rows: [] }));
+      const simStarts  = await client.query('SELECT * FROM simulator_starts').catch(() => ({ rows: [] }));
+      const orgs       = await client.query('SELECT * FROM organisations').catch(() => ({ rows: [] }));
+      const orgUsers   = await client.query('SELECT * FROM org_users').catch(() => ({ rows: [] }));
+      const orgSessions = await client.query('SELECT * FROM org_sessions').catch(() => ({ rows: [] }));
       console.log(`[init-db] ${judgments.rows.length} oordelen, ${eggs.rows.length} easter-egg views, ${simStarts.rows.length} simulator-starts, ${orgs.rows.length} organisaties, ${orgUsers.rows.length} org-gebruikers opgeslagen.`);
 
       await client.query(seed);
