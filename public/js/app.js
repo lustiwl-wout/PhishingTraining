@@ -58,8 +58,6 @@
     document.querySelectorAll('#sim-difficulty-toggle [data-difficulty]').forEach((el) => {
       el.classList.toggle('active', el.dataset.difficulty === d);
     });
-    const hint = document.getElementById('sim-difficulty-hint');
-    if (hint) hint.textContent = t('sim.difficulty.hint.' + d);
   }
 
   // -------- audience (persoonlijk vs zakelijk) --------
@@ -154,8 +152,6 @@
     const devIcon = document.getElementById('device-switch-icon');
     if (devName) devName.textContent = t('device.' + currentDevice + '.title');
     if (devIcon) devIcon.textContent = DEVICE_ICONS[currentDevice] || '';
-    const diffHint = document.getElementById('sim-difficulty-hint');
-    if (diffHint) diffHint.textContent = t('sim.difficulty.hint.' + currentDifficulty);
   }
 
   function setLanguage(lang) {
