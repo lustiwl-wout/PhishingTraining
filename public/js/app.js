@@ -184,9 +184,90 @@
   // de doelgroep-picker automatisch volgt als die nog niet gekozen is.
   // Herstel ook de laatst-bezochte stap zodat een refresh niet altijd
   // op de welkom-pagina belandt.
+  // -------- enterprise config --------
+  let enterpriseConfig = null;
+
+  async function loadEnterpriseConfig() {
+    try {
+      const r = await fetch('/api/enterprise/config');
+      if (!r.ok) return;
+      const cfg = await r.json();
+      if (!cfg.enterprise) return;
+      enterpriseConfig = cfg;
+      applyEnterpriseConfig(cfg);
+    } catch (_) { /* non-enterprise: ignore */ }
+  }
+
+  function applyEnterpriseConfig(cfg) {
+    // --- talen: verberg kaarten die niet zijn toegestaan ---
+    document.querySelectorAll('#lang-picker [data-lang]').forEach(btn => {
+      btn.hidden = !cfg.locales.includes(btn.dataset.lang);
+    });
+    // Als slechts één taal: stel in en verberg picker-knop
+    if (cfg.locales.length === 1) {
+      setLanguage(cfg.locales[0]);
+      const sw = document.getElementById('lang-switch');
+      if (sw) sw.hidden = true;
+    } else if (!cfg.locales.includes(currentLang)) {
+      setLanguage(cfg.locales[0]);
+    }
+
+    // --- doelgroep: verberg kaarten die niet zijn toegestaan ---
+    document.querySelectorAll('#audience-picker [data-audience]').forEach(btn => {
+      btn.hidden = !cfg.audiences.includes(btn.dataset.audience);
+    });
+    if (cfg.audiences.length === 1) {
+      setAudience(cfg.audiences[0]);
+      const sw = document.getElementById('audience-switch');
+      if (sw) sw.hidden = true;
+    } else if (!cfg.audiences.includes(currentAudience)) {
+      setAudience(cfg.audiences[0]);
+    }
+
+    // --- moeilijkheidsgraad ---
+    const toggle = document.getElementById('sim-difficulty-toggle');
+    if (cfg.difficulties.length === 1) {
+      // Één keuze: toggle helemaal verbergen
+      if (toggle) toggle.hidden = true;
+      setDifficulty(cfg.difficulties[0]);
+    } else {
+      // Meerdere: verberg knoppen die niet zijn toegestaan
+      if (toggle) {
+        toggle.querySelectorAll('[data-difficulty]').forEach(btn => {
+          btn.hidden = !cfg.difficulties.includes(btn.dataset.difficulty);
+        });
+      }
+      if (!cfg.difficulties.includes(currentDifficulty)) {
+        setDifficulty(cfg.difficulties[0]);
+      }
+    }
+
+    // Org-naam tonen in header indien aanwezig
+    const brandEl = document.querySelector('.nav-brand, #welkom-titel');
+    if (brandEl && cfg.orgName) {
+      const tag = document.createElement('span');
+      tag.style.cssText = 'font-size:.75rem;font-weight:400;color:var(--ink-soft);margin-left:.5rem;vertical-align:middle';
+      tag.textContent = '— ' + cfg.orgName;
+      brandEl.appendChild(tag);
+    }
+
+    // Toon uitlog-knop voor enterprise gebruikers
+    const nav = document.querySelector('nav') || document.querySelector('header');
+    if (nav) {
+      const logoutForm = document.createElement('form');
+      logoutForm.method = 'POST';
+      logoutForm.action = '/e/logout';
+      logoutForm.style.cssText = 'display:inline;margin-left:.5rem';
+      logoutForm.innerHTML = '<button type="submit" style="background:none;border:none;cursor:pointer;font-size:.85rem;color:var(--ink-soft)">Uitloggen</button>';
+      nav.appendChild(logoutForm);
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
-    applyI18n();
-    setDifficulty(currentDifficulty);
+    loadEnterpriseConfig().then(() => {
+      applyI18n();
+      setDifficulty(currentDifficulty);
+    });
     const savedPage = localStorage.getItem('vo_page');
     if (savedPage && pages.includes(savedPage) && savedPage !== 'welkom') {
       go(savedPage);

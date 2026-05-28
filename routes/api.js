@@ -236,16 +236,15 @@ router.post('/inbox/:id/judge', async (req, res, next) => {
     const msg = rows[0];
     const isCorrect = verdict === (msg.is_phishing ? 'phish' : 'trust');
 
-    await db.query(
-      `INSERT INTO inbox_judgments
-         (session_id, message_id, verdict, is_correct, clicked_link, revealed_sender, ip_address, difficulty, org_user_id)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
-      [session_id, id, verdict, isCorrect, !!clicked_link, !!revealed_sender, clientIp(req), difficulty, orgUserId]
-    );
-
-    // Update org_session last_active
-    if (orgUserId && req.session.enterpriseSessionId) {
-      db.query(`UPDATE org_sessions SET last_active = NOW() WHERE session_id = $1`, [req.session.enterpriseSessionId]).catch(() => {});
+    // Alleen opslaan voor enterprise-gebruikers
+    if (orgUserId) {
+      await db.query(
+        `INSERT INTO inbox_judgments
+           (session_id, message_id, verdict, is_correct, clicked_link, revealed_sender, ip_address, difficulty, org_user_id)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
+        [session_id, id, verdict, isCorrect, !!clicked_link, !!revealed_sender, clientIp(req), difficulty, orgUserId]
+      );
+      db.query(`UPDATE org_sessions SET last_active = NOW() WHERE session_id = $1`, [session_id]).catch(() => {});
     }
 
     res.json({
@@ -273,29 +272,34 @@ router.get('/stats', async (_req, res, next) => {
   } catch (err) { next(err); }
 });
 
-// POST /api/simulator/start  { session_id }
-router.post('/simulator/start', async (req, res, next) => {
-  try {
-    const sessionId = req.body?.session_id || '';
-    if (!isUuidLike(sessionId)) return res.status(400).json({ error: 'ongeldig session_id' });
-    await db.query(
-      'INSERT INTO simulator_starts (session_id, ip_address) VALUES ($1, $2)',
-      [sessionId, clientIp(req)]
-    );
-    res.status(201).json({ ok: true });
-  } catch (err) { next(err); }
-});
+// POST /api/simulator/start — no-op voor gratis gebruikers
+router.post('/simulator/start', (_req, res) => res.status(201).json({ ok: true }));
 
-// POST /api/easter-egg  { session_id }
-router.post('/easter-egg', async (req, res, next) => {
+// POST /api/easter-egg — no-op voor gratis gebruikers
+router.post('/easter-egg', (_req, res) => res.status(201).json({ ok: true }));
+
+// GET /api/enterprise/config
+router.get('/enterprise/config', async (req, res, next) => {
   try {
-    const sessionId = req.body?.session_id || '';
-    if (!isUuidLike(sessionId)) return res.status(400).json({ error: 'ongeldig session_id' });
-    await db.query(
-      'INSERT INTO easter_egg_views (session_id, ip_address) VALUES ($1, $2)',
-      [sessionId, clientIp(req)]
-    );
-    res.status(201).json({ ok: true });
+    const orgUserId = req.session?.enterpriseOrgUserId;
+    if (!orgUserId) return res.json({ enterprise: false });
+
+    const { rows } = await db.query(`
+      SELECT o.name, o.slug, o.locales, o.audiences, o.difficulties
+      FROM org_users u
+      JOIN organisations o ON o.id = u.org_id
+      WHERE u.id = $1
+    `, [orgUserId]);
+
+    if (!rows[0]) return res.json({ enterprise: false });
+    const org = rows[0];
+    res.json({
+      enterprise: true,
+      orgName: org.name,
+      locales: org.locales,
+      audiences: org.audiences,
+      difficulties: org.difficulties,
+    });
   } catch (err) { next(err); }
 });
 

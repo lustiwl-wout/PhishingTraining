@@ -60,8 +60,8 @@ function sameOriginOnly(req, res, next) {
 const readLimit = rateLimit({ windowMs: 60_000, max: 120, standardHeaders: true, legacyHeaders: false });
 const writeLimit = rateLimit({ windowMs: 60_000, max: 30, standardHeaders: true, legacyHeaders: false });
 
-// Beheer (voor /sitrep/login mag je altijd komen, de rest checkt de sessie zelf)
-app.use('/sitrep', adminRouter);
+// Beheer (/admin)
+app.use('/admin', adminRouter);
 
 // Enterprise login (/e/:slug) en klantportaal (/portal/:token)
 app.use('/e', enterpriseRouter);
