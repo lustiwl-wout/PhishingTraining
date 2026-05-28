@@ -64,7 +64,9 @@ router.get('/', requireLogin, async (req, res, next) => {
           COUNT(*) FILTER (WHERE clicked_link)::int                             AS link_geklikt,
           COALESCE(ROUND(
             COUNT(*) FILTER (WHERE is_correct)::numeric / NULLIF(COUNT(*), 0) * 100
-          ), 0)::int                                                             AS gemiddeld_pct
+          ), 0)::int                                                             AS gemiddeld_pct,
+          COUNT(DISTINCT session_id) FILTER (WHERE difficulty = 'advanced')::int AS gevorderd_sessies,
+          COUNT(DISTINCT session_id) FILTER (WHERE difficulty = 'normal')::int   AS normaal_sessies
         FROM inbox_judgments
         WHERE TRUE ${jf}
       `),
@@ -73,7 +75,8 @@ router.get('/', requireLogin, async (req, res, next) => {
           TO_CHAR(MIN(j.answered_at) AT TIME ZONE 'Europe/Amsterdam', 'DD-MM-YYYY HH24:MI') AS tijdstip,
           COALESCE(MAX(j.ip_address), '—')                                      AS ip,
           COUNT(*)::int                                                          AS oordelen,
-          COUNT(*) FILTER (WHERE j.is_correct)::int                             AS correct
+          COUNT(*) FILTER (WHERE j.is_correct)::int                             AS correct,
+          MAX(j.difficulty)                                                      AS difficulty
         FROM inbox_judgments j
         WHERE TRUE ${jf}
         GROUP BY j.session_id
@@ -141,12 +144,16 @@ function loginPage(error = '') {
 }
 
 function dashboardPage(overzicht, recent, ips, easterEggCount, simulatorStartCount, periode) {
+  const diffLabel = d => d === 'advanced' ? '<span style="background:#f59e0b;color:#fff;padding:.1rem .4rem;border-radius:4px;font-size:.8rem">Gevorderd</span>'
+                                          : '<span style="background:#6b7280;color:#fff;padding:.1rem .4rem;border-radius:4px;font-size:.8rem">Normaal</span>';
+
   const rows = recent.map(r => `
     <tr>
       <td>${r.tijdstip}</td>
       <td><code>${r.ip}</code></td>
       <td>${r.oordelen}</td>
       <td>${r.oordelen > 0 ? Math.round(r.correct / r.oordelen * 100) : '—'}%</td>
+      <td>${diffLabel(r.difficulty)}</td>
     </tr>`).join('');
 
   const ipRows = ips.map(r => `
@@ -210,6 +217,8 @@ function dashboardPage(overzicht, recent, ips, easterEggCount, simulatorStartCou
     <div class="stat"><div class="val">${overzicht.correct}</div><div class="lbl">Correct beoordeeld</div></div>
     <div class="stat"><div class="val">${overzicht.gemiddeld_pct}%</div><div class="lbl">Gemiddelde score</div></div>
     <div class="stat"><div class="val">${overzicht.link_geklikt}</div><div class="lbl">Link geklikt</div></div>
+    <div class="stat"><div class="val">${overzicht.normaal_sessies}</div><div class="lbl">Sessies Normaal</div></div>
+    <div class="stat"><div class="val">${overzicht.gevorderd_sessies}</div><div class="lbl">Sessies Gevorderd</div></div>
     <div class="stat"><div class="val">${easterEggCount}</div><div class="lbl">Easter egg gezien 👑</div></div>
   </div>
 
@@ -217,7 +226,7 @@ function dashboardPage(overzicht, recent, ips, easterEggCount, simulatorStartCou
     <h2>Laatste 20 sessies</h2>
     ${recent.length === 0 ? '<p style="color:#9ca3af">Geen sessies in deze periode.</p>' : `
     <table>
-      <thead><tr><th>Tijdstip</th><th>IP-adres</th><th>Oordelen</th><th>Score</th></tr></thead>
+      <thead><tr><th>Tijdstip</th><th>IP-adres</th><th>Oordelen</th><th>Score</th><th>Niveau</th></tr></thead>
       <tbody>${rows}</tbody>
     </table>`}
   </div>

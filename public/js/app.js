@@ -1259,6 +1259,7 @@
         body: JSON.stringify({
           session_id: getSessionId(),
           verdict,
+          difficulty: currentDifficulty,
           clicked_link: interactions.clicked_link,
           revealed_sender: interactions.revealed_sender,
         }),

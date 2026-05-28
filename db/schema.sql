@@ -98,6 +98,7 @@ CREATE TABLE IF NOT EXISTS inbox_judgments (
 );
 
 ALTER TABLE inbox_judgments ADD COLUMN IF NOT EXISTS ip_address TEXT;
+ALTER TABLE inbox_judgments ADD COLUMN IF NOT EXISTS difficulty TEXT NOT NULL DEFAULT 'normal';
 CREATE INDEX IF NOT EXISTS idx_inbox_judgments_session ON inbox_judgments(session_id);
 
 CREATE TABLE IF NOT EXISTS easter_egg_views (
