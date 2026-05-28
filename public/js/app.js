@@ -251,6 +251,12 @@
       brandEl.appendChild(tag);
     }
 
+    // Papieren versie niet beschikbaar voor enterprise-gebruikers
+    const printBtn = document.getElementById('sim-print-btn');
+    const printOr  = document.querySelector('.sim-print-or');
+    if (printBtn) printBtn.hidden = true;
+    if (printOr)  printOr.hidden = true;
+
     // Toon uitlog-knop voor enterprise gebruikers
     const nav = document.querySelector('nav') || document.querySelector('header');
     if (nav) {
