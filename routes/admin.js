@@ -1,7 +1,42 @@
 const express = require('express');
+const http = require('http');
 const db = require('../db');
 
 const router = express.Router();
+
+// Simple in-memory geo cache (IP → {city, country, isp})
+const geoCache = new Map();
+
+function geoLookup(ip) {
+  if (!ip || ip === '—' || ip.startsWith('127.') || ip.startsWith('::')) {
+    return Promise.resolve(null);
+  }
+  if (geoCache.has(ip)) return Promise.resolve(geoCache.get(ip));
+  return new Promise((resolve) => {
+    const req = http.get(
+      `http://ip-api.com/json/${encodeURIComponent(ip)}?fields=status,country,city,isp`,
+      { timeout: 3000 },
+      (res) => {
+        let data = '';
+        res.on('data', (c) => { data += c; });
+        res.on('end', () => {
+          try {
+            const j = JSON.parse(data);
+            if (j.status === 'success') {
+              const geo = { city: j.city, country: j.country, isp: j.isp };
+              geoCache.set(ip, geo);
+              resolve(geo);
+            } else {
+              resolve(null);
+            }
+          } catch { resolve(null); }
+        });
+      }
+    );
+    req.on('error', () => resolve(null));
+    req.on('timeout', () => { req.destroy(); resolve(null); });
+  });
+}
 
 function requireLogin(req, res, next) {
   if (req.session?.admin) return next();
@@ -102,7 +137,12 @@ router.get('/', requireLogin, async (req, res, next) => {
       `),
     ]);
 
-    res.type('html').send(dashboardPage(overzicht.rows[0], recent.rows, ips.rows, egg.rows[0].totaal, starts.rows[0].totaal, periode));
+    // Geo-lookup for unique IPs (parallel, max 3s each, cached)
+    const uniqueIps = [...new Set(ips.rows.map(r => r.ip).filter(Boolean))];
+    const geoResults = await Promise.all(uniqueIps.map(ip => geoLookup(ip)));
+    const geoMap = Object.fromEntries(uniqueIps.map((ip, i) => [ip, geoResults[i]]));
+
+    res.type('html').send(dashboardPage(overzicht.rows[0], recent.rows, ips.rows, egg.rows[0].totaal, starts.rows[0].totaal, periode, geoMap));
   } catch (err) { next(err); }
 });
 
@@ -143,9 +183,16 @@ function loginPage(error = '') {
 </html>`;
 }
 
-function dashboardPage(overzicht, recent, ips, easterEggCount, simulatorStartCount, periode) {
+function dashboardPage(overzicht, recent, ips, easterEggCount, simulatorStartCount, periode, geoMap = {}) {
   const diffLabel = d => d === 'advanced' ? '<span style="background:#f59e0b;color:#fff;padding:.1rem .4rem;border-radius:4px;font-size:.8rem">Gevorderd</span>'
                                           : '<span style="background:#6b7280;color:#fff;padding:.1rem .4rem;border-radius:4px;font-size:.8rem">Normaal</span>';
+
+  const geoStr = (ip) => {
+    const g = geoMap[ip];
+    if (!g) return '—';
+    const parts = [g.city, g.country].filter(Boolean).join(', ');
+    return parts || '—';
+  };
 
   const rows = recent.map(r => `
     <tr>
@@ -156,12 +203,17 @@ function dashboardPage(overzicht, recent, ips, easterEggCount, simulatorStartCou
       <td>${diffLabel(r.difficulty)}</td>
     </tr>`).join('');
 
-  const ipRows = ips.map(r => `
+  const ipRows = ips.map(r => {
+    const g = geoMap[r.ip];
+    return `
     <tr>
       <td><code>${r.ip}</code></td>
+      <td>${geoStr(r.ip)}</td>
+      <td style="color:#6b7280;font-size:.85rem">${g?.isp || '—'}</td>
       <td>${r.bezoeken}</td>
       <td>${new Date(r.laatste).toLocaleString('nl-NL', { timeZone: 'Europe/Amsterdam' })}</td>
-    </tr>`).join('');
+    </tr>`;
+  }).join('');
 
   const filterLinks = [
     ['vandaag', 'Vandaag'],
@@ -235,7 +287,7 @@ function dashboardPage(overzicht, recent, ips, easterEggCount, simulatorStartCou
     <h2>IP-adressen (uniek, meest recent)</h2>
     ${ips.length === 0 ? '<p style="color:#9ca3af">Geen data in deze periode.</p>' : `
     <table>
-      <thead><tr><th>IP-adres</th><th>Acties</th><th>Laatste activiteit</th></tr></thead>
+      <thead><tr><th>IP-adres</th><th>Locatie</th><th>ISP</th><th>Acties</th><th>Laatste activiteit</th></tr></thead>
       <tbody>${ipRows}</tbody>
     </table>`}
   </div>
