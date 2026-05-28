@@ -78,7 +78,7 @@ router.get('/orgs/new', requireLogin, (_req, res) => {
 // POST /admin/orgs
 router.post('/orgs', requireLogin, async (req, res, next) => {
   try {
-    const { name, slug, max_users, valid_until } = req.body || {};
+    const { name, slug, email_domain, max_users, valid_until } = req.body || {};
     const locales     = parseArray(req.body, 'locales', ALL_LOCALES);
     const audiences   = parseArray(req.body, 'audiences', ALL_AUDIENCES);
     const difficulties = parseArray(req.body, 'difficulties', ALL_DIFFICULTIES);
@@ -92,11 +92,12 @@ router.post('/orgs', requireLogin, async (req, res, next) => {
 
     const admin_token = crypto.randomBytes(24).toString('hex');
     const maxU = Math.max(1, Math.min(5000, parseInt(max_users, 10) || 50));
+    const domain = email_domain ? email_domain.trim().toLowerCase().replace(/^@/, '') : null;
 
     const { rows } = await db.query(
-      `INSERT INTO organisations (name, slug, locales, audiences, difficulties, max_users, valid_until, admin_token)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING id`,
-      [name.trim(), slug.trim(), locales, audiences, difficulties, maxU, valid_until, admin_token]
+      `INSERT INTO organisations (name, slug, email_domain, locales, audiences, difficulties, max_users, valid_until, admin_token)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING id`,
+      [name.trim(), slug.trim(), domain, locales, audiences, difficulties, maxU, valid_until, admin_token]
     );
     res.redirect(`/admin/orgs/${rows[0].id}`);
   } catch (err) {
@@ -130,7 +131,7 @@ router.post('/orgs/:id', requireLogin, async (req, res, next) => {
     const { rows: [org] } = await db.query(`SELECT * FROM organisations WHERE id = $1`, [req.params.id]);
     if (!org) return res.status(404).end();
 
-    const { valid_until, max_users } = req.body || {};
+    const { valid_until, max_users, email_domain } = req.body || {};
     const locales     = parseArray(req.body, 'locales', ALL_LOCALES);
     const audiences   = parseArray(req.body, 'audiences', ALL_AUDIENCES);
     const difficulties = parseArray(req.body, 'difficulties', ALL_DIFFICULTIES);
@@ -138,10 +139,12 @@ router.post('/orgs/:id', requireLogin, async (req, res, next) => {
     if (locales.length === 0 || audiences.length === 0 || difficulties.length === 0)
       return res.redirect(`/admin/orgs/${org.id}?err=Selecteer+minimaal+%C3%A9%C3%A9n+optie+per+categorie.`);
 
+    const domain = email_domain ? email_domain.trim().toLowerCase().replace(/^@/, '') : null;
+
     await db.query(
-      `UPDATE organisations SET locales=$1, audiences=$2, difficulties=$3, valid_until=$4, max_users=$5 WHERE id=$6`,
+      `UPDATE organisations SET locales=$1, audiences=$2, difficulties=$3, valid_until=$4, max_users=$5, email_domain=$6 WHERE id=$7`,
       [locales, audiences, difficulties, valid_until || org.valid_until,
-       Math.max(1, Math.min(5000, parseInt(max_users, 10) || org.max_users)), org.id]
+       Math.max(1, Math.min(5000, parseInt(max_users, 10) || org.max_users)), domain, org.id]
     );
     res.redirect(`/admin/orgs/${org.id}`);
   } catch (err) { next(err); }
@@ -321,6 +324,10 @@ function orgFormPage(error = '') {
           <div><label>Slug (URL-deel)</label><input name="slug" type="text" required placeholder="acme-bv" pattern="[a-z0-9-]+" /></div>
         </div>
         <div class="form-row">
+          <div><label>E-maildomein (optioneel)</label><input name="email_domain" type="text" placeholder="acme.nl" /></div>
+          <div></div>
+        </div>
+        <div class="form-row">
           <div><label>Max. deelnemers</label><input name="max_users" type="number" min="1" max="5000" value="50" /></div>
           <div><label>Geldig tot</label><input name="valid_until" type="date" required value="${tomorrow}" /></div>
         </div>
@@ -355,6 +362,10 @@ function orgDetailPage(org, users) {
     <div class="section">
       <h2>Instellingen</h2>
       <form method="POST" action="/admin/orgs/${org.id}">
+        <div class="form-row">
+          <div><label>E-maildomein (optioneel)</label><input name="email_domain" type="text" placeholder="acme.nl" value="${e(org.email_domain || '')}" /></div>
+          <div></div>
+        </div>
         <div class="form-row">
           <div><label>Max. deelnemers</label><input name="max_users" type="number" min="1" max="5000" value="${org.max_users}" /></div>
           <div><label>Geldig tot</label><input name="valid_until" type="date" value="${new Date(org.valid_until).toISOString().slice(0,10)}" /></div>

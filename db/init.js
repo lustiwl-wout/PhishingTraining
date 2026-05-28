@@ -78,9 +78,9 @@ async function initDb({ force = false } = {}) {
         for (const r of orgs.rows) {
           await client.query(
             `INSERT INTO organisations
-               (id, name, slug, locales, audiences, difficulties, max_users, valid_until, admin_token, created_at)
-             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) ON CONFLICT (id) DO NOTHING`,
-            [r.id, r.name, r.slug, r.locales, r.audiences, r.difficulties, r.max_users, r.valid_until, r.admin_token, r.created_at]
+               (id, name, slug, email_domain, locales, audiences, difficulties, max_users, valid_until, admin_token, created_at)
+             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) ON CONFLICT (id) DO NOTHING`,
+            [r.id, r.name, r.slug, r.email_domain ?? null, r.locales, r.audiences, r.difficulties, r.max_users, r.valid_until, r.admin_token, r.created_at]
           );
         }
         await client.query(`SELECT setval('organisations_id_seq', MAX(id)) FROM organisations`);

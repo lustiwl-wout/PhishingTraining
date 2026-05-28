@@ -226,6 +226,7 @@ function loginPage(org, error = '') {
     .err { margin-top: 1rem; color: #dc2626; font-size: .9rem;
            background: #fef2f2; border-radius: 6px; padding: .6rem .8rem; }
     footer { margin-top: 2rem; font-size: .8rem; color: #9ca3af; }
+    .domain { font-size: .8rem; font-weight: 400; color: #6b7280; letter-spacing: 0; }
   </style>
 </head>
 <body>
@@ -233,7 +234,7 @@ function loginPage(org, error = '') {
     <p class="org">${esc(org.name)}</p>
     <h1>🛡️ Phishing-training</h1>
     <form method="POST" action="/e/${esc(org.slug)}/login" autocomplete="off">
-      <label for="nid">Uw ID-nummer</label>
+      <label for="nid">Uw ID-nummer${org.email_domain ? ` <span class="domain">@${esc(org.email_domain)}</span>` : ''}</label>
       <input id="nid" name="numeric_id" type="text" inputmode="numeric"
              pattern="[0-9]+" maxlength="10" required autofocus placeholder="bv. 00142" />
       <label for="pin">Pincode (4 cijfers)</label>

@@ -108,6 +108,7 @@ CREATE TABLE IF NOT EXISTS organisations (
   id           SERIAL PRIMARY KEY,
   name         TEXT        NOT NULL,
   slug         TEXT        NOT NULL UNIQUE,
+  email_domain TEXT,
   locales      TEXT[]      NOT NULL DEFAULT ARRAY['nl','nl-BE','en','fr','fr-BE','de'],
   audiences    TEXT[]      NOT NULL DEFAULT ARRAY['personal','business'],
   difficulties TEXT[]      NOT NULL DEFAULT ARRAY['normal','advanced'],
@@ -116,6 +117,7 @@ CREATE TABLE IF NOT EXISTS organisations (
   admin_token  TEXT        NOT NULL UNIQUE,
   created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+ALTER TABLE organisations ADD COLUMN IF NOT EXISTS email_domain TEXT;
 CREATE INDEX IF NOT EXISTS idx_organisations_slug        ON organisations(slug);
 CREATE INDEX IF NOT EXISTS idx_organisations_admin_token ON organisations(admin_token);
 
