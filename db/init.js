@@ -61,26 +61,69 @@ async function initDb({ force = false } = {}) {
       console.log(`[init-db] seed laden (${reason}). hash: ${previousHash || 'none'} -> ${seedHash}`);
 
       // Bewaar gebruikersdata vóór de seed (die truncate+cascade doet op content-tabellen).
-      const [judgments, eggs, simStarts] = await Promise.all([
+      const [judgments, eggs, simStarts, orgs, orgUsers, orgSessions] = await Promise.all([
         client.query('SELECT * FROM inbox_judgments').catch(() => ({ rows: [] })),
         client.query('SELECT * FROM easter_egg_views').catch(() => ({ rows: [] })),
         client.query('SELECT * FROM simulator_starts').catch(() => ({ rows: [] })),
+        client.query('SELECT * FROM organisations').catch(() => ({ rows: [] })),
+        client.query('SELECT * FROM org_users').catch(() => ({ rows: [] })),
+        client.query('SELECT * FROM org_sessions').catch(() => ({ rows: [] })),
       ]);
-      console.log(`[init-db] ${judgments.rows.length} oordelen, ${eggs.rows.length} easter-egg views en ${simStarts.rows.length} simulator-starts opgeslagen.`);
+      console.log(`[init-db] ${judgments.rows.length} oordelen, ${eggs.rows.length} easter-egg views, ${simStarts.rows.length} simulator-starts, ${orgs.rows.length} organisaties, ${orgUsers.rows.length} org-gebruikers opgeslagen.`);
 
       await client.query(seed);
 
       // Zet gebruikersdata terug. message_id-referenties zijn geldig zolang de
       // seed dezelfde berichten in dezelfde volgorde invoegt (RESTART IDENTITY).
+      // Organisations first (org_users + org_sessions depend on them)
+      if (orgs.rows.length > 0) {
+        for (const r of orgs.rows) {
+          await client.query(
+            `INSERT INTO organisations
+               (id, name, slug, difficulty, max_users, valid_until, admin_token, created_at)
+             VALUES ($1,$2,$3,$4,$5,$6,$7,$8) ON CONFLICT (id) DO NOTHING`,
+            [r.id, r.name, r.slug, r.difficulty, r.max_users, r.valid_until, r.admin_token, r.created_at]
+          );
+        }
+        await client.query(`SELECT setval('organisations_id_seq', MAX(id)) FROM organisations`);
+        console.log(`[init-db] ${orgs.rows.length} organisaties teruggezet.`);
+      }
+      if (orgUsers.rows.length > 0) {
+        for (const r of orgUsers.rows) {
+          await client.query(
+            `INSERT INTO org_users
+               (id, org_id, numeric_id, pincode_hash, allow_retrain, failed_attempts, locked_until, created_at)
+             VALUES ($1,$2,$3,$4,$5,$6,$7,$8) ON CONFLICT (id) DO NOTHING`,
+            [r.id, r.org_id, r.numeric_id, r.pincode_hash, r.allow_retrain,
+             r.failed_attempts, r.locked_until, r.created_at]
+          );
+        }
+        await client.query(`SELECT setval('org_users_id_seq', MAX(id)) FROM org_users`);
+        console.log(`[init-db] ${orgUsers.rows.length} org-gebruikers teruggezet.`);
+      }
+      if (orgSessions.rows.length > 0) {
+        for (const r of orgSessions.rows) {
+          await client.query(
+            `INSERT INTO org_sessions (id, org_user_id, session_id, started_at, last_active)
+             VALUES ($1,$2,$3,$4,$5) ON CONFLICT (id) DO NOTHING`,
+            [r.id, r.org_user_id, r.session_id, r.started_at, r.last_active]
+          );
+        }
+        await client.query(`SELECT setval('org_sessions_id_seq', MAX(id)) FROM org_sessions`);
+        console.log(`[init-db] ${orgSessions.rows.length} org-sessies teruggezet.`);
+      }
+
       if (judgments.rows.length > 0) {
         for (const r of judgments.rows) {
           await client.query(
             `INSERT INTO inbox_judgments
-               (id, session_id, message_id, verdict, is_correct, clicked_link, revealed_sender, ip_address, answered_at)
-             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+               (id, session_id, message_id, verdict, is_correct, clicked_link,
+                revealed_sender, ip_address, difficulty, org_user_id, answered_at)
+             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
              ON CONFLICT (id) DO NOTHING`,
             [r.id, r.session_id, r.message_id, r.verdict, r.is_correct,
-             r.clicked_link, r.revealed_sender, r.ip_address, r.answered_at]
+             r.clicked_link, r.revealed_sender, r.ip_address,
+             r.difficulty ?? 'normal', r.org_user_id ?? null, r.answered_at]
           );
         }
         await client.query(`SELECT setval('inbox_judgments_id_seq', MAX(id)) FROM inbox_judgments`);

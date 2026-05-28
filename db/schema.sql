@@ -99,7 +99,57 @@ CREATE TABLE IF NOT EXISTS inbox_judgments (
 
 ALTER TABLE inbox_judgments ADD COLUMN IF NOT EXISTS ip_address TEXT;
 ALTER TABLE inbox_judgments ADD COLUMN IF NOT EXISTS difficulty TEXT NOT NULL DEFAULT 'normal';
+ALTER TABLE inbox_judgments ADD COLUMN IF NOT EXISTS org_user_id INTEGER;
 CREATE INDEX IF NOT EXISTS idx_inbox_judgments_session ON inbox_judgments(session_id);
+CREATE INDEX IF NOT EXISTS idx_inbox_judgments_org_user ON inbox_judgments(org_user_id);
+
+-- ── Enterprise tables ──────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS organisations (
+  id           SERIAL PRIMARY KEY,
+  name         TEXT        NOT NULL,
+  slug         TEXT        NOT NULL UNIQUE,
+  difficulty   TEXT        NOT NULL DEFAULT 'normal',
+  max_users    INTEGER     NOT NULL DEFAULT 50,
+  valid_until  DATE        NOT NULL,
+  admin_token  TEXT        NOT NULL UNIQUE,
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_organisations_slug        ON organisations(slug);
+CREATE INDEX IF NOT EXISTS idx_organisations_admin_token ON organisations(admin_token);
+
+CREATE TABLE IF NOT EXISTS org_users (
+  id               SERIAL PRIMARY KEY,
+  org_id           INTEGER     NOT NULL REFERENCES organisations(id) ON DELETE CASCADE,
+  numeric_id       TEXT        NOT NULL,
+  pincode_hash     TEXT        NOT NULL,
+  allow_retrain    BOOLEAN     NOT NULL DEFAULT FALSE,
+  failed_attempts  INTEGER     NOT NULL DEFAULT 0,
+  locked_until     TIMESTAMPTZ,
+  created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE (org_id, numeric_id)
+);
+CREATE INDEX IF NOT EXISTS idx_org_users_org_id ON org_users(org_id);
+
+CREATE TABLE IF NOT EXISTS org_sessions (
+  id           SERIAL PRIMARY KEY,
+  org_user_id  INTEGER     NOT NULL REFERENCES org_users(id) ON DELETE CASCADE,
+  session_id   TEXT        NOT NULL UNIQUE,
+  started_at   TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  last_active  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_org_sessions_session_id  ON org_sessions(session_id);
+CREATE INDEX IF NOT EXISTS idx_org_sessions_org_user_id ON org_sessions(org_user_id);
+
+-- FK van inbox_judgments → org_users (pas toevoegen als tabel bestaat)
+DO $$ BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'inbox_judgments_org_user_id_fkey'
+  ) THEN
+    ALTER TABLE inbox_judgments
+      ADD CONSTRAINT inbox_judgments_org_user_id_fkey
+      FOREIGN KEY (org_user_id) REFERENCES org_users(id);
+  END IF;
+END $$;
 
 CREATE TABLE IF NOT EXISTS easter_egg_views (
   id          SERIAL PRIMARY KEY,

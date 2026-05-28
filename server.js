@@ -6,6 +6,7 @@ const rateLimit = require('express-rate-limit');
 const session = require('express-session');
 const apiRouter = require('./routes/api');
 const adminRouter = require('./routes/admin');
+const { loginRouter: enterpriseRouter, portalRouter } = require('./routes/enterprise');
 const { initDbWithRetry } = require('./db/init');
 
 const app = express();
@@ -61,6 +62,10 @@ const writeLimit = rateLimit({ windowMs: 60_000, max: 30, standardHeaders: true,
 
 // Beheer (voor /sitrep/login mag je altijd komen, de rest checkt de sessie zelf)
 app.use('/sitrep', adminRouter);
+
+// Enterprise login (/e/:slug) en klantportaal (/portal/:token)
+app.use('/e', enterpriseRouter);
+app.use('/portal', portalRouter);
 
 // API
 app.use('/api', sameOriginOnly);

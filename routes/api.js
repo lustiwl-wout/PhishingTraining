@@ -212,12 +212,19 @@ router.post('/inbox/:id/judge', async (req, res, next) => {
     const id = Number.parseInt(req.params.id, 10);
     if (!Number.isInteger(id)) return res.status(400).json({ error: 'ongeldig id' });
 
-    const { session_id, verdict, difficulty: rawDiff, clicked_link = false, revealed_sender = false } = req.body || {};
-    if (!isUuidLike(session_id)) return res.status(400).json({ error: 'ongeldig session_id' });
+    const { session_id: bodySessionId, verdict, difficulty: rawDiff, clicked_link = false, revealed_sender = false } = req.body || {};
     if (verdict !== 'trust' && verdict !== 'phish') {
       return res.status(400).json({ error: 'verdict moet "trust" of "phish" zijn' });
     }
     const difficulty = SUPPORTED_DIFFICULTIES.has(rawDiff) ? rawDiff : 'normal';
+
+    // Enterprise session overrides client-supplied session_id
+    const orgUserId = req.session?.enterpriseOrgUserId || null;
+    const session_id = orgUserId
+      ? req.session.enterpriseSessionId
+      : bodySessionId;
+
+    if (!isUuidLike(session_id)) return res.status(400).json({ error: 'ongeldig session_id' });
 
     const { rows } = await db.query(
       `SELECT is_phishing, red_flags, green_flags, explanation, sender_note
@@ -230,10 +237,16 @@ router.post('/inbox/:id/judge', async (req, res, next) => {
     const isCorrect = verdict === (msg.is_phishing ? 'phish' : 'trust');
 
     await db.query(
-      `INSERT INTO inbox_judgments (session_id, message_id, verdict, is_correct, clicked_link, revealed_sender, ip_address, difficulty)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-      [session_id, id, verdict, isCorrect, !!clicked_link, !!revealed_sender, clientIp(req), difficulty]
+      `INSERT INTO inbox_judgments
+         (session_id, message_id, verdict, is_correct, clicked_link, revealed_sender, ip_address, difficulty, org_user_id)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+      [session_id, id, verdict, isCorrect, !!clicked_link, !!revealed_sender, clientIp(req), difficulty, orgUserId]
     );
+
+    // Update org_session last_active
+    if (orgUserId && req.session.enterpriseSessionId) {
+      db.query(`UPDATE org_sessions SET last_active = NOW() WHERE session_id = $1`, [req.session.enterpriseSessionId]).catch(() => {});
+    }
 
     res.json({
       correct: isCorrect,

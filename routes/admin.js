@@ -1,5 +1,7 @@
 const express = require('express');
 const http = require('http');
+const crypto = require('node:crypto');
+const bcrypt = require('bcryptjs');
 const db = require('../db');
 
 const router = express.Router();
@@ -293,6 +295,271 @@ function dashboardPage(overzicht, recent, ips, easterEggCount, simulatorStartCou
   </div>
 </body>
 </html>`;
+}
+
+// ── Org management ──────────────────────────────────────────────────────────
+
+router.use(express.urlencoded({ extended: false }));
+
+// GET /sitrep/orgs
+router.get('/orgs', requireLogin, async (req, res, next) => {
+  try {
+    const { rows } = await db.query(`
+      SELECT o.*,
+             COUNT(u.id)::int AS user_count
+      FROM organisations o
+      LEFT JOIN org_users u ON u.org_id = o.id
+      GROUP BY o.id ORDER BY o.created_at DESC
+    `);
+    res.type('html').send(orgsPage(rows));
+  } catch (err) { next(err); }
+});
+
+// GET /sitrep/orgs/new
+router.get('/orgs/new', requireLogin, (_req, res) => {
+  res.type('html').send(orgFormPage());
+});
+
+// POST /sitrep/orgs
+router.post('/orgs', requireLogin, async (req, res, next) => {
+  try {
+    const { name, slug, difficulty, max_users, valid_until } = req.body || {};
+    if (!name || !slug || !valid_until) return res.type('html').send(orgFormPage('Naam, slug en geldigheidsdatum zijn verplicht.'));
+    if (!/^[a-z0-9-]+$/.test(slug)) return res.type('html').send(orgFormPage('Slug mag alleen kleine letters, cijfers en koppeltekens bevatten.'));
+
+    const admin_token = crypto.randomBytes(24).toString('hex');
+    const diff = difficulty === 'advanced' ? 'advanced' : 'normal';
+    const maxU = Math.max(1, Math.min(5000, parseInt(max_users, 10) || 50));
+
+    const { rows } = await db.query(
+      `INSERT INTO organisations (name, slug, difficulty, max_users, valid_until, admin_token)
+       VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
+      [name.trim(), slug.trim(), diff, maxU, valid_until, admin_token]
+    );
+    res.redirect(`/sitrep/orgs/${rows[0].id}`);
+  } catch (err) {
+    if (err.code === '23505') return res.type('html').send(orgFormPage('Deze slug is al in gebruik.'));
+    next(err);
+  }
+});
+
+// GET /sitrep/orgs/:id
+router.get('/orgs/:id', requireLogin, async (req, res, next) => {
+  try {
+    const { rows: [org] } = await db.query(`SELECT * FROM organisations WHERE id = $1`, [req.params.id]);
+    if (!org) return res.status(404).type('html').send('<h1>Niet gevonden</h1>');
+
+    const { rows: users } = await db.query(`
+      SELECT u.id, u.numeric_id, u.allow_retrain, u.created_at,
+             COUNT(DISTINCT j.message_id)::int AS done_count
+      FROM org_users u
+      LEFT JOIN inbox_judgments j ON j.org_user_id = u.id
+      WHERE u.org_id = $1
+      GROUP BY u.id ORDER BY u.numeric_id
+    `, [org.id]);
+
+    res.type('html').send(orgDetailPage(org, users));
+  } catch (err) { next(err); }
+});
+
+// POST /sitrep/orgs/:id/generate — generate N users, return CSV immediately
+router.post('/orgs/:id/generate', requireLogin, async (req, res, next) => {
+  try {
+    const { rows: [org] } = await db.query(`SELECT * FROM organisations WHERE id = $1`, [req.params.id]);
+    if (!org) return res.status(404).end();
+
+    const count = Math.max(1, Math.min(500, parseInt(req.body.count, 10) || 10));
+
+    // Get current max numeric_id for this org
+    const { rows: [maxRow] } = await db.query(
+      `SELECT COALESCE(MAX(numeric_id::int), 0)::int AS maxid FROM org_users WHERE org_id = $1`,
+      [org.id]
+    );
+    const startId = maxRow.maxid + 1;
+
+    const lines = ['ID,Pincode'];
+    for (let i = 0; i < count; i++) {
+      const numericId = String(startId + i).padStart(5, '0');
+      const pin = String(crypto.randomInt(0, 10000)).padStart(4, '0');
+      const hash = await bcrypt.hash(pin, 10);
+      await db.query(
+        `INSERT INTO org_users (org_id, numeric_id, pincode_hash) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING`,
+        [org.id, numericId, hash]
+      );
+      lines.push(`${numericId},${pin}`);
+    }
+
+    res.set('Content-Disposition', `attachment; filename="${org.slug}-credentials.csv"`)
+       .type('text/csv').send(lines.join('\r\n'));
+  } catch (err) { next(err); }
+});
+
+// ── Org HTML helpers ─────────────────────────────────────────────────────────
+
+function adminEsc(s) {
+  return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+const adminStyle = `
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; background: #f4f6f9; color: #1a1a2e; padding: 2rem 1rem; }
+  .wrap { max-width: 860px; margin: 0 auto; }
+  .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+  h1 { font-size: 1.3rem; }
+  a { color: #2563eb; }
+  .btn { display: inline-block; padding: .4rem .9rem; background: #2563eb; color: #fff;
+         text-decoration: none; border-radius: 6px; font-size: .9rem; border: none; cursor: pointer; }
+  .btn:hover { background: #1d4ed8; }
+  .btn-sec { background: #e5e7eb; color: #374151; }
+  .btn-sec:hover { background: #d1d5db; }
+  .section { background: #fff; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,.07);
+             padding: 1.5rem; margin-bottom: 1.5rem; }
+  h2 { font-size: 1rem; color: #374151; margin-bottom: 1rem; }
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  th { text-align: left; padding: .5rem .75rem; border-bottom: 2px solid #e5e7eb; color: #6b7280; font-weight: 600; }
+  td { padding: .5rem .75rem; border-bottom: 1px solid #f3f4f6; }
+  tr:last-child td { border-bottom: none; }
+  label { display: block; font-size: .9rem; color: #444; margin: .75rem 0 .25rem; }
+  input, select { width: 100%; padding: .5rem .75rem; border: 1.5px solid #d1d5db; border-radius: 6px; font-size: .95rem; }
+  input:focus, select:focus { outline: none; border-color: #2563eb; }
+  .err { color: #dc2626; background: #fef2f2; border-radius: 6px; padding: .5rem .75rem; margin-bottom: 1rem; font-size: .9rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
+`;
+
+function orgsPage(orgs) {
+  const rows = orgs.map(o => `
+    <tr>
+      <td><a href="/sitrep/orgs/${o.id}">${adminEsc(o.name)}</a></td>
+      <td><code>${adminEsc(o.slug)}</code></td>
+      <td>${o.difficulty === 'advanced' ? 'Gevorderd' : 'Normaal'}</td>
+      <td>${o.user_count} / ${o.max_users}</td>
+      <td>${new Date(o.valid_until).toLocaleDateString('nl-NL')}</td>
+      <td><a href="/portal/${adminEsc(o.admin_token)}" target="_blank">Portaal ↗</a></td>
+    </tr>`).join('');
+
+  return `<!doctype html><html lang="nl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Organisaties — Beheer</title><style>${adminStyle}</style></head>
+<body><div class="wrap">
+  <div class="topbar">
+    <h1>🏢 Organisaties</h1>
+    <div style="display:flex;gap:.5rem">
+      <a class="btn btn-sec" href="/sitrep">← Beheer</a>
+      <a class="btn" href="/sitrep/orgs/new">+ Nieuwe organisatie</a>
+    </div>
+  </div>
+  <div class="section">
+    ${orgs.length === 0 ? '<p style="color:#9ca3af">Nog geen organisaties.</p>' : `
+    <table>
+      <thead><tr><th>Naam</th><th>Slug</th><th>Niveau</th><th>Deelnemers</th><th>Geldig tot</th><th>Portaal</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`}
+  </div>
+</div></body></html>`;
+}
+
+function orgFormPage(error = '') {
+  const tomorrow = new Date(Date.now() + 365 * 86400000).toISOString().slice(0, 10);
+  return `<!doctype html><html lang="nl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nieuwe organisatie — Beheer</title><style>${adminStyle}</style></head>
+<body><div class="wrap">
+  <div class="topbar"><h1>Nieuwe organisatie</h1><a class="btn btn-sec" href="/sitrep/orgs">← Terug</a></div>
+  ${error ? `<p class="err">${adminEsc(error)}</p>` : ''}
+  <div class="section">
+    <form method="POST" action="/sitrep/orgs">
+      <div class="form-row">
+        <div>
+          <label>Naam</label>
+          <input name="name" type="text" required placeholder="Acme B.V." />
+        </div>
+        <div>
+          <label>Slug (URL)</label>
+          <input name="slug" type="text" required placeholder="acme-bv" pattern="[a-z0-9-]+" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div>
+          <label>Moeilijkheidsgraad</label>
+          <select name="difficulty">
+            <option value="normal">Normaal</option>
+            <option value="advanced">Gevorderd</option>
+          </select>
+        </div>
+        <div>
+          <label>Max. deelnemers</label>
+          <input name="max_users" type="number" min="1" max="5000" value="50" />
+        </div>
+      </div>
+      <div>
+        <label>Geldig tot</label>
+        <input name="valid_until" type="date" required value="${tomorrow}" />
+      </div>
+      <br>
+      <button class="btn" type="submit">Aanmaken</button>
+    </form>
+  </div>
+</div></body></html>`;
+}
+
+function orgDetailPage(org, users) {
+  const portalUrl = `/portal/${org.admin_token}`;
+  const userRows = users.map(u => `
+    <tr>
+      <td><code>${adminEsc(u.numeric_id)}</code></td>
+      <td>${u.done_count > 0 ? '✅' : '—'}</td>
+      <td>${u.allow_retrain ? '🔓' : '🔒'}</td>
+      <td>${new Date(u.created_at).toLocaleDateString('nl-NL')}</td>
+    </tr>`).join('');
+
+  return `<!doctype html><html lang="nl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${adminEsc(org.name)} — Beheer</title><style>${adminStyle}</style></head>
+<body><div class="wrap">
+  <div class="topbar">
+    <h1>${adminEsc(org.name)}</h1>
+    <div style="display:flex;gap:.5rem">
+      <a class="btn btn-sec" href="/sitrep/orgs">← Organisaties</a>
+      <a class="btn" href="${adminEsc(portalUrl)}" target="_blank">Portaal ↗</a>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Details</h2>
+    <table>
+      <tr><th>Slug</th><td><code>${adminEsc(org.slug)}</code></td></tr>
+      <tr><th>Niveau</th><td>${org.difficulty === 'advanced' ? 'Gevorderd' : 'Normaal'}</td></tr>
+      <tr><th>Deelnemers</th><td>${users.length} / ${org.max_users}</td></tr>
+      <tr><th>Geldig tot</th><td>${new Date(org.valid_until).toLocaleDateString('nl-NL')}</td></tr>
+      <tr><th>Portaallink</th><td><a href="${adminEsc(portalUrl)}" target="_blank">/portal/${adminEsc(org.admin_token)}</a></td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Deelnemers genereren</h2>
+    <p style="font-size:.9rem;color:#6b7280;margin-bottom:1rem">
+      De pincode wordt direct als CSV-download geretourneerd — hij wordt <strong>niet opgeslagen</strong>.
+      Bewaar het bestand op een veilige plek.
+    </p>
+    <form method="POST" action="/sitrep/orgs/${org.id}/generate" style="display:flex;gap:.75rem;align-items:flex-end;flex-wrap:wrap">
+      <div>
+        <label>Aantal nieuwe IDs</label>
+        <input name="count" type="number" min="1" max="500" value="10" style="width:120px" />
+      </div>
+      <button class="btn" type="submit">Genereren + downloaden CSV</button>
+    </form>
+  </div>
+
+  ${users.length > 0 ? `
+  <div class="section">
+    <h2>Bestaande deelnemers (${users.length})</h2>
+    <table>
+      <thead><tr><th>ID</th><th>Actief</th><th>Herhaling</th><th>Aangemaakt</th></tr></thead>
+      <tbody>${userRows}</tbody>
+    </table>
+  </div>` : ''}
+</div></body></html>`;
 }
 
 module.exports = router;
