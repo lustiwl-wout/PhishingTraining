@@ -3161,3 +3161,144 @@ SELECT 'fr-BE', audience, sender_name, sender_address, sender_note, received_lab
        explanation, sort_order, difficulty
 FROM inbox_messages
 WHERE locale = 'fr' AND difficulty = 'advanced' AND sort_order >= 150;
+
+-- ── SharePoint-phishing (sort_order 210, business, advanced) ──────────────
+INSERT INTO inbox_messages
+  (locale, audience, sender_name, sender_address, sender_note, received_label,
+   subject, preview, body, links, is_phishing, red_flags, green_flags,
+   explanation, sort_order, difficulty)
+VALUES
+('nl', 'business',
+ 'Microsoft SharePoint',
+ 'no-reply@sharepointonline-files.com',
+ 'Het domein is sharepointonline-files.com — niet sharepointonline.com. Microsoft verstuurt uitnodigingen altijd via @sharepointonline.com.',
+ 'vandaag 14:22',
+ 'Vandenberghe Koen heeft een bestand met u gedeeld',
+ 'Vandenberghe Koen heeft u uitgenodigd om ‘IT_Infra_Strategie_2026_NL’ te bewerken.',
+ E'Goedemiddag,
+
+Vandenberghe Koen heeft een bestand met u gedeeld en u uitgenodigd om dit te bewerken.
+
+☁️  IT_Infra_Strategie_2026_NL.docx
+
+"Eerste versie voor intern review — graag jullie feedback voor vrijdag."
+
+Klik hieronder om het bestand te openen:
+
+{link:0}
+
+Deze uitnodiging is alleen geldig voor u en personen met bestaande toegang.
+
+Microsoft SharePoint',
+ '[{"label":"Bestand openen","real_url":"http://sharepointonline-files.com/share/view?id=a9f3c2","suspicious":true,"warning":"Dit is geen Microsoft-link. Het domein sharepointonline-files.com is nep. U wordt naar een valse inlogpagina geleid om uw Microsoft-wachtwoord te stelen."}]'::jsonb,
+ TRUE,
+ '["Het afzenderdomein sharepointonline-files.com is niet van Microsoft — het echte is @sharepointonline.com","Een echte SharePoint-uitnodiging opent het bestand direct — er wordt nooit om een nieuw wachtwoord gevraagd","De link gaat naar sharepointonline-files.com in plaats van sharepoint.com of microsoft.com","Controleer uitnodigingen altijd via Microsoft 365 zelf, niet via een e-maillink"]'::jsonb,
+ '[]'::jsonb,
+ 'Dit is phishing. Het afzenderdomein sharepointonline-files.com lijkt sterk op het echte Microsoft-domein, maar is nep. Via de link wordt u naar een valse Microsoft-inlogpagina geleid om uw werkwachtwoord te stelen. Echte SharePoint-uitnodigingen komen altijd van @sharepointonline.com en openen het bestand zonder opnieuw in te loggen.',
+ 210, 'advanced'),
+('en', 'business',
+ 'Microsoft SharePoint',
+ 'no-reply@sharepointonline-files.com',
+ 'The domain is sharepointonline-files.com — not sharepointonline.com. Microsoft always sends sharing invitations from @sharepointonline.com.',
+ 'today 14:22',
+ 'Vandenberghe Koen has shared a file with you',
+ 'Vandenberghe Koen has invited you to edit ‘IT_Infra_Strategy_2026_EN’.',
+ E'Good afternoon,
+
+Vandenberghe Koen has shared a file with you and invited you to edit it.
+
+☁️  IT_Infra_Strategy_2026_EN.docx
+
+"First draft for internal review — please send feedback by Friday."
+
+Click below to open the file:
+
+{link:0}
+
+This invitation is valid only for you and people with existing access.
+
+Microsoft SharePoint',
+ '[{"label":"Open file","real_url":"http://sharepointonline-files.com/share/view?id=a9f3c2","suspicious":true,"warning":"This is not a Microsoft link. The domain sharepointonline-files.com is fake. You will be taken to a fake login page to steal your Microsoft password."}]'::jsonb,
+ TRUE,
+ '["The sender domain sharepointonline-files.com is not Microsoft — the real one is @sharepointonline.com","A genuine SharePoint invitation opens the file directly — you are never asked to log in again","The link points to sharepointonline-files.com rather than sharepoint.com or microsoft.com","Always check sharing invitations via Microsoft 365 directly, not through an email link"]'::jsonb,
+ '[]'::jsonb,
+ 'This is phishing. The sender domain sharepointonline-files.com closely resembles the real Microsoft domain but is fake. The link leads to a false Microsoft login page designed to steal your work password. Genuine SharePoint invitations always come from @sharepointonline.com and open the file without requiring you to log in again.',
+ 210, 'advanced'),
+('fr', 'business',
+ 'Microsoft SharePoint',
+ 'no-reply@sharepointonline-files.com',
+ 'Le domaine est sharepointonline-files.com — pas sharepointonline.com. Microsoft envoie toujours les invitations depuis @sharepointonline.com.',
+ 'aujourd''hui 14:22',
+ 'Vandenberghe Koen a partagé un fichier avec vous',
+ 'Vandenberghe Koen vous a invité(e) à modifier ‘IT_Infra_Strategie_2026_FR’.',
+ E'Bonjour,
+
+Vandenberghe Koen a partagé un fichier avec vous et vous a invité(e) à le modifier.
+
+☁️  IT_Infra_Strategie_2026_FR.docx
+
+"Première version pour relecture interne — merci de me faire part de vos retours avant vendredi."
+
+Cliquez ci-dessous pour ouvrir le fichier :
+
+{link:0}
+
+Cette invitation est valable uniquement pour vous et les personnes disposant déjà d''un accès.
+
+Microsoft SharePoint',
+ '[{"label":"Ouvrir le fichier","real_url":"http://sharepointonline-files.com/share/view?id=a9f3c2","suspicious":true,"warning":"Ce lien ne provient pas de Microsoft. Le domaine sharepointonline-files.com est frauduleux. Vous serez redirigé(e) vers une fausse page de connexion Microsoft pour vous voler votre mot de passe."}]'::jsonb,
+ TRUE,
+ '["Le domaine expéditeur sharepointonline-files.com n''est pas Microsoft — le vrai est @sharepointonline.com","Une vraie invitation SharePoint ouvre directement le fichier — on ne vous demande jamais de vous reconnecter","Le lien pointe vers sharepointonline-files.com et non vers sharepoint.com ou microsoft.com","Vérifiez toujours les invitations de partage directement via Microsoft 365, pas via un lien e-mail"]'::jsonb,
+ '[]'::jsonb,
+ 'Il s''agit de phishing. Le domaine sharepointonline-files.com ressemble fortement au vrai domaine Microsoft, mais il est frauduleux. Le lien mène vers une fausse page de connexion Microsoft conçue pour voler votre mot de passe professionnel. Les vraies invitations SharePoint viennent toujours de @sharepointonline.com et ouvrent le fichier sans nouvelle connexion.',
+ 210, 'advanced'),
+('de', 'business',
+ 'Microsoft SharePoint',
+ 'no-reply@sharepointonline-files.com',
+ 'Die Domain lautet sharepointonline-files.com — nicht sharepointonline.com. Microsoft versendet Einladungen immer über @sharepointonline.com.',
+ 'heute 14:22',
+ 'Vandenberghe Koen hat eine Datei mit Ihnen geteilt',
+ 'Vandenberghe Koen hat Sie eingeladen, ‘IT_Infra_Strategie_2026_DE’ zu bearbeiten.',
+ E'Guten Tag,
+
+Vandenberghe Koen hat eine Datei mit Ihnen geteilt und Sie zur Bearbeitung eingeladen.
+
+☁️  IT_Infra_Strategie_2026_DE.docx
+
+"Erster Entwurf zur internen Überprüfung — bitte Feedback bis Freitag."
+
+Klicken Sie unten, um die Datei zu öffnen:
+
+{link:0}
+
+Diese Einladung gilt nur für Sie und Personen mit bestehendem Zugriff.
+
+Microsoft SharePoint',
+ '[{"label":"Datei öffnen","real_url":"http://sharepointonline-files.com/share/view?id=a9f3c2","suspicious":true,"warning":"Dies ist kein Microsoft-Link. Die Domain sharepointonline-files.com ist gefälscht. Sie werden auf eine gefälschte Microsoft-Anmeldeseite weitergeleitet, um Ihr Passwort zu stehlen."}]'::jsonb,
+ TRUE,
+ '["Die Absender-Domain sharepointonline-files.com gehört nicht zu Microsoft — die echte ist @sharepointonline.com","Eine echte SharePoint-Einladung öffnet die Datei direkt — Sie werden nie aufgefordert, sich erneut anzumelden","Der Link zeigt auf sharepointonline-files.com statt auf sharepoint.com oder microsoft.com","Überprüfen Sie Freigabe-Einladungen immer direkt über Microsoft 365, nicht über einen E-Mail-Link"]'::jsonb,
+ '[]'::jsonb,
+ 'Dies ist Phishing. Die Domain sharepointonline-files.com ähnelt der echten Microsoft-Domain stark, ist aber gefälscht. Der Link führt auf eine gefälschte Microsoft-Anmeldeseite, die Ihr Arbeitspasswort stehlen soll. Echte SharePoint-Einladungen kommen immer von @sharepointonline.com und öffnen die Datei ohne erneute Anmeldung.',
+ 210, 'advanced');
+
+-- nl-BE copy
+INSERT INTO inbox_messages
+  (locale, audience, sender_name, sender_address, sender_note, received_label,
+   subject, preview, body, links, is_phishing, red_flags, green_flags,
+   explanation, sort_order, difficulty)
+SELECT 'nl-BE', audience, sender_name, sender_address, sender_note, received_label,
+       subject, preview, body, links, is_phishing, red_flags, green_flags,
+       explanation, sort_order, difficulty
+FROM inbox_messages
+WHERE locale = 'nl' AND difficulty = 'advanced' AND sort_order = 210;
+
+-- fr-BE copy
+INSERT INTO inbox_messages
+  (locale, audience, sender_name, sender_address, sender_note, received_label,
+   subject, preview, body, links, is_phishing, red_flags, green_flags,
+   explanation, sort_order, difficulty)
+SELECT 'fr-BE', audience, sender_name, sender_address, sender_note, received_label,
+       subject, preview, body, links, is_phishing, red_flags, green_flags,
+       explanation, sort_order, difficulty
+FROM inbox_messages
+WHERE locale = 'fr' AND difficulty = 'advanced' AND sort_order = 210;
