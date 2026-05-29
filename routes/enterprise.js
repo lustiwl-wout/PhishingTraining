@@ -53,7 +53,13 @@ loginRouter.use(express.urlencoded({ extended: false }));
 // GET /e/:slug
 loginRouter.get('/:slug', async (req, res) => {
   const org = await getOrgBy('slug', req.params.slug).catch(() => null);
-  if (!org || isExpired(org)) return notFound(res);
+  if (!org || isExpired(org)) {
+    // Als dit via subdomain-routing is binnengekomen (bv. onbekend.seethephish.com),
+    // stuur door naar de algemene training in plaats van een 404 te tonen.
+    const canonical = (process.env.CANONICAL_URL || '').replace(/\/$/, '');
+    if (canonical) return res.redirect(canonical + '/');
+    return notFound(res);
+  }
   if (req.session.enterpriseOrgUserId) return res.redirect('/');
   res.type('html').send(loginPage(org));
 });
