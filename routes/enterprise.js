@@ -45,12 +45,12 @@ async function countJudgedByUser(orgUserId) {
   return rows[0].done;
 }
 
-// ── LOGIN ROUTER  (mounted at /e) ───────────────────────────────────────────
+// ── LOGIN ROUTER  (mounted at /) ────────────────────────────────────────────
 
 const loginRouter = express.Router();
 loginRouter.use(express.urlencoded({ extended: false }));
 
-// GET /e/:slug
+// GET /:slug
 loginRouter.get('/:slug', async (req, res) => {
   const org = await getOrgBy('slug', req.params.slug).catch(() => null);
   if (!org || isExpired(org)) {
@@ -64,7 +64,7 @@ loginRouter.get('/:slug', async (req, res) => {
   res.type('html').send(loginPage(org));
 });
 
-// POST /e/:slug/login
+// POST /:slug/login
 loginRouter.post('/:slug/login', async (req, res) => {
   const org = await getOrgBy('slug', req.params.slug).catch(() => null);
   if (!org || isExpired(org)) return notFound(res);
@@ -126,7 +126,7 @@ loginRouter.post('/:slug/login', async (req, res) => {
   res.redirect('/');
 });
 
-// POST /e/logout
+// POST /logout
 loginRouter.post('/logout', async (req, res) => {
   if (req.session.enterpriseSessionId) {
     await db.query(`DELETE FROM org_sessions WHERE session_id = $1`, [req.session.enterpriseSessionId]).catch(() => {});
@@ -239,7 +239,7 @@ function loginPage(org, error = '') {
   <div class="card">
     <p class="org">${esc(org.name)}</p>
     <h1>🛡️ Phishing-training</h1>
-    <form method="POST" action="/e/${esc(org.slug)}/login" autocomplete="off">
+    <form method="POST" action="/${esc(org.slug)}/login" autocomplete="off">
       <label for="nid">Uw ID-nummer${org.email_domain ? ` <span class="domain">@${esc(org.email_domain)}</span>` : ''}</label>
       <input id="nid" name="numeric_id" type="text" inputmode="numeric"
              pattern="[0-9]+" maxlength="10" required autofocus placeholder="bv. 00142" />

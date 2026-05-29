@@ -262,7 +262,7 @@
     if (nav) {
       const logoutForm = document.createElement('form');
       logoutForm.method = 'POST';
-      logoutForm.action = '/e/logout';
+      logoutForm.action = '/logout';
       logoutForm.style.cssText = 'display:inline;margin-left:.5rem';
       logoutForm.innerHTML = '<button type="submit" style="background:none;border:none;cursor:pointer;font-size:.85rem;color:var(--ink-soft)">Uitloggen</button>';
       nav.appendChild(logoutForm);

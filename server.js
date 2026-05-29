@@ -39,7 +39,7 @@ app.use(session({
 // ── Subdomain routing ──────────────────────────────────────────────────────
 // test.seethephish.com/  →  if not logged in: show enterprise login for "test"
 //                           if logged in:     serve the SPA (training) as normal
-// All other paths (/api/*, /css/*, /e/*, etc.) are never rewritten so the
+// All other paths (/api/*, /css/*, etc.) are never rewritten so the
 // same app works correctly on the subdomain after login.
 app.use((req, res, next) => {
   if (!BASE_HOST) return next();
@@ -51,10 +51,10 @@ app.use((req, res, next) => {
   if (!sub || sub.includes('.')) return next(); // ignore deeper subdomains
 
   // Only rewrite the bare root while not authenticated; everything else
-  // (static assets, /api/*, /e/slug/login, etc.) passes straight through.
+  // (static assets, /api/*, /slug/login, etc.) passes straight through.
   if (req.method === 'GET' && (req.path === '/' || req.path === '/index.html')) {
     if (!req.session?.enterpriseOrgUserId) {
-      req.url = `/e/${encodeURIComponent(sub)}`;
+      req.url = `/${encodeURIComponent(sub)}`;
     }
   }
   next();
@@ -93,14 +93,17 @@ const writeLimit = rateLimit({ windowMs: 60_000, max: 30, standardHeaders: true,
 // Beheer (/admin)
 app.use('/admin', adminRouter);
 
-// Enterprise login (/e/:slug) en klantportaal (/portal/:token)
-app.use('/e', enterpriseRouter);
+// Klantportaal (/portal/:token)
 app.use('/portal', portalRouter);
 
 // API
 app.use('/api', sameOriginOnly);
 app.use('/api', (req, res, next) => req.method === 'GET' ? readLimit(req, res, next) : writeLimit(req, res, next));
 app.use('/api', apiRouter);
+
+// Enterprise login (/:slug, /:slug/login, /logout) — na statisch + API
+// zodat /api/*, /admin/*, /portal/* nooit worden onderschept.
+app.use(enterpriseRouter);
 
 // Fallback voor onbekende routes -> SPA-startpagina
 app.get('*', sendIndex);
