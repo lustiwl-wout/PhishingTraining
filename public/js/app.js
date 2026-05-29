@@ -290,6 +290,11 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
+    const savedPage = localStorage.getItem('vo_page');
+    if (savedPage && pages.includes(savedPage) && savedPage !== 'welkom') {
+      go(savedPage);
+    }
+
     loadEnterpriseConfig().then(() => {
       applyI18n();
       setDifficulty(currentDifficulty);
@@ -305,28 +310,24 @@
       } else if (needAudience && (!allowedAudiences || allowedAudiences.length > 1)) {
         showAudiencePicker();
       }
-    });
-    const savedPage = localStorage.getItem('vo_page');
-    if (savedPage && pages.includes(savedPage) && savedPage !== 'welkom') {
-      go(savedPage);
-    }
-    // Als de gebruiker midden in de simulator zat, herstellen we apparaat,
-    // beoordelingen en het laatst geopende bericht zodat ze niet opnieuw
-    // hoeven te beginnen.
-    if (savedPage === 'simulator') {
-      const saved = loadPersistedSimState();
-      if (saved && saved.device) {
-        setDevice(saved.device);
-        document.body.classList.add('sim-fullscreen');
-        if (saved.device === 'desktop') {
-          showSimPhase('inbox');
-          startSimulator({ restore: true }).catch((err) => console.error(err));
-        } else {
-          showSimPhase('mobile');
-          startMobileSimulator({ restore: true }).catch((err) => console.error(err));
+
+      // Simulator herstellen NA enterprise config zodat audience/difficulty
+      // al correct zijn ingesteld voordat de eerste fetch plaatsvindt.
+      if (savedPage === 'simulator') {
+        const saved = loadPersistedSimState();
+        if (saved && saved.device) {
+          setDevice(saved.device);
+          document.body.classList.add('sim-fullscreen');
+          if (saved.device === 'desktop') {
+            showSimPhase('inbox');
+            startSimulator({ restore: true }).catch((err) => console.error(err));
+          } else {
+            showSimPhase('mobile');
+            startMobileSimulator({ restore: true }).catch((err) => console.error(err));
+          }
         }
       }
-    }
+    });
   });
 
   document.addEventListener('click', (e) => {
