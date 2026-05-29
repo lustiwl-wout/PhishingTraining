@@ -21,6 +21,11 @@ const INDEX_HTML = fs.readFileSync(path.join(PUBLIC_DIR, 'index.html'), 'utf8')
   .replaceAll('__VER__', ASSET_VER)
   .replaceAll('__CANONICAL__', CANONICAL);
 
+// BASE_HOST: e.g. "seethephish.com" — used for subdomain routing.
+// Strip protocol and trailing slash if someone sets the full URL.
+const BASE_HOST = (process.env.BASE_HOST || '')
+  .toLowerCase().replace(/^https?:\/\//, '').replace(/\/$/, '');
+
 app.disable('x-powered-by');
 app.use(express.json({ limit: '64kb' }));
 
@@ -30,6 +35,31 @@ app.use(session({
   saveUninitialized: false,
   cookie: { httpOnly: true, sameSite: 'lax', maxAge: 8 * 60 * 60 * 1000 },
 }));
+
+// ── Subdomain routing ──────────────────────────────────────────────────────
+// test.seethephish.com/  →  if not logged in: show enterprise login for "test"
+//                           if logged in:     serve the SPA (training) as normal
+// All other paths (/api/*, /css/*, /e/*, etc.) are never rewritten so the
+// same app works correctly on the subdomain after login.
+app.use((req, res, next) => {
+  if (!BASE_HOST) return next();
+  const host = (req.headers.host || '').split(':')[0].toLowerCase();
+  if (host === BASE_HOST || host === `www.${BASE_HOST}`) return next();
+  if (!host.endsWith(`.${BASE_HOST}`)) return next();
+
+  const sub = host.slice(0, -(BASE_HOST.length + 1));
+  if (!sub || sub.includes('.')) return next(); // ignore deeper subdomains
+
+  // Only rewrite the bare root while not authenticated; everything else
+  // (static assets, /api/*, /e/slug/login, etc.) passes straight through.
+  if (req.method === 'GET' && (req.path === '/' || req.path === '/index.html')) {
+    if (!req.session?.enterpriseOrgUserId) {
+      req.url = `/e/${encodeURIComponent(sub)}`;
+    }
+  }
+  next();
+});
+// ──────────────────────────────────────────────────────────────────────────
 
 // HTML zelf nooit cachen (kort), assets daarentegen lang (URL is versie-gestempeld).
 function sendIndex(_req, res) {
