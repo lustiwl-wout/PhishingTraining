@@ -293,14 +293,17 @@
     loadEnterpriseConfig().then(() => {
       applyI18n();
       setDifficulty(currentDifficulty);
-      // Taal/doelgroep-pickers alleen tonen voor niet-enterprise gebruikers.
-      // Voor enterprise staat alles al vast via applyEnterpriseConfig().
-      if (!enterpriseConfig) {
-        if (!localStorage.getItem('vo_lang')) {
-          showLangPicker();
-        } else if (!localStorage.getItem('vo_audience')) {
-          showAudiencePicker();
-        }
+      // Pickers tonen als er een keuze te maken valt.
+      // Bij enterprise zijn de opties al gefilterd door applyEnterpriseConfig();
+      // toon de picker alleen als er meerdere toegestane opties zijn.
+      const allowedLangs     = enterpriseConfig ? enterpriseConfig.locales    : null;
+      const allowedAudiences = enterpriseConfig ? enterpriseConfig.audiences  : null;
+      const needLang     = !localStorage.getItem('vo_lang')     || (allowedLangs     && !allowedLangs.includes(localStorage.getItem('vo_lang')));
+      const needAudience = !localStorage.getItem('vo_audience') || (allowedAudiences && !allowedAudiences.includes(localStorage.getItem('vo_audience')));
+      if (needLang && (!allowedLangs || allowedLangs.length > 1)) {
+        showLangPicker();
+      } else if (needAudience && (!allowedAudiences || allowedAudiences.length > 1)) {
+        showAudiencePicker();
       }
     });
     const savedPage = localStorage.getItem('vo_page');
