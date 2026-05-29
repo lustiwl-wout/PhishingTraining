@@ -354,7 +354,10 @@ function overviewPage(orgs) {
     <div class="section">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
         <h2 style="margin:0">Alle organisaties</h2>
-        <a class="btn btn-sm" href="/admin/orgs/new">+ Nieuw</a>
+        <div style="display:flex;gap:.5rem">
+          <a class="btn btn-sm" style="background:#f3f4f6;color:#374151;border:1px solid #d1d5db" href="/admin/messages">📊 Berichtstatistieken</a>
+          <a class="btn btn-sm" href="/admin/orgs/new">+ Nieuw</a>
+        </div>
       </div>
       ${orgs.length === 0 ? '<p style="color:#9ca3af">Nog geen organisaties.</p>' : `
       <table>
@@ -514,6 +517,122 @@ function orgDetailPage(org, users) {
         <tbody>${userRows}</tbody>
       </table>
     </div>` : ''}`, '/admin');
+}
+
+// GET /admin/messages — globale berichtstatistieken
+router.get('/messages', requireLogin, async (req, res, next) => {
+  try {
+    const { locale, audience, difficulty } = req.query;
+
+    const conditions = ['m.active = TRUE'];
+    const params = [];
+    if (locale)     { params.push(locale);     conditions.push(`m.locale = $${params.length}`); }
+    if (audience)   { params.push(audience);   conditions.push(`m.audience = $${params.length}`); }
+    if (difficulty) { params.push(difficulty); conditions.push(`m.difficulty = $${params.length}`); }
+
+    const where = conditions.join(' AND ');
+
+    // Gebruik de eerste beoordeling per (session_id, message_id) om hertraining
+    // niet mee te tellen. org_user_id=NULL zijn publieke gebruikers.
+    const { rows } = await db.query(`
+      WITH first_j AS (
+        SELECT DISTINCT ON (session_id, message_id)
+          message_id, is_correct, clicked_link, org_user_id
+        FROM inbox_judgments
+        ORDER BY session_id, message_id, answered_at ASC
+      )
+      SELECT
+        m.id, m.subject, m.sender_name, m.sender_address, m.is_phishing,
+        m.locale, m.audience, m.difficulty,
+        COUNT(j.message_id)::int                                          AS total,
+        COUNT(j.message_id) FILTER (WHERE j.is_correct)::int             AS correct,
+        COUNT(j.message_id) FILTER (WHERE j.org_user_id IS NOT NULL)::int AS enterprise_total,
+        COUNT(j.message_id) FILTER (WHERE j.org_user_id IS NULL)::int     AS public_total
+      FROM inbox_messages m
+      LEFT JOIN first_j j ON j.message_id = m.id
+      WHERE ${where}
+      GROUP BY m.id, m.subject, m.sender_name, m.sender_address, m.is_phishing,
+               m.locale, m.audience, m.difficulty
+      ORDER BY
+        CASE WHEN COUNT(j.message_id) = 0 THEN 1 ELSE 0 END ASC,
+        (COUNT(j.message_id) FILTER (WHERE j.is_correct)::float / NULLIF(COUNT(j.message_id), 0)) ASC,
+        m.is_phishing DESC
+    `, params);
+
+    res.type('html').send(messageStatsPage(rows, { locale, audience, difficulty }));
+  } catch (err) { next(err); }
+});
+
+function messageStatsPage(rows, filters) {
+  const locales     = ['nl', 'nl-BE', 'en', 'fr', 'fr-BE', 'de'];
+  const audiences   = ['personal', 'business'];
+  const difficulties = ['normal', 'advanced'];
+
+  function opt(val, label, current) {
+    return `<option value="${e(val)}" ${current === val ? 'selected' : ''}>${e(label)}</option>`;
+  }
+  function sel(name, options, current) {
+    return `<select name="${e(name)}" onchange="this.form.submit()">
+      <option value="">— Alle —</option>
+      ${options.map(([v, l]) => opt(v, l, current)).join('')}
+    </select>`;
+  }
+
+  const pct = (r) => r.total > 0 ? Math.round(r.correct / r.total * 100) : null;
+  const pctBadge = (r) => {
+    const p = pct(r);
+    if (p === null) return '<span style="color:#9ca3af">—</span>';
+    const color = p >= 80 ? '#16a34a' : p >= 55 ? '#d97706' : '#dc2626';
+    return `<span style="color:${color};font-weight:600">${p}%</span>`;
+  };
+
+  const tableRows = rows.map(r => `
+    <tr>
+      <td>${r.is_phishing ? '<span class="badge r">Phish</span>' : '<span class="badge g">Echt</span>'}</td>
+      <td style="max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
+          title="${e(r.subject)}">${e(r.subject)}</td>
+      <td style="font-size:.82rem;color:#6b7280;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
+          title="${e(r.sender_address)}">${e(r.sender_address)}</td>
+      <td>${e(r.locale)}</td>
+      <td>${e(r.audience)}</td>
+      <td>${e(r.difficulty)}</td>
+      <td style="text-align:right">${r.total}</td>
+      <td style="text-align:right">${r.enterprise_total > 0 ? r.enterprise_total : ''}</td>
+      <td style="text-align:right">${r.public_total > 0 ? r.public_total : ''}</td>
+      <td style="text-align:right">${pctBadge(r)}</td>
+    </tr>`).join('');
+
+  const judged = rows.filter(r => r.total > 0).length;
+
+  return shell('Berichtstatistieken', `
+    <div class="stat-grid">
+      <div class="stat"><div class="val">${rows.length}</div><div class="lbl">Berichten</div></div>
+      <div class="stat"><div class="val">${judged}</div><div class="lbl">Al beoordeeld</div></div>
+      <div class="stat"><div class="val">${rows.reduce((s,r)=>s+r.total,0)}</div><div class="lbl">Beoordelingen</div></div>
+    </div>
+    <div class="section">
+      <form method="GET" action="/admin/messages" style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;margin-bottom:1rem">
+        <span style="font-size:.9rem;color:#6b7280">Filter:</span>
+        ${sel('locale',     locales.map(l=>[l,l]),          filters.locale)}
+        ${sel('audience',   [['personal','Privé'],['business','Zakelijk']], filters.audience)}
+        ${sel('difficulty', [['normal','Normaal'],['advanced','Gevorderd']], filters.difficulty)}
+        <a href="/admin/messages" style="font-size:.85rem;color:#6b7280">Wissen</a>
+      </form>
+      ${rows.length === 0 ? '<p style="color:#9ca3af">Geen berichten gevonden.</p>' : `
+      <div style="overflow-x:auto">
+      <table>
+        <thead><tr>
+          <th>Type</th><th>Onderwerp</th><th>Afzender</th>
+          <th>Taal</th><th>Doelgroep</th><th>Niveau</th>
+          <th style="text-align:right">Totaal</th>
+          <th style="text-align:right" title="Enterprise-gebruikers">Ent.</th>
+          <th style="text-align:right" title="Publieke gebruikers">Pub.</th>
+          <th style="text-align:right">Correct %</th>
+        </tr></thead>
+        <tbody>${tableRows}</tbody>
+      </table>
+      </div>`}
+    </div>`, '/admin');
 }
 
 module.exports = router;

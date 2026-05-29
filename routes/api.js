@@ -236,14 +236,14 @@ router.post('/inbox/:id/judge', async (req, res, next) => {
     const msg = rows[0];
     const isCorrect = verdict === (msg.is_phishing ? 'phish' : 'trust');
 
-    // Alleen opslaan voor enterprise-gebruikers
+    // Altijd opslaan — voor enterprise ook org_user_id, voor publiek null.
+    await db.query(
+      `INSERT INTO inbox_judgments
+         (session_id, message_id, verdict, is_correct, clicked_link, revealed_sender, ip_address, difficulty, org_user_id)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
+      [session_id, id, verdict, isCorrect, !!clicked_link, !!revealed_sender, clientIp(req), difficulty, orgUserId]
+    );
     if (orgUserId) {
-      await db.query(
-        `INSERT INTO inbox_judgments
-           (session_id, message_id, verdict, is_correct, clicked_link, revealed_sender, ip_address, difficulty, org_user_id)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
-        [session_id, id, verdict, isCorrect, !!clicked_link, !!revealed_sender, clientIp(req), difficulty, orgUserId]
-      );
       db.query(`UPDATE org_sessions SET last_active = NOW() WHERE session_id = $1`, [session_id]).catch(() => {});
     }
 
