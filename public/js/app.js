@@ -1189,7 +1189,7 @@
       '<div class="mob-reader-content"><p class="muted" style="padding:14px">' + escapeHtml(t('sim.ol.loading')) + '</p></div>';
     reader.querySelector('.mob-btn-back').addEventListener('click', closeMobReader);
     let m;
-    try { m = await api('/inbox/' + id); }
+    try { m = applyOrgDomain([await api('/inbox/' + id)])[0]; }
     catch (_) {
       reader.querySelector('.mob-reader-content').innerHTML =
         '<p class="error" style="padding:14px">' + escapeHtml(t('sim.ol.msgLoadError')) + '</p>';
@@ -1277,7 +1277,7 @@
     const reader = document.getElementById('ol-reader');
     reader.innerHTML = '<p class="muted">' + escapeHtml(t('sim.ol.loading')) + '</p>';
     let m;
-    try { m = await api('/inbox/' + id); }
+    try { m = applyOrgDomain([await api('/inbox/' + id)])[0]; }
     catch (_) { reader.innerHTML = '<p class="error">' + escapeHtml(t('sim.ol.msgLoadError')) + '</p>'; return; }
     renderReader(m);
     reader.scrollTop = 0;
