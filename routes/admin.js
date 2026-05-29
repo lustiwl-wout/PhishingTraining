@@ -586,23 +586,55 @@ function messageStatsPage(rows, filters) {
     return `<span style="color:${color};font-weight:600">${p}%</span>`;
   };
 
-  const tableRows = rows.map(r => `
-    <tr>
-      <td>${r.is_phishing ? '<span class="badge r">Phish</span>' : '<span class="badge g">Echt</span>'}</td>
-      <td style="max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
-          title="${e(r.subject)}">${e(r.subject)}</td>
-      <td style="font-size:.82rem;color:#6b7280;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
-          title="${e(r.sender_address)}">${e(r.sender_address)}</td>
-      <td>${e(r.locale)}</td>
-      <td>${e(r.audience)}</td>
-      <td>${e(r.difficulty)}</td>
-      <td style="text-align:right">${r.total}</td>
-      <td style="text-align:right">${r.enterprise_total > 0 ? r.enterprise_total : ''}</td>
-      <td style="text-align:right">${r.public_total > 0 ? r.public_total : ''}</td>
-      <td style="text-align:right">${pctBadge(r)}</td>
-    </tr>`).join('');
+  // Kolommen: id, label, standaard zichtbaar
+  const COLS = [
+    { id: 'type',       label: 'Type',       def: true  },
+    { id: 'subject',    label: 'Onderwerp',  def: true  },
+    { id: 'sender',     label: 'Afzender',   def: false },
+    { id: 'locale',     label: 'Taal',       def: true  },
+    { id: 'audience',   label: 'Doelgroep',  def: false },
+    { id: 'difficulty', label: 'Niveau',     def: true  },
+    { id: 'total',      label: 'Beoordeeld', def: true  },
+    { id: 'ent_pct',    label: 'Ent. %',     def: false },
+    { id: 'pub_pct',    label: 'Pub. %',     def: false },
+    { id: 'correct',    label: 'Correct %',  def: true  },
+  ];
+
+  const entPct  = (r) => r.total > 0 ? Math.round(r.enterprise_total / r.total * 100) + '%' : '—';
+  const pubPct  = (r) => r.total > 0 ? Math.round(r.public_total    / r.total * 100) + '%' : '—';
+
+  const cellMap = (r) => ({
+    type:       r.is_phishing ? '<span class="badge r">Phish</span>' : '<span class="badge g">Echt</span>',
+    subject:    `<span title="${e(r.subject)}">${e(r.subject)}</span>`,
+    sender:     `<span style="font-size:.82rem;color:#6b7280" title="${e(r.sender_address)}">${e(r.sender_address)}</span>`,
+    locale:     e(r.locale),
+    audience:   e(r.audience),
+    difficulty: e(r.difficulty),
+    total:      String(r.total || '—'),
+    ent_pct:    entPct(r),
+    pub_pct:    pubPct(r),
+    correct:    pctBadge(r),
+  });
+
+  const tableRows = rows.map(r => {
+    const cells = cellMap(r);
+    return '<tr>' + COLS.map(c =>
+      `<td data-col="${c.id}" style="${c.id==='subject'?'max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;':''
+        }${['total','ent_pct','pub_pct','correct'].includes(c.id)?'text-align:right;':''}">${cells[c.id]}</td>`
+    ).join('') + '</tr>';
+  }).join('');
+
+  const thCells = COLS.map(c =>
+    `<th data-col="${c.id}" style="${['total','ent_pct','pub_pct','correct'].includes(c.id)?'text-align:right':''}">${c.label}</th>`
+  ).join('');
 
   const judged = rows.filter(r => r.total > 0).length;
+
+  const colPickerItems = COLS.map(c =>
+    `<label style="display:flex;align-items:center;gap:.4rem;cursor:pointer;white-space:nowrap">
+      <input type="checkbox" data-toggle-col="${c.id}" ${c.def ? 'checked' : ''}> ${c.label}
+    </label>`
+  ).join('');
 
   return shell('Berichtstatistieken', `
     <div class="stat-grid">
@@ -611,28 +643,76 @@ function messageStatsPage(rows, filters) {
       <div class="stat"><div class="val">${rows.reduce((s,r)=>s+r.total,0)}</div><div class="lbl">Beoordelingen</div></div>
     </div>
     <div class="section">
-      <form method="GET" action="/admin/messages" style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;margin-bottom:1rem">
-        <span style="font-size:.9rem;color:#6b7280">Filter:</span>
-        ${sel('locale',     locales.map(l=>[l,l]),          filters.locale)}
-        ${sel('audience',   [['personal','Privé'],['business','Zakelijk']], filters.audience)}
-        ${sel('difficulty', [['normal','Normaal'],['advanced','Gevorderd']], filters.difficulty)}
-        <a href="/admin/messages" style="font-size:.85rem;color:#6b7280">Wissen</a>
-      </form>
+      <div style="display:flex;gap:.75rem;align-items:flex-start;flex-wrap:wrap;margin-bottom:1rem;justify-content:space-between">
+        <form method="GET" action="/admin/messages" style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap">
+          <span style="font-size:.9rem;color:#6b7280">Filter:</span>
+          ${sel('locale',     locales.map(l=>[l,l]),          filters.locale)}
+          ${sel('audience',   [['personal','Privé'],['business','Zakelijk']], filters.audience)}
+          ${sel('difficulty', [['normal','Normaal'],['advanced','Gevorderd']], filters.difficulty)}
+          <a href="/admin/messages" style="font-size:.85rem;color:#6b7280">Wissen</a>
+        </form>
+        <div style="position:relative">
+          <button id="col-picker-btn" type="button" class="btn btn-sm"
+            style="background:#f3f4f6;color:#374151;border:1px solid #d1d5db">
+            ⚙ Kolommen
+          </button>
+          <div id="col-picker" style="display:none;position:absolute;right:0;top:2.2rem;z-index:20;
+            background:#fff;border:1px solid #d1d5db;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.12);
+            padding:.75rem 1rem;display:none;flex-direction:column;gap:.5rem;min-width:160px">
+            ${colPickerItems}
+          </div>
+        </div>
+      </div>
       ${rows.length === 0 ? '<p style="color:#9ca3af">Geen berichten gevonden.</p>' : `
-      <div style="overflow-x:auto">
-      <table>
-        <thead><tr>
-          <th>Type</th><th>Onderwerp</th><th>Afzender</th>
-          <th>Taal</th><th>Doelgroep</th><th>Niveau</th>
-          <th style="text-align:right">Totaal</th>
-          <th style="text-align:right" title="Enterprise-gebruikers">Ent.</th>
-          <th style="text-align:right" title="Publieke gebruikers">Pub.</th>
-          <th style="text-align:right">Correct %</th>
-        </tr></thead>
-        <tbody>${tableRows}</tbody>
-      </table>
+      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+        <table id="msg-stats-table" style="min-width:520px">
+          <thead><tr>${thCells}</tr></thead>
+          <tbody>${tableRows}</tbody>
+        </table>
       </div>`}
-    </div>`, '/admin');
+    </div>
+    <script>
+    (function() {
+      const STORE_KEY = 'vo_admin_msg_cols';
+      const defaults = {${COLS.map(c => `'${c.id}':${c.def}`).join(',')}};
+
+      function loadPrefs() {
+        try { return Object.assign({}, defaults, JSON.parse(localStorage.getItem(STORE_KEY) || '{}')); }
+        catch(_) { return Object.assign({}, defaults); }
+      }
+      function savePrefs(p) { localStorage.setItem(STORE_KEY, JSON.stringify(p)); }
+
+      function applyPrefs(prefs) {
+        document.querySelectorAll('[data-col]').forEach(el => {
+          el.style.display = prefs[el.dataset.col] === false ? 'none' : '';
+        });
+      }
+
+      const prefs = loadPrefs();
+      applyPrefs(prefs);
+
+      // Sync checkboxes to saved prefs
+      document.querySelectorAll('[data-toggle-col]').forEach(cb => {
+        cb.checked = prefs[cb.dataset.toggleCol] !== false;
+        cb.addEventListener('change', () => {
+          prefs[cb.dataset.toggleCol] = cb.checked;
+          savePrefs(prefs);
+          applyPrefs(prefs);
+        });
+      });
+
+      // Toggle picker dropdown
+      const btn = document.getElementById('col-picker-btn');
+      const picker = document.getElementById('col-picker');
+      picker.style.display = 'none';
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        picker.style.display = picker.style.display === 'none' ? 'flex' : 'none';
+      });
+      document.addEventListener('click', () => { picker.style.display = 'none'; });
+      picker.addEventListener('click', e => e.stopPropagation());
+    })();
+    </script>`, '/admin');
 }
 
 module.exports = router;
