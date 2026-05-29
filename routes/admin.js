@@ -179,6 +179,40 @@ router.post('/orgs/:id/generate', requireLogin, async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
+// POST /admin/orgs/:id/import — import a list of existing IDs from an HR system
+router.post('/orgs/:id/import', requireLogin, async (req, res, next) => {
+  try {
+    const { rows: [org] } = await db.query(`SELECT * FROM organisations WHERE id = $1`, [req.params.id]);
+    if (!org) return res.status(404).end();
+
+    // Accept IDs as newline- or comma-separated text; strip whitespace, drop blanks/duplicates
+    const raw = String(req.body.ids || '');
+    const ids = [...new Set(
+      raw.split(/[\n,;]+/).map(s => s.trim()).filter(s => s.length > 0 && s.length <= 50)
+    )];
+
+    if (ids.length === 0) return res.redirect(`/admin/orgs/${org.id}?err=Geen+geldige+ID%27s+gevonden.`);
+    if (ids.length > 500) return res.redirect(`/admin/orgs/${org.id}?err=Maximaal+500+ID%27s+per+keer.`);
+
+    const lines = ['ID,Pincode,Status'];
+
+    for (const rawId of ids) {
+      const pin = String(crypto.randomInt(0, 10000)).padStart(4, '0');
+      const hash = await bcrypt.hash(pin, 10);
+      const result = await db.query(
+        `INSERT INTO org_users (org_id, numeric_id, pincode_hash) VALUES ($1,$2,$3) ON CONFLICT (org_id, numeric_id) DO NOTHING RETURNING id`,
+        [org.id, rawId, hash]
+      );
+      // If ON CONFLICT fired (already existed), mark as skipped
+      const status = result.rowCount > 0 ? 'nieuw' : 'al_aanwezig';
+      lines.push(`${rawId},${result.rowCount > 0 ? pin : ''},${status}`);
+    }
+
+    res.set('Content-Disposition', `attachment; filename="${org.slug}-import.csv"`)
+       .type('text/csv').send(lines.join('\r\n'));
+  } catch (err) { next(err); }
+});
+
 // ── HTML helpers ────────────────────────────────────────────────────────────
 
 function e(s) {
@@ -389,13 +423,27 @@ function orgDetailPage(org, users) {
 
     <div class="section">
       <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
-        <h2 style="margin:0">Deelnemers genereren</h2>
+        <h2 style="margin:0">Deelnemers aanmaken</h2>
         <p style="font-size:.8rem;color:#6b7280;flex-basis:100%">Pincodes worden direct als CSV gedownload — worden <strong>niet</strong> opgeslagen.</p>
       </div>
-      <form method="POST" action="/admin/orgs/${org.id}/generate" style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:flex-end">
-        <div><label>Aantal</label><input name="count" type="number" min="1" max="500" value="10" style="width:110px"/></div>
-        <button class="btn" type="submit">Genereren + CSV</button>
-      </form>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;flex-wrap:wrap">
+        <div>
+          <p style="font-size:.85rem;font-weight:600;margin-bottom:.5rem">Automatisch nummeren</p>
+          <form method="POST" action="/admin/orgs/${org.id}/generate" style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:flex-end">
+            <div><label>Aantal</label><input name="count" type="number" min="1" max="500" value="10" style="width:110px"/></div>
+            <button class="btn" type="submit">Genereren + CSV</button>
+          </form>
+        </div>
+        <div>
+          <p style="font-size:.85rem;font-weight:600;margin-bottom:.5rem">Importeren uit HR-systeem</p>
+          <form method="POST" action="/admin/orgs/${org.id}/import">
+            <label style="font-size:.8rem;color:#6b7280">ID's plakken — één per regel, of komma-gescheiden</label>
+            <textarea name="ids" rows="5" style="width:100%;margin-top:.35rem;padding:.5rem .7rem;border:1.5px solid #d1d5db;border-radius:8px;font-family:monospace;font-size:.85rem;resize:vertical" placeholder="1001&#10;1002&#10;1003&#10;..."></textarea>
+            <button class="btn" type="submit" style="margin-top:.5rem">Importeren + CSV</button>
+          </form>
+          <p style="font-size:.75rem;color:#9ca3af;margin-top:.4rem">Bestaande ID's worden overgeslagen (status: al_aanwezig). Maximaal 500 per keer.</p>
+        </div>
+      </div>
     </div>
 
     ${users.length > 0 ? `
