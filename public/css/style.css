@@ -139,6 +139,7 @@ body {
   transform: translateY(-1px);
 }
 .lang-card:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.lang-card[hidden] { display: none; }
 .lang-flag { font-size: 1.8rem; line-height: 1; }
 @media (max-width: 480px) {
   .lang-grid { grid-template-columns: 1fr; }
@@ -1887,6 +1888,7 @@ body.device-iphone .device-homebar::after {
   cursor: pointer;
   transition: background .15s, color .15s, border-color .15s;
 }
+.difficulty-btn[hidden] { display: none; }
 .difficulty-btn:hover {
   background: var(--bg);
 }
