@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const db = require('../db');
 
 const router = express.Router();
-router.use(express.urlencoded({ extended: false }));
+router.use(express.urlencoded({ extended: false, limit: '20mb' }));
 
 // ── Auth ────────────────────────────────────────────────────────────────────
 
@@ -180,36 +180,67 @@ router.post('/orgs/:id/generate', requireLogin, async (req, res, next) => {
 });
 
 // POST /admin/orgs/:id/import — import a list of existing IDs from an HR system
+// Streams the CSV response so large batches (tens of thousands) don't time out.
 router.post('/orgs/:id/import', requireLogin, async (req, res, next) => {
   try {
     const { rows: [org] } = await db.query(`SELECT * FROM organisations WHERE id = $1`, [req.params.id]);
     if (!org) return res.status(404).end();
 
-    // Accept IDs as newline- or comma-separated text; strip whitespace, drop blanks/duplicates
     const raw = String(req.body.ids || '');
     const ids = [...new Set(
       raw.split(/[\n,;]+/).map(s => s.trim()).filter(s => s.length > 0 && s.length <= 50)
     )];
 
     if (ids.length === 0) return res.redirect(`/admin/orgs/${org.id}?err=Geen+geldige+ID%27s+gevonden.`);
-    if (ids.length > 500) return res.redirect(`/admin/orgs/${org.id}?err=Maximaal+500+ID%27s+per+keer.`);
 
-    const lines = ['ID,Pincode,Status'];
+    // Stream so the browser starts downloading immediately.
+    res.set('Content-Disposition', `attachment; filename="${org.slug}-import.csv"`);
+    res.type('text/csv');
+    res.write('ID,Pincode,Status\r\n');
 
-    for (const rawId of ids) {
-      const pin = String(crypto.randomInt(0, 10000)).padStart(4, '0');
-      const hash = await bcrypt.hash(pin, 10);
+    // Cost 8 is fine: 4-digit PINs + account lockout make online brute-force
+    // impossible regardless of hash speed. Cost 8 runs ~15ms vs ~100ms for cost 10.
+    const BCRYPT_COST = 8;
+    const CONCURRENCY = 20; // parallel bcrypt calls per micro-batch
+    const DB_BATCH    = 500; // rows per INSERT statement (stays well under pg's 65535-param limit)
+
+    for (let i = 0; i < ids.length; i += DB_BATCH) {
+      const chunk = ids.slice(i, i + DB_BATCH);
+
+      // Hash all PINs in this chunk with bounded parallelism.
+      const hashed = [];
+      for (let j = 0; j < chunk.length; j += CONCURRENCY) {
+        const group = chunk.slice(j, j + CONCURRENCY);
+        const results = await Promise.all(group.map(async (rawId) => {
+          const pin  = String(crypto.randomInt(0, 10000)).padStart(4, '0');
+          const hash = await bcrypt.hash(pin, BCRYPT_COST);
+          return { rawId, pin, hash };
+        }));
+        hashed.push(...results);
+      }
+
+      // Single multi-row INSERT for the whole chunk.
+      // Each row uses ($1, $even, $odd) — org_id is always $1.
+      const values = hashed.map((_, k) => `($1,$${k * 2 + 2},$${k * 2 + 3})`).join(',');
+      const params = [org.id, ...hashed.flatMap(r => [r.rawId, r.hash])];
       const result = await db.query(
-        `INSERT INTO org_users (org_id, numeric_id, pincode_hash) VALUES ($1,$2,$3) ON CONFLICT (org_id, numeric_id) DO NOTHING RETURNING id`,
-        [org.id, rawId, hash]
+        `INSERT INTO org_users (org_id, numeric_id, pincode_hash)
+         VALUES ${values}
+         ON CONFLICT (org_id, numeric_id) DO NOTHING
+         RETURNING numeric_id`,
+        params
       );
-      // If ON CONFLICT fired (already existed), mark as skipped
-      const status = result.rowCount > 0 ? 'nieuw' : 'al_aanwezig';
-      lines.push(`${rawId},${result.rowCount > 0 ? pin : ''},${status}`);
+      const inserted = new Set(result.rows.map(r => r.numeric_id));
+
+      const csvChunk = hashed
+        .map(r => inserted.has(r.rawId)
+          ? `${r.rawId},${r.pin},nieuw`
+          : `${r.rawId},,al_aanwezig`)
+        .join('\r\n');
+      res.write(csvChunk + '\r\n');
     }
 
-    res.set('Content-Disposition', `attachment; filename="${org.slug}-import.csv"`)
-       .type('text/csv').send(lines.join('\r\n'));
+    res.end();
   } catch (err) { next(err); }
 });
 
@@ -441,7 +472,7 @@ function orgDetailPage(org, users) {
             <textarea name="ids" rows="5" style="width:100%;margin-top:.35rem;padding:.5rem .7rem;border:1.5px solid #d1d5db;border-radius:8px;font-family:monospace;font-size:.85rem;resize:vertical" placeholder="1001&#10;1002&#10;1003&#10;..."></textarea>
             <button class="btn" type="submit" style="margin-top:.5rem">Importeren + CSV</button>
           </form>
-          <p style="font-size:.75rem;color:#9ca3af;margin-top:.4rem">Bestaande ID's worden overgeslagen (status: al_aanwezig). Maximaal 500 per keer.</p>
+          <p style="font-size:.75rem;color:#9ca3af;margin-top:.4rem">Bestaande ID's worden overgeslagen (status: al_aanwezig). Grote lijsten worden gestreamd — de download start meteen.</p>
         </div>
       </div>
     </div>
