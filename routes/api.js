@@ -305,4 +305,24 @@ router.get('/enterprise/config', async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
+// GET /api/enterprise/progress — voortgang van de ingelogde enterprise-gebruiker
+router.get('/enterprise/progress', async (req, res, next) => {
+  const orgUserId = req.session?.enterpriseOrgUserId;
+  if (!orgUserId) return res.json({ judgments: {} });
+  try {
+    const { rows } = await db.query(
+      `SELECT j.message_id, j.verdict, j.is_correct, m.is_phishing
+       FROM inbox_judgments j
+       JOIN inbox_messages m ON m.id = j.message_id
+       WHERE j.org_user_id = $1`,
+      [orgUserId]
+    );
+    const judgments = {};
+    rows.forEach(r => {
+      judgments[r.message_id] = { verdict: r.verdict, correct: r.is_correct, is_phishing: r.is_phishing };
+    });
+    res.json({ judgments });
+  } catch (err) { next(err); }
+});
+
 module.exports = router;

@@ -145,21 +145,38 @@ portalRouter.get('/:token', async (req, res) => {
   if (!org) return notFound(res);
 
   const total = await countActiveMessages(org.difficulty);
-  const { rows } = await db.query(`
-    SELECT
-      u.id, u.numeric_id, u.allow_retrain,
-      COUNT(DISTINCT j.message_id)::int              AS done_count,
-      COUNT(j.id) FILTER (WHERE j.is_correct)::int   AS correct_count,
-      MIN(j.answered_at)                             AS first_judged_at,
-      MAX(j.answered_at)                             AS last_judged_at
-    FROM org_users u
-    LEFT JOIN inbox_judgments j ON j.org_user_id = u.id
-    WHERE u.org_id = $1
-    GROUP BY u.id, u.numeric_id, u.allow_retrain
-    ORDER BY u.numeric_id
-  `, [org.id]);
+  const [{ rows: userRows }, { rows: msgRows }] = await Promise.all([
+    db.query(`
+      SELECT
+        u.id, u.numeric_id, u.allow_retrain,
+        COUNT(DISTINCT j.message_id)::int              AS done_count,
+        COUNT(j.id) FILTER (WHERE j.is_correct)::int   AS correct_count,
+        MIN(j.answered_at)                             AS first_judged_at,
+        MAX(j.answered_at)                             AS last_judged_at
+      FROM org_users u
+      LEFT JOIN inbox_judgments j ON j.org_user_id = u.id
+      WHERE u.org_id = $1
+      GROUP BY u.id, u.numeric_id, u.allow_retrain
+      ORDER BY u.numeric_id
+    `, [org.id]),
+    db.query(`
+      SELECT
+        m.id, m.subject, m.sender_name, m.sender_address, m.is_phishing, m.locale,
+        COUNT(j.id)::int                              AS judged_count,
+        COUNT(j.id) FILTER (WHERE j.is_correct)::int  AS correct_count
+      FROM inbox_messages m
+      INNER JOIN inbox_judgments j ON j.message_id = m.id
+      INNER JOIN org_users u ON u.id = j.org_user_id AND u.org_id = $1
+      WHERE m.active = TRUE
+      GROUP BY m.id, m.subject, m.sender_name, m.sender_address, m.is_phishing, m.locale
+      ORDER BY
+        (COUNT(j.id) FILTER (WHERE j.is_correct)::float / NULLIF(COUNT(j.id), 0)) ASC,
+        m.is_phishing DESC,
+        COUNT(j.id) DESC
+    `, [org.id]),
+  ]);
 
-  res.type('html').send(portalPage(org, rows, total, req.params.token));
+  res.type('html').send(portalPage(org, userRows, total, req.params.token, msgRows));
 });
 
 // POST /portal/:token/toggle/:userId
@@ -279,7 +296,7 @@ function completedPage(org) {
 </html>`;
 }
 
-function portalPage(org, users, totalMessages, token) {
+function portalPage(org, users, totalMessages, token, msgStats = []) {
   const isDone = (r) => r.done_count >= totalMessages && totalMessages > 0;
   const score  = (r) => r.done_count > 0 ? Math.round(r.correct_count / r.done_count * 100) + '%' : '—';
 
@@ -303,6 +320,25 @@ function portalPage(org, users, totalMessages, token) {
   const done   = users.filter(r => isDone(r)).length;
   const busy   = users.filter(r => !isDone(r) && r.done_count > 0).length;
   const notyet = users.filter(r => r.done_count === 0).length;
+
+  const pct = (r) => r.judged_count > 0
+    ? Math.round(r.correct_count / r.judged_count * 100) + '%' : '—';
+  const riskBar = (r) => {
+    if (r.judged_count === 0) return '<span style="color:#9ca3af">—</span>';
+    const p = Math.round(r.correct_count / r.judged_count * 100);
+    const color = p >= 80 ? '#16a34a' : p >= 60 ? '#d97706' : '#dc2626';
+    return `<span style="color:${color};font-weight:600">${p}%</span>`;
+  };
+  const msgStatRows = msgStats.map(r => `
+    <tr>
+      <td>${r.is_phishing ? '<span class="badge red">Phishing</span>' : '<span class="badge green">Echt</span>'}</td>
+      <td style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
+          title="${esc(r.subject)}">${esc(r.subject)}</td>
+      <td style="color:#6b7280;font-size:.82rem">${esc(r.sender_address)}</td>
+      <td style="color:#6b7280;font-size:.8rem">${esc(r.locale)}</td>
+      <td style="text-align:right">${r.judged_count}</td>
+      <td style="text-align:right">${riskBar(r)}</td>
+    </tr>`).join('');
 
   return `<!doctype html>
 <html lang="nl">
@@ -334,7 +370,9 @@ function portalPage(org, users, totalMessages, token) {
     tr:last-child td { border-bottom: none; }
     .badge { padding: .15rem .5rem; border-radius: 4px; font-size: .8rem; font-weight: 600; }
     .badge.green { background: #dcfce7; color: #166534; }
+    .badge.red   { background: #fee2e2; color: #991b1b; }
     .badge.grey  { background: #f3f4f6; color: #6b7280; }
+    .section + .section { margin-top: 1.5rem; }
     .btn-sm { padding: .25rem .65rem; border: 1.5px solid #d1d5db; border-radius: 5px;
               background: #fff; cursor: pointer; font-size: .8rem; }
     .btn-sm.on { border-color: #2563eb; color: #2563eb; }
@@ -371,6 +409,19 @@ function portalPage(org, users, totalMessages, token) {
             <th>Eerste login</th><th>Laatste activiteit</th><th>Herhaling</th>
           </tr></thead>
           <tbody>${userRows}</tbody>
+        </table>`}
+  </div>
+
+  <div class="section">
+    <h2>Statistieken per bericht <span style="font-size:.8rem;font-weight:400;color:#9ca3af">(gesorteerd op minst-herkend)</span></h2>
+    ${msgStats.length === 0
+      ? '<p style="color:#9ca3af">Nog geen beoordelingen.</p>'
+      : `<table>
+          <thead><tr>
+            <th>Type</th><th>Onderwerp</th><th>Afzender</th><th>Taal</th>
+            <th style="text-align:right">Beoordeeld</th><th style="text-align:right">Correct</th>
+          </tr></thead>
+          <tbody>${msgStatRows}</tbody>
         </table>`}
   </div>
 </div>

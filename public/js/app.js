@@ -788,9 +788,17 @@
     try {
       const messages = applyOrgDomain(await api('/inbox'));
       const saved = opts.restore ? loadPersistedSimState() : null;
+      let judgments = (saved && saved.judgments) || {};
+      // Enterprise: laad beoordelingen uit DB zodat voortgang apparaat-onafhankelijk is.
+      if (enterpriseConfig) {
+        try {
+          const progress = await api('/enterprise/progress');
+          if (progress.judgments) judgments = Object.assign({}, judgments, progress.judgments);
+        } catch (_) {}
+      }
       simState = {
         messages,
-        judgments: (saved && saved.judgments) || {},
+        judgments,
         interactions: (saved && saved.interactions) || {},
         current: (saved && saved.current) || null,
       };
@@ -989,9 +997,16 @@
     try {
       const messages = applyOrgDomain(await api('/inbox'));
       const saved = opts.restore ? loadPersistedSimState() : null;
+      let judgments = (saved && saved.judgments) || {};
+      if (enterpriseConfig) {
+        try {
+          const progress = await api('/enterprise/progress');
+          if (progress.judgments) judgments = Object.assign({}, judgments, progress.judgments);
+        } catch (_) {}
+      }
       simState = {
         messages,
-        judgments: (saved && saved.judgments) || {},
+        judgments,
         interactions: (saved && saved.interactions) || {},
         current: (saved && saved.current) || null,
       };
@@ -1403,7 +1418,7 @@
       return;
     }
 
-    simState.judgments[m.id] = { verdict, correct: res.correct };
+    simState.judgments[m.id] = { verdict, correct: res.correct, is_phishing: res.is_phishing, red_flags: res.red_flags || [] };
     if (currentDevice === 'desktop') renderInboxList();
     else renderMobList();
     updateProgress();
@@ -1473,10 +1488,42 @@
     const titel = t('sim.final.' + bucket + '.h');
     const advies = t('sim.final.' + bucket + '.p');
 
+    // Inzichten: verdeel phishing vs. echte mails, toon wat gemist is.
+    const phishingMsgs = simState.messages.filter((m) => simState.judgments[m.id]?.is_phishing);
+    const legitMsgs    = simState.messages.filter((m) => simState.judgments[m.id] && !simState.judgments[m.id].is_phishing);
+    const phishCorrect = phishingMsgs.filter((m) => simState.judgments[m.id].correct).length;
+    const legitCorrect = legitMsgs.filter((m) => simState.judgments[m.id].correct).length;
+    const missedPhish  = phishingMsgs.filter((m) => !simState.judgments[m.id].correct);
+
+    const breakdownHtml = (phishingMsgs.length > 0 || legitMsgs.length > 0) ? (
+      '<div class="final-breakdown">' +
+        (phishingMsgs.length > 0
+          ? '<span>' + escapeHtml(t('sim.final.insight.phishing', { correct: phishCorrect, total: phishingMsgs.length })) + '</span>'
+          : '') +
+        (legitMsgs.length > 0
+          ? '<span>' + escapeHtml(t('sim.final.insight.legit', { correct: legitCorrect, total: legitMsgs.length })) + '</span>'
+          : '') +
+      '</div>'
+    ) : '';
+
+    const missedHtml = missedPhish.length > 0 ? (
+      '<div class="final-missed">' +
+        '<p class="final-missed-h">' + escapeHtml(t('sim.final.insight.missed')) + '</p>' +
+        '<ul>' + missedPhish.map((m) => {
+          const flags = simState.judgments[m.id].red_flags || [];
+          const tip = flags[0] ? ' <em>— ' + escapeHtml(replaceDomain(flags[0])) + '</em>' : '';
+          return '<li>' + escapeHtml(m.subject) + tip + '</li>';
+        }).join('') +
+        '</ul>' +
+      '</div>'
+    ) : '';
+
     result.innerHTML =
       '<h2>' + escapeHtml(titel) + '</h2>' +
       '<p class="big-text">' + t('sim.final.score', { correct, total, pct }) + '</p>' +
       '<p>' + escapeHtml(advies) + '</p>' +
+      breakdownHtml +
+      missedHtml +
       '<div class="actions">' +
         '<button class="btn btn-primary" id="sim-again">' + escapeHtml(t('sim.final.again')) + '</button>' +
         '<button class="btn btn-secondary" data-go="hulp">' + escapeHtml(t('sim.final.help')) + '</button>' +

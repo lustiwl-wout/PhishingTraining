@@ -192,6 +192,9 @@ window.VO_LOCALES = {
     'sim.final.score': 'U beoordeelde <strong>{correct} van de {total}</strong> berichten goed ({pct}%).',
     'sim.final.again': 'Opnieuw oefenen',
     'sim.final.help': 'Bekijk hulp en tips',
+    'sim.final.insight.phishing': 'Phishing-mails: {correct} van {total} herkend',
+    'sim.final.insight.legit': 'Echte mails: {correct} van {total} correct',
+    'sim.final.insight.missed': 'Mails waarbij u in de val trapte:',
 
     'sim.junk.sender': 'Z.K.H. Prins Adewale Ogundimu',
     'sim.junk.senderEmail': 'hrh.ogundimu@central-bank-transfer.info',
@@ -421,6 +424,9 @@ window.VO_LOCALES = {
     'sim.final.score': 'U beoordeelde <strong>{correct} van de {total}</strong> berichten goed ({pct}%).',
     'sim.final.again': 'Opnieuw oefenen',
     'sim.final.help': 'Bekijk hulp en tips',
+    'sim.final.insight.phishing': 'Phishing-mails: {correct} van {total} herkend',
+    'sim.final.insight.legit': 'Echte mails: {correct} van {total} correct',
+    'sim.final.insight.missed': 'Mails waarbij u in de val getrapt bent:',
 
     'sim.junk.sender': 'Z.K.H. Prins Adewale Ogundimu',
     'sim.junk.senderEmail': 'hrh.ogundimu@central-bank-transfer.info',
@@ -650,6 +656,9 @@ window.VO_LOCALES = {
     'sim.final.score': 'You judged <strong>{correct} out of {total}</strong> messages correctly ({pct}%).',
     'sim.final.again': 'Practise again',
     'sim.final.help': 'See help and tips',
+    'sim.final.insight.phishing': 'Phishing emails: {correct} of {total} identified',
+    'sim.final.insight.legit': 'Legitimate emails: {correct} of {total} correct',
+    'sim.final.insight.missed': 'Emails you fell for:',
 
     'sim.junk.sender': 'HRH Prince Adewale Ogundimu',
     'sim.junk.senderEmail': 'hrh.ogundimu@central-bank-transfer.info',
@@ -879,6 +888,10 @@ window.VO_LOCALES = {
     'sim.final.score': 'Vous avez correctement jugé <strong>{correct} message(s) sur {total}</strong> ({pct} %).',
     'sim.final.again': 'Recommencer l’entraînement',
     'sim.final.help': 'Voir l’aide et les conseils',
+    'sim.final.insight.phishing': 'E-mails de phishing : {correct} sur {total} détectés',
+    'sim.final.insight.legit': 'E-mails légitimes : {correct} sur {total} corrects',
+    'sim.final.insight.missed': 'Messages qui vous ont trompé(e) :',
+
 
     'sim.junk.sender': 'S.A.R. Prince Adewale Ogundimu',
     'sim.junk.senderEmail': 'hrh.ogundimu@central-bank-transfer.info',
@@ -1108,6 +1121,10 @@ window.VO_LOCALES = {
     'sim.final.score': 'Vous avez correctement jugé <strong>{correct} message(s) sur {total}</strong> ({pct} %).',
     'sim.final.again': 'Recommencer l’entraînement',
     'sim.final.help': 'Voir l’aide et les conseils',
+    'sim.final.insight.phishing': 'E-mails de phishing : {correct} sur {total} détectés',
+    'sim.final.insight.legit': 'E-mails légitimes : {correct} sur {total} corrects',
+    'sim.final.insight.missed': 'Messages qui vous ont trompé(e) :',
+
 
     'sim.junk.sender': 'S.A.R. Prince Adewale Ogundimu',
     'sim.junk.senderEmail': 'hrh.ogundimu@central-bank-transfer.info',
@@ -1337,6 +1354,9 @@ window.VO_LOCALES = {
     'sim.final.score': 'Sie haben <strong>{correct} von {total}</strong> Nachrichten richtig bewertet ({pct} %).',
     'sim.final.again': 'Erneut üben',
     'sim.final.help': 'Hilfe und Tipps ansehen',
+    'sim.final.insight.phishing': 'Phishing-E-Mails: {correct} von {total} erkannt',
+    'sim.final.insight.legit': 'Echte E-Mails: {correct} von {total} korrekt',
+    'sim.final.insight.missed': 'E-Mails, auf die Sie hereingefallen sind:',
 
     'sim.junk.sender': 'S.K.H. Prinz Adewale Ogundimu',
     'sim.junk.senderEmail': 'hrh.ogundimu@central-bank-transfer.info',

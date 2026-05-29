@@ -201,6 +201,15 @@ h3 { font-size: 1.05rem; margin: 0 0 .35rem; }
 .lead { font-size: 1rem; color: var(--ink-soft); margin: 0 0 .75rem; }
 .big-text { font-size: 1.05rem; }
 
+.final-breakdown { display: flex; gap: 1rem; flex-wrap: wrap; margin: .75rem 0; }
+.final-breakdown span { background: var(--bg); border: 1px solid var(--border);
+  border-radius: 6px; padding: .35rem .75rem; font-size: .9rem; }
+.final-missed { margin: .75rem 0; }
+.final-missed-h { font-weight: 600; margin-bottom: .35rem; font-size: .9rem; }
+.final-missed ul { margin: 0; padding-left: 1.25rem; font-size: .875rem;
+  color: var(--ink-soft); line-height: 1.6; }
+.final-missed ul em { color: var(--danger, #dc2626); font-style: normal; }
+
 /* ---------- card ---------- */
 .card {
   background: var(--surface);
