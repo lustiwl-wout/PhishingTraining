@@ -271,22 +271,22 @@
 
   // Vervang het fictieve interne domein "kestrel.nl/be/de" door het domein
   // van de organisatie zodat de training realistisch aanvoelt voor medewerkers.
-  function applyOrgDomain(messages) {
+  function replaceDomain(s) {
     const domain = enterpriseConfig?.emailDomain;
-    if (!domain) return messages;
-    return messages.map(m => {
-      const replace = (s) => s
-        ? s.replace(/\bkestrel\.(nl|be|de|com)\b/g, domain)
-             .replace(/\bkestrel\.sharepoint\.com\b/g, domain.split('.')[0] + '.sharepoint.com')
-        : s;
-      return Object.assign({}, m, {
-        sender_address: replace(m.sender_address),
-        sender_name:    replace(m.sender_name),
-        preview:        replace(m.preview),
-        body:           replace(m.body),
-        subject:        replace(m.subject),
-      });
-    });
+    if (!domain || !s) return s;
+    return s.replace(/\bkestrel\.(nl|be|de|com)\b/g, domain)
+            .replace(/\bkestrel\.sharepoint\.com\b/g, domain.split('.')[0] + '.sharepoint.com');
+  }
+
+  function applyOrgDomain(messages) {
+    if (!enterpriseConfig?.emailDomain) return messages;
+    return messages.map(m => Object.assign({}, m, {
+      sender_address: replaceDomain(m.sender_address),
+      sender_name:    replaceDomain(m.sender_name),
+      preview:        replaceDomain(m.preview),
+      body:           replaceDomain(m.body),
+      subject:        replaceDomain(m.subject),
+    }));
   }
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -1398,10 +1398,10 @@
   }
 
   function showVerdictFeedback(m, res) {
-    const redFlags = (res.red_flags || []).map((s) => '<li>' + escapeHtml(s) + '</li>').join('');
-    const greenFlags = (res.green_flags || []).map((s) => '<li>' + escapeHtml(s) + '</li>').join('');
+    const redFlags = (res.red_flags || []).map((s) => '<li>' + escapeHtml(replaceDomain(s)) + '</li>').join('');
+    const greenFlags = (res.green_flags || []).map((s) => '<li>' + escapeHtml(replaceDomain(s)) + '</li>').join('');
     const senderNote = res.sender_note
-      ? '<p><strong>' + escapeHtml(t('sim.verdict.senderNote')) + '</strong> ' + escapeHtml(res.sender_note) + '</p>'
+      ? '<p><strong>' + escapeHtml(t('sim.verdict.senderNote')) + '</strong> ' + escapeHtml(replaceDomain(res.sender_note)) + '</p>'
       : '';
 
     showModal({
@@ -1410,7 +1410,7 @@
       bodyHtml:
         '<p><strong>' + escapeHtml(t('sim.verdict.answer')) + '</strong> ' +
           escapeHtml(res.is_phishing ? t('sim.verdict.isPhishing') : t('sim.verdict.isReal')) + '</p>' +
-        '<p>' + escapeHtml(res.explanation) + '</p>' +
+        '<p>' + escapeHtml(replaceDomain(res.explanation)) + '</p>' +
         senderNote +
         (redFlags ? '<p><strong>' + escapeHtml(t('sim.verdict.redFlags')) + '</strong></p><ul class="check-list">' + redFlags + '</ul>' : '') +
         (greenFlags ? '<p><strong>' + escapeHtml(t('sim.verdict.greenFlags')) + '</strong></p><ul class="check-list">' + greenFlags + '</ul>' : ''),
