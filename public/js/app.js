@@ -123,10 +123,10 @@
   function applyI18n(root) {
     const scope = root || document;
     scope.querySelectorAll('[data-i18n]').forEach((el) => {
-      el.textContent = t(el.getAttribute('data-i18n'));
+      el.textContent = replaceDomain(t(el.getAttribute('data-i18n')));
     });
     scope.querySelectorAll('[data-i18n-html]').forEach((el) => {
-      el.innerHTML = t(el.getAttribute('data-i18n-html'));
+      el.innerHTML = replaceDomain(t(el.getAttribute('data-i18n-html')));
     });
     document.documentElement.lang = currentLang;
     const titleEl = document.querySelector('title[data-i18n]');
@@ -649,7 +649,7 @@
     status.hidden = true;
 
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-    const email = t('user.email');
+    const email = replaceDomain(t('user.email'));
 
     await sleep(450);
     for (const ch of email) {
