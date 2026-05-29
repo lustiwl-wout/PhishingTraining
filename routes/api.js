@@ -296,6 +296,7 @@ router.get('/enterprise/config', async (req, res, next) => {
     res.json({
       enterprise: true,
       orgName: org.name,
+      orgSlug: org.slug,
       locales: org.locales,
       audiences: org.audiences,
       difficulties: org.difficulties,

@@ -275,10 +275,16 @@
     if (!s || !enterpriseConfig) return s;
     const domain  = enterpriseConfig.emailDomain;
     const orgName = enterpriseConfig.orgName;
+    const orgSlug = enterpriseConfig.orgSlug;
     let r = s;
     if (domain) {
       r = r.replace(/\bkestrel\.(nl|be|de|com)\b/g, domain)
            .replace(/\bkestrel\.sharepoint\.com\b/g, domain.split('.')[0] + '.sharepoint.com');
+    }
+    if (orgSlug) {
+      // Replace kestrel-lookalike domains (e.g. kestrel-access.nl → test-access.nl)
+      // so phishing lessons stay relevant: "test-access.nl is not test.nl"
+      r = r.replace(/\bkestrel-(\w+)\.(nl|be|de|com|net)\b/g, orgSlug + '-$1.$2');
     }
     if (orgName) {
       r = r.replace(/\bKestrel\b/g, orgName);
