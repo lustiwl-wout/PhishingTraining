@@ -272,10 +272,18 @@
   // Vervang het fictieve interne domein "kestrel.nl/be/de" door het domein
   // van de organisatie zodat de training realistisch aanvoelt voor medewerkers.
   function replaceDomain(s) {
-    const domain = enterpriseConfig?.emailDomain;
-    if (!domain || !s) return s;
-    return s.replace(/\bkestrel\.(nl|be|de|com)\b/g, domain)
-            .replace(/\bkestrel\.sharepoint\.com\b/g, domain.split('.')[0] + '.sharepoint.com');
+    if (!s || !enterpriseConfig) return s;
+    const domain  = enterpriseConfig.emailDomain;
+    const orgName = enterpriseConfig.orgName;
+    let r = s;
+    if (domain) {
+      r = r.replace(/\bkestrel\.(nl|be|de|com)\b/g, domain)
+           .replace(/\bkestrel\.sharepoint\.com\b/g, domain.split('.')[0] + '.sharepoint.com');
+    }
+    if (orgName) {
+      r = r.replace(/\bKestrel\b/g, orgName);
+    }
+    return r;
   }
 
   function applyOrgDomain(messages) {
