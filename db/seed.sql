@@ -3174,18 +3174,18 @@ VALUES
  'Het domein is sharepointonline-files.com — niet sharepointonline.com. Microsoft verstuurt uitnodigingen altijd via @sharepointonline.com.',
  'vandaag 14:22',
  'Vandenberghe Koen heeft een bestand met u gedeeld',
- 'Vandenberghe Koen heeft u uitgenodigd om ‘IT_Infra_Strategie_2026_NL’ te bewerken.',
+ 'Vandenberghe Koen heeft u uitgenodigd om ‘Salarisschalen_en_Bonussen_2026_NL’ te bewerken.',
  E'Goedemiddag,
 
 Vandenberghe Koen heeft een bestand met u gedeeld en u uitgenodigd om dit te bewerken.
 
-☁️  IT_Infra_Strategie_2026_NL.docx
+☁️  Salarisschalen_en_Bonussen_2026_NL.xlsx
 
-"Eerste versie voor intern review — graag jullie feedback voor vrijdag."
+"Vertrouwelijk — ter review voor HR en management. Graag feedback voor maandag."
 
 Klik hieronder om het bestand te openen:
 
-{link:0}
+{{link:0}}
 
 Deze uitnodiging is alleen geldig voor u en personen met bestaande toegang.
 
@@ -3202,18 +3202,18 @@ Microsoft SharePoint',
  'The domain is sharepointonline-files.com — not sharepointonline.com. Microsoft always sends sharing invitations from @sharepointonline.com.',
  'today 14:22',
  'Vandenberghe Koen has shared a file with you',
- 'Vandenberghe Koen has invited you to edit ‘IT_Infra_Strategy_2026_EN’.',
+ 'Vandenberghe Koen has invited you to edit ‘Salary_Scales_and_Bonuses_2026_EN’.',
  E'Good afternoon,
 
 Vandenberghe Koen has shared a file with you and invited you to edit it.
 
-☁️  IT_Infra_Strategy_2026_EN.docx
+☁️  Salary_Scales_and_Bonuses_2026_EN.xlsx
 
-"First draft for internal review — please send feedback by Friday."
+"Confidential — for HR and management review. Please share feedback by Monday."
 
 Click below to open the file:
 
-{link:0}
+{{link:0}}
 
 This invitation is valid only for you and people with existing access.
 
@@ -3230,18 +3230,18 @@ Microsoft SharePoint',
  'Le domaine est sharepointonline-files.com — pas sharepointonline.com. Microsoft envoie toujours les invitations depuis @sharepointonline.com.',
  'aujourd''hui 14:22',
  'Vandenberghe Koen a partagé un fichier avec vous',
- 'Vandenberghe Koen vous a invité(e) à modifier ‘IT_Infra_Strategie_2026_FR’.',
+ 'Vandenberghe Koen vous a invité(e) à modifier ‘Grilles_Salaires_Primes_2026_FR’.',
  E'Bonjour,
 
 Vandenberghe Koen a partagé un fichier avec vous et vous a invité(e) à le modifier.
 
-☁️  IT_Infra_Strategie_2026_FR.docx
+☁️  Grilles_Salaires_Primes_2026_FR.xlsx
 
-"Première version pour relecture interne — merci de me faire part de vos retours avant vendredi."
+"Confidentiel — à relire par les RH et la direction. Merci de me faire part de vos retours avant lundi."
 
 Cliquez ci-dessous pour ouvrir le fichier :
 
-{link:0}
+{{link:0}}
 
 Cette invitation est valable uniquement pour vous et les personnes disposant déjà d''un accès.
 
@@ -3258,18 +3258,18 @@ Microsoft SharePoint',
  'Die Domain lautet sharepointonline-files.com — nicht sharepointonline.com. Microsoft versendet Einladungen immer über @sharepointonline.com.',
  'heute 14:22',
  'Vandenberghe Koen hat eine Datei mit Ihnen geteilt',
- 'Vandenberghe Koen hat Sie eingeladen, ‘IT_Infra_Strategie_2026_DE’ zu bearbeiten.',
+ 'Vandenberghe Koen hat Sie eingeladen, ‘Gehaltstabellen_und_Praemien_2026_DE’ zu bearbeiten.',
  E'Guten Tag,
 
 Vandenberghe Koen hat eine Datei mit Ihnen geteilt und Sie zur Bearbeitung eingeladen.
 
-☁️  IT_Infra_Strategie_2026_DE.docx
+☁️  Gehaltstabellen_und_Praemien_2026_DE.xlsx
 
-"Erster Entwurf zur internen Überprüfung — bitte Feedback bis Freitag."
+"Vertraulich — zur Überprüfung durch HR und Geschäftsführung. Bitte bis Montag Feedback geben."
 
 Klicken Sie unten, um die Datei zu öffnen:
 
-{link:0}
+{{link:0}}
 
 Diese Einladung gilt nur für Sie und Personen mit bestehendem Zugriff.
 
