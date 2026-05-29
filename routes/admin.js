@@ -460,14 +460,14 @@ function orgDetailPage(org, users) {
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;flex-wrap:wrap">
         <div>
           <p style="font-size:.85rem;font-weight:600;margin-bottom:.5rem">Automatisch nummeren</p>
-          <form method="POST" action="/admin/orgs/${org.id}/generate" style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:flex-end">
+          <form class="csv-form" method="POST" action="/admin/orgs/${org.id}/generate" style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:flex-end">
             <div><label>Aantal</label><input name="count" type="number" min="1" max="500" value="10" style="width:110px"/></div>
             <button class="btn" type="submit">Genereren + CSV</button>
           </form>
         </div>
         <div>
           <p style="font-size:.85rem;font-weight:600;margin-bottom:.5rem">Importeren uit HR-systeem</p>
-          <form method="POST" action="/admin/orgs/${org.id}/import">
+          <form class="csv-form" method="POST" action="/admin/orgs/${org.id}/import">
             <label style="font-size:.8rem;color:#6b7280">ID's plakken — één per regel, of komma-gescheiden</label>
             <textarea name="ids" rows="5" style="width:100%;margin-top:.35rem;padding:.5rem .7rem;border:1.5px solid #d1d5db;border-radius:8px;font-family:monospace;font-size:.85rem;resize:vertical" placeholder="1001&#10;1002&#10;1003&#10;..."></textarea>
             <button class="btn" type="submit" style="margin-top:.5rem">Importeren + CSV</button>
@@ -476,6 +476,34 @@ function orgDetailPage(org, users) {
         </div>
       </div>
     </div>
+
+    <script>
+    document.querySelectorAll('.csv-form').forEach(form => {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = form.querySelector('button[type=submit]');
+        const label = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Bezig…';
+        try {
+          const resp = await fetch(form.action, { method: 'POST', body: new URLSearchParams(new FormData(form)) });
+          if (!resp.ok) throw new Error('server error');
+          const cd = resp.headers.get('Content-Disposition') || '';
+          const filename = cd.match(/filename="([^"]+)"/)?.[1] || 'export.csv';
+          const blob = await resp.blob();
+          const url  = URL.createObjectURL(blob);
+          const a    = document.createElement('a');
+          a.href = url; a.download = filename; a.click();
+          URL.revokeObjectURL(url);
+          location.reload();
+        } catch {
+          btn.disabled = false;
+          btn.textContent = label;
+          alert('Er ging iets mis. Probeer het opnieuw.');
+        }
+      });
+    });
+    </script>
 
     ${users.length > 0 ? `
     <div class="section">
