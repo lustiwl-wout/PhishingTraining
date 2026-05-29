@@ -285,7 +285,7 @@ router.get('/enterprise/config', async (req, res, next) => {
     if (!orgUserId) return res.json({ enterprise: false });
 
     const { rows } = await db.query(`
-      SELECT o.name, o.slug, o.locales, o.audiences, o.difficulties
+      SELECT o.name, o.slug, o.locales, o.audiences, o.difficulties, o.email_domain
       FROM org_users u
       JOIN organisations o ON o.id = u.org_id
       WHERE u.id = $1
@@ -299,6 +299,7 @@ router.get('/enterprise/config', async (req, res, next) => {
       locales: org.locales,
       audiences: org.audiences,
       difficulties: org.difficulties,
+      emailDomain: org.email_domain || null,
     });
   } catch (err) { next(err); }
 });

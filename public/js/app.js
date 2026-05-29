@@ -269,10 +269,39 @@
     }
   }
 
+  // Vervang het fictieve interne domein "kestrel.nl/be/de" door het domein
+  // van de organisatie zodat de training realistisch aanvoelt voor medewerkers.
+  function applyOrgDomain(messages) {
+    const domain = enterpriseConfig?.emailDomain;
+    if (!domain) return messages;
+    return messages.map(m => {
+      const replace = (s) => s
+        ? s.replace(/\bkestrel\.(nl|be|de|com)\b/g, domain)
+             .replace(/\bkestrel\.sharepoint\.com\b/g, domain.split('.')[0] + '.sharepoint.com')
+        : s;
+      return Object.assign({}, m, {
+        sender_address: replace(m.sender_address),
+        sender_name:    replace(m.sender_name),
+        preview:        replace(m.preview),
+        body:           replace(m.body),
+        subject:        replace(m.subject),
+      });
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     loadEnterpriseConfig().then(() => {
       applyI18n();
       setDifficulty(currentDifficulty);
+      // Taal/doelgroep-pickers alleen tonen voor niet-enterprise gebruikers.
+      // Voor enterprise staat alles al vast via applyEnterpriseConfig().
+      if (!enterpriseConfig) {
+        if (!localStorage.getItem('vo_lang')) {
+          showLangPicker();
+        } else if (!localStorage.getItem('vo_audience')) {
+          showAudiencePicker();
+        }
+      }
     });
     const savedPage = localStorage.getItem('vo_page');
     if (savedPage && pages.includes(savedPage) && savedPage !== 'welkom') {
@@ -294,11 +323,6 @@
           startMobileSimulator({ restore: true }).catch((err) => console.error(err));
         }
       }
-    }
-    if (!localStorage.getItem('vo_lang')) {
-      showLangPicker();
-    } else if (!localStorage.getItem('vo_audience')) {
-      showAudiencePicker();
     }
   });
 
@@ -744,7 +768,7 @@
     list.innerHTML = '<li class="ol-loading">' + escapeHtml(t('sim.ol.loading')) + '</li>';
 
     try {
-      const messages = await api('/inbox');
+      const messages = applyOrgDomain(await api('/inbox'));
       const saved = opts.restore ? loadPersistedSimState() : null;
       simState = {
         messages,
@@ -945,7 +969,7 @@
     const list = document.getElementById('mob-list-items');
     if (list) list.innerHTML = '<li class="mob-item" style="justify-content:center"><em>' + escapeHtml(t('sim.ol.loading')) + '</em></li>';
     try {
-      const messages = await api('/inbox');
+      const messages = applyOrgDomain(await api('/inbox'));
       const saved = opts.restore ? loadPersistedSimState() : null;
       simState = {
         messages,
