@@ -760,7 +760,8 @@ mark.phish-mark .dot, .annotation-list .dot {
   cursor: pointer; text-align: left; font: inherit;
 }
 .ol-attach-chip:hover { background: #f3f7fc; border-color: #b9d4ef; }
-.ol-attach-ico { font-size: 1.35rem; line-height: 1; flex: none; }
+.ol-attach-ico { flex: none; display: flex; align-items: center; }
+.ol-attach-ico svg { display: block; filter: drop-shadow(0 1px 1px rgba(0,0,0,.12)); }
 .ol-attach-info { min-width: 0; display: flex; flex-direction: column; }
 .ol-attach-name { font-size: .9rem; color: #1b1b1b; font-weight: 600;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
