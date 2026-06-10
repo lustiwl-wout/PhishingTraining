@@ -324,17 +324,22 @@ router.get('/enterprise/config', async (req, res, next) => {
 });
 
 // GET /api/enterprise/progress — voortgang van de ingelogde enterprise-gebruiker
+// Alleen de huidige trainingsronde: judgments worden opgeslagen met de
+// enterpriseSessionId die bij iedere login opnieuw wordt aangemaakt. Zonder
+// dit filter zou een herhaaltraining de oordelen van de vórige ronde mee
+// terugkrijgen en na een paar antwoorden direct op "afgerond" springen.
 router.get('/enterprise/progress', async (req, res, next) => {
   const orgUserId = req.session?.enterpriseOrgUserId;
-  if (!orgUserId) return res.json({ judgments: {} });
+  const sessionId = req.session?.enterpriseSessionId;
+  if (!orgUserId || !sessionId) return res.json({ judgments: {} });
   try {
     const { rows } = await db.query(
       `SELECT j.message_id, j.verdict, j.is_correct, m.is_phishing
        FROM inbox_judgments j
        JOIN inbox_messages m ON m.id = j.message_id
-       WHERE j.org_user_id = $1
+       WHERE j.org_user_id = $1 AND j.session_id = $2
        ORDER BY j.answered_at ASC`,
-      [orgUserId]
+      [orgUserId, sessionId]
     );
     const judgments = {};
     rows.forEach(r => {
