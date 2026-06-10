@@ -63,6 +63,7 @@
   // -------- audience (persoonlijk vs zakelijk) --------
   const SUPPORTED_AUDIENCES = ['personal', 'business'];
   const AUDIENCE_ICONS = { personal: '📥', business: '💼' };
+  const DEVICE_ICONS = { desktop: '💻', android: '📱', iphone: '📱' };
   function detectInitialAudience() {
     const stored = localStorage.getItem('vo_audience');
     return SUPPORTED_AUDIENCES.includes(stored) ? stored : null;
@@ -679,7 +680,7 @@
     emailRow.hidden = true;
     pwRow.hidden = false;
     title.textContent = t('sim.ms.pwTitle');
-    subtitle.innerHTML = t('sim.ms.pwSubtitle', { email });
+    subtitle.innerHTML = t('sim.ms.pwSubtitle', { email: escapeHtml(email) });
     submit.textContent = t('sim.ms.submit');
     back.hidden = false;
 
@@ -699,7 +700,7 @@
       if (linkRows) linkRows.hidden = true;
       if (actions) actions.hidden = true;
       title.textContent = t('sim.ms.mfa.title');
-      subtitle.innerHTML = t('sim.ms.pwSubtitle', { email });
+      subtitle.innerHTML = t('sim.ms.pwSubtitle', { email: escapeHtml(email) });
       const mfaCode = String(Math.floor(10 + Math.random() * 90)); // tweecijferig
       mfaNum.textContent = mfaCode;
       mfaStatus.innerHTML = '<span class="ms-spinner" aria-hidden="true"></span> ' + escapeHtml(t('sim.ms.mfa.waiting'));
@@ -946,9 +947,9 @@
           '</div>' +
         '</div>' +
       '</header>' +
-      '<div class="ol-msg-body ol-junk-body">' + t('sim.junk.body') + '</div>' +
+      '<div class="ol-msg-body ol-junk-body">' + replaceDomain(t('sim.junk.body')) + '</div>' +
       '<div class="ol-msg-actions judged">' +
-        '<p class="muted">' + t('sim.junk.note') + '</p>' +
+        '<p class="muted">' + replaceDomain(t('sim.junk.note')) + '</p>' +
       '</div>';
     reader.scrollTop = 0;
   }
@@ -1170,9 +1171,9 @@
             '<div class="mob-reader-to">' + escapeHtml(t('sim.ol.to')) + ' · ' + escapeHtml(t('sim.junk.received')) + '</div>' +
           '</div>' +
         '</div>' +
-        '<div class="mob-reader-body mob-junk-body">' + t('sim.junk.body') + '</div>' +
+        '<div class="mob-reader-body mob-junk-body">' + replaceDomain(t('sim.junk.body')) + '</div>' +
       '</div>' +
-      '<div class="mob-junk-note">' + t('sim.junk.note') + '</div>';
+      '<div class="mob-junk-note">' + replaceDomain(t('sim.junk.note')) + '</div>';
     reader.querySelector('.mob-btn-back').addEventListener('click', () => {
       reader.hidden = true;
     });

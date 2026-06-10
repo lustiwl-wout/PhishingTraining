@@ -19,6 +19,19 @@ router.get('/login', (req, res) => {
   res.type('html').send(loginPage());
 });
 
+// Constant-time vergelijking: voorkomt dat een aanvaller via responstijden
+// karakter voor karakter het wachtwoord kan raden.
+function safeEqual(a, b) {
+  const ba = Buffer.from(String(a ?? ''));
+  const bb = Buffer.from(String(b ?? ''));
+  if (ba.length !== bb.length) {
+    // Vergelijk alsnog (tegen length-timing) maar resultaat is altijd false.
+    crypto.timingSafeEqual(bb, bb);
+    return false;
+  }
+  return crypto.timingSafeEqual(ba, bb);
+}
+
 // POST /admin/login
 router.post('/login', (req, res) => {
   const { username, password } = req.body || {};
@@ -26,9 +39,13 @@ router.post('/login', (req, res) => {
   const validPass = process.env.ADMIN_PASSWORD;
   if (!validUser || !validPass)
     return res.type('html').send(loginPage('ADMIN_USER en ADMIN_PASSWORD zijn niet ingesteld.'));
-  if (username === validUser && password === validPass) {
-    req.session.admin = true;
-    return res.redirect('/admin');
+  if (safeEqual(username, validUser) && safeEqual(password, validPass)) {
+    // Nieuwe sessie-ID na login voorkomt session fixation.
+    return req.session.regenerate((err) => {
+      if (err) return res.status(500).type('html').send(loginPage('Er ging iets mis. Probeer opnieuw.'));
+      req.session.admin = true;
+      res.redirect('/admin');
+    });
   }
   res.type('html').send(loginPage('Onjuiste gebruikersnaam of wachtwoord.'));
 });

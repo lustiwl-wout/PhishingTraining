@@ -237,10 +237,13 @@ router.post('/inbox/:id/judge', async (req, res, next) => {
     const isCorrect = verdict === (msg.is_phishing ? 'phish' : 'trust');
 
     // Altijd opslaan — voor enterprise ook org_user_id, voor publiek null.
+    // ON CONFLICT: bij hertraining in dezelfde sessie telt het eerste oordeel;
+    // de unique constraint houdt ook de tabelgroei in toom.
     await db.query(
       `INSERT INTO inbox_judgments
          (session_id, message_id, verdict, is_correct, clicked_link, revealed_sender, ip_address, difficulty, org_user_id)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+       ON CONFLICT (session_id, message_id) DO NOTHING`,
       [session_id, id, verdict, isCorrect, !!clicked_link, !!revealed_sender, clientIp(req), difficulty, orgUserId]
     );
     if (orgUserId) {
@@ -314,7 +317,8 @@ router.get('/enterprise/progress', async (req, res, next) => {
       `SELECT j.message_id, j.verdict, j.is_correct, m.is_phishing
        FROM inbox_judgments j
        JOIN inbox_messages m ON m.id = j.message_id
-       WHERE j.org_user_id = $1`,
+       WHERE j.org_user_id = $1
+       ORDER BY j.answered_at ASC`,
       [orgUserId]
     );
     const judgments = {};

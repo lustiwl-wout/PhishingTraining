@@ -80,7 +80,7 @@ window.VO_LOCALES = {
     'leren.it6.p.business': 'Staat er “Geachte medewerker” of “Dear user” in plaats van uw naam? Wees dan extra alert. Interne berichten van uw IT‑afdeling of HR gebruiken altijd uw naam of uw persoonlijke werkmailadres.',
     'leren.it7.h': 'U verwachtte dit bericht niet',
     'leren.it7.p': 'Een pakket aangemeld terwijl u niets besteld hebt? Een factuur voor iets dat u niet kent? Een bericht dat u een prijs gewonnen hebt? Stel uzelf de vraag: <strong>verwacht ik dit?</strong> Bij twijfel: niet klikken. Open de app of website van de afzender zelf — typ het adres in de browser, nooit via de link. Of neem contact op met de organisatie via hun officiële contactgegevens.',
-    'leren.it7.p.business': 'Een melding over een document dat een collega gedeeld zou hebben, terwijl u niets verwachtte? Een factuur die u “dringend” moet goedkeuren? Stel uzelf de vraag: <strong>verwacht ik dit?</strong> Bij twijfel: niet klikken. Controleer het direct in de officiele applicatie (SharePoint, uw ERP). Of neem contact op met uw IT‑afdeling of helpdesk.',
+    'leren.it7.p.business': 'Een melding over een document dat een collega gedeeld zou hebben, terwijl u niets verwachtte? Een factuur die u “dringend” moet goedkeuren? Stel uzelf de vraag: <strong>verwacht ik dit?</strong> Bij twijfel: niet klikken. Controleer het direct in de officiële applicatie (SharePoint, uw ERP). Of neem contact op met uw IT‑afdeling of helpdesk.',
     'leren.examples': 'Bekijk voorbeelden →',
 
     'voorbeelden.h1': 'Voorbeelden van phishing‑mails',
@@ -214,7 +214,7 @@ window.VO_LOCALES = {
     'hulp.contacts.trusted': '<strong>Iemand die u vertrouwt</strong> — een collega, goede vriend of familielid. Twee paar ogen zien meer dan één, en u hoeft het niet alleen op te lossen.',
     'hulp.twijfel.h': 'U twijfelt over een bericht',
     'hulp.twijfel.li1': 'Klik op niets en vul niets in.',
-    'hulp.twijfel.li2': 'Open de app of de officiele website van de organisatie zelf — typ het adres in de browser. Of neem contact op via de contactgegevens op de achterkant van uw bankpas of op hun officiele website.',
+    'hulp.twijfel.li2': 'Open de app of de officiële website van de organisatie zelf — typ het adres in de browser. Of neem contact op via de contactgegevens op de achterkant van uw bankpas of op hun officiële website.',
     'hulp.twijfel.li2.business': 'Controleer via een kanaal dat u al kent — Teams‑chat met de collega, het interne telefoonboek, of de officiële website van een leverancier. Niet via wat er in de verdachte mail zelf staat.',
     'hulp.twijfel.li3': 'Vraag iemand die u vertrouwt — een collega, goede vriend of familielid — om mee te kijken.',
     'hulp.geklikt.h': 'U heeft per ongeluk geklikt of iets ingevuld',
@@ -224,7 +224,7 @@ window.VO_LOCALES = {
     'hulp.geklikt.li3': 'Maak een screenshot van het bericht en bewaar die, zodat u het later rustig kunt bespreken — bijvoorbeeld met uw bank of met een IT‑collega.',
     'hulp.geklikt.li3.business': 'Bewaar de mail (maak eventueel een screenshot) zolang u met IT in gesprek bent. Zo kunnen zij nakijken of er meer collega’s dezelfde mail hebben gekregen.',
     'hulp.onthoud.h': 'Onthoud altijd',
-    'hulp.onthoud.p': '🛑 <strong>Een bank, de overheid of een bezorger vraagt nooit om uw pincode of wachtwoord.</strong> Bij twijfel: <strong>niet klikken.</strong> Open de app of website zelf, of neem contact op via de officiele contactgegevens.',
+    'hulp.onthoud.p': '🛑 <strong>Een bank, de overheid of een bezorger vraagt nooit om uw pincode of wachtwoord.</strong> Bij twijfel: <strong>niet klikken.</strong> Open de app of website zelf, of neem contact op via de officiële contactgegevens.',
     'hulp.back': '← Terug naar het begin',
     'hulp.print': 'Tips afdrukken 🖨️',
 
@@ -312,7 +312,7 @@ window.VO_LOCALES = {
     'leren.it6.p.business': 'Staat er “Geachte medewerker” of “Dear user” in plaats van uw naam? Wees dan extra alert. Interne berichten van uw IT‑afdeling of HR gebruiken altijd uw naam of uw persoonlijke werkmailadres.',
     'leren.it7.h': 'U verwachtte dit bericht niet',
     'leren.it7.p': 'Een pakket aangemeld terwijl u niets besteld hebt? Een factuur voor iets dat u niet kent? Een bericht dat u een prijs gewonnen hebt? Stel uzelf de vraag: <strong>verwacht ik dit?</strong> Bij twijfel: niet klikken. Open de app of website van de afzender zelf — typ het adres in de browser, nooit via de link. Of neem contact op met de organisatie via hun officiële contactgegevens.',
-    'leren.it7.p.business': 'Een melding over een document dat een collega gedeeld zou hebben, terwijl u niets verwachtte? Een factuur die u “dringend” moet goedkeuren? Stel uzelf de vraag: <strong>verwacht ik dit?</strong> Bij twijfel: niet klikken. Controleer het direct in de officiele applicatie (SharePoint, uw ERP). Of neem contact op met uw IT‑afdeling of helpdesk.',
+    'leren.it7.p.business': 'Een melding over een document dat een collega gedeeld zou hebben, terwijl u niets verwachtte? Een factuur die u “dringend” moet goedkeuren? Stel uzelf de vraag: <strong>verwacht ik dit?</strong> Bij twijfel: niet klikken. Controleer het direct in de officiële applicatie (SharePoint, uw ERP). Of neem contact op met uw IT‑afdeling of helpdesk.',
     'leren.examples': 'Bekijk voorbeelden →',
 
     'voorbeelden.h1': 'Voorbeelden van phishing‑mails',
@@ -446,7 +446,7 @@ window.VO_LOCALES = {
     'hulp.contacts.trusted': '<strong>Iemand die u vertrouwt</strong> — een collega, goede vriend of familielid. Twee paar ogen zien meer dan één, en u hoeft het niet alleen op te lossen.',
     'hulp.twijfel.h': 'U twijfelt over een bericht',
     'hulp.twijfel.li1': 'Klik op niets en vul niets in.',
-    'hulp.twijfel.li2': 'Open de app of de officiele website van de organisatie zelf — typ het adres in de browser. Of neem contact op via de contactgegevens op de achterkant van uw bankkaart of op hun officiele website.',
+    'hulp.twijfel.li2': 'Open de app of de officiële website van de organisatie zelf — typ het adres in de browser. Of neem contact op via de contactgegevens op de achterkant van uw bankkaart of op hun officiële website.',
     'hulp.twijfel.li2.business': 'Controleer via een kanaal dat u al kent — Teams‑chat met de collega, het interne telefoonboek, of de officiële website van een leverancier. Niet via wat er in de verdachte mail zelf staat.',
     'hulp.twijfel.li3': 'Vraag iemand die u vertrouwt — een collega, goede vriend of familielid — om mee te kijken.',
     'hulp.geklikt.h': 'U hebt per ongeluk geklikt of iets ingevuld',
@@ -456,7 +456,7 @@ window.VO_LOCALES = {
     'hulp.geklikt.li3': 'Maak een screenshot van het bericht en bewaar die, zodat u het later rustig kunt bespreken — bijvoorbeeld met uw bank of met een IT‑collega.',
     'hulp.geklikt.li3.business': 'Bewaar de mail (maak eventueel een screenshot) zolang u met IT in gesprek bent. Zo kunnen zij nakijken of er meer collega’s dezelfde mail hebben gekregen.',
     'hulp.onthoud.h': 'Onthoud altijd',
-    'hulp.onthoud.p': '🛑 <strong>Een bank, de overheid of een bezorger vraagt nooit om uw pincode of paswoord.</strong> Bij twijfel: <strong>niet klikken.</strong> Open de app of website zelf, of neem contact op via de officiele contactgegevens.',
+    'hulp.onthoud.p': '🛑 <strong>Een bank, de overheid of een bezorger vraagt nooit om uw pincode of paswoord.</strong> Bij twijfel: <strong>niet klikken.</strong> Open de app of website zelf, of neem contact op via de officiële contactgegevens.',
     'hulp.back': '← Terug naar het begin',
     'hulp.print': 'Tips afdrukken 🖨️',
 

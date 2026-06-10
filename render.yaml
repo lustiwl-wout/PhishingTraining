@@ -16,3 +16,5 @@ services:
         value: production
       - key: DATABASE_URL
         sync: false   # zelf invullen in het Render dashboard met de Neon connection string
+      - key: SESSION_SECRET
+        generateValue: true   # Render genereert automatisch een sterke waarde

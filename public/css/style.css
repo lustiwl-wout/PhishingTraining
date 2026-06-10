@@ -27,7 +27,8 @@
   --ol-border: #e1dfdd;
   --ol-hover: #f3f2f1;
   --ol-ink: #242424;
-  --ol-muted: #616161;
+  /* Donker genoeg voor WCAG AA op de lichtgrijze Outlook-achtergrond (#faf9f8) */
+  --ol-muted: #4d4d4d;
 }
 
 * { box-sizing: border-box; }

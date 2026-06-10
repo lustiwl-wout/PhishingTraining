@@ -4,10 +4,12 @@ const path = require('node:path');
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const session = require('express-session');
+const PgSession = require('connect-pg-simple')(session);
 const apiRouter = require('./routes/api');
 const adminRouter = require('./routes/admin');
 const { loginRouter: enterpriseRouter, portalRouter } = require('./routes/enterprise');
 const { initDbWithRetry } = require('./db/init');
+const db = require('./db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -29,8 +31,20 @@ const BASE_HOST = (process.env.BASE_HOST || '')
 app.disable('x-powered-by');
 app.use(express.json({ limit: '64kb' }));
 
+// In productie is een echte SESSION_SECRET verplicht — met de hardcoded
+// fallback zou iedereen sessie-cookies kunnen vervalsen.
+if (process.env.NODE_ENV === 'production' && !process.env.SESSION_SECRET) {
+  console.error('[server] FATAL: SESSION_SECRET ontbreekt. Zet deze in de environment variables.');
+  process.exit(1);
+}
+
+// Sessies in Postgres i.p.v. in-memory, zodat ingelogde gebruikers niet
+// uitgelogd raken bij elke deploy/herstart. Tabel wordt automatisch aangemaakt.
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'verander-dit-in-productie',
+  store: process.env.DATABASE_URL
+    ? new PgSession({ pool: db.pool, tableName: 'user_sessions', createTableIfMissing: true })
+    : undefined, // zonder DB (lokaal testen): val terug op MemoryStore
+  secret: process.env.SESSION_SECRET || 'alleen-voor-lokaal-ontwikkelen',
   resave: false,
   saveUninitialized: false,
   cookie: { httpOnly: true, sameSite: 'lax', maxAge: 8 * 60 * 60 * 1000 },
@@ -75,13 +89,16 @@ app.use(express.static(PUBLIC_DIR, {
 }));
 
 // Sta alleen requests toe die afkomstig zijn van de eigen site.
-// Directe aanroepen (curl, scripts) hebben geen Origin/Referer en worden geblokkeerd.
+// Strikte host-vergelijking: "evil.com/onze-site.nl" of "onze-site.nl.evil.com"
+// komen er niet doorheen. Geen Origin/Referer (bv. same-origin fetch in
+// sommige browsers, of server-to-server health checks) laten we door.
 function sameOriginOnly(req, res, next) {
-  const origin = req.headers['origin'] || req.headers['referer'] || '';
-  const host = req.headers['host'] || '';
-  // Laat requests door als: geen Origin (server-to-server op zelfde machine),
-  // of Origin/Referer bevat dezelfde host als de request.
-  if (!origin || origin.includes(host)) return next();
+  const raw = req.headers['origin'] || req.headers['referer'] || '';
+  if (!raw) return next();
+  const host = (req.headers['host'] || '').toLowerCase();
+  try {
+    if (new URL(raw).host.toLowerCase() === host) return next();
+  } catch (_) { /* ongeldige URL → weigeren */ }
   return res.status(403).json({ error: 'toegang geweigerd' });
 }
 
@@ -89,8 +106,15 @@ function sameOriginOnly(req, res, next) {
 // max 30 per minuut voor schrijf-endpoints (POST).
 const readLimit = rateLimit({ windowMs: 60_000, max: 120, standardHeaders: true, legacyHeaders: false });
 const writeLimit = rateLimit({ windowMs: 60_000, max: 30, standardHeaders: true, legacyHeaders: false });
+// Strenge limiet voor login-pogingen (brute-force bescherming):
+// max 10 per kwartier per IP, alleen geteld op POST.
+const loginLimit = rateLimit({
+  windowMs: 15 * 60_000, max: 10, standardHeaders: true, legacyHeaders: false,
+  skip: (req) => req.method !== 'POST',
+});
 
 // Beheer (/admin)
+app.use('/admin/login', loginLimit);
 app.use('/admin', adminRouter);
 
 // Klantportaal (/portal/:token)
@@ -103,6 +127,7 @@ app.use('/api', apiRouter);
 
 // Enterprise login (/:slug, /:slug/login, /logout) — na statisch + API
 // zodat /api/*, /admin/*, /portal/* nooit worden onderschept.
+app.use('/:slug/login', loginLimit);
 app.use(enterpriseRouter);
 
 // Fallback voor onbekende routes -> SPA-startpagina

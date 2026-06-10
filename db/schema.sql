@@ -102,6 +102,22 @@ ALTER TABLE inbox_judgments ADD COLUMN IF NOT EXISTS difficulty TEXT NOT NULL DE
 ALTER TABLE inbox_judgments ADD COLUMN IF NOT EXISTS org_user_id INTEGER;
 CREATE INDEX IF NOT EXISTS idx_inbox_judgments_session ON inbox_judgments(session_id);
 CREATE INDEX IF NOT EXISTS idx_inbox_judgments_org_user ON inbox_judgments(org_user_id);
+CREATE INDEX IF NOT EXISTS idx_inbox_judgments_message  ON inbox_judgments(message_id);
+CREATE INDEX IF NOT EXISTS idx_inbox_judgments_org_user_message ON inbox_judgments(org_user_id, message_id);
+
+-- Eén oordeel per sessie per bericht: voorkomt dubbele rijen bij hertraining
+-- en spam-inserts. Bestaande duplicaten worden eerst opgeruimd (oudste blijft,
+-- dat is consistent met de "eerste oordeel telt"-statistieken).
+DO $$ BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'uq_inbox_judgments_session_message'
+  ) THEN
+    DELETE FROM inbox_judgments a USING inbox_judgments b
+      WHERE a.session_id = b.session_id AND a.message_id = b.message_id AND a.id > b.id;
+    ALTER TABLE inbox_judgments
+      ADD CONSTRAINT uq_inbox_judgments_session_message UNIQUE (session_id, message_id);
+  END IF;
+END $$;
 
 -- ── Enterprise tables ──────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS organisations (
