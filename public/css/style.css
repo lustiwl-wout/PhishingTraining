@@ -744,11 +744,6 @@ mark.phish-mark .dot, .annotation-list .dot {
   cursor: pointer;
 }
 .ol-link:hover { color: var(--ol-blue-dark); }
-.ol-link-url {
-  color: var(--ol-muted); font-size: .85rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  margin-left: .2rem;
-}
 
 .ol-msg-actions {
   margin-top: 1.75rem; padding-top: 1rem;
@@ -1025,8 +1020,6 @@ body.sim-fullscreen .outlook {
   background: var(--cta, #0067b8); color: var(--cta-ink, #fff) !important;
   font-weight: 600; text-decoration: none;
 }
-.eml-cta .ol-link .ol-link-url { display: block; font-size: .72rem; font-weight: 400;
-  opacity: .85; margin-top: .2rem; }
 .eml-foot {
   padding: .95rem 1.5rem; background: #f4f4f4; border-top: 1px solid #e6e6e6;
   font-size: .74rem; color: #8a8a8a; line-height: 1.5;
@@ -1036,16 +1029,20 @@ body.sim-fullscreen .outlook {
 /* Logo-tekst: het "woordmerk" in een eigen vorm i.p.v. een gekleurde balk. */
 .eml-logo { font-weight: 800; letter-spacing: -.3px; }
 
+/* Woordmerk op een witte kop: gebruik --logo (een leesbare variant van de
+   merkkleur) als die is meegegeven, anders de merkkleur zelf. Felle merken
+   (KPN-groen, oranje, Barclays-blauw) krijgen zo voldoende contrast. */
+
 /* --- Familie 1: BANK — smalle gekleurde kopbalk, knop met scherpe hoeken --- */
 .eml.fam-bank { border-top: 4px solid var(--brand); border-radius: 0; }
 .eml.fam-bank .eml-top { padding: 1rem 1.5rem .4rem; }
-.eml.fam-bank .eml-logo { font-size: 1.45rem; color: var(--brand); }
+.eml.fam-bank .eml-logo { font-size: 1.45rem; color: var(--logo, var(--brand)); }
 .eml.fam-bank .eml-cta .ol-link { border-radius: 2px; }
 
 /* --- Familie 2: OVERHEID — sober, serif-kop, dunne lijn, geen ronde hoeken - */
 .eml.fam-gov { border-radius: 0; border-top: 6px solid var(--brand); }
 .eml.fam-gov .eml-top { padding: 1rem 1.5rem; border-bottom: 1px solid #eee; }
-.eml.fam-gov .eml-logo { font-size: 1.15rem; color: var(--brand);
+.eml.fam-gov .eml-logo { font-size: 1.15rem; color: var(--logo, var(--brand));
   font-family: Georgia, 'Times New Roman', serif; font-weight: 700; }
 .eml.fam-gov .eml-h { font-family: Georgia, serif; font-weight: 700; }
 .eml.fam-gov .eml-cta .ol-link { border-radius: 0; }
@@ -1061,7 +1058,7 @@ body.sim-fullscreen .outlook {
 /* --- Familie 4: TECH — strak, klein woordmerk linksboven, veel wit --------- */
 .eml.fam-tech { border: 1px solid #e1e1e1; border-radius: 4px; }
 .eml.fam-tech .eml-top { padding: 1.3rem 1.5rem .2rem; }
-.eml.fam-tech .eml-logo { font-size: 1.2rem; color: var(--brand); font-weight: 600; }
+.eml.fam-tech .eml-logo { font-size: 1.2rem; color: var(--logo, var(--brand)); font-weight: 600; }
 .eml.fam-tech .eml-h { font-weight: 600; }
 .eml.fam-tech .eml-cta { text-align: left; }
 .eml.fam-tech .eml-cta .ol-link { border-radius: 4px; }
@@ -1074,12 +1071,11 @@ body.sim-fullscreen .outlook {
 .eml.fam-retail .eml-body { text-align: center; }
 .eml.fam-retail .eml-cta .ol-link { border-radius: 22px; padding: .75rem 2.2rem; }
 
-/* --- Familie 6: BETAALAPP — kaartachtig, afgerond, bedrag groot ------------ */
+/* --- Familie 6: BETAALAPP — kaartachtig, afgerond, gekleurde hero ---------- */
 .eml.fam-pay { border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.08); }
 .eml.fam-pay .eml-hero { background: var(--brand); padding: 1.3rem 1.5rem;
   color: var(--cta-ink, #fff); }
 .eml.fam-pay .eml-logo { font-size: 1.3rem; color: var(--cta-ink, #fff); }
-.eml.fam-pay .eml-amount { font-size: 1.7rem; font-weight: 700; margin-top: .3rem; }
 .eml.fam-pay .eml-cta .ol-link { border-radius: 24px; }
 .ol-share-head {
   padding: 1.75rem 1.5rem 1.25rem;
@@ -1138,8 +1134,8 @@ body.sim-fullscreen .outlook {
   gap: .45rem;
 }
 /* Binnen de share-kaart wordt de renderBody-link getoond als Teams-
-   knop: een blauw label. De URL staat eronder in kleine grijze tekst
-   zodat de gebruiker het domein nog steeds kan beoordelen. */
+   knop: een blauw label. De bestemming ontdekt de gebruiker door te
+   hoveren of te klikken — niet vooraf zichtbaar in de kaart. */
 .ol-share-actions .ol-link {
   display: block;
   text-decoration: none;
@@ -1154,16 +1150,6 @@ body.sim-fullscreen .outlook {
   font-size: .95rem;
 }
 .ol-share-actions .ol-link:hover .ol-link-label { background: #004e8c; }
-.ol-share-actions .ol-link-url {
-  display: block;
-  margin-top: .35rem;
-  color: #605e5c;
-  font-size: .78rem;
-  font-weight: 400;
-  word-break: break-all;
-  text-align: left;
-  opacity: 1;
-}
 
 /* ========================================================
    Mobiele simulators — apparaat-keuze en device-frame.

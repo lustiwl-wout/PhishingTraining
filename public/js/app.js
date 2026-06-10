@@ -1361,11 +1361,13 @@
       const link = links[idx];
       if (!link) return '';
       const label = escapeHtml(link.label || 'link');
-      const url = escapeHtml(link.real_url || '');
+      // We tonen de bestemmings-URL bewust NIET inline in de mail. Net als in
+      // een echte mailclient ontdekt de gebruiker waar de link heen gaat door
+      // te hoveren (tooltip) of erop te klikken (de link-modal toont het doel).
+      // Zo blijft de oefening realistisch: zelf controleren, niet voorgekauwd.
       return '<a href="#" class="ol-link" data-link-idx="' + idx + '" ' +
              'title="' + escapeHtml(t('sim.reader.linkTo', { url: link.real_url || '' })) + '">' +
-             '<span class="ol-link-label">' + label + '</span>' +
-             ' <span class="ol-link-url" aria-hidden="true">' + url + '</span></a>';
+             '<span class="ol-link-label">' + label + '</span></a>';
     });
     return html;
   }
