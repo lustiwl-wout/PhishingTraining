@@ -1536,14 +1536,38 @@
       ? '<p><strong>' + escapeHtml(t('sim.verdict.senderNote')) + '</strong> ' + escapeHtml(replaceDomain(res.sender_note)) + '</p>'
       : '';
 
+    // De feedback verschilt per uitkomst: een terechte melding bevestigt
+    // de meld-reflex; een onterechte melding van een echt bericht krijgt
+    // een mildere toon dan "fout" — voorzichtigheid is geen domme fout.
+    const reported = simState.judgments[m.id]?.verdict === 'phish';
+    let title, variant;
+    if (res.correct) {
+      title = reported ? t('sim.verdict.reported.correct') : t('sim.verdict.correct');
+      variant = 'good';
+    } else if (reported) {
+      title = t('sim.verdict.falsereport.title');
+      variant = '';
+    } else {
+      title = t('sim.verdict.wrong');
+      variant = 'bad';
+    }
+    const reportNote = reported
+      ? (res.correct
+        ? '<p>' + escapeHtml(t('sim.verdict.reported.note', {
+            org: (enterpriseConfig && enterpriseConfig.orgName) || t('sim.verdict.reported.orgFallback'),
+          })) + '</p>'
+        : '<p>' + escapeHtml(t('sim.verdict.falsereport.note')) + '</p>')
+      : '';
+
     showModal({
-      title: res.correct ? t('sim.verdict.correct') : t('sim.verdict.wrong'),
-      variant: res.correct ? 'good' : 'bad',
+      title,
+      variant,
       bodyHtml:
         '<p><strong>' + escapeHtml(t('sim.verdict.answer')) + '</strong> ' +
           escapeHtml(res.is_phishing ? t('sim.verdict.isPhishing') : t('sim.verdict.isReal')) + '</p>' +
         '<p>' + escapeHtml(replaceDomain(res.explanation)) + '</p>' +
         senderNote +
+        reportNote +
         (redFlags ? '<p><strong>' + escapeHtml(t('sim.verdict.redFlags')) + '</strong></p><ul class="check-list">' + redFlags + '</ul>' : '') +
         (greenFlags ? '<p><strong>' + escapeHtml(t('sim.verdict.greenFlags')) + '</strong></p><ul class="check-list">' + greenFlags + '</ul>' : ''),
       actions: [
