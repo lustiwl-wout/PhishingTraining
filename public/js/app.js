@@ -1394,6 +1394,80 @@
     });
   }
 
+  // Pictogram per bestandstype. Bij een dubbele extensie (bv. .pdf.exe)
+  // toont een echte aanvaller het icoon van het type dat hij NABOOTST —
+  // de .exe blijft verborgen. Wij doen dat ook: de vermomming is
+  // overtuigend, de enige tell is de bestandsnaam zelf.
+  function attachIcon(filename) {
+    const parts = (filename || '').toLowerCase().split('.');
+    const real = parts.pop();
+    const exec = ['exe', 'scr', 'bat', 'com', 'cmd', 'js', 'jar', 'msi'];
+    const shown = (exec.includes(real) && parts.length) ? parts.pop() : real;
+
+    let color = '#6b7280', label = (shown || 'bin').toUpperCase().slice(0, 4);
+    if (shown === 'pdf')                             { color = '#e53e3e'; label = 'PDF'; }
+    else if (['doc', 'docx'].includes(shown))        { color = '#2b5fd8'; label = 'DOC'; }
+    else if (['xls', 'xlsx', 'csv'].includes(shown)) { color = '#276749'; label = 'XLS'; }
+    else if (['ppt', 'pptx'].includes(shown))        { color = '#c05621'; label = 'PPT'; }
+    else if (['zip', 'rar', '7z'].includes(shown))   { color = '#d69e2e'; label = 'ZIP'; }
+    else if (['jpg','jpeg','png','gif','webp'].includes(shown)) { color = '#6b46c1'; label = 'IMG'; }
+
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 40" width="28" height="35" aria-hidden="true">'
+      + '<path d="M4 0h17l7 8v32H4z" fill="#fff" stroke="#d1d5db" stroke-width="1.5"/>'
+      + '<path d="M21 0l7 8h-7z" fill="#e5e7eb" stroke="#d1d5db" stroke-width="1.5"/>'
+      + '<rect x="4" y="24" width="24" height="12" rx="2" fill="' + color + '"/>'
+      + '<text x="16" y="34" text-anchor="middle" font-family="system-ui,sans-serif"'
+      + ' font-size="7" font-weight="700" fill="#fff">' + label + '</text>'
+      + '</svg>';
+  }
+
+  function renderAttachments(m) {
+    const atts = m.attachments || [];
+    if (atts.length === 0) return '';
+    const chips = atts.map((a, i) =>
+      '<button class="ol-attach-chip" data-attach-idx="' + i + '" type="button">' +
+        '<span class="ol-attach-ico" aria-hidden="true">' + attachIcon(a.filename) + '</span>' +
+        '<span class="ol-attach-info">' +
+          '<span class="ol-attach-name">' + escapeHtml(a.filename || 'bijlage') + '</span>' +
+          (a.size ? '<span class="ol-attach-size">' + escapeHtml(a.size) + '</span>' : '') +
+        '</span>' +
+      '</button>'
+    ).join('');
+    return '<div class="ol-attach-bar">' +
+      '<div class="ol-attach-label">' + escapeHtml(t('sim.attach.label', { count: atts.length })) + '</div>' +
+      '<div class="ol-attach-chips">' + chips + '</div></div>';
+  }
+
+  function wireAttachments(scope, m) {
+    scope.querySelectorAll('[data-attach-idx]').forEach((btn) => {
+      const idx = Number.parseInt(btn.dataset.attachIdx, 10);
+      const att = (m.attachments || [])[idx];
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        // Een bijlage openen is "ik trapte erin", maar het is géén link-klik —
+        // aparte teller zodat de eindrapportage feitelijk klopt.
+        if (simState.interactions[m.id]) simState.interactions[m.id].opened_attachment = true;
+        openAttachmentModal(att);
+      });
+    });
+  }
+
+  function openAttachmentModal(att) {
+    const bad = !!(att && att.dangerous);
+    const warning = att ? (att.warning || '') : '';
+    showModal({
+      title: bad ? t('sim.attach.titleBad') : t('sim.attach.titleSafe'),
+      variant: bad ? 'bad' : '',
+      bodyHtml:
+        '<p class="big-text">' + escapeHtml(t('sim.attach.opens')) + '</p>' +
+        '<p class="mono url-preview ' + (bad ? 'bad' : '') + '">' +
+          escapeHtml(att ? att.filename : '') + '</p>' +
+        (warning ? '<p class="tip-line">' + escapeHtml(warning) + '</p>' : '') +
+        '<p>' + (bad ? t('sim.attach.dontOpen') : escapeHtml(t('sim.attach.tip'))) + '</p>',
+      actions: [{ label: t('common.close'), primary: true, close: true }],
+    });
+  }
+
   async function submitVerdict(m, verdict) {
     // Verdict-knoppen disablen — werkt in beide skins omdat iedere
     // verdict-knop het data-verdict attribuut draagt.

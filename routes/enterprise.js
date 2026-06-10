@@ -29,18 +29,29 @@ async function getOrgBy(field, value) {
   return rows[0] || null;
 }
 
-async function countActiveMessages(difficulty) {
+async function countActiveMessages(org) {
   const { rows } = await db.query(
-    `SELECT COUNT(*)::int AS total FROM inbox_messages WHERE active = TRUE AND difficulty = $1`,
-    [difficulty]
+    `SELECT COUNT(*)::int AS total
+       FROM inbox_messages
+      WHERE active = TRUE
+        AND difficulty = $1
+        AND locale = ANY($2)
+        AND (audience = ANY($3) OR audience = 'both')`,
+    [org.difficulty, org.locales, org.audiences]
   );
   return rows[0].total;
 }
 
-async function countJudgedByUser(orgUserId) {
+async function countJudgedByUser(orgUserId, org) {
   const { rows } = await db.query(
-    `SELECT COUNT(DISTINCT message_id)::int AS done FROM inbox_judgments WHERE org_user_id = $1`,
-    [orgUserId]
+    `SELECT COUNT(DISTINCT j.message_id)::int AS done
+       FROM inbox_judgments j
+       JOIN inbox_messages m ON m.id = j.message_id
+      WHERE j.org_user_id = $1
+        AND m.difficulty = $2
+        AND m.locale = ANY($3)
+        AND (m.audience = ANY($4) OR m.audience = 'both')`,
+    [orgUserId, org.difficulty, org.locales, org.audiences]
   );
   return rows[0].done;
 }
@@ -103,8 +114,8 @@ loginRouter.post('/:slug/login', async (req, res) => {
   await db.query(`UPDATE org_users SET failed_attempts = 0, locked_until = NULL WHERE id = $1`, [user.id]);
 
   // Check retrain block
-  const total = await countActiveMessages(org.difficulty);
-  const done = await countJudgedByUser(user.id);
+  const total = await countActiveMessages(org);
+  const done = await countJudgedByUser(user.id, org);
   if (done >= total && total > 0 && !user.allow_retrain) {
     return res.type('html').send(completedPage(org));
   }
@@ -144,7 +155,7 @@ portalRouter.get('/:token', async (req, res) => {
   const org = await getOrgBy('admin_token', req.params.token).catch(() => null);
   if (!org) return notFound(res);
 
-  const total = await countActiveMessages(org.difficulty);
+  const total = await countActiveMessages(org);
   const [{ rows: userRows }, { rows: msgRows }] = await Promise.all([
     db.query(`
       SELECT
@@ -201,7 +212,7 @@ portalRouter.get('/:token/export.csv', async (req, res) => {
   const org = await getOrgBy('admin_token', req.params.token).catch(() => null);
   if (!org) return notFound(res);
 
-  const total = await countActiveMessages(org.difficulty);
+  const total = await countActiveMessages(org);
   const { rows } = await db.query(`
     SELECT u.numeric_id,
            COUNT(DISTINCT j.message_id)::int            AS done_count,
@@ -398,7 +409,7 @@ function portalPage(org, users, totalMessages, token, msgStats = []) {
   <div class="topbar">
     <div>
       <h1>🛡️ ${esc(org.name)}</h1>
-      <p class="sub">Trainingsportaal · Geldig tot ${fmtDate(org.valid_until)} · ${org.difficulty === 'advanced' ? 'Gevorderd' : 'Normaal'}</p>
+      <p class="sub">Trainingsportaal · Geldig tot ${fmtDate(org.valid_until)} · ${org.difficulty === 'advanced' ? 'Gevorderd' : 'Normaal'} · ${(org.locales || []).join(', ')}</p>
     </div>
     <a class="btn-export" href="/portal/${esc(token)}/export.csv">⬇ CSV exporteren</a>
   </div>
