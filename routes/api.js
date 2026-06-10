@@ -329,4 +329,17 @@ router.get('/enterprise/progress', async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
+// GET /api/qr-scans?session_id=… — heeft deze sessie de QR-code(s) gescand?
+// Enterprise: sessie uit de cookie. Publiek: session_id-parameter.
+router.get('/qr-scans', async (req, res, next) => {
+  try {
+    const sid = req.session?.enterpriseSessionId || String(req.query.session_id || '');
+    if (!isUuidLike(sid)) return res.json({ scans: [] });
+    const { rows } = await db.query(
+      `SELECT tag FROM qr_scans WHERE session_id = $1`, [sid]
+    );
+    res.json({ scans: rows.map(r => r.tag) });
+  } catch (err) { next(err); }
+});
+
 module.exports = router;

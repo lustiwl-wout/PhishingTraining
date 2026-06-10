@@ -1360,6 +1360,10 @@
     // HTML-escaping en \n -> <br>.
     const isHtml = /^\s*<[a-z][\s\S]*>/i.test(text);
     let html = isHtml ? text : escapeHtml(text).replaceAll('\n', '<br>');
+    // QR-afbeeldingen krijgen de sessie mee zodat een echte scan met de
+    // telefoon herleidbaar is naar deze trainingssessie (zie /qr-img).
+    html = html.replaceAll(/src="\/qr-img\/(\w+)"/g, (_m, tag) =>
+      'src="/qr-img/' + tag + '?s=' + encodeURIComponent(getSessionId()) + '"');
     html = html.replaceAll(/\{\{link:(\d+)\}\}/g, (_m, n) => {
       const idx = Number.parseInt(n, 10);
       const link = links[idx];
@@ -1524,6 +1528,7 @@
       '<p class="big-text">' + t('sim.final.score', { correct, total, pct }) + '</p>' +
       '<p>' + escapeHtml(advies) + '</p>' +
       breakdownHtml +
+      '<div id="final-qr-warning"></div>' +
       missedHtml +
       '<div class="actions">' +
         '<button class="btn btn-primary" id="sim-again">' + escapeHtml(t('sim.final.again')) + '</button>' +
@@ -1544,6 +1549,20 @@
       }
     });
     result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // Heeft de gebruiker tijdens de oefening écht een QR-code gescand
+    // met de telefoon? Dan tonen we dat als extra leermoment.
+    api('/qr-scans?session_id=' + encodeURIComponent(getSessionId()))
+      .then((r) => {
+        if (!r.scans || r.scans.length === 0) return;
+        const el = document.getElementById('final-qr-warning');
+        if (!el) return;
+        el.innerHTML =
+          '<div class="final-qr-scanned">⚠️ ' +
+          escapeHtml(t('sim.final.qrScanned')) +
+          '</div>';
+      })
+      .catch(() => {});
   }
 
   function initials(name) {

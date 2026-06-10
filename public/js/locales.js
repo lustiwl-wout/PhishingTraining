@@ -195,6 +195,7 @@ window.VO_LOCALES = {
     'sim.final.insight.phishing': 'Phishing-mails: {correct} van {total} herkend',
     'sim.final.insight.legit': 'Echte mails: {correct} van {total} correct',
     'sim.final.insight.missed': 'Mails waarbij u in de val trapte:',
+    'sim.final.qrScanned': 'U scande de QR-code uit een oefenmail met uw telefoon. In het echt was u daarmee op een nep-betaalpagina beland. Scan nooit QR-codes uit onverwachte e-mails.',
 
     'sim.junk.sender': 'Z.K.H. Prins Adewale Ogundimu',
     'sim.junk.senderEmail': 'hrh.ogundimu@central-bank-transfer.info',
@@ -427,6 +428,7 @@ window.VO_LOCALES = {
     'sim.final.insight.phishing': 'Phishing-mails: {correct} van {total} herkend',
     'sim.final.insight.legit': 'Echte mails: {correct} van {total} correct',
     'sim.final.insight.missed': 'Mails waarbij u in de val getrapt bent:',
+    'sim.final.qrScanned': 'U scande de QR-code uit een oefenmail met uw telefoon. In het echt was u daarmee op een nep-betaalpagina beland. Scan nooit QR-codes uit onverwachte e-mails.',
 
     'sim.junk.sender': 'Z.K.H. Prins Adewale Ogundimu',
     'sim.junk.senderEmail': 'hrh.ogundimu@central-bank-transfer.info',
@@ -659,6 +661,7 @@ window.VO_LOCALES = {
     'sim.final.insight.phishing': 'Phishing emails: {correct} of {total} identified',
     'sim.final.insight.legit': 'Legitimate emails: {correct} of {total} correct',
     'sim.final.insight.missed': 'Emails you fell for:',
+    'sim.final.qrScanned': 'You scanned the QR code from a practice email with your phone. In real life that would have taken you to a fake payment page. Never scan QR codes from unexpected emails.',
 
     'sim.junk.sender': 'HRH Prince Adewale Ogundimu',
     'sim.junk.senderEmail': 'hrh.ogundimu@central-bank-transfer.info',
@@ -891,6 +894,7 @@ window.VO_LOCALES = {
     'sim.final.insight.phishing': 'E-mails de phishing : {correct} sur {total} détectés',
     'sim.final.insight.legit': 'E-mails légitimes : {correct} sur {total} corrects',
     'sim.final.insight.missed': 'Messages qui vous ont trompé(e) :',
+    'sim.final.qrScanned': 'Vous avez scanné le QR code d\'un e-mail d\'exercice avec votre téléphone. En réalité, vous auriez atterri sur une fausse page de paiement. Ne scannez jamais de QR codes provenant d\'e-mails inattendus.',
 
 
     'sim.junk.sender': 'S.A.R. Prince Adewale Ogundimu',
@@ -1124,6 +1128,7 @@ window.VO_LOCALES = {
     'sim.final.insight.phishing': 'E-mails de phishing : {correct} sur {total} détectés',
     'sim.final.insight.legit': 'E-mails légitimes : {correct} sur {total} corrects',
     'sim.final.insight.missed': 'Messages qui vous ont trompé(e) :',
+    'sim.final.qrScanned': 'Vous avez scanné le QR code d\'un e-mail d\'exercice avec votre téléphone. En réalité, vous auriez atterri sur une fausse page de paiement. Ne scannez jamais de QR codes provenant d\'e-mails inattendus.',
 
 
     'sim.junk.sender': 'S.A.R. Prince Adewale Ogundimu',
@@ -1357,6 +1362,7 @@ window.VO_LOCALES = {
     'sim.final.insight.phishing': 'Phishing-E-Mails: {correct} von {total} erkannt',
     'sim.final.insight.legit': 'Echte E-Mails: {correct} von {total} korrekt',
     'sim.final.insight.missed': 'E-Mails, auf die Sie hereingefallen sind:',
+    'sim.final.qrScanned': 'Sie haben den QR-Code aus einer Übungs-E-Mail mit Ihrem Telefon gescannt. Im Ernstfall wären Sie auf einer gefälschten Zahlungsseite gelandet. Scannen Sie niemals QR-Codes aus unerwarteten E-Mails.',
 
     'sim.junk.sender': 'S.K.H. Prinz Adewale Ogundimu',
     'sim.junk.senderEmail': 'hrh.ogundimu@central-bank-transfer.info',

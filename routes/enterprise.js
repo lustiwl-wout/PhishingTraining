@@ -152,7 +152,12 @@ portalRouter.get('/:token', async (req, res) => {
         COUNT(DISTINCT j.message_id)::int              AS done_count,
         COUNT(j.id) FILTER (WHERE j.is_correct)::int   AS correct_count,
         MIN(j.answered_at)                             AS first_judged_at,
-        MAX(j.answered_at)                             AS last_judged_at
+        MAX(j.answered_at)                             AS last_judged_at,
+        EXISTS (
+          SELECT 1 FROM org_sessions s
+          JOIN qr_scans q ON q.session_id = s.session_id
+          WHERE s.org_user_id = u.id
+        )                                              AS qr_scanned
       FROM org_users u
       LEFT JOIN inbox_judgments j ON j.org_user_id = u.id
       WHERE u.org_id = $1
@@ -201,18 +206,23 @@ portalRouter.get('/:token/export.csv', async (req, res) => {
     SELECT u.numeric_id,
            COUNT(DISTINCT j.message_id)::int            AS done_count,
            COUNT(j.id) FILTER (WHERE j.is_correct)::int AS correct_count,
-           MIN(j.answered_at)                           AS first_judged_at
+           MIN(j.answered_at)                           AS first_judged_at,
+           EXISTS (
+             SELECT 1 FROM org_sessions s
+             JOIN qr_scans q ON q.session_id = s.session_id
+             WHERE s.org_user_id = u.id
+           )                                            AS qr_scanned
     FROM org_users u
     LEFT JOIN inbox_judgments j ON j.org_user_id = u.id
     WHERE u.org_id = $1
     GROUP BY u.id, u.numeric_id ORDER BY u.numeric_id
   `, [org.id]);
 
-  const lines = ['ID,Training afgerond,Score (%),Datum'];
+  const lines = ['ID,Training afgerond,Score (%),QR gescand,Datum'];
   for (const r of rows) {
     const isDone = r.done_count >= total && total > 0;
     const score = r.done_count > 0 ? Math.round(r.correct_count / r.done_count * 100) : '';
-    lines.push(`${r.numeric_id},${isDone ? 'Ja' : 'Nee'},${score},${r.first_judged_at ? fmtDate(r.first_judged_at) : ''}`);
+    lines.push(`${r.numeric_id},${isDone ? 'Ja' : 'Nee'},${score},${r.qr_scanned ? 'Ja' : 'Nee'},${r.first_judged_at ? fmtDate(r.first_judged_at) : ''}`);
   }
 
   res.set('Content-Disposition', `attachment; filename="${org.slug}-resultaten.csv"`)
@@ -305,6 +315,9 @@ function portalPage(org, users, totalMessages, token, msgStats = []) {
       <td><code>${esc(r.numeric_id)}</code></td>
       <td>${isDone(r) ? '<span class="badge green">Ja</span>' : '<span class="badge grey">Nee</span>'}</td>
       <td>${score(r)}</td>
+      <td>${r.qr_scanned
+        ? '<span class="badge red" title="Scande de QR-code uit een oefenmail met de telefoon — in het echt gephisht">⚠️ Ja</span>'
+        : '<span class="badge grey">Nee</span>'}</td>
       <td>${fmtDate(r.first_judged_at)}</td>
       <td>${fmtDate(r.last_judged_at)}</td>
       <td>
@@ -406,6 +419,7 @@ function portalPage(org, users, totalMessages, token, msgStats = []) {
       : `<table>
           <thead><tr>
             <th>ID</th><th>Afgerond</th><th>Score</th>
+            <th title="Heeft de deelnemer de QR-code uit een oefenmail écht gescand?">QR gescand</th>
             <th>Eerste login</th><th>Laatste activiteit</th><th>Herhaling</th>
           </tr></thead>
           <tbody>${userRows}</tbody>

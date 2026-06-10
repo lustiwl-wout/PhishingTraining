@@ -105,6 +105,17 @@ CREATE INDEX IF NOT EXISTS idx_inbox_judgments_org_user ON inbox_judgments(org_u
 CREATE INDEX IF NOT EXISTS idx_inbox_judgments_message  ON inbox_judgments(message_id);
 CREATE INDEX IF NOT EXISTS idx_inbox_judgments_org_user_message ON inbox_judgments(org_user_id, message_id);
 
+-- QR-scans uit oefenmails ("quishing"): wie de QR-code écht scant met zijn
+-- telefoon, komt op /qr terecht — dat registreren we hier per sessie.
+CREATE TABLE IF NOT EXISTS qr_scans (
+  id          SERIAL PRIMARY KEY,
+  session_id  TEXT        NOT NULL,
+  tag         TEXT        NOT NULL,
+  scanned_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE (session_id, tag)
+);
+CREATE INDEX IF NOT EXISTS idx_qr_scans_session ON qr_scans(session_id);
+
 -- Eén oordeel per sessie per bericht: voorkomt dubbele rijen bij hertraining
 -- en spam-inserts. Bestaande duplicaten worden eerst opgeruimd (oudste blijft,
 -- dat is consistent met de "eerste oordeel telt"-statistieken).
