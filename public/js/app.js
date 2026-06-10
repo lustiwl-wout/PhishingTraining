@@ -553,6 +553,10 @@
                 escapeHtml(m.subject) + '</div>' +
             '</div>' +
             '<div class="print-email-body">' + renderBody(m.body, m.links || []) + '</div>' +
+            ((m.attachments && m.attachments.length)
+              ? '<div class="print-attach">📎 ' + escapeHtml(t('sim.attach.label', { count: m.attachments.length })) + ' ' +
+                  m.attachments.map((a) => escapeHtml(a.filename)).join(', ') + '</div>'
+              : '') +
           '</div>' +
           '<p class="print-question">' + escapeHtml(t('sim.print.question')) + '</p>' +
         '</section>'
@@ -831,7 +835,9 @@
             '<span class="ol-item-sender">' + escapeHtml(m.sender_name) + '</span>' +
             '<span class="ol-item-time">' + escapeHtml(m.received_label) + '</span>' +
           '</div>' +
-          '<div class="ol-item-subject">' + escapeHtml(m.subject) + '</div>' +
+          '<div class="ol-item-subject">' +
+            ((m.attachments && m.attachments.length) ? '<span class="ol-item-clip" aria-label="Bijlage">📎</span> ' : '') +
+            escapeHtml(m.subject) + '</div>' +
           '<div class="ol-item-preview">' + escapeHtml(m.preview || '') + '</div>' +
         '</div>';
       li.addEventListener('click', () => openMessage(m.id));
@@ -1187,7 +1193,9 @@
             '<span class="mob-item-sender">' + escapeHtml(m.sender_name) + statusIco + '</span>' +
             '<span class="mob-item-time">' + escapeHtml(m.received_label || '') + '</span>' +
           '</div>' +
-          '<div class="mob-item-subject">' + escapeHtml(m.subject) + '</div>' +
+          '<div class="mob-item-subject">' +
+            ((m.attachments && m.attachments.length) ? '📎 ' : '') +
+            escapeHtml(m.subject) + '</div>' +
           '<div class="mob-item-preview">' + escapeHtml(m.preview || '') + '</div>' +
         '</div>';
       li.addEventListener('click', () => openMobMessage(m.id));
@@ -1244,9 +1252,11 @@
           '</div>' +
         '</div>' +
         '<div class="mob-reader-body">' + renderBody(m.body, m.links || []) + '</div>' +
+        renderAttachments(m) +
       '</div>' +
       verdictBlock;
     reader.querySelector('.mob-btn-back').addEventListener('click', closeMobReader);
+    wireAttachments(reader, m);
     reader.querySelectorAll('[data-link-idx]').forEach((a) => {
       const idx = Number.parseInt(a.dataset.linkIdx, 10);
       const link = (m.links || [])[idx];
@@ -1321,6 +1331,7 @@
         '</div>' +
       '</header>' +
       '<div class="ol-msg-body">' + renderBody(m.body, m.links || []) + '</div>' +
+      renderAttachments(m) +
       (judged ? '<div class="ol-msg-actions judged"><p class="muted">' + escapeHtml(t('sim.reader.alreadyJudged')) + '</p></div>'
               : '<div class="ol-msg-actions">' +
                   '<p class="ol-verdict-q">' + escapeHtml(t('sim.reader.verdictQ')) + '</p>' +
@@ -1337,6 +1348,7 @@
         openLinkModal(link);
       });
     });
+    wireAttachments(reader, m);
 
     reader.querySelectorAll('[data-verdict]').forEach((b) => {
       b.addEventListener('click', () => submitVerdict(m, b.dataset.verdict));
@@ -1384,6 +1396,65 @@
         '<p class="mono url-preview ' + (bad ? 'bad' : '') + '">' + escapeHtml(url) + '</p>' +
         (warning ? '<p class="tip-line">' + escapeHtml(warning) + '</p>' : '') +
         '<p>' + (bad ? t('sim.link.dontClick') : escapeHtml(t('sim.link.tip'))) + '</p>',
+      actions: [{ label: t('common.close'), primary: true, close: true }],
+    });
+  }
+
+  // Pictogram per bestandstype. Een dubbele extensie (.pdf.exe) tonen we
+  // bewust met het document-icoon — precies de vermomming die de phisher
+  // gebruikt; de waarschuwing komt pas bij het openen.
+  function attachIcon(filename) {
+    const ext = (filename || '').toLowerCase().split('.').pop();
+    if (['pdf'].includes(ext)) return '📕';
+    if (['doc', 'docx'].includes(ext)) return '📘';
+    if (['xls', 'xlsx', 'csv'].includes(ext)) return '📗';
+    if (['zip', 'rar', '7z', 'exe'].includes(ext)) return '📄';
+    return '📄';
+  }
+
+  function renderAttachments(m) {
+    const atts = m.attachments || [];
+    if (atts.length === 0) return '';
+    const chips = atts.map((a, i) =>
+      '<button class="ol-attach-chip" data-attach-idx="' + i + '" type="button">' +
+        '<span class="ol-attach-ico" aria-hidden="true">' + attachIcon(a.filename) + '</span>' +
+        '<span class="ol-attach-info">' +
+          '<span class="ol-attach-name">' + escapeHtml(a.filename || 'bijlage') + '</span>' +
+          (a.size ? '<span class="ol-attach-size">' + escapeHtml(a.size) + '</span>' : '') +
+        '</span>' +
+      '</button>'
+    ).join('');
+    return '<div class="ol-attach-bar">' +
+      '<div class="ol-attach-label">' + escapeHtml(t('sim.attach.label', { count: atts.length })) + '</div>' +
+      '<div class="ol-attach-chips">' + chips + '</div></div>';
+  }
+
+  function wireAttachments(scope, m) {
+    scope.querySelectorAll('[data-attach-idx]').forEach((btn) => {
+      const idx = Number.parseInt(btn.dataset.attachIdx, 10);
+      const att = (m.attachments || [])[idx];
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        // Een bijlage openen is dezelfde "ik trapte erin"-actie als op een
+        // verdachte link klikken — we registreren het op dezelfde teller.
+        if (simState.interactions[m.id]) simState.interactions[m.id].clicked_link = true;
+        openAttachmentModal(att);
+      });
+    });
+  }
+
+  function openAttachmentModal(att) {
+    const bad = !!(att && att.dangerous);
+    const warning = att ? (att.warning || '') : '';
+    showModal({
+      title: bad ? t('sim.attach.titleBad') : t('sim.attach.titleSafe'),
+      variant: bad ? 'bad' : '',
+      bodyHtml:
+        '<p class="big-text">' + escapeHtml(t('sim.attach.opens')) + '</p>' +
+        '<p class="mono url-preview ' + (bad ? 'bad' : '') + '">' +
+          escapeHtml(att ? att.filename : '') + '</p>' +
+        (warning ? '<p class="tip-line">' + escapeHtml(warning) + '</p>' : '') +
+        '<p>' + (bad ? t('sim.attach.dontOpen') : escapeHtml(t('sim.attach.tip'))) + '</p>',
       actions: [{ label: t('common.close'), primary: true, close: true }],
     });
   }

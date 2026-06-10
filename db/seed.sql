@@ -1436,7 +1436,7 @@ INSERT INTO inbox_messages
  '3 dagen geleden 17:20',
  'Exclusieve kans bij internationale opdrachtgever — CV beoordeeld',
  'Beste Jan, ik heb uw profiel op LinkedIn bekeken en heb een exclusieve positie...',
- E'Beste Jan,\n\nIk heb uw profiel bekeken en heb een exclusieve senior-positie bij een internationale opdrachtgever die volgens mij perfect bij uw ervaring past. Salarisindicatie: € 95k - € 115k.\n\nDe rol is nog niet publiek gemaakt en er is haast bij. Klant wil deze week al een shortlist.\n\nIn de bijlage vindt u de functieomschrijving en het geheimhoudingscontract (NDA) dat ik u vraag te openen en te ondertekenen voordat ik meer details kan delen.\n\nBijlage: Functiebeschrijving_en_NDA.pdf.exe\n\nMet vriendelijke groet,\nSarah Visser\nPremium Talent — Executive Search',
+ E'Beste Jan,\n\nIk heb uw profiel bekeken en heb een exclusieve senior-positie bij een internationale opdrachtgever die volgens mij perfect bij uw ervaring past. Salarisindicatie: € 95k - € 115k.\n\nDe rol is nog niet publiek gemaakt en er is haast bij. Klant wil deze week al een shortlist.\n\nIn de bijlage vindt u de functieomschrijving en het geheimhoudingscontract (NDA) dat ik u vraag te openen en te ondertekenen voordat ik meer details kan delen.\n\nMet vriendelijke groet,\nSarah Visser\nPremium Talent — Executive Search',
  '[]'::jsonb,
  TRUE,
  '["Afzender op \".info\"-domein zonder bekend bureau","Onverwacht contact met een bijlage","De bestandsnaam eindigt op .pdf.exe — dat is een uitvoerbaar programma vermomd als PDF","Tijdsdruk: \"deze week al een shortlist\"","Geheimhouding gevraagd — bedoeld om u te isoleren","Salaris als lokker zonder enige controleerbare context"]'::jsonb,
@@ -1606,7 +1606,7 @@ INSERT INTO inbox_messages
  '3 dagen geleden 17u20',
  'Exclusieve kans bij internationale opdrachtgever — profiel beoordeeld',
  'Beste Peter, ik heb uw profiel op LinkedIn bekeken en heb een exclusieve positie...',
- E'Beste Peter,\n\nIk heb uw profiel bekeken en heb een exclusieve senior-positie bij een internationale opdrachtgever die volgens mij perfect bij uw ervaring past. Salarisindicatie: € 95.000 - € 115.000 bruto.\n\nDe rol is nog niet publiek gemaakt en er is haast bij. Klant wil deze week al een shortlist.\n\nIn de bijlage vindt u de functieomschrijving en het geheimhoudingscontract (NDA) dat ik u vraag te openen en te ondertekenen voordat ik meer details kan delen.\n\nBijlage: Functiebeschrijving_en_NDA.pdf.exe\n\nMet vriendelijke groeten,\nSarah Vermeulen\nPremium Talent — Executive Search',
+ E'Beste Peter,\n\nIk heb uw profiel bekeken en heb een exclusieve senior-positie bij een internationale opdrachtgever die volgens mij perfect bij uw ervaring past. Salarisindicatie: € 95.000 - € 115.000 bruto.\n\nDe rol is nog niet publiek gemaakt en er is haast bij. Klant wil deze week al een shortlist.\n\nIn de bijlage vindt u de functieomschrijving en het geheimhoudingscontract (NDA) dat ik u vraag te openen en te ondertekenen voordat ik meer details kan delen.\n\nMet vriendelijke groeten,\nSarah Vermeulen\nPremium Talent — Executive Search',
  '[]'::jsonb,
  TRUE,
  '["Afzender op \".info\"-domein zonder bekend bureau","Onverwacht contact met een bijlage","De bestandsnaam eindigt op .pdf.exe — dat is een uitvoerbaar programma vermomd als pdf","Tijdsdruk: \"deze week al een shortlist\"","Geheimhouding gevraagd — bedoeld om u te isoleren","Salaris als lokker zonder enige controleerbare context"]'::jsonb,
@@ -1776,7 +1776,7 @@ INSERT INTO inbox_messages
  '3 days ago 17:20',
  'Exclusive opportunity with an international client — profile shortlisted',
  'Dear Jane, I''ve reviewed your profile on LinkedIn and have an exclusive position...',
- E'Dear Jane,\n\nI''ve reviewed your profile and I have an exclusive senior position with an international client that, in my view, fits your experience perfectly. Salary range: £85k - £105k.\n\nThe role hasn''t been made public yet and it''s urgent. The client wants a shortlist this week.\n\nAttached you''ll find the job specification and the non-disclosure agreement (NDA) that I''d ask you to open and sign before I can share more details.\n\nAttachment: Job_Spec_and_NDA.pdf.exe\n\nKind regards,\nSarah Clarke\nPremium Talent — Executive Search',
+ E'Dear Jane,\n\nI''ve reviewed your profile and I have an exclusive senior position with an international client that, in my view, fits your experience perfectly. Salary range: £85k - £105k.\n\nThe role hasn''t been made public yet and it''s urgent. The client wants a shortlist this week.\n\nAttached you''ll find the job specification and the non-disclosure agreement (NDA) that I''d ask you to open and sign before I can share more details.\n\nKind regards,\nSarah Clarke\nPremium Talent — Executive Search',
  '[]'::jsonb,
  TRUE,
  '["Sender on a \".info\" domain with no known recognised agency","Unsolicited contact with an attachment","File name ends in .pdf.exe — that is an executable program disguised as a PDF","Time pressure: \"shortlist this week\"","Asks for confidentiality — designed to isolate you","Salary as bait with no verifiable context"]'::jsonb,
@@ -1946,7 +1946,7 @@ INSERT INTO inbox_messages
  'il y a 3 jours 17h20',
  'Opportunité exclusive chez un grand compte international — profil sélectionné',
  'Bonjour Pierre, j''ai examiné votre profil sur LinkedIn et j''ai un poste exclusif...',
- E'Bonjour Pierre,\n\nJ''ai examiné votre profil et j''ai un poste senior exclusif chez un grand compte international qui correspond parfaitement à votre expérience, selon moi. Fourchette de rémunération : 85 000 € — 105 000 € brut.\n\nLe poste n''a pas été rendu public et il y a urgence. Le client veut une shortlist cette semaine.\n\nEn pièce jointe, vous trouverez la fiche de poste et l''accord de confidentialité (NDA) que je vous demande d''ouvrir et de signer avant que je puisse vous communiquer plus de détails.\n\nPièce jointe : Fiche_Poste_et_NDA.pdf.exe\n\nCordialement,\nSophie Clément\nPremium Talent — Executive Search',
+ E'Bonjour Pierre,\n\nJ''ai examiné votre profil et j''ai un poste senior exclusif chez un grand compte international qui correspond parfaitement à votre expérience, selon moi. Fourchette de rémunération : 85 000 € — 105 000 € brut.\n\nLe poste n''a pas été rendu public et il y a urgence. Le client veut une shortlist cette semaine.\n\nEn pièce jointe, vous trouverez la fiche de poste et l''accord de confidentialité (NDA) que je vous demande d''ouvrir et de signer avant que je puisse vous communiquer plus de détails.\n\nCordialement,\nSophie Clément\nPremium Talent — Executive Search',
  '[]'::jsonb,
  TRUE,
  '["Expéditrice sur un domaine \".info\" sans cabinet reconnu","Contact non sollicité avec une pièce jointe","Le nom du fichier se termine par .pdf.exe — c''est un programme exécutable déguisé en PDF","Pression temporelle : \"shortlist cette semaine\"","Confidentialité demandée — vise à vous isoler","Rémunération utilisée comme appât, sans contexte vérifiable"]'::jsonb,
@@ -2116,7 +2116,7 @@ INSERT INTO inbox_messages
  'il y a 3 jours 17h20',
  'Opportunité exclusive chez un grand compte international — profil sélectionné',
  'Bonjour Pierre, j''ai examiné votre profil sur LinkedIn et j''ai un poste exclusif...',
- E'Bonjour Pierre,\n\nJ''ai examiné votre profil et j''ai un poste senior exclusif chez un grand compte international qui correspond parfaitement à votre expérience, selon moi. Fourchette de rémunération : 85.000 € — 105.000 € brut.\n\nLe poste n''a pas été rendu public et il y a urgence. Le client veut une shortlist cette semaine.\n\nEn pièce jointe, vous trouverez la fiche de poste et l''accord de confidentialité (NDA) que je vous demande d''ouvrir et de signer avant que je puisse vous communiquer plus de détails.\n\nPièce jointe : Fiche_Poste_et_NDA.pdf.exe\n\nBien à vous,\nSophie Delvaux\nPremium Talent — Executive Search',
+ E'Bonjour Pierre,\n\nJ''ai examiné votre profil et j''ai un poste senior exclusif chez un grand compte international qui correspond parfaitement à votre expérience, selon moi. Fourchette de rémunération : 85.000 € — 105.000 € brut.\n\nLe poste n''a pas été rendu public et il y a urgence. Le client veut une shortlist cette semaine.\n\nEn pièce jointe, vous trouverez la fiche de poste et l''accord de confidentialité (NDA) que je vous demande d''ouvrir et de signer avant que je puisse vous communiquer plus de détails.\n\nBien à vous,\nSophie Delvaux\nPremium Talent — Executive Search',
  '[]'::jsonb,
  TRUE,
  '["Expéditrice sur un domaine \".info\" sans cabinet reconnu","Contact non sollicité avec une pièce jointe","Le nom du fichier se termine par .pdf.exe — c''est un programme exécutable déguisé en PDF","Pression temporelle : \"shortlist cette semaine\"","Confidentialité demandée — vise à vous isoler","Rémunération utilisée comme appât, sans contexte vérifiable"]'::jsonb,
@@ -2286,7 +2286,7 @@ INSERT INTO inbox_messages
  'vor 3 Tagen 17:20',
  'Exklusive Chance bei internationalem Kunden — Profil ausgewählt',
  'Sehr geehrter Herr Müller, ich habe Ihr LinkedIn-Profil gesehen und habe eine exklusive Position...',
- E'Sehr geehrter Herr Müller,\n\nich habe Ihr Profil gesehen und habe eine exklusive Senior-Position bei einem internationalen Kunden, die meiner Meinung nach perfekt zu Ihrer Erfahrung passt. Gehaltsrahmen: 85.000 € — 105.000 € brutto.\n\nDie Rolle ist noch nicht öffentlich, und es eilt. Der Kunde möchte diese Woche eine Shortlist.\n\nIm Anhang finden Sie die Stellenbeschreibung und die Geheimhaltungsvereinbarung (NDA), die ich Sie bitte zu öffnen und zu unterzeichnen, bevor ich weitere Details teilen kann.\n\nAnhang: Stellenbeschreibung_und_NDA.pdf.exe\n\nMit freundlichen Grüßen,\nSophie Hoffmann\nPremium Talent — Executive Search',
+ E'Sehr geehrter Herr Müller,\n\nich habe Ihr Profil gesehen und habe eine exklusive Senior-Position bei einem internationalen Kunden, die meiner Meinung nach perfekt zu Ihrer Erfahrung passt. Gehaltsrahmen: 85.000 € — 105.000 € brutto.\n\nDie Rolle ist noch nicht öffentlich, und es eilt. Der Kunde möchte diese Woche eine Shortlist.\n\nIm Anhang finden Sie die Stellenbeschreibung und die Geheimhaltungsvereinbarung (NDA), die ich Sie bitte zu öffnen und zu unterzeichnen, bevor ich weitere Details teilen kann.\n\nMit freundlichen Grüßen,\nSophie Hoffmann\nPremium Talent — Executive Search',
  '[]'::jsonb,
  TRUE,
  '["Absenderin auf einer \".info\"-Domain ohne bekannte Agentur","Unerwartete Kontaktaufnahme mit Anhang","Der Dateiname endet auf .pdf.exe — das ist ein ausführbares Programm, getarnt als PDF","Zeitdruck: \"diese Woche Shortlist\"","Vertraulichkeit gefordert — soll Sie isolieren","Gehalt als Köder ohne überprüfbaren Kontext"]'::jsonb,
@@ -3915,3 +3915,24 @@ FROM inbox_messages
 WHERE locale = 'fr' AND difficulty = 'normal' AND sort_order = 95
   AND sender_name = 'Microsoft Authenticator'
 ON CONFLICT DO NOTHING;
+
+-- ============================================================
+-- Bijlagen: de recruiter-phishing heeft een kwaadaardige bijlage
+-- (.pdf.exe). We tonen die als echte, klikbare bijlage-chip i.p.v.
+-- als tekst in de body. Per taal de juiste bestandsnaam + uitleg.
+-- ============================================================
+UPDATE inbox_messages SET attachments =
+  '[{"filename":"Functiebeschrijving_en_NDA.pdf.exe","size":"248 KB","dangerous":true,"warning":"Dit bestand heet \".pdf.exe\". De échte extensie is .exe — een uitvoerbaar programma, vermomd als PDF. Open dit nooit. Een serieuze recruiter stuurt geen los uitvoerbaar bestand."}]'::jsonb
+WHERE locale IN ('nl','nl-BE') AND sender_address LIKE '%premium-talent-careers.info';
+
+UPDATE inbox_messages SET attachments =
+  '[{"filename":"Job_Spec_and_NDA.pdf.exe","size":"248 KB","dangerous":true,"warning":"This file is named \".pdf.exe\". Its real extension is .exe — an executable program disguised as a PDF. Never open it. A genuine recruiter does not send a stand-alone executable."}]'::jsonb
+WHERE locale = 'en' AND sender_address LIKE '%premium-talent-careers.info';
+
+UPDATE inbox_messages SET attachments =
+  '[{"filename":"Fiche_Poste_et_NDA.pdf.exe","size":"248 KB","dangerous":true,"warning":"Ce fichier s’appelle « .pdf.exe ». Sa vraie extension est .exe — un programme exécutable déguisé en PDF. Ne l’ouvrez jamais. Un vrai recruteur n’envoie pas un exécutable isolé."}]'::jsonb
+WHERE locale IN ('fr','fr-BE') AND sender_address LIKE '%premium-talent-careers.info';
+
+UPDATE inbox_messages SET attachments =
+  '[{"filename":"Stellenbeschreibung_und_NDA.pdf.exe","size":"248 KB","dangerous":true,"warning":"Diese Datei heißt „.pdf.exe\". Ihre echte Endung ist .exe — ein ausführbares Programm, getarnt als PDF. Öffnen Sie sie nie. Ein echter Recruiter sendet keine einzelne ausführbare Datei."}]'::jsonb
+WHERE locale = 'de' AND sender_address LIKE '%premium-talent-careers.info';

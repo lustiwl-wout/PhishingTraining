@@ -745,6 +745,28 @@ mark.phish-mark .dot, .annotation-list .dot {
 }
 .ol-link:hover { color: var(--ol-blue-dark); }
 
+/* ── Bijlagen ──────────────────────────────────────────────────────────────
+   Een echte bijlage-strook onder de mail, met klikbare chip per bestand.
+   Klikken opent een leermoment (zie openAttachmentModal) — het bestand
+   wordt nooit echt geopend. */
+.ol-attach-bar { margin: 1rem 0 .25rem; padding-top: .85rem;
+  border-top: 1px solid var(--ol-border); }
+.ol-attach-label { font-size: .8rem; color: var(--ol-muted); margin-bottom: .45rem; }
+.ol-attach-chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+.ol-attach-chip {
+  display: flex; align-items: center; gap: .6rem;
+  max-width: 320px; padding: .55rem .8rem;
+  background: #fff; border: 1px solid #d8d8d8; border-radius: 4px;
+  cursor: pointer; text-align: left; font: inherit;
+}
+.ol-attach-chip:hover { background: #f3f7fc; border-color: #b9d4ef; }
+.ol-attach-ico { font-size: 1.35rem; line-height: 1; flex: none; }
+.ol-attach-info { min-width: 0; display: flex; flex-direction: column; }
+.ol-attach-name { font-size: .9rem; color: #1b1b1b; font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ol-attach-size { font-size: .75rem; color: var(--ol-muted); }
+.print-attach { margin-top: .6rem; font-size: .85rem; color: #333; }
+
 .ol-msg-actions {
   margin-top: 1.75rem; padding-top: 1rem;
   border-top: 1px solid var(--ol-border);
