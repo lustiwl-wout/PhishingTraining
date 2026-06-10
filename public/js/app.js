@@ -1350,10 +1350,12 @@
     // HTML-escaping en \n -> <br>.
     const isHtml = /^\s*<[a-z][\s\S]*>/i.test(text);
     let html = isHtml ? text : escapeHtml(text).replaceAll('\n', '<br>');
-    // QR-afbeeldingen krijgen de sessie mee zodat een echte scan met de
-    // telefoon herleidbaar is naar deze trainingssessie (zie /qr-img).
+    // QR-afbeeldingen krijgen de sessie en taal mee zodat een echte scan
+    // met de telefoon herleidbaar is naar deze trainingssessie én de
+    // lespagina in de juiste taal verschijnt (zie /qr-img en /qr).
     html = html.replaceAll(/src="\/qr-img\/(\w+)"/g, (_m, tag) =>
-      'src="/qr-img/' + tag + '?s=' + encodeURIComponent(getSessionId()) + '"');
+      'src="/qr-img/' + tag + '?s=' + encodeURIComponent(getSessionId()) +
+      '&l=' + encodeURIComponent(currentLang) + '"');
     html = html.replaceAll(/\{\{link:(\d+)\}\}/g, (_m, n) => {
       const idx = Number.parseInt(n, 10);
       const link = links[idx];
