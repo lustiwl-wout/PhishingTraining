@@ -1400,15 +1400,20 @@
     });
   }
 
-  // Pictogram per bestandstype. Een dubbele extensie (.pdf.exe) tonen we
-  // bewust met het document-icoon — precies de vermomming die de phisher
-  // gebruikt; de waarschuwing komt pas bij het openen.
+  // Pictogram per bestandstype. Bij een dubbele extensie (bv. .pdf.exe)
+  // toont een echte aanvaller het icoon van het type dat hij NABOOTST —
+  // de .exe blijft verborgen. Wij doen dat ook: de vermomming is
+  // overtuigend, de enige tell is de bestandsnaam zelf.
   function attachIcon(filename) {
-    const ext = (filename || '').toLowerCase().split('.').pop();
-    if (['pdf'].includes(ext)) return '📕';
-    if (['doc', 'docx'].includes(ext)) return '📘';
-    if (['xls', 'xlsx', 'csv'].includes(ext)) return '📗';
-    if (['zip', 'rar', '7z', 'exe'].includes(ext)) return '📄';
+    const parts = (filename || '').toLowerCase().split('.');
+    const real = parts.pop();
+    const exec = ['exe', 'scr', 'bat', 'com', 'cmd', 'js', 'jar', 'msi'];
+    const shown = (exec.includes(real) && parts.length) ? parts.pop() : real;
+    if (shown === 'pdf') return '📕';
+    if (['doc', 'docx'].includes(shown)) return '📘';
+    if (['xls', 'xlsx', 'csv'].includes(shown)) return '📗';
+    if (['ppt', 'pptx'].includes(shown)) return '📙';
+    if (['zip', 'rar', '7z'].includes(shown)) return '🗜️';
     return '📄';
   }
 
@@ -1435,9 +1440,9 @@
       const att = (m.attachments || [])[idx];
       btn.addEventListener('click', (e) => {
         e.preventDefault();
-        // Een bijlage openen is dezelfde "ik trapte erin"-actie als op een
-        // verdachte link klikken — we registreren het op dezelfde teller.
-        if (simState.interactions[m.id]) simState.interactions[m.id].clicked_link = true;
+        // Een bijlage openen is "ik trapte erin", maar het is géén link-klik —
+        // aparte teller zodat de eindrapportage feitelijk klopt.
+        if (simState.interactions[m.id]) simState.interactions[m.id].opened_attachment = true;
         openAttachmentModal(att);
       });
     });
@@ -1596,6 +1601,15 @@
       ? '<div class="final-qr-scanned">⚠️ ' + escapeHtml(t('sim.final.clickedLinks', { count: clickedCount })) + '</div>'
       : '';
 
+    // Apart: hoe vaak opende de gebruiker een gevaarlijke bijlage?
+    const openedCount = simState.messages.filter((m) => {
+      const j = simState.judgments[m.id];
+      return j && j.is_phishing && simState.interactions[m.id]?.opened_attachment;
+    }).length;
+    const openedHtml = openedCount > 0
+      ? '<div class="final-qr-scanned">⚠️ ' + escapeHtml(t('sim.final.openedAttachment', { count: openedCount })) + '</div>'
+      : '';
+
     const missedHtml = missedPhish.length > 0 ? (
       '<div class="final-missed">' +
         '<p class="final-missed-h">' + escapeHtml(t('sim.final.insight.missed')) + '</p>' +
@@ -1614,6 +1628,7 @@
       '<p>' + escapeHtml(advies) + '</p>' +
       breakdownHtml +
       clickedHtml +
+      openedHtml +
       '<div id="final-qr-warning"></div>' +
       missedHtml +
       '<div class="actions">' +

@@ -156,6 +156,7 @@ window.VO_LOCALES = {
     'sim.error.sessionExpired': 'Uw sessie is verlopen. Log opnieuw in om verder te gaan — uw voortgang is bewaard.',
     'sim.error.relogin': 'Opnieuw inloggen',
     'sim.final.clickedLinks': 'U klikte in {count} phishing-mail(s) op de verdachte link. In het echt was dat het moment geweest waarop uw gegevens gestolen werden.',
+    'sim.final.openedAttachment': 'U opende in {count} phishing-mail(s) de gevaarlijke bijlage. In het echt was dat het moment geweest waarop schadelijke software op uw computer kwam.',
     'sim.ol.msgLoadError': 'Bericht kon niet geladen worden.',
     'sim.ol.to': 'Aan: u',
 
@@ -400,6 +401,7 @@ window.VO_LOCALES = {
     'sim.error.sessionExpired': 'Uw sessie is verlopen. Log opnieuw in om verder te gaan — uw voortgang is bewaard.',
     'sim.error.relogin': 'Opnieuw inloggen',
     'sim.final.clickedLinks': 'U klikte in {count} phishing-mail(s) op de verdachte link. In het echt was dat het moment geweest waarop uw gegevens gestolen werden.',
+    'sim.final.openedAttachment': 'U opende in {count} phishing-mail(s) de gevaarlijke bijlage. In het echt was dat het moment geweest waarop schadelijke software op uw computer kwam.',
     'sim.ol.msgLoadError': 'Bericht kon niet geladen worden.',
     'sim.ol.to': 'Aan: u',
 
@@ -644,6 +646,7 @@ window.VO_LOCALES = {
     'sim.error.sessionExpired': 'Your session has expired. Log in again to continue — your progress has been saved.',
     'sim.error.relogin': 'Log in again',
     'sim.final.clickedLinks': 'You clicked the suspicious link in {count} phishing email(s). In real life, that is the moment your details would have been stolen.',
+    'sim.final.openedAttachment': 'You opened the dangerous attachment in {count} phishing email(s). In real life, that is the moment malicious software would have been installed on your computer.',
     'sim.ol.msgLoadError': 'The message could not be loaded.',
     'sim.ol.to': 'To: you',
 
@@ -888,6 +891,7 @@ window.VO_LOCALES = {
     'sim.error.sessionExpired': 'Votre session a expiré. Reconnectez-vous pour continuer — votre progression est sauvegardée.',
     'sim.error.relogin': 'Se reconnecter',
     'sim.final.clickedLinks': 'Vous avez cliqué sur le lien suspect dans {count} e-mail(s) de phishing. En réalité, c\'est à ce moment-là que vos données auraient été volées.',
+    'sim.final.openedAttachment': 'Vous avez ouvert la pièce jointe dangereuse dans {count} e-mail(s) de phishing. En réalité, c’est à ce moment-là qu’un logiciel malveillant se serait installé sur votre ordinateur.',
     'sim.ol.msgLoadError': 'Le message n’a pas pu être chargé.',
     'sim.ol.to': 'À : vous',
 
@@ -1133,6 +1137,7 @@ window.VO_LOCALES = {
     'sim.error.sessionExpired': 'Votre session a expiré. Reconnectez-vous pour continuer — votre progression est sauvegardée.',
     'sim.error.relogin': 'Se reconnecter',
     'sim.final.clickedLinks': 'Vous avez cliqué sur le lien suspect dans {count} e-mail(s) de phishing. En réalité, c\'est à ce moment-là que vos données auraient été volées.',
+    'sim.final.openedAttachment': 'Vous avez ouvert la pièce jointe dangereuse dans {count} e-mail(s) de phishing. En réalité, c’est à ce moment-là qu’un logiciel malveillant se serait installé sur votre ordinateur.',
     'sim.ol.msgLoadError': 'Le message n’a pas pu être chargé.',
     'sim.ol.to': 'À : vous',
 
@@ -1378,6 +1383,7 @@ window.VO_LOCALES = {
     'sim.error.sessionExpired': 'Ihre Sitzung ist abgelaufen. Melden Sie sich erneut an — Ihr Fortschritt wurde gespeichert.',
     'sim.error.relogin': 'Erneut anmelden',
     'sim.final.clickedLinks': 'Sie haben in {count} Phishing-E-Mail(s) auf den verdächtigen Link geklickt. Im Ernstfall wären genau dann Ihre Daten gestohlen worden.',
+    'sim.final.openedAttachment': 'Sie haben in {count} Phishing-E-Mail(s) den gefährlichen Anhang geöffnet. Im Ernstfall wäre genau dann Schadsoftware auf Ihrem Computer installiert worden.',
     'sim.ol.msgLoadError': 'Die Nachricht konnte nicht geladen werden.',
     'sim.ol.to': 'An: Sie',
 
