@@ -2061,10 +2061,15 @@ body.device-iphone .device-homebar::after {
   }
   .print-email-body p { margin: 0 0 .7em; }
   .print-email-body a { color: #000; text-decoration: underline; }
-  .print-email-body a::after {
-    content: " [" attr(href) "]";
-    font-size: 9pt; color: #555;
+  /* Doel-URL's staan als voetnoten onder het bericht (.print-links) —
+     href is hier altijd "#", dus attr(href) afdrukken heeft geen zin. */
+  .print-links {
+    margin-top: .8em; padding-top: .5em;
+    border-top: 1pt solid #999;
+    font-size: 9pt; color: #333;
   }
+  .print-links ul { margin: .3em 0 0; padding-left: 1.2em; }
+  .print-links li { margin-bottom: .2em; }
   /* SharePoint-card vereenvoudigen voor print. */
   .print-email-body .ol-share-card {
     border: 1px solid #999;

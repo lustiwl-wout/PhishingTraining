@@ -570,6 +570,13 @@
                 escapeHtml(m.subject) + '</div>' +
             '</div>' +
             '<div class="print-email-body">' + renderBody(m.body, m.links || []) + '</div>' +
+            // Op papier kun je niet hoveren of klikken — daarom hier wél de
+            // doel-URL's, als voetnoten onder het bericht.
+            ((m.links || []).length ? '<div class="print-links"><strong>' +
+              escapeHtml(t('sim.print.links')) + '</strong><ul>' +
+              (m.links || []).map((l) => '<li>' + escapeHtml(l.label || 'link') +
+                ' → <span class="mono">' + escapeHtml(l.real_url || '') + '</span></li>').join('') +
+              '</ul></div>' : '') +
           '</div>' +
           '<p class="print-question">' + escapeHtml(t('sim.print.question')) + '</p>' +
         '</section>'
@@ -1369,11 +1376,11 @@
       const link = links[idx];
       if (!link) return '';
       const label = escapeHtml(link.label || 'link');
-      const url = escapeHtml(link.real_url || '');
+      // Geen zichtbare URL naast de knop/link — net als in een echte
+      // mailclient zie je die alleen bij hover (title) of na klikken (modal).
       return '<a href="#" class="ol-link" data-link-idx="' + idx + '" ' +
              'title="' + escapeHtml(t('sim.reader.linkTo', { url: link.real_url || '' })) + '">' +
-             '<span class="ol-link-label">' + label + '</span>' +
-             ' <span class="ol-link-url" aria-hidden="true">' + url + '</span></a>';
+             '<span class="ol-link-label">' + label + '</span></a>';
     });
     return html;
   }
