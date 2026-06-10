@@ -1004,36 +1004,83 @@ body.sim-fullscreen .outlook {
   overflow: hidden;
 }
 
-/* ── Branded e-mail look (.eml) ────────────────────────────────────────────
-   Echte nieuwsbrieven/notificaties zijn opgemaakte HTML-mails met een
-   merkbalk, knop en kleine lettertjes onderaan. Phishing kopieert die stijl —
-   dus onze oefenmails doen dat ook. De merkkleur komt per mail inline mee. */
+/* ── Nagebootste huisstijlen (.eml) ────────────────────────────────────────
+   Echte merken hebben totaal verschillende mailstructuren. Eén generiek
+   sjabloon zou de oefenmails juist herkenbaar maken — dus we bootsen per
+   merk de echte huisstijl na, net zoals een phisher dat doet: logo-tekst in
+   het eigen lettertype, eigen koptekst-stijl, eigen knopvorm, eigen footer.
+   Variabelen per mail inline: --brand (balk), --cta (knop), --ink. */
 .ol-msg-body .eml, .mob-reader-body .eml, .print-email-body .eml {
-  max-width: 540px; margin: .5rem auto; background: #fff;
-  border: 1px solid #e3e3e3; border-radius: 6px; overflow: hidden;
+  max-width: 560px; margin: .5rem auto; background: #fff;
+  border: 1px solid #e3e3e3; overflow: hidden;
   font-family: 'Segoe UI', Arial, sans-serif; font-size: .95rem;
   line-height: 1.55; color: #262626;
 }
-.eml-brand {
-  padding: .85rem 1.4rem; color: #fff; font-weight: 700;
-  font-size: 1.05rem; letter-spacing: .2px;
-}
-.eml-body { padding: 1.2rem 1.4rem 1.4rem; }
-.eml-body p { margin: 0 0 .8rem; }
-.eml-h { font-size: 1.12rem; font-weight: 650; margin: 0 0 .9rem; color: #1b1b1b; }
-.eml-cta { text-align: center; margin: 1.1rem 0; }
+.eml-body { padding: 1.3rem 1.5rem 1.5rem; }
+.eml-body p { margin: 0 0 .85rem; }
+.eml-h { font-size: 1.14rem; font-weight: 650; margin: 0 0 .9rem; color: #1b1b1b; }
+.eml-cta { text-align: center; margin: 1.2rem 0; }
 .eml-cta .ol-link {
-  display: inline-block; padding: .65rem 1.6rem; border-radius: 4px;
+  display: inline-block; padding: .7rem 1.7rem;
   background: var(--cta, #0067b8); color: var(--cta-ink, #fff) !important;
   font-weight: 600; text-decoration: none;
 }
 .eml-cta .ol-link .ol-link-url { display: block; font-size: .72rem; font-weight: 400;
   opacity: .85; margin-top: .2rem; }
 .eml-foot {
-  padding: .9rem 1.4rem; background: #f6f6f6; border-top: 1px solid #ececec;
-  font-size: .76rem; color: #8a8a8a; line-height: 1.5;
+  padding: .95rem 1.5rem; background: #f4f4f4; border-top: 1px solid #e6e6e6;
+  font-size: .74rem; color: #8a8a8a; line-height: 1.5;
 }
 .eml-foot p { margin: 0 0 .3rem; }
+
+/* Logo-tekst: het "woordmerk" in een eigen vorm i.p.v. een gekleurde balk. */
+.eml-logo { font-weight: 800; letter-spacing: -.3px; }
+
+/* --- Familie 1: BANK — smalle gekleurde kopbalk, knop met scherpe hoeken --- */
+.eml.fam-bank { border-top: 4px solid var(--brand); border-radius: 0; }
+.eml.fam-bank .eml-top { padding: 1rem 1.5rem .4rem; }
+.eml.fam-bank .eml-logo { font-size: 1.45rem; color: var(--brand); }
+.eml.fam-bank .eml-cta .ol-link { border-radius: 2px; }
+
+/* --- Familie 2: OVERHEID — sober, serif-kop, dunne lijn, geen ronde hoeken - */
+.eml.fam-gov { border-radius: 0; border-top: 6px solid var(--brand); }
+.eml.fam-gov .eml-top { padding: 1rem 1.5rem; border-bottom: 1px solid #eee; }
+.eml.fam-gov .eml-logo { font-size: 1.15rem; color: var(--brand);
+  font-family: Georgia, 'Times New Roman', serif; font-weight: 700; }
+.eml.fam-gov .eml-h { font-family: Georgia, serif; font-weight: 700; }
+.eml.fam-gov .eml-cta .ol-link { border-radius: 0; }
+
+/* --- Familie 3: BEZORGER — grote gekleurde hero-balk met groot woordmerk --- */
+.eml.fam-parcel { border-radius: 8px; }
+.eml.fam-parcel .eml-hero { background: var(--brand); padding: 1.5rem;
+  text-align: center; }
+.eml.fam-parcel .eml-logo { font-size: 1.9rem; color: var(--cta-ink, #fff);
+  text-transform: uppercase; letter-spacing: 1px; }
+.eml.fam-parcel .eml-cta .ol-link { border-radius: 24px; }
+
+/* --- Familie 4: TECH — strak, klein woordmerk linksboven, veel wit --------- */
+.eml.fam-tech { border: 1px solid #e1e1e1; border-radius: 4px; }
+.eml.fam-tech .eml-top { padding: 1.3rem 1.5rem .2rem; }
+.eml.fam-tech .eml-logo { font-size: 1.2rem; color: var(--brand); font-weight: 600; }
+.eml.fam-tech .eml-h { font-weight: 600; }
+.eml.fam-tech .eml-cta { text-align: left; }
+.eml.fam-tech .eml-cta .ol-link { border-radius: 4px; }
+
+/* --- Familie 5: RETAIL/CONSUMER — gecentreerde merkbalk, ronde knop -------- */
+.eml.fam-retail { border-radius: 6px; }
+.eml.fam-retail .eml-hero { background: var(--brand); padding: 1.1rem;
+  text-align: center; }
+.eml.fam-retail .eml-logo { font-size: 1.5rem; color: var(--cta-ink, #fff); }
+.eml.fam-retail .eml-body { text-align: center; }
+.eml.fam-retail .eml-cta .ol-link { border-radius: 22px; padding: .75rem 2.2rem; }
+
+/* --- Familie 6: BETAALAPP — kaartachtig, afgerond, bedrag groot ------------ */
+.eml.fam-pay { border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.08); }
+.eml.fam-pay .eml-hero { background: var(--brand); padding: 1.3rem 1.5rem;
+  color: var(--cta-ink, #fff); }
+.eml.fam-pay .eml-logo { font-size: 1.3rem; color: var(--cta-ink, #fff); }
+.eml.fam-pay .eml-amount { font-size: 1.7rem; font-weight: 700; margin-top: .3rem; }
+.eml.fam-pay .eml-cta .ol-link { border-radius: 24px; }
 .ol-share-head {
   padding: 1.75rem 1.5rem 1.25rem;
   text-align: center;
