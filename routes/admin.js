@@ -264,6 +264,43 @@ router.post('/orgs/:id/import', requireLogin, async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
+// POST /admin/orgs/:id/users/:userId/reset-pin
+// Pincodes staan bcrypt-gehasht in de database en kunnen dus niet worden
+// opgevraagd — alleen opnieuw gegenereerd. De nieuwe pincode wordt éénmalig
+// getoond en nergens in platte tekst bewaard. Reset ontgrendelt het account.
+router.post('/orgs/:id/users/:userId/reset-pin', requireLogin, async (req, res, next) => {
+  try {
+    const { rows: [org] } = await db.query(`SELECT * FROM organisations WHERE id = $1`, [req.params.id]);
+    if (!org) return res.status(404).end();
+
+    const { rows: [user] } = await db.query(
+      `SELECT id, numeric_id FROM org_users WHERE id = $1 AND org_id = $2`,
+      [parseInt(req.params.userId, 10), org.id]
+    );
+    if (!user) return res.status(404).end();
+
+    const pin = String(crypto.randomInt(0, 10000)).padStart(4, '0');
+    const hash = await bcrypt.hash(pin, 10);
+    await db.query(
+      `UPDATE org_users SET pincode_hash = $1, failed_attempts = 0, locked_until = NULL WHERE id = $2`,
+      [hash, user.id]
+    );
+
+    res.type('html').send(shell('Nieuwe pincode', `
+      <div class="section" style="max-width:480px">
+        <h2>🔑 Nieuwe pincode voor ID <code>${e(user.numeric_id)}</code></h2>
+        <p style="font-size:2.2rem;font-weight:700;letter-spacing:.35em;text-align:center;
+                  background:#f3f4f6;border-radius:8px;padding:1rem;margin:1rem 0">${e(pin)}</p>
+        <p style="color:#6b7280;font-size:.9rem">
+          Noteer deze pincode nu — hij wordt versleuteld opgeslagen en kan hierna
+          niet meer worden getoond. Het account is ook ontgrendeld (mislukte
+          inlogpogingen zijn gereset).
+        </p>
+        <p style="margin-top:1rem"><a class="btn" href="/admin/orgs/${org.id}">← Terug naar ${e(org.name)}</a></p>
+      </div>`, `/admin/orgs/${org.id}`));
+  } catch (err) { next(err); }
+});
+
 // ── HTML helpers ────────────────────────────────────────────────────────────
 
 function e(s) {
@@ -455,6 +492,12 @@ function orgDetailPage(org, users) {
     <td>${u.done_count > 0 ? '<span class="badge g">Actief</span>' : '<span class="badge n">—</span>'}</td>
     <td>${u.allow_retrain ? '🔓' : '🔒'}</td>
     <td style="color:#9ca3af;font-size:.85rem">${new Date(u.created_at).toLocaleDateString('nl-NL')}</td>
+    <td>
+      <form method="POST" action="/admin/orgs/${org.id}/users/${u.id}/reset-pin" style="display:inline"
+            onsubmit="return confirm('Nieuwe pincode genereren voor ID ${e(u.numeric_id)}? De oude pincode werkt daarna niet meer.')">
+        <button class="btn btn-sm" type="submit" title="Pincodes zijn versleuteld opgeslagen en kunnen niet worden opgevraagd — wel opnieuw gegenereerd.">🔑 Nieuwe pincode</button>
+      </form>
+    </td>
   </tr>`).join('');
 
   return shell(org.name, `
@@ -550,7 +593,7 @@ function orgDetailPage(org, users) {
     <div class="section">
       <h2>Deelnemers (${users.length})</h2>
       <table>
-        <thead><tr><th>ID</th><th>Status</th><th>Herhaling</th><th>Aangemaakt</th></tr></thead>
+        <thead><tr><th>ID</th><th>Status</th><th>Herhaling</th><th>Aangemaakt</th><th>Pincode</th></tr></thead>
         <tbody>${userRows}</tbody>
       </table>
     </div>` : ''}`, '/admin');
