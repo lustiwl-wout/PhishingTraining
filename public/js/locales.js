@@ -112,6 +112,7 @@ window.VO_LOCALES = {
     'sim.print.received': 'Ontvangen',
     'sim.print.subject': 'Onderwerp',
     'sim.print.question': 'Wat denkt u: phishing of een echt bericht?',
+    'sim.print.links': 'Links in dit bericht:',
     'sim.print.is.phishing': 'Phishing',
     'sim.print.is.real': 'Echt bericht',
 
@@ -345,6 +346,7 @@ window.VO_LOCALES = {
     'sim.print.received': 'Ontvangen',
     'sim.print.subject': 'Onderwerp',
     'sim.print.question': 'Wat denkt u: phishing of een echt bericht?',
+    'sim.print.links': 'Links in dit bericht:',
     'sim.print.is.phishing': 'Phishing',
     'sim.print.is.real': 'Echt bericht',
 
@@ -578,6 +580,7 @@ window.VO_LOCALES = {
     'sim.print.received': 'Received',
     'sim.print.subject': 'Subject',
     'sim.print.question': 'What do you think: phishing or a real message?',
+    'sim.print.links': 'Links in this message:',
     'sim.print.is.phishing': 'Phishing',
     'sim.print.is.real': 'Real message',
 
@@ -811,6 +814,7 @@ window.VO_LOCALES = {
     'sim.print.received': 'Reçu',
     'sim.print.subject': 'Objet',
     'sim.print.question': 'Qu’en pensez-vous : hameçonnage ou vrai message ?',
+    'sim.print.links': 'Liens dans ce message :',
     'sim.print.is.phishing': 'Hameçonnage',
     'sim.print.is.real': 'Message réel',
 
@@ -1045,6 +1049,7 @@ window.VO_LOCALES = {
     'sim.print.received': 'Reçu',
     'sim.print.subject': 'Objet',
     'sim.print.question': 'Qu’en pensez-vous : hameçonnage ou vrai message ?',
+    'sim.print.links': 'Liens dans ce message :',
     'sim.print.is.phishing': 'Hameçonnage',
     'sim.print.is.real': 'Message réel',
 
@@ -1279,6 +1284,7 @@ window.VO_LOCALES = {
     'sim.print.received': 'Empfangen',
     'sim.print.subject': 'Betreff',
     'sim.print.question': 'Was meinen Sie: Phishing oder eine echte Nachricht?',
+    'sim.print.links': 'Links in dieser Nachricht:',
     'sim.print.is.phishing': 'Phishing',
     'sim.print.is.real': 'Echte Nachricht',
 
