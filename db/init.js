@@ -118,7 +118,7 @@ async function initDb({ force = false } = {}) {
                (id, session_id, message_id, verdict, is_correct, clicked_link,
                 revealed_sender, ip_address, difficulty, org_user_id, answered_at)
              VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
-             ON CONFLICT (id) DO NOTHING`,
+             ON CONFLICT DO NOTHING`,
             [r.id, r.session_id, r.message_id, r.verdict, r.is_correct,
              r.clicked_link, r.revealed_sender, r.ip_address,
              r.difficulty ?? 'normal', r.org_user_id ?? null, r.answered_at]
