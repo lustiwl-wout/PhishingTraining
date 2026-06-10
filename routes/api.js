@@ -212,7 +212,7 @@ router.post('/inbox/:id/judge', async (req, res, next) => {
     const id = Number.parseInt(req.params.id, 10);
     if (!Number.isInteger(id)) return res.status(400).json({ error: 'ongeldig id' });
 
-    const { session_id: bodySessionId, verdict, difficulty: rawDiff, clicked_link = false, revealed_sender = false } = req.body || {};
+    const { session_id: bodySessionId, verdict, difficulty: rawDiff, clicked_link = false, revealed_sender = false, enterprise = false } = req.body || {};
     if (verdict !== 'trust' && verdict !== 'phish') {
       return res.status(400).json({ error: 'verdict moet "trust" of "phish" zijn' });
     }
@@ -220,6 +220,14 @@ router.post('/inbox/:id/judge', async (req, res, next) => {
 
     // Enterprise session overrides client-supplied session_id
     const orgUserId = req.session?.enterpriseOrgUserId || null;
+
+    // De client dénkt enterprise te zijn maar de sessie is verlopen:
+    // expliciet 401 — anders wordt het oordeel anoniem opgeslagen en
+    // verliest de medewerker zijn voortgang zonder het te merken.
+    if (enterprise && !orgUserId) {
+      return res.status(401).json({ error: 'sessie verlopen', requiresReauth: true });
+    }
+
     const session_id = orgUserId
       ? req.session.enterpriseSessionId
       : bodySessionId;

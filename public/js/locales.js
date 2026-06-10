@@ -152,6 +152,10 @@ window.VO_LOCALES = {
     'sim.ol.empty': 'Selecteer een bericht links om te beginnen.',
     'sim.ol.loading': 'Bezig met laden…',
     'sim.ol.loadError': 'Kon de inbox niet laden.',
+    'sim.ol.noMessages': 'Geen oefenberichten beschikbaar voor deze instellingen. Kies een andere taal of moeilijkheidsgraad.',
+    'sim.error.sessionExpired': 'Uw sessie is verlopen. Log opnieuw in om verder te gaan — uw voortgang is bewaard.',
+    'sim.error.relogin': 'Opnieuw inloggen',
+    'sim.final.clickedLinks': 'U klikte in {count} phishing-mail(s) op de verdachte link. In het echt was dat het moment geweest waarop uw gegevens gestolen werden.',
     'sim.ol.msgLoadError': 'Bericht kon niet geladen worden.',
     'sim.ol.to': 'Aan: u',
 
@@ -230,6 +234,7 @@ window.VO_LOCALES = {
     'hulp.print': 'Tips afdrukken 🖨️',
 
     'footer.tagline': 'Veilig Online · Een gratis training om phishing te herkennen.',
+    'footer.tagline.enterprise': 'Veilig Online · Phishing-training voor Kestrel.',
     'footer.contact': 'Vragen over deze training? <a href="mailto:wouter.lustig@outlook.com">Wouter Lustig</a>',
 
     'common.back': '← Terug',
@@ -385,6 +390,10 @@ window.VO_LOCALES = {
     'sim.ol.empty': 'Selecteer links een bericht om te beginnen.',
     'sim.ol.loading': 'Bezig met laden…',
     'sim.ol.loadError': 'Kon het postvak niet laden.',
+    'sim.ol.noMessages': 'Geen oefenberichten beschikbaar voor deze instellingen. Kies een andere taal of moeilijkheidsgraad.',
+    'sim.error.sessionExpired': 'Uw sessie is verlopen. Log opnieuw in om verder te gaan — uw voortgang is bewaard.',
+    'sim.error.relogin': 'Opnieuw inloggen',
+    'sim.final.clickedLinks': 'U klikte in {count} phishing-mail(s) op de verdachte link. In het echt was dat het moment geweest waarop uw gegevens gestolen werden.',
     'sim.ol.msgLoadError': 'Bericht kon niet geladen worden.',
     'sim.ol.to': 'Aan: u',
 
@@ -463,6 +472,7 @@ window.VO_LOCALES = {
     'hulp.print': 'Tips afdrukken 🖨️',
 
     'footer.tagline': 'Veilig Online · Een gratis opleiding om phishing te herkennen.',
+    'footer.tagline.enterprise': 'Veilig Online · Phishing-training voor Kestrel.',
     'footer.contact': 'Vragen over deze training? <a href="mailto:wouter.lustig@outlook.com">Wouter Lustig</a>',
 
     'common.back': '← Terug',
@@ -618,6 +628,10 @@ window.VO_LOCALES = {
     'sim.ol.empty': 'Select a message on the left to begin.',
     'sim.ol.loading': 'Loading…',
     'sim.ol.loadError': 'Could not load the inbox.',
+    'sim.ol.noMessages': 'No practice messages available for these settings. Try another language or difficulty.',
+    'sim.error.sessionExpired': 'Your session has expired. Log in again to continue — your progress has been saved.',
+    'sim.error.relogin': 'Log in again',
+    'sim.final.clickedLinks': 'You clicked the suspicious link in {count} phishing email(s). In real life, that is the moment your details would have been stolen.',
     'sim.ol.msgLoadError': 'The message could not be loaded.',
     'sim.ol.to': 'To: you',
 
@@ -696,6 +710,7 @@ window.VO_LOCALES = {
     'hulp.print': 'Print tips 🖨️',
 
     'footer.tagline': 'Safe Online · A free training to help you spot phishing.',
+    'footer.tagline.enterprise': 'Veilig Online · Phishing training for Kestrel.',
     'footer.contact': 'Questions about this training? <a href="mailto:wouter.lustig@outlook.com">Wouter Lustig</a>',
 
     'common.back': '← Back',
@@ -851,6 +866,10 @@ window.VO_LOCALES = {
     'sim.ol.empty': 'Sélectionnez un message à gauche pour commencer.',
     'sim.ol.loading': 'Chargement…',
     'sim.ol.loadError': 'Impossible de charger la boîte de réception.',
+    'sim.ol.noMessages': 'Aucun message d\'exercice disponible pour ces paramètres. Essayez une autre langue ou un autre niveau.',
+    'sim.error.sessionExpired': 'Votre session a expiré. Reconnectez-vous pour continuer — votre progression est sauvegardée.',
+    'sim.error.relogin': 'Se reconnecter',
+    'sim.final.clickedLinks': 'Vous avez cliqué sur le lien suspect dans {count} e-mail(s) de phishing. En réalité, c\'est à ce moment-là que vos données auraient été volées.',
     'sim.ol.msgLoadError': 'Le message n’a pas pu être chargé.',
     'sim.ol.to': 'À : vous',
 
@@ -930,6 +949,7 @@ window.VO_LOCALES = {
     'hulp.print': 'Imprimer les conseils 🖨️',
 
     'footer.tagline': 'Sécurité en ligne · Une formation gratuite pour reconnaître le hameçonnage.',
+    'footer.tagline.enterprise': 'Veilig Online · Formation anti-phishing pour Kestrel.',
     'footer.contact': 'Des questions sur cette formation ? <a href="mailto:wouter.lustig@outlook.com">Wouter Lustig</a>',
 
     'common.back': '← Retour',
@@ -1085,6 +1105,10 @@ window.VO_LOCALES = {
     'sim.ol.empty': 'Sélectionnez un message à gauche pour commencer.',
     'sim.ol.loading': 'Chargement…',
     'sim.ol.loadError': 'Impossible de charger la boîte de réception.',
+    'sim.ol.noMessages': 'Aucun message d\'exercice disponible pour ces paramètres. Essayez une autre langue ou un autre niveau.',
+    'sim.error.sessionExpired': 'Votre session a expiré. Reconnectez-vous pour continuer — votre progression est sauvegardée.',
+    'sim.error.relogin': 'Se reconnecter',
+    'sim.final.clickedLinks': 'Vous avez cliqué sur le lien suspect dans {count} e-mail(s) de phishing. En réalité, c\'est à ce moment-là que vos données auraient été volées.',
     'sim.ol.msgLoadError': 'Le message n’a pas pu être chargé.',
     'sim.ol.to': 'À : vous',
 
@@ -1164,6 +1188,7 @@ window.VO_LOCALES = {
     'hulp.print': 'Imprimer les conseils 🖨️',
 
     'footer.tagline': 'Sécurité en ligne · Une formation gratuite pour reconnaître le hameçonnage.',
+    'footer.tagline.enterprise': 'Veilig Online · Formation anti-phishing pour Kestrel.',
     'footer.contact': 'Des questions sur cette formation ? <a href="mailto:wouter.lustig@outlook.com">Wouter Lustig</a>',
 
     'common.back': '← Retour',
@@ -1319,6 +1344,10 @@ window.VO_LOCALES = {
     'sim.ol.empty': 'Wählen Sie links eine Nachricht aus, um zu beginnen.',
     'sim.ol.loading': 'Wird geladen…',
     'sim.ol.loadError': 'Der Posteingang konnte nicht geladen werden.',
+    'sim.ol.noMessages': 'Keine Übungsnachrichten für diese Einstellungen verfügbar. Wählen Sie eine andere Sprache oder Schwierigkeit.',
+    'sim.error.sessionExpired': 'Ihre Sitzung ist abgelaufen. Melden Sie sich erneut an — Ihr Fortschritt wurde gespeichert.',
+    'sim.error.relogin': 'Erneut anmelden',
+    'sim.final.clickedLinks': 'Sie haben in {count} Phishing-E-Mail(s) auf den verdächtigen Link geklickt. Im Ernstfall wären genau dann Ihre Daten gestohlen worden.',
     'sim.ol.msgLoadError': 'Die Nachricht konnte nicht geladen werden.',
     'sim.ol.to': 'An: Sie',
 
@@ -1397,6 +1426,7 @@ window.VO_LOCALES = {
     'hulp.print': 'Tipps drucken 🖨️',
 
     'footer.tagline': 'Sicher Online · Eine kostenlose Schulung, um Phishing zu erkennen.',
+    'footer.tagline.enterprise': 'Veilig Online · Phishing-Training für Kestrel.',
     'footer.contact': 'Fragen zu dieser Schulung? <a href="mailto:wouter.lustig@outlook.com">Wouter Lustig</a>',
 
     'common.back': '← Zurück',

@@ -1003,6 +1003,37 @@ body.sim-fullscreen .outlook {
   font-family: 'Segoe UI', Arial, sans-serif;
   overflow: hidden;
 }
+
+/* ── Branded e-mail look (.eml) ────────────────────────────────────────────
+   Echte nieuwsbrieven/notificaties zijn opgemaakte HTML-mails met een
+   merkbalk, knop en kleine lettertjes onderaan. Phishing kopieert die stijl —
+   dus onze oefenmails doen dat ook. De merkkleur komt per mail inline mee. */
+.ol-msg-body .eml, .mob-reader-body .eml, .print-email-body .eml {
+  max-width: 540px; margin: .5rem auto; background: #fff;
+  border: 1px solid #e3e3e3; border-radius: 6px; overflow: hidden;
+  font-family: 'Segoe UI', Arial, sans-serif; font-size: .95rem;
+  line-height: 1.55; color: #262626;
+}
+.eml-brand {
+  padding: .85rem 1.4rem; color: #fff; font-weight: 700;
+  font-size: 1.05rem; letter-spacing: .2px;
+}
+.eml-body { padding: 1.2rem 1.4rem 1.4rem; }
+.eml-body p { margin: 0 0 .8rem; }
+.eml-h { font-size: 1.12rem; font-weight: 650; margin: 0 0 .9rem; color: #1b1b1b; }
+.eml-cta { text-align: center; margin: 1.1rem 0; }
+.eml-cta .ol-link {
+  display: inline-block; padding: .65rem 1.6rem; border-radius: 4px;
+  background: var(--cta, #0067b8); color: var(--cta-ink, #fff) !important;
+  font-weight: 600; text-decoration: none;
+}
+.eml-cta .ol-link .ol-link-url { display: block; font-size: .72rem; font-weight: 400;
+  opacity: .85; margin-top: .2rem; }
+.eml-foot {
+  padding: .9rem 1.4rem; background: #f6f6f6; border-top: 1px solid #ececec;
+  font-size: .76rem; color: #8a8a8a; line-height: 1.5;
+}
+.eml-foot p { margin: 0 0 .3rem; }
 .ol-share-head {
   padding: 1.75rem 1.5rem 1.25rem;
   text-align: center;

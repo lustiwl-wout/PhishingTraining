@@ -151,6 +151,7 @@ portalRouter.get('/:token', async (req, res) => {
         u.id, u.numeric_id, u.allow_retrain,
         COUNT(DISTINCT j.message_id)::int              AS done_count,
         COUNT(j.id) FILTER (WHERE j.is_correct)::int   AS correct_count,
+        COUNT(j.id) FILTER (WHERE j.clicked_link)::int AS clicked_count,
         MIN(j.answered_at)                             AS first_judged_at,
         MAX(j.answered_at)                             AS last_judged_at,
         EXISTS (
@@ -318,6 +319,9 @@ function portalPage(org, users, totalMessages, token, msgStats = []) {
       <td>${r.qr_scanned
         ? '<span class="badge red" title="Scande de QR-code uit een oefenmail met de telefoon — in het echt gephisht">⚠️ Ja</span>'
         : '<span class="badge grey">Nee</span>'}</td>
+      <td>${r.clicked_count > 0
+        ? `<span class="badge red" title="Klikte ${r.clicked_count}× op een link in een oefenmail">⚠️ ${r.clicked_count}×</span>`
+        : '<span class="badge grey">0</span>'}</td>
       <td>${fmtDate(r.first_judged_at)}</td>
       <td>${fmtDate(r.last_judged_at)}</td>
       <td>
@@ -420,6 +424,7 @@ function portalPage(org, users, totalMessages, token, msgStats = []) {
           <thead><tr>
             <th>ID</th><th>Afgerond</th><th>Score</th>
             <th title="Heeft de deelnemer de QR-code uit een oefenmail écht gescand?">QR gescand</th>
+            <th title="Hoe vaak klikte de deelnemer op een link in een oefenmail?">Links geklikt</th>
             <th>Eerste login</th><th>Laatste activiteit</th><th>Herhaling</th>
           </tr></thead>
           <tbody>${userRows}</tbody>
