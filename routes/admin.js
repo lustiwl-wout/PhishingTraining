@@ -96,9 +96,10 @@ router.get('/orgs/new', requireLogin, (_req, res) => {
 router.post('/orgs', requireLogin, async (req, res, next) => {
   try {
     const { name, slug, email_domain, max_users, valid_until } = req.body || {};
-    const locales     = parseArray(req.body, 'locales', ALL_LOCALES);
-    const audiences   = parseArray(req.body, 'audiences', ALL_AUDIENCES);
+    const locales      = parseArray(req.body, 'locales', ALL_LOCALES);
+    const audiences    = parseArray(req.body, 'audiences', ALL_AUDIENCES);
     const difficulties = parseArray(req.body, 'difficulties', ALL_DIFFICULTIES);
+    const difficulty   = ALL_DIFFICULTIES.includes(req.body.difficulty) ? req.body.difficulty : 'normal';
 
     if (!name || !slug || !valid_until)
       return res.type('html').send(orgFormPage('Naam, slug en geldigheidsdatum zijn verplicht.'));
@@ -112,9 +113,9 @@ router.post('/orgs', requireLogin, async (req, res, next) => {
     const domain = email_domain ? email_domain.trim().toLowerCase().replace(/^@/, '') : null;
 
     const { rows } = await db.query(
-      `INSERT INTO organisations (name, slug, email_domain, locales, audiences, difficulties, max_users, valid_until, admin_token)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING id`,
-      [name.trim(), slug.trim(), domain, locales, audiences, difficulties, maxU, valid_until, admin_token]
+      `INSERT INTO organisations (name, slug, email_domain, locales, audiences, difficulties, difficulty, max_users, valid_until, admin_token)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING id`,
+      [name.trim(), slug.trim(), domain, locales, audiences, difficulties, difficulty, maxU, valid_until, admin_token]
     );
     res.redirect(`/admin/orgs/${rows[0].id}`);
   } catch (err) {
@@ -149,9 +150,10 @@ router.post('/orgs/:id', requireLogin, async (req, res, next) => {
     if (!org) return res.status(404).end();
 
     const { valid_until, max_users, email_domain, name } = req.body || {};
-    const locales     = parseArray(req.body, 'locales', ALL_LOCALES);
-    const audiences   = parseArray(req.body, 'audiences', ALL_AUDIENCES);
+    const locales      = parseArray(req.body, 'locales', ALL_LOCALES);
+    const audiences    = parseArray(req.body, 'audiences', ALL_AUDIENCES);
     const difficulties = parseArray(req.body, 'difficulties', ALL_DIFFICULTIES);
+    const difficulty   = ALL_DIFFICULTIES.includes(req.body.difficulty) ? req.body.difficulty : (org.difficulty || 'normal');
 
     if (locales.length === 0 || audiences.length === 0 || difficulties.length === 0)
       return res.redirect(`/admin/orgs/${org.id}?err=Selecteer+minimaal+%C3%A9%C3%A9n+optie+per+categorie.`);
@@ -160,8 +162,8 @@ router.post('/orgs/:id', requireLogin, async (req, res, next) => {
     const domain  = email_domain ? email_domain.trim().toLowerCase().replace(/^@/, '') : null;
 
     await db.query(
-      `UPDATE organisations SET name=$1, locales=$2, audiences=$3, difficulties=$4, valid_until=$5, max_users=$6, email_domain=$7 WHERE id=$8`,
-      [orgName, locales, audiences, difficulties, valid_until || org.valid_until,
+      `UPDATE organisations SET name=$1, locales=$2, audiences=$3, difficulties=$4, difficulty=$5, valid_until=$6, max_users=$7, email_domain=$8 WHERE id=$9`,
+      [orgName, locales, audiences, difficulties, difficulty, valid_until || org.valid_until,
        Math.max(1, Math.min(5000, parseInt(max_users, 10) || org.max_users)), domain, org.id]
     );
     res.redirect(`/admin/orgs/${org.id}`);
@@ -392,6 +394,14 @@ function checkboxGroup(name, options, selected) {
     </label>`).join('')}</div>`;
 }
 
+function radioGroup(name, options, selected) {
+  return `<div class="check-group">${options.map(([val, label]) => `
+    <label>
+      <input type="radio" name="${e(name)}" value="${e(val)}" ${selected === val ? 'checked' : ''}>
+      ${e(label)}
+    </label>`).join('')}</div>`;
+}
+
 const LOCALE_LABELS = [
   ['nl','🇳🇱 Nederlands'],['nl-BE','🇧🇪 Nederlands (BE)'],['en','🇬🇧 English'],
   ['fr','🇫🇷 Français'],['fr-BE','🇧🇪 Français (BE)'],['de','🇩🇪 Deutsch'],
@@ -421,8 +431,13 @@ function orgFormPage(error = '') {
         ${checkboxGroup('locales', LOCALE_LABELS, ALL_LOCALES)}
         <label>Doelgroep</label>
         ${checkboxGroup('audiences', AUDIENCE_LABELS, ALL_AUDIENCES)}
-        <label>Moeilijkheidsgraad</label>
+        <label>Beschikbare moeilijkheidsgrades</label>
         ${checkboxGroup('difficulties', DIFFICULTY_LABELS, ALL_DIFFICULTIES)}
+        <label style="margin-top:.75rem">Afronding bij niveau</label>
+        <p style="font-size:.8rem;color:#6b7280;margin:.2rem 0 .5rem">
+          Training geldt als afgerond als de deelnemer alle berichten van dit niveau heeft beoordeeld.
+        </p>
+        ${radioGroup('difficulty', DIFFICULTY_LABELS, 'normal')}
         <br>
         <button class="btn" type="submit">Aanmaken</button>
       </form>
@@ -460,8 +475,13 @@ function orgDetailPage(org, users) {
         ${checkboxGroup('locales', LOCALE_LABELS, locales)}
         <label>Doelgroep</label>
         ${checkboxGroup('audiences', AUDIENCE_LABELS, audiences)}
-        <label>Moeilijkheidsgraad</label>
+        <label>Beschikbare moeilijkheidsgrades</label>
         ${checkboxGroup('difficulties', DIFFICULTY_LABELS, difficulties)}
+        <label style="margin-top:.75rem">Afronding bij niveau</label>
+        <p style="font-size:.8rem;color:#6b7280;margin:.2rem 0 .5rem">
+          Training geldt als afgerond als de deelnemer alle berichten van dit niveau heeft beoordeeld.
+        </p>
+        ${radioGroup('difficulty', DIFFICULTY_LABELS, org.difficulty || 'normal')}
         <br>
         <button class="btn" type="submit">Opslaan</button>
       </form>

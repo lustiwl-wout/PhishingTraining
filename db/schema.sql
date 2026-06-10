@@ -145,6 +145,7 @@ CREATE TABLE IF NOT EXISTS organisations (
   created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 ALTER TABLE organisations ADD COLUMN IF NOT EXISTS email_domain TEXT;
+ALTER TABLE organisations ADD COLUMN IF NOT EXISTS difficulty TEXT NOT NULL DEFAULT 'normal';
 CREATE INDEX IF NOT EXISTS idx_organisations_slug        ON organisations(slug);
 CREATE INDEX IF NOT EXISTS idx_organisations_admin_token ON organisations(admin_token);
 

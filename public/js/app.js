@@ -63,6 +63,7 @@
   // -------- audience (persoonlijk vs zakelijk) --------
   const SUPPORTED_AUDIENCES = ['personal', 'business'];
   const AUDIENCE_ICONS = { personal: '📥', business: '💼' };
+  const DEVICE_ICONS = { desktop: '💻', android: '📱', iphone: '📱' };
   function detectInitialAudience() {
     const stored = localStorage.getItem('vo_audience');
     return SUPPORTED_AUDIENCES.includes(stored) ? stored : null;
@@ -86,13 +87,10 @@
     if (!sim || !sim.classList.contains('active')) return;
     const inboxPhase = document.getElementById('sim-phase-inbox');
     const mobilePhase = document.getElementById('sim-phase-mobile');
-    // restore: true — taal/doelgroep/niveau wisselen mag de voortgang
-    // niet wissen. Berichten van een andere taal hebben andere id's,
-    // dus oordelen blijven netjes per taal bewaard.
     if (inboxPhase && !inboxPhase.hidden) {
-      startSimulator({ restore: true });
+      startSimulator();
     } else if (mobilePhase && !mobilePhase.hidden) {
-      startMobileSimulator({ restore: true }).catch((err) => console.error(err));
+      startMobileSimulator().catch((err) => console.error(err));
     }
   }
 
@@ -151,6 +149,10 @@
     const audIcon = document.getElementById('audience-switch-icon');
     if (audName) audName.textContent = t('audience.' + currentAudience + '.title');
     if (audIcon) audIcon.textContent = AUDIENCE_ICONS[currentAudience] || '';
+    const devName = document.getElementById('device-switch-name');
+    const devIcon = document.getElementById('device-switch-icon');
+    if (devName) devName.textContent = t('device.' + currentDevice + '.title');
+    if (devIcon) devIcon.textContent = DEVICE_ICONS[currentDevice] || '';
   }
 
   function setLanguage(lang) {
@@ -198,11 +200,6 @@
   }
 
   function applyEnterpriseConfig(cfg) {
-    // Footer: "gratis training" klopt niet voor medewerkers van een
-    // betalende organisatie — toon daar de organisatienaam.
-    document.querySelectorAll('[data-i18n="footer.tagline"]').forEach((el) => {
-      el.setAttribute('data-i18n', 'footer.tagline.enterprise');
-    });
     // --- talen: verberg kaarten die niet zijn toegestaan ---
     document.querySelectorAll('#lang-picker [data-lang]').forEach(btn => {
       btn.hidden = !cfg.locales.includes(btn.dataset.lang);
@@ -282,13 +279,13 @@
     const orgSlug = enterpriseConfig.orgSlug;
     let r = s;
     if (domain) {
-      r = r.replace(/\bkestrel\.(nl|be|de|com|fr|co\.uk)\b/g, domain)
+      r = r.replace(/\bkestrel\.(nl|be|de|com)\b/g, domain)
            .replace(/\bkestrel\.sharepoint\.com\b/g, domain.split('.')[0] + '.sharepoint.com');
     }
     if (orgSlug) {
       // Replace kestrel-lookalike domains (e.g. kestrel-access.nl → test-access.nl)
       // so phishing lessons stay relevant: "test-access.nl is not test.nl"
-      r = r.replace(/\bkestrel-(\w+)\.(nl|be|de|com|net|fr|co\.uk)\b/g, orgSlug + '-$1.$2');
+      r = r.replace(/\bkestrel-(\w+)\.(nl|be|de|com|net)\b/g, orgSlug + '-$1.$2');
     }
     if (orgName) {
       r = r.replace(/\bKestrel\b/g, orgName);
@@ -331,14 +328,12 @@
 
       // Simulator herstellen NA enterprise config zodat audience/difficulty
       // al correct zijn ingesteld voordat de eerste fetch plaatsvindt.
-      // Het apparaat bepalen we opnieuw: wie op desktop oefende en op een
-      // telefoon terugkomt, krijgt gewoon de mobiele weergave.
       if (savedPage === 'simulator') {
         const saved = loadPersistedSimState();
-        if (saved) {
-          setDevice(detectDevice());
+        if (saved && saved.device) {
+          setDevice(saved.device);
           document.body.classList.add('sim-fullscreen');
-          if (currentDevice === 'desktop') {
+          if (saved.device === 'desktop') {
             showSimPhase('inbox');
             startSimulator({ restore: true }).catch((err) => console.error(err));
           } else {
@@ -370,6 +365,14 @@
       setDifficulty(diffBtn.dataset.difficulty);
       return;
     }
+    // Apparaat-picker kaart (💻 / 📱 / 🍏) — niet meer in de UI, maar
+    // we laten de hook staan voor mogelijke toekomstige debug/preview.
+    const devPickCard = e.target.closest('#device-picker [data-device]');
+    if (devPickCard) {
+      e.preventDefault();
+      switchDevice(devPickCard.dataset.device);
+      return;
+    }
     if (e.target.closest('#lang-switch')) {
       showLangPicker();
     }
@@ -381,6 +384,22 @@
   // Wissel van apparaat midden in de sessie: zet het nieuwe device,
   // herstart de simulator in de juiste skin als we nog in de simulator
   // zitten. Buiten de simulator alleen de voorkeur bijwerken.
+  function switchDevice(d) {
+    const wasInSim = document.getElementById('simulator').classList.contains('active');
+    setDevice(d);
+    if (!wasInSim) return;
+    // Resultaat-kaart verbergen als die nog open stond
+    const result = document.getElementById('sim-result');
+    if (result) result.hidden = true;
+    document.body.classList.add('sim-fullscreen');
+    if (d === 'desktop') {
+      showSimPhase('login');
+      runMicrosoftLoginAnimation().catch((err) => console.error(err));
+    } else {
+      showSimPhase('mobile');
+      startMobileSimulator().catch((err) => console.error(err));
+    }
+  }
 
   // -------- session id (anoniem, alleen om de attempt te koppelen) --------
   function getSessionId() {
@@ -457,11 +476,7 @@
       const res = await fetch(url, Object.assign({
         headers: { 'Content-Type': 'application/json' },
       }, opts || {}));
-      if (!res.ok) {
-        const err = new Error('API ' + res.status);
-        err.status = res.status;
-        throw err;
-      }
+      if (!res.ok) throw new Error('API ' + res.status);
       return await res.json();
     } finally {
       clearTimeout(coldStartTimer);
@@ -484,10 +499,12 @@
     try { localStorage.setItem('vo_page', step); } catch (_) {}
     // Fullscreen voor de simulator: verberg trainings-chrome, laat Outlook het scherm vullen.
     document.body.classList.toggle('sim-fullscreen', step === 'simulator');
-    // "Sluit oefening" is alleen zinvol in de simulator.
+    // Apparaat-wissel en "Sluit oefening" zijn alleen zinvol in de simulator.
     const inSim = step === 'simulator';
     const exitBtn = document.getElementById('sim-exit-btn');
+    const devBtn = document.getElementById('device-switch');
     if (exitBtn) exitBtn.hidden = !inSim;
+    if (devBtn) devBtn.hidden = !inSim;
 
     const main = document.getElementById('hoofd');
     if (main) main.focus();
@@ -553,10 +570,6 @@
                 escapeHtml(m.subject) + '</div>' +
             '</div>' +
             '<div class="print-email-body">' + renderBody(m.body, m.links || []) + '</div>' +
-            ((m.attachments && m.attachments.length)
-              ? '<div class="print-attach">📎 ' + escapeHtml(t('sim.attach.label', { count: m.attachments.length })) + ' ' +
-                  m.attachments.map((a) => escapeHtml(a.filename)).join(', ') + '</div>'
-              : '') +
           '</div>' +
           '<p class="print-question">' + escapeHtml(t('sim.print.question')) + '</p>' +
         '</section>'
@@ -620,7 +633,7 @@
     });
   }
 
-  async function runMicrosoftLoginAnimation(simOpts) {
+  async function runMicrosoftLoginAnimation() {
     const emailEl = document.getElementById('ms-email');
     const pwEl = document.getElementById('ms-password');
     const pwRow = document.getElementById('ms-password-row');
@@ -709,7 +722,7 @@
     showSimPhase('inbox');
     submit.disabled = false;
     back.disabled = false;
-    startSimulator(simOpts);
+    startSimulator();
   }
 
   document.addEventListener('click', (e) => {
@@ -777,10 +790,8 @@
       const messages = applyOrgDomain(await api('/inbox'));
       const saved = opts.restore ? loadPersistedSimState() : null;
       let judgments = (saved && saved.judgments) || {};
-      // Enterprise: laad beoordelingen uit DB zodat voortgang apparaat-
-      // onafhankelijk is. Niet bij fresh (= "Opnieuw oefenen"): anders
-      // zou elke hertraining direct als volledig beoordeeld starten.
-      if (enterpriseConfig && !opts.fresh) {
+      // Enterprise: laad beoordelingen uit DB zodat voortgang apparaat-onafhankelijk is.
+      if (enterpriseConfig) {
         try {
           const progress = await api('/enterprise/progress');
           if (progress.judgments) judgments = Object.assign({}, judgments, progress.judgments);
@@ -804,9 +815,6 @@
         }
         openMessage(openId);
       } else {
-        // Geen berichten voor deze taal/doelgroep/niveau-combinatie:
-        // duidelijke melding i.p.v. een eeuwig "bezig met laden".
-        list.innerHTML = '<li class="ol-loading">' + escapeHtml(t('sim.ol.noMessages')) + '</li>';
         resetReader();
       }
     } catch (err) {
@@ -835,9 +843,7 @@
             '<span class="ol-item-sender">' + escapeHtml(m.sender_name) + '</span>' +
             '<span class="ol-item-time">' + escapeHtml(m.received_label) + '</span>' +
           '</div>' +
-          '<div class="ol-item-subject">' +
-            ((m.attachments && m.attachments.length) ? '<span class="ol-item-clip" aria-label="Bijlage">📎</span> ' : '') +
-            escapeHtml(m.subject) + '</div>' +
+          '<div class="ol-item-subject">' + escapeHtml(m.subject) + '</div>' +
           '<div class="ol-item-preview">' + escapeHtml(m.preview || '') + '</div>' +
         '</div>';
       li.addEventListener('click', () => openMessage(m.id));
@@ -993,7 +999,7 @@
       const messages = applyOrgDomain(await api('/inbox'));
       const saved = opts.restore ? loadPersistedSimState() : null;
       let judgments = (saved && saved.judgments) || {};
-      if (enterpriseConfig && !opts.fresh) {
+      if (enterpriseConfig) {
         try {
           const progress = await api('/enterprise/progress');
           if (progress.judgments) judgments = Object.assign({}, judgments, progress.judgments);
@@ -1013,8 +1019,6 @@
           openId = next.id;
         }
         openMobMessage(openId);
-      } else if (list) {
-        list.innerHTML = '<li class="mob-item" style="justify-content:center"><em>' + escapeHtml(t('sim.ol.noMessages')) + '</em></li>';
       }
     } catch (err) {
       if (list) list.innerHTML = '<li class="mob-item" style="justify-content:center;color:#b3261e">' + escapeHtml(t('sim.ol.loadError')) + '</li>';
@@ -1193,9 +1197,7 @@
             '<span class="mob-item-sender">' + escapeHtml(m.sender_name) + statusIco + '</span>' +
             '<span class="mob-item-time">' + escapeHtml(m.received_label || '') + '</span>' +
           '</div>' +
-          '<div class="mob-item-subject">' +
-            ((m.attachments && m.attachments.length) ? '📎 ' : '') +
-            escapeHtml(m.subject) + '</div>' +
+          '<div class="mob-item-subject">' + escapeHtml(m.subject) + '</div>' +
           '<div class="mob-item-preview">' + escapeHtml(m.preview || '') + '</div>' +
         '</div>';
       li.addEventListener('click', () => openMobMessage(m.id));
@@ -1205,7 +1207,7 @@
 
   async function openMobMessage(id) {
     simState.current = id;
-    if (!simState.interactions[id]) simState.interactions[id] = { clicked_link: false };
+    if (!simState.interactions[id]) simState.interactions[id] = { clicked_link: false, revealed_sender: false };
     persistSimState();
     const reader = document.getElementById('mob-reader');
     if (!reader) return;
@@ -1252,11 +1254,9 @@
           '</div>' +
         '</div>' +
         '<div class="mob-reader-body">' + renderBody(m.body, m.links || []) + '</div>' +
-        renderAttachments(m) +
       '</div>' +
       verdictBlock;
     reader.querySelector('.mob-btn-back').addEventListener('click', closeMobReader);
-    wireAttachments(reader, m);
     reader.querySelectorAll('[data-link-idx]').forEach((a) => {
       const idx = Number.parseInt(a.dataset.linkIdx, 10);
       const link = (m.links || [])[idx];
@@ -1301,7 +1301,7 @@
 
   async function openMessage(id) {
     simState.current = id;
-    if (!simState.interactions[id]) simState.interactions[id] = { clicked_link: false };
+    if (!simState.interactions[id]) simState.interactions[id] = { clicked_link: false, revealed_sender: false };
     persistSimState();
     renderInboxList();
     const reader = document.getElementById('ol-reader');
@@ -1331,7 +1331,6 @@
         '</div>' +
       '</header>' +
       '<div class="ol-msg-body">' + renderBody(m.body, m.links || []) + '</div>' +
-      renderAttachments(m) +
       (judged ? '<div class="ol-msg-actions judged"><p class="muted">' + escapeHtml(t('sim.reader.alreadyJudged')) + '</p></div>'
               : '<div class="ol-msg-actions">' +
                   '<p class="ol-verdict-q">' + escapeHtml(t('sim.reader.verdictQ')) + '</p>' +
@@ -1348,7 +1347,6 @@
         openLinkModal(link);
       });
     });
-    wireAttachments(reader, m);
 
     reader.querySelectorAll('[data-verdict]').forEach((b) => {
       b.addEventListener('click', () => submitVerdict(m, b.dataset.verdict));
@@ -1362,24 +1360,20 @@
     // HTML-escaping en \n -> <br>.
     const isHtml = /^\s*<[a-z][\s\S]*>/i.test(text);
     let html = isHtml ? text : escapeHtml(text).replaceAll('\n', '<br>');
-    // QR-afbeeldingen krijgen de sessie en taal mee zodat een echte scan
-    // met de telefoon herleidbaar is naar deze trainingssessie én de
-    // lespagina in de juiste taal verschijnt (zie /qr-img en /qr).
+    // QR-afbeeldingen krijgen de sessie mee zodat een echte scan met de
+    // telefoon herleidbaar is naar deze trainingssessie (zie /qr-img).
     html = html.replaceAll(/src="\/qr-img\/(\w+)"/g, (_m, tag) =>
-      'src="/qr-img/' + tag + '?s=' + encodeURIComponent(getSessionId()) +
-      '&l=' + encodeURIComponent(currentLang) + '"');
+      'src="/qr-img/' + tag + '?s=' + encodeURIComponent(getSessionId()) + '"');
     html = html.replaceAll(/\{\{link:(\d+)\}\}/g, (_m, n) => {
       const idx = Number.parseInt(n, 10);
       const link = links[idx];
       if (!link) return '';
       const label = escapeHtml(link.label || 'link');
-      // We tonen de bestemmings-URL bewust NIET inline in de mail. Net als in
-      // een echte mailclient ontdekt de gebruiker waar de link heen gaat door
-      // te hoveren (tooltip) of erop te klikken (de link-modal toont het doel).
-      // Zo blijft de oefening realistisch: zelf controleren, niet voorgekauwd.
+      const url = escapeHtml(link.real_url || '');
       return '<a href="#" class="ol-link" data-link-idx="' + idx + '" ' +
              'title="' + escapeHtml(t('sim.reader.linkTo', { url: link.real_url || '' })) + '">' +
-             '<span class="ol-link-label">' + label + '</span></a>';
+             '<span class="ol-link-label">' + label + '</span>' +
+             ' <span class="ol-link-url" aria-hidden="true">' + url + '</span></a>';
     });
     return html;
   }
@@ -1409,12 +1403,22 @@
     const real = parts.pop();
     const exec = ['exe', 'scr', 'bat', 'com', 'cmd', 'js', 'jar', 'msi'];
     const shown = (exec.includes(real) && parts.length) ? parts.pop() : real;
-    if (shown === 'pdf') return '📕';
-    if (['doc', 'docx'].includes(shown)) return '📘';
-    if (['xls', 'xlsx', 'csv'].includes(shown)) return '📗';
-    if (['ppt', 'pptx'].includes(shown)) return '📙';
-    if (['zip', 'rar', '7z'].includes(shown)) return '🗜️';
-    return '📄';
+
+    let color = '#6b7280', label = (shown || 'bin').toUpperCase().slice(0, 4);
+    if (shown === 'pdf')                             { color = '#e53e3e'; label = 'PDF'; }
+    else if (['doc', 'docx'].includes(shown))        { color = '#2b5fd8'; label = 'DOC'; }
+    else if (['xls', 'xlsx', 'csv'].includes(shown)) { color = '#276749'; label = 'XLS'; }
+    else if (['ppt', 'pptx'].includes(shown))        { color = '#c05621'; label = 'PPT'; }
+    else if (['zip', 'rar', '7z'].includes(shown))   { color = '#d69e2e'; label = 'ZIP'; }
+    else if (['jpg','jpeg','png','gif','webp'].includes(shown)) { color = '#6b46c1'; label = 'IMG'; }
+
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 40" width="28" height="35" aria-hidden="true">'
+      + '<path d="M4 0h17l7 8v32H4z" fill="#fff" stroke="#d1d5db" stroke-width="1.5"/>'
+      + '<path d="M21 0l7 8h-7z" fill="#e5e7eb" stroke="#d1d5db" stroke-width="1.5"/>'
+      + '<rect x="4" y="24" width="24" height="12" rx="2" fill="' + color + '"/>'
+      + '<text x="16" y="34" text-anchor="middle" font-family="system-ui,sans-serif"'
+      + ' font-size="7" font-weight="700" fill="#fff">' + label + '</text>'
+      + '</svg>';
   }
 
   function renderAttachments(m) {
@@ -1480,22 +1484,11 @@
           verdict,
           difficulty: currentDifficulty,
           clicked_link: interactions.clicked_link,
-          // De server weigert met 401 als onze enterprise-sessie
-          // ondertussen verlopen is — zo gaat geen voortgang verloren.
-          enterprise: !!enterpriseConfig,
+          revealed_sender: interactions.revealed_sender,
         }),
       });
-    } catch (err) {
+    } catch (_) {
       activeButtons.forEach((b) => b.disabled = false);
-      if (err && err.status === 401 && enterpriseConfig) {
-        showModal({
-          title: t('sim.error.title'),
-          bodyHtml: '<p>' + escapeHtml(t('sim.error.sessionExpired')) + '</p>',
-          actions: [{ label: t('sim.error.relogin'), primary: true,
-                      onClick: () => { window.location.href = '/'; } }],
-        });
-        return;
-      }
       showModal({
         title: t('sim.error.title'),
         bodyHtml: '<p>' + escapeHtml(t('sim.error.save')) + '</p>',
@@ -1592,24 +1585,6 @@
       '</div>'
     ) : '';
 
-    // Hoe vaak klikte de gebruiker op een verdachte link in een phishing-mail?
-    const clickedCount = simState.messages.filter((m) => {
-      const j = simState.judgments[m.id];
-      return j && j.is_phishing && simState.interactions[m.id]?.clicked_link;
-    }).length;
-    const clickedHtml = clickedCount > 0
-      ? '<div class="final-qr-scanned">⚠️ ' + escapeHtml(t('sim.final.clickedLinks', { count: clickedCount })) + '</div>'
-      : '';
-
-    // Apart: hoe vaak opende de gebruiker een gevaarlijke bijlage?
-    const openedCount = simState.messages.filter((m) => {
-      const j = simState.judgments[m.id];
-      return j && j.is_phishing && simState.interactions[m.id]?.opened_attachment;
-    }).length;
-    const openedHtml = openedCount > 0
-      ? '<div class="final-qr-scanned">⚠️ ' + escapeHtml(t('sim.final.openedAttachment', { count: openedCount })) + '</div>'
-      : '';
-
     const missedHtml = missedPhish.length > 0 ? (
       '<div class="final-missed">' +
         '<p class="final-missed-h">' + escapeHtml(t('sim.final.insight.missed')) + '</p>' +
@@ -1627,8 +1602,6 @@
       '<p class="big-text">' + t('sim.final.score', { correct, total, pct }) + '</p>' +
       '<p>' + escapeHtml(advies) + '</p>' +
       breakdownHtml +
-      clickedHtml +
-      openedHtml +
       '<div id="final-qr-warning"></div>' +
       missedHtml +
       '<div class="actions">' +
@@ -1643,10 +1616,10 @@
       result.hidden = true;
       if (currentDevice === 'desktop') {
         showSimPhase('inbox');
-        startSimulator({ fresh: true });
+        startSimulator();
       } else {
         showSimPhase('mobile');
-        startMobileSimulator({ fresh: true });
+        startMobileSimulator();
       }
     });
     result.scrollIntoView({ behavior: 'smooth', block: 'start' });
