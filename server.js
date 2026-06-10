@@ -29,6 +29,15 @@ const BASE_HOST = (process.env.BASE_HOST || '')
   .toLowerCase().replace(/^https?:\/\//, '').replace(/\/$/, '');
 
 app.disable('x-powered-by');
+
+// Render (en vergelijkbare hosts) zetten één reverse proxy vóór de app en
+// sturen het echte client-IP mee in X-Forwarded-For. Zonder trust proxy
+// ziet Express alleen het proxy-IP: rate limiting zou dan alle bezoekers
+// als één gebruiker tellen (en express-rate-limit weigert dat terecht),
+// en secure cookies zouden niet werken omdat req.secure false blijft.
+// Waarde 1 = vertrouw precies één proxy-hop, niet willekeurige headers.
+app.set('trust proxy', 1);
+
 app.use(express.json({ limit: '64kb' }));
 
 // In productie is een echte SESSION_SECRET verplicht — met de hardcoded
