@@ -129,7 +129,8 @@ app.use('/api', apiRouter);
 // De oefenmails tonen <img src="/qr-img/:tag">. We genereren de QR per sessie
 // zodat een scan met de telefoon herleidbaar is naar de trainingssessie.
 const QRCode = require('qrcode');
-const QR_TAGS = new Set(['mfa', 'tikkie']);
+const QR_TAGS = new Set(['mfa', 'tikkie', 'paypal', 'payconiq']);
+const QR_LANGS = new Set(['nl', 'en', 'fr', 'de']);
 
 function qrSessionId(req) {
   // Enterprise: sessiecookie gaat mee met het <img>-request.
@@ -139,12 +140,20 @@ function qrSessionId(req) {
   return /^[a-zA-Z0-9_-]{8,64}$/.test(s) ? s : null;
 }
 
+// Basistaal van de oefening (nl-BE → nl, fr-BE → fr) voor de lespagina.
+function qrLang(raw) {
+  const base = String(raw || '').split('-')[0];
+  return QR_LANGS.has(base) ? base : 'nl';
+}
+
 app.get('/qr-img/:tag', async (req, res) => {
   const tag = req.params.tag;
   if (!QR_TAGS.has(tag)) return res.status(404).end();
   const sid = qrSessionId(req);
+  const lang = qrLang(req.query.l);
   const base = CANONICAL || `https://${req.get('host')}`;
-  const target = base + '/qr?t=' + tag + (sid ? '&s=' + encodeURIComponent(sid) : '');
+  const target = base + '/qr?t=' + tag + '&l=' + lang
+    + (sid ? '&s=' + encodeURIComponent(sid) : '');
   try {
     const svg = await QRCode.toString(target, { type: 'svg', errorCorrectionLevel: 'M', margin: 0 });
     res.set('Cache-Control', 'no-store').type('image/svg+xml').send(svg);
@@ -153,6 +162,58 @@ app.get('/qr-img/:tag', async (req, res) => {
     res.status(500).end();
   }
 });
+
+// Teksten van de QR-lespagina per taal.
+const QR_PAGE_I18N = {
+  nl: {
+    title: 'U scande een QR-code uit een verdachte e-mail',
+    h1: 'U scande zojuist een QR-code uit een verdachte e-mail',
+    warnStrong: 'Dit was een oefening.',
+    warnRest: 'In een echte aanval had hier een nep-betaalpagina of nep-inlogpagina gestaan die uw gegevens steelt.',
+    body: 'Een QR-code in een e-mail is als een link die u niet kunt lezen: u ziet pas waar hij naartoe gaat als het te laat is. E-mailfilters kunnen er ook niet in kijken — daarom gebruiken oplichters ze steeds vaker.',
+    remember: 'Onthoud:',
+    li1: 'Scan nooit een QR-code uit een onverwachte e-mail',
+    li2: 'Verwacht u echt iets? Open dan zelf de app of website',
+    li3: 'Echte organisaties dwingen u nooit via een QR-code in te loggen of te betalen',
+    btn: 'Naar de phishing-training →',
+  },
+  en: {
+    title: 'You scanned a QR code from a suspicious email',
+    h1: 'You just scanned a QR code from a suspicious email',
+    warnStrong: 'This was an exercise.',
+    warnRest: 'In a real attack, this would have been a fake payment or login page stealing your details.',
+    body: 'A QR code in an email is a link you cannot read: you only see where it leads when it is too late. Email filters cannot look inside it either — which is why scammers use them more and more.',
+    remember: 'Remember:',
+    li1: 'Never scan a QR code from an unexpected email',
+    li2: 'Expecting something real? Open the app or website yourself',
+    li3: 'Real organisations never force you to log in or pay via a QR code',
+    btn: 'To the phishing training →',
+  },
+  fr: {
+    title: 'Vous avez scanné un QR code d’un e-mail suspect',
+    h1: 'Vous venez de scanner un QR code provenant d’un e-mail suspect',
+    warnStrong: 'C’était un exercice.',
+    warnRest: 'Dans une vraie attaque, vous seriez arrivé(e) sur une fausse page de paiement ou de connexion qui vole vos données.',
+    body: 'Un QR code dans un e-mail est un lien que vous ne pouvez pas lire : vous ne voyez où il mène que lorsqu’il est trop tard. Les filtres e-mail ne peuvent pas non plus l’inspecter — c’est pourquoi les escrocs les utilisent de plus en plus.',
+    remember: 'À retenir :',
+    li1: 'Ne scannez jamais un QR code d’un e-mail inattendu',
+    li2: 'Vous attendez vraiment quelque chose ? Ouvrez vous-même l’application ou le site',
+    li3: 'Les vraies organisations ne vous forcent jamais à vous connecter ou payer via un QR code',
+    btn: 'Vers la formation anti-phishing →',
+  },
+  de: {
+    title: 'Sie haben einen QR-Code aus einer verdächtigen E-Mail gescannt',
+    h1: 'Sie haben soeben einen QR-Code aus einer verdächtigen E-Mail gescannt',
+    warnStrong: 'Dies war eine Übung.',
+    warnRest: 'Bei einem echten Angriff wäre hier eine gefälschte Zahlungs- oder Anmeldeseite gewesen, die Ihre Daten stiehlt.',
+    body: 'Ein QR-Code in einer E-Mail ist ein Link, den Sie nicht lesen können: Sie sehen erst, wohin er führt, wenn es zu spät ist. Auch E-Mail-Filter können nicht hineinschauen — deshalb nutzen Betrüger sie immer häufiger.',
+    remember: 'Merken Sie sich:',
+    li1: 'Scannen Sie nie einen QR-Code aus einer unerwarteten E-Mail',
+    li2: 'Erwarten Sie wirklich etwas? Öffnen Sie selbst die App oder Website',
+    li3: 'Echte Organisationen zwingen Sie nie, sich über einen QR-Code anzumelden oder zu zahlen',
+    btn: 'Zum Phishing-Training →',
+  },
+};
 
 // Leermoment voor wie de QR-code uit de oefenmail écht scant.
 // Mobiel-eerst: deze pagina wordt vrijwel altijd op een telefoon geopend.
@@ -167,14 +228,16 @@ app.get('/qr', (req, res) => {
       [sid, tag]
     ).catch((err) => console.error('[qr] scan niet opgeslagen:', err.message));
   }
+  const lang = qrLang(req.query.l);
+  const T = QR_PAGE_I18N[lang];
   res.set('Cache-Control', 'no-store');
   res.type('html').send(`<!doctype html>
-<html lang="nl">
+<html lang="${lang}">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex" />
-  <title>U scande een QR-code uit een verdachte e-mail</title>
+  <title>${T.title}</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: system-ui, sans-serif; background: #f4f6f9; color: #1a2332;
@@ -190,27 +253,21 @@ app.get('/qr', (req, res) => {
     ul { padding-left: 1.3rem; line-height: 1.7; margin-bottom: 1rem; }
     a.btn { display: block; text-align: center; background: #2563eb; color: #fff;
             text-decoration: none; padding: .8rem; border-radius: 8px; font-weight: 600; }
-    .en { color: #6b7280; font-size: .85rem; margin-top: 1rem; }
   </style>
 </head>
 <body>
   <div class="card">
     <div class="emoji">🎣</div>
-    <h1>U scande zojuist een QR-code uit een verdachte e-mail</h1>
-    <div class="warn"><strong>Dit was een oefening.</strong> In een echte aanval had hier
-    een nep-betaalpagina of nep-inlogpagina gestaan die uw gegevens steelt.</div>
-    <p>Een QR-code in een e-mail is als een link die u niet kunt lezen:
-    u ziet pas waar hij naartoe gaat als het te laat is. E-mailfilters kunnen
-    er ook niet in kijken — daarom gebruiken oplichters ze steeds vaker.</p>
-    <p><strong>Onthoud:</strong></p>
+    <h1>${T.h1}</h1>
+    <div class="warn"><strong>${T.warnStrong}</strong> ${T.warnRest}</div>
+    <p>${T.body}</p>
+    <p><strong>${T.remember}</strong></p>
     <ul>
-      <li>Scan nooit een QR-code uit een onverwachte e-mail</li>
-      <li>Verwacht u echt iets? Open dan zelf de app of website</li>
-      <li>Echte organisaties dwingen u nooit via een QR-code in te loggen of te betalen</li>
+      <li>${T.li1}</li>
+      <li>${T.li2}</li>
+      <li>${T.li3}</li>
     </ul>
-    <a class="btn" href="${CANONICAL || '/'}">Naar de gratis phishing-training →</a>
-    <p class="en">You scanned a QR code from a suspicious email — this was a training
-    exercise. Never scan QR codes from unexpected emails.</p>
+    <a class="btn" href="${CANONICAL || '/'}">${T.btn}</a>
   </div>
 </body>
 </html>`);

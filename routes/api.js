@@ -158,13 +158,20 @@ router.get('/inbox', async (req, res, next) => {
     const audience = pickAudience(req);
     const difficulty = pickDifficulty(req);
     const result = await withFallback(locale, (loc) => db.query(
-      `SELECT id, sender_name, sender_address, received_label, subject, preview
+      `SELECT id, sender_name, sender_address, received_label, subject, preview,
+              attachments
          FROM inbox_messages
         WHERE active = TRUE AND locale = $1 AND audience IN ($2, 'both') AND difficulty = $3
         ORDER BY sort_order, id`,
       [loc, audience, difficulty]
     ));
-    res.json(result.rows);
+    // In de lijst alleen tonen DÁT er een bijlage is (voor de paperclip).
+    // Of die gevaarlijk is en de waarschuwing horen pas bij het openen —
+    // net zoals we is_phishing/uitleg hier ook niet meegeven.
+    const rows = result.rows.map((r) => Object.assign({}, r, {
+      attachments: (r.attachments || []).map((a) => ({ filename: a.filename, size: a.size })),
+    }));
+    res.json(rows);
   } catch (err) { next(err); }
 });
 
@@ -180,7 +187,7 @@ router.get('/print', async (req, res, next) => {
     const difficulty = pickDifficulty(req);
     const result = await withFallback(locale, (loc) => db.query(
       `SELECT id, sender_name, sender_address, sender_note, received_label,
-              subject, body, links, is_phishing, red_flags, green_flags,
+              subject, body, links, attachments, is_phishing, red_flags, green_flags,
               explanation, sort_order
          FROM inbox_messages
         WHERE active = TRUE AND locale = $1 AND audience IN ($2, 'both') AND difficulty = $3
@@ -212,7 +219,7 @@ router.post('/inbox/:id/judge', async (req, res, next) => {
     const id = Number.parseInt(req.params.id, 10);
     if (!Number.isInteger(id)) return res.status(400).json({ error: 'ongeldig id' });
 
-    const { session_id: bodySessionId, verdict, difficulty: rawDiff, clicked_link = false, revealed_sender = false } = req.body || {};
+    const { session_id: bodySessionId, verdict, difficulty: rawDiff, clicked_link = false, revealed_sender = false, enterprise = false } = req.body || {};
     if (verdict !== 'trust' && verdict !== 'phish') {
       return res.status(400).json({ error: 'verdict moet "trust" of "phish" zijn' });
     }
@@ -220,6 +227,14 @@ router.post('/inbox/:id/judge', async (req, res, next) => {
 
     // Enterprise session overrides client-supplied session_id
     const orgUserId = req.session?.enterpriseOrgUserId || null;
+
+    // De client dénkt enterprise te zijn maar de sessie is verlopen:
+    // expliciet 401 — anders wordt het oordeel anoniem opgeslagen en
+    // verliest de medewerker zijn voortgang zonder het te merken.
+    if (enterprise && !orgUserId) {
+      return res.status(401).json({ error: 'sessie verlopen', requiresReauth: true });
+    }
+
     const session_id = orgUserId
       ? req.session.enterpriseSessionId
       : bodySessionId;

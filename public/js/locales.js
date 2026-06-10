@@ -153,6 +153,11 @@ window.VO_LOCALES = {
     'sim.ol.empty': 'Selecteer een bericht links om te beginnen.',
     'sim.ol.loading': 'Bezig met laden…',
     'sim.ol.loadError': 'Kon de inbox niet laden.',
+    'sim.ol.noMessages': 'Geen oefenberichten beschikbaar voor deze instellingen. Kies een andere taal of moeilijkheidsgraad.',
+    'sim.error.sessionExpired': 'Uw sessie is verlopen. Log opnieuw in om verder te gaan — uw voortgang is bewaard.',
+    'sim.error.relogin': 'Opnieuw inloggen',
+    'sim.final.clickedLinks': 'U klikte in {count} phishing-mail(s) op de verdachte link. In het echt was dat het moment geweest waarop uw gegevens gestolen werden.',
+    'sim.final.openedAttachment': 'U opende in {count} phishing-mail(s) de gevaarlijke bijlage. In het echt was dat het moment geweest waarop schadelijke software op uw computer kwam.',
     'sim.ol.msgLoadError': 'Bericht kon niet geladen worden.',
     'sim.ol.to': 'Aan: u',
 
@@ -167,6 +172,12 @@ window.VO_LOCALES = {
     'sim.link.goes': 'Deze link gaat naar:',
     'sim.link.dontClick': '<strong>Klik niet op deze link.</strong> Sluit dit bericht en meld het als phishing.',
     'sim.link.tip': 'Tip: ook bij bekende organisaties is het veiliger om zelf naar hun website te gaan dan op links in e‑mail te klikken.',
+    'sim.attach.label': '{count} bijlage(n)',
+    'sim.attach.titleSafe': 'Bijlage openen?',
+    'sim.attach.titleBad': '⚠️ Let op — verdachte bijlage',
+    'sim.attach.opens': 'Deze bijlage is:',
+    'sim.attach.dontOpen': '<strong>Open deze bijlage niet.</strong> Sluit dit bericht en meld het als phishing.',
+    'sim.attach.tip': 'Tip: open alleen bijlagen die u verwacht. Let op dubbele extensies zoals .pdf.exe — dat is een programma, geen document.',
 
     'sim.verdict.correct': '✅ Goed beoordeeld!',
     'sim.verdict.wrong': '❌ Dat klopt niet.',
@@ -231,6 +242,7 @@ window.VO_LOCALES = {
     'hulp.print': 'Tips afdrukken 🖨️',
 
     'footer.tagline': 'Veilig Online · Een gratis training om phishing te herkennen.',
+    'footer.tagline.enterprise': 'Veilig Online · Phishing-training voor Kestrel.',
     'footer.contact': 'Vragen over deze training? <a href="mailto:wouter.lustig@outlook.com">Wouter Lustig</a>',
 
     'common.back': '← Terug',
@@ -387,6 +399,11 @@ window.VO_LOCALES = {
     'sim.ol.empty': 'Selecteer links een bericht om te beginnen.',
     'sim.ol.loading': 'Bezig met laden…',
     'sim.ol.loadError': 'Kon het postvak niet laden.',
+    'sim.ol.noMessages': 'Geen oefenberichten beschikbaar voor deze instellingen. Kies een andere taal of moeilijkheidsgraad.',
+    'sim.error.sessionExpired': 'Uw sessie is verlopen. Log opnieuw in om verder te gaan — uw voortgang is bewaard.',
+    'sim.error.relogin': 'Opnieuw inloggen',
+    'sim.final.clickedLinks': 'U klikte in {count} phishing-mail(s) op de verdachte link. In het echt was dat het moment geweest waarop uw gegevens gestolen werden.',
+    'sim.final.openedAttachment': 'U opende in {count} phishing-mail(s) de gevaarlijke bijlage. In het echt was dat het moment geweest waarop schadelijke software op uw computer kwam.',
     'sim.ol.msgLoadError': 'Bericht kon niet geladen worden.',
     'sim.ol.to': 'Aan: u',
 
@@ -401,6 +418,12 @@ window.VO_LOCALES = {
     'sim.link.goes': 'Deze link gaat naar:',
     'sim.link.dontClick': '<strong>Klik niet op deze link.</strong> Sluit dit bericht en meld het als phishing.',
     'sim.link.tip': 'Tip: ook bij bekende organisaties is het veiliger om zelf naar hun website te gaan dan op links in e‑mail te klikken.',
+    'sim.attach.label': '{count} bijlage(n)',
+    'sim.attach.titleSafe': 'Bijlage openen?',
+    'sim.attach.titleBad': '⚠️ Let op — verdachte bijlage',
+    'sim.attach.opens': 'Deze bijlage is:',
+    'sim.attach.dontOpen': '<strong>Open deze bijlage niet.</strong> Sluit dit bericht en meld het als phishing.',
+    'sim.attach.tip': 'Tip: open alleen bijlagen die u verwacht. Let op dubbele extensies zoals .pdf.exe — dat is een programma, geen document.',
 
     'sim.verdict.correct': '✅ Goed beoordeeld!',
     'sim.verdict.wrong': '❌ Dat klopt niet.',
@@ -465,6 +488,7 @@ window.VO_LOCALES = {
     'hulp.print': 'Tips afdrukken 🖨️',
 
     'footer.tagline': 'Veilig Online · Een gratis opleiding om phishing te herkennen.',
+    'footer.tagline.enterprise': 'Veilig Online · Phishing-training voor Kestrel.',
     'footer.contact': 'Vragen over deze training? <a href="mailto:wouter.lustig@outlook.com">Wouter Lustig</a>',
 
     'common.back': '← Terug',
@@ -621,6 +645,11 @@ window.VO_LOCALES = {
     'sim.ol.empty': 'Select a message on the left to begin.',
     'sim.ol.loading': 'Loading…',
     'sim.ol.loadError': 'Could not load the inbox.',
+    'sim.ol.noMessages': 'No practice messages available for these settings. Try another language or difficulty.',
+    'sim.error.sessionExpired': 'Your session has expired. Log in again to continue — your progress has been saved.',
+    'sim.error.relogin': 'Log in again',
+    'sim.final.clickedLinks': 'You clicked the suspicious link in {count} phishing email(s). In real life, that is the moment your details would have been stolen.',
+    'sim.final.openedAttachment': 'You opened the dangerous attachment in {count} phishing email(s). In real life, that is the moment malicious software would have been installed on your computer.',
     'sim.ol.msgLoadError': 'The message could not be loaded.',
     'sim.ol.to': 'To: you',
 
@@ -635,6 +664,12 @@ window.VO_LOCALES = {
     'sim.link.goes': 'This link goes to:',
     'sim.link.dontClick': '<strong>Do not click this link.</strong> Close this message and report it as phishing.',
     'sim.link.tip': 'Tip: even for well-known organisations, it’s safer to open their website yourself than to click links in email.',
+    'sim.attach.label': '{count} attachment(s)',
+    'sim.attach.titleSafe': 'Open attachment?',
+    'sim.attach.titleBad': '⚠️ Caution — suspicious attachment',
+    'sim.attach.opens': 'This attachment is:',
+    'sim.attach.dontOpen': '<strong>Do not open this attachment.</strong> Close this message and report it as phishing.',
+    'sim.attach.tip': 'Tip: only open attachments you are expecting. Watch for double extensions like .pdf.exe — that is a program, not a document.',
 
     'sim.verdict.correct': '✅ Correct!',
     'sim.verdict.wrong': '❌ Not quite right.',
@@ -699,6 +734,7 @@ window.VO_LOCALES = {
     'hulp.print': 'Print tips 🖨️',
 
     'footer.tagline': 'Safe Online · A free training to help you spot phishing.',
+    'footer.tagline.enterprise': 'Veilig Online · Phishing training for Kestrel.',
     'footer.contact': 'Questions about this training? <a href="mailto:wouter.lustig@outlook.com">Wouter Lustig</a>',
 
     'common.back': '← Back',
@@ -855,6 +891,11 @@ window.VO_LOCALES = {
     'sim.ol.empty': 'Sélectionnez un message à gauche pour commencer.',
     'sim.ol.loading': 'Chargement…',
     'sim.ol.loadError': 'Impossible de charger la boîte de réception.',
+    'sim.ol.noMessages': 'Aucun message d\'exercice disponible pour ces paramètres. Essayez une autre langue ou un autre niveau.',
+    'sim.error.sessionExpired': 'Votre session a expiré. Reconnectez-vous pour continuer — votre progression est sauvegardée.',
+    'sim.error.relogin': 'Se reconnecter',
+    'sim.final.clickedLinks': 'Vous avez cliqué sur le lien suspect dans {count} e-mail(s) de phishing. En réalité, c\'est à ce moment-là que vos données auraient été volées.',
+    'sim.final.openedAttachment': 'Vous avez ouvert la pièce jointe dangereuse dans {count} e-mail(s) de phishing. En réalité, c’est à ce moment-là qu’un logiciel malveillant se serait installé sur votre ordinateur.',
     'sim.ol.msgLoadError': 'Le message n’a pas pu être chargé.',
     'sim.ol.to': 'À : vous',
 
@@ -869,6 +910,12 @@ window.VO_LOCALES = {
     'sim.link.goes': 'Ce lien mène à :',
     'sim.link.dontClick': '<strong>Ne cliquez pas sur ce lien.</strong> Fermez ce message et signalez‑le comme hameçonnage.',
     'sim.link.tip': 'Astuce : même pour des organisations connues, il est plus sûr d’aller vous‑même sur leur site que de cliquer sur des liens dans un e‑mail.',
+    'sim.attach.label': '{count} pièce(s) jointe(s)',
+    'sim.attach.titleSafe': 'Ouvrir la pièce jointe ?',
+    'sim.attach.titleBad': '⚠️ Attention — pièce jointe suspecte',
+    'sim.attach.opens': 'Cette pièce jointe est :',
+    'sim.attach.dontOpen': '<strong>N’ouvrez pas cette pièce jointe.</strong> Fermez ce message et signalez-le comme hameçonnage.',
+    'sim.attach.tip': 'Astuce : n’ouvrez que les pièces jointes que vous attendez. Méfiez-vous des doubles extensions comme .pdf.exe — c’est un programme, pas un document.',
 
     'sim.verdict.correct': '✅ Bien vu !',
     'sim.verdict.wrong': '❌ Ce n’est pas correct.',
@@ -934,6 +981,7 @@ window.VO_LOCALES = {
     'hulp.print': 'Imprimer les conseils 🖨️',
 
     'footer.tagline': 'Sécurité en ligne · Une formation gratuite pour reconnaître le hameçonnage.',
+    'footer.tagline.enterprise': 'Veilig Online · Formation anti-phishing pour Kestrel.',
     'footer.contact': 'Des questions sur cette formation ? <a href="mailto:wouter.lustig@outlook.com">Wouter Lustig</a>',
 
     'common.back': '← Retour',
@@ -1090,6 +1138,11 @@ window.VO_LOCALES = {
     'sim.ol.empty': 'Sélectionnez un message à gauche pour commencer.',
     'sim.ol.loading': 'Chargement…',
     'sim.ol.loadError': 'Impossible de charger la boîte de réception.',
+    'sim.ol.noMessages': 'Aucun message d\'exercice disponible pour ces paramètres. Essayez une autre langue ou un autre niveau.',
+    'sim.error.sessionExpired': 'Votre session a expiré. Reconnectez-vous pour continuer — votre progression est sauvegardée.',
+    'sim.error.relogin': 'Se reconnecter',
+    'sim.final.clickedLinks': 'Vous avez cliqué sur le lien suspect dans {count} e-mail(s) de phishing. En réalité, c\'est à ce moment-là que vos données auraient été volées.',
+    'sim.final.openedAttachment': 'Vous avez ouvert la pièce jointe dangereuse dans {count} e-mail(s) de phishing. En réalité, c’est à ce moment-là qu’un logiciel malveillant se serait installé sur votre ordinateur.',
     'sim.ol.msgLoadError': 'Le message n’a pas pu être chargé.',
     'sim.ol.to': 'À : vous',
 
@@ -1104,6 +1157,12 @@ window.VO_LOCALES = {
     'sim.link.goes': 'Ce lien mène à :',
     'sim.link.dontClick': '<strong>Ne cliquez pas sur ce lien.</strong> Fermez ce message et signalez‑le comme hameçonnage.',
     'sim.link.tip': 'Astuce : même pour des organisations connues, il est plus sûr d’aller vous‑même sur leur site que de cliquer sur des liens dans un e‑mail.',
+    'sim.attach.label': '{count} pièce(s) jointe(s)',
+    'sim.attach.titleSafe': 'Ouvrir la pièce jointe ?',
+    'sim.attach.titleBad': '⚠️ Attention — pièce jointe suspecte',
+    'sim.attach.opens': 'Cette pièce jointe est :',
+    'sim.attach.dontOpen': '<strong>N’ouvrez pas cette pièce jointe.</strong> Fermez ce message et signalez-le comme hameçonnage.',
+    'sim.attach.tip': 'Astuce : n’ouvrez que les pièces jointes que vous attendez. Méfiez-vous des doubles extensions comme .pdf.exe — c’est un programme, pas un document.',
 
     'sim.verdict.correct': '✅ Bien vu !',
     'sim.verdict.wrong': '❌ Ce n’est pas correct.',
@@ -1169,6 +1228,7 @@ window.VO_LOCALES = {
     'hulp.print': 'Imprimer les conseils 🖨️',
 
     'footer.tagline': 'Sécurité en ligne · Une formation gratuite pour reconnaître le hameçonnage.',
+    'footer.tagline.enterprise': 'Veilig Online · Formation anti-phishing pour Kestrel.',
     'footer.contact': 'Des questions sur cette formation ? <a href="mailto:wouter.lustig@outlook.com">Wouter Lustig</a>',
 
     'common.back': '← Retour',
@@ -1325,6 +1385,11 @@ window.VO_LOCALES = {
     'sim.ol.empty': 'Wählen Sie links eine Nachricht aus, um zu beginnen.',
     'sim.ol.loading': 'Wird geladen…',
     'sim.ol.loadError': 'Der Posteingang konnte nicht geladen werden.',
+    'sim.ol.noMessages': 'Keine Übungsnachrichten für diese Einstellungen verfügbar. Wählen Sie eine andere Sprache oder Schwierigkeit.',
+    'sim.error.sessionExpired': 'Ihre Sitzung ist abgelaufen. Melden Sie sich erneut an — Ihr Fortschritt wurde gespeichert.',
+    'sim.error.relogin': 'Erneut anmelden',
+    'sim.final.clickedLinks': 'Sie haben in {count} Phishing-E-Mail(s) auf den verdächtigen Link geklickt. Im Ernstfall wären genau dann Ihre Daten gestohlen worden.',
+    'sim.final.openedAttachment': 'Sie haben in {count} Phishing-E-Mail(s) den gefährlichen Anhang geöffnet. Im Ernstfall wäre genau dann Schadsoftware auf Ihrem Computer installiert worden.',
     'sim.ol.msgLoadError': 'Die Nachricht konnte nicht geladen werden.',
     'sim.ol.to': 'An: Sie',
 
@@ -1339,6 +1404,12 @@ window.VO_LOCALES = {
     'sim.link.goes': 'Dieser Link führt zu:',
     'sim.link.dontClick': '<strong>Klicken Sie nicht auf diesen Link.</strong> Schließen Sie diese Nachricht und melden Sie sie als Phishing.',
     'sim.link.tip': 'Tipp: Auch bei bekannten Organisationen ist es sicherer, deren Website selbst aufzurufen, als in einer E‑Mail auf Links zu klicken.',
+    'sim.attach.label': '{count} Anhang/Anhänge',
+    'sim.attach.titleSafe': 'Anhang öffnen?',
+    'sim.attach.titleBad': '⚠️ Achtung — verdächtiger Anhang',
+    'sim.attach.opens': 'Dieser Anhang ist:',
+    'sim.attach.dontOpen': '<strong>Öffnen Sie diesen Anhang nicht.</strong> Schließen Sie diese Nachricht und melden Sie sie als Phishing.',
+    'sim.attach.tip': 'Tipp: Öffnen Sie nur Anhänge, die Sie erwarten. Achten Sie auf doppelte Endungen wie .pdf.exe — das ist ein Programm, kein Dokument.',
 
     'sim.verdict.correct': '✅ Richtig erkannt!',
     'sim.verdict.wrong': '❌ Das stimmt nicht.',
@@ -1403,6 +1474,7 @@ window.VO_LOCALES = {
     'hulp.print': 'Tipps drucken 🖨️',
 
     'footer.tagline': 'Sicher Online · Eine kostenlose Schulung, um Phishing zu erkennen.',
+    'footer.tagline.enterprise': 'Veilig Online · Phishing-Training für Kestrel.',
     'footer.contact': 'Fragen zu dieser Schulung? <a href="mailto:wouter.lustig@outlook.com">Wouter Lustig</a>',
 
     'common.back': '← Zurück',
