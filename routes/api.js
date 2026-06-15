@@ -84,15 +84,21 @@ router.get('/inbox', async (req, res, next) => {
     const audience = pickAudience(req);
     const difficulty = pickDifficulty(req);
     const channel = pickChannel(req);
-    const result = await withFallback(locale, (loc) => db.query(
+    const listQuery = (loc, diff) => db.query(
       `SELECT id, channel, category, sender_name, sender_address, received_label, subject, preview,
               attachments
          FROM inbox_messages
         WHERE active = TRUE AND locale = $1 AND audience IN ($2, 'both')
           AND difficulty = $3 AND channel = $4
         ORDER BY sort_order, id`,
-      [loc, audience, difficulty, channel]
-    ));
+      [loc, audience, diff, channel]
+    );
+    let result = await withFallback(locale, (loc) => listQuery(loc, difficulty));
+    // Niveau-fallback: heeft dit kanaal (nog) geen 'advanced'-berichten, val
+    // dan terug op 'normal' zodat de simulator nooit leeg is.
+    if (result.rowCount === 0 && difficulty !== 'normal') {
+      result = await withFallback(locale, (loc) => listQuery(loc, 'normal'));
+    }
     // In de lijst alleen tonen DÁT er een bijlage is (voor de paperclip).
     // Of die gevaarlijk is en de waarschuwing horen pas bij het openen —
     // net zoals we is_phishing/uitleg hier ook niet meegeven.
@@ -125,7 +131,7 @@ router.get('/print', async (req, res, next) => {
     const audience = pickAudience(req);
     const difficulty = pickDifficulty(req);
     const channel = pickChannel(req);
-    const result = await withFallback(locale, (loc) => db.query(
+    const printQuery = (loc, diff) => db.query(
       `SELECT id, channel, sender_name, sender_address, sender_note, received_label,
               subject, body, links, attachments, is_phishing, red_flags, green_flags,
               explanation, sort_order
@@ -133,8 +139,12 @@ router.get('/print', async (req, res, next) => {
         WHERE active = TRUE AND locale = $1 AND audience IN ($2, 'both')
           AND difficulty = $3 AND channel = $4
         ORDER BY sort_order, id`,
-      [loc, audience, difficulty, channel]
-    ));
+      [loc, audience, diff, channel]
+    );
+    let result = await withFallback(locale, (loc) => printQuery(loc, difficulty));
+    if (result.rowCount === 0 && difficulty !== 'normal') {
+      result = await withFallback(locale, (loc) => printQuery(loc, 'normal'));
+    }
     res.json(result.rows);
   } catch (err) { next(err); }
 });
