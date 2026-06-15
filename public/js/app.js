@@ -61,6 +61,14 @@
     document.body.classList.remove(
       'channel-email', 'channel-sms', 'channel-whatsapp', 'channel-phone');
     document.body.classList.add('channel-' + c);
+    document.querySelectorAll('#sim-channel-toggle [data-channel]').forEach((el) => {
+      el.classList.toggle('active', el.dataset.channel === c);
+    });
+  }
+  // sms/whatsapp delen de chat-skin in een telefoon-frame; e-mail gebruikt
+  // de bestaande desktop/mobiele mail-skins.
+  function isChatChannel() {
+    return currentChannel === 'sms' || currentChannel === 'whatsapp';
   }
 
   // -------- difficulty (normaal vs gevorderd) --------
@@ -100,10 +108,13 @@
     if (!sim || !sim.classList.contains('active')) return;
     const inboxPhase = document.getElementById('sim-phase-inbox');
     const mobilePhase = document.getElementById('sim-phase-mobile');
-    // restore: true — taal/doelgroep/niveau wisselen mag de voortgang
-    // niet wissen. Berichten van een andere taal hebben andere id's,
-    // dus oordelen blijven netjes per taal bewaard.
-    if (inboxPhase && !inboxPhase.hidden) {
+    const chatPhase = document.getElementById('sim-phase-chat');
+    // restore: true — taal/doelgroep/niveau/kanaal wisselen mag de voortgang
+    // niet wissen. Berichten van een andere taal/kanaal hebben andere id's,
+    // dus oordelen blijven netjes per combinatie bewaard.
+    if (chatPhase && !chatPhase.hidden) {
+      startChatSimulator({ restore: true }).catch((err) => console.error(err));
+    } else if (inboxPhase && !inboxPhase.hidden) {
       startSimulator({ restore: true });
     } else if (mobilePhase && !mobilePhase.hidden) {
       startMobileSimulator({ restore: true }).catch((err) => console.error(err));
@@ -350,9 +361,17 @@
       if (savedPage === 'simulator') {
         const saved = loadPersistedSimState();
         if (saved) {
+          // Kanaal herstellen zodat een reload de juiste skin (mail of chat)
+          // teruggeeft. setChannel() zet ook de body-klasse die de CSS stuurt.
+          if (saved.channel && SUPPORTED_CHANNELS.includes(saved.channel)) {
+            setChannel(saved.channel);
+          }
           setDevice(detectDevice());
           document.body.classList.add('sim-fullscreen');
-          if (currentDevice === 'desktop') {
+          if (isChatChannel()) {
+            showSimPhase('chat');
+            startChatSimulator({ restore: true }).catch((err) => console.error(err));
+          } else if (currentDevice === 'desktop') {
             showSimPhase('inbox');
             startSimulator({ restore: true }).catch((err) => console.error(err));
           } else {
@@ -382,6 +401,39 @@
     if (diffBtn && diffBtn.closest('#sim-difficulty-toggle')) {
       e.preventDefault();
       setDifficulty(diffBtn.dataset.difficulty);
+      return;
+    }
+    const chBtn = e.target.closest('[data-channel]');
+    if (chBtn && chBtn.closest('#sim-channel-toggle')) {
+      e.preventDefault();
+      const wasChat = isChatChannel();
+      setChannel(chBtn.dataset.channel);
+      // Midden in een sessie van kanaal wisselen: herstart de simulator in
+      // de juiste skin. restore:true zodat reeds-beoordeelde berichten van
+      // dit kanaal bewaard blijven (oordelen zijn per bericht-id gescheiden).
+      const sim = document.getElementById('simulator');
+      if (sim && sim.classList.contains('active') && !document.body.classList.contains('sim-fullscreen') === false) {
+        const inExercise = ['inbox', 'mobile', 'chat'].some((p) => {
+          const el = document.getElementById('sim-phase-' + p);
+          return el && !el.hidden;
+        });
+        if (inExercise) {
+          if (isChatChannel()) {
+            showSimPhase('chat');
+            startChatSimulator({ restore: true }).catch((err) => console.error(err));
+          } else {
+            setDevice(detectDevice());
+            if (currentDevice === 'desktop') {
+              showSimPhase('inbox');
+              startSimulator({ restore: true });
+            } else {
+              showSimPhase('mobile');
+              startMobileSimulator({ restore: true }).catch((err) => console.error(err));
+            }
+          }
+        }
+      }
+      void wasChat;
       return;
     }
     if (e.target.closest('#lang-switch')) {
@@ -615,6 +667,7 @@
     try {
       localStorage.setItem(SIM_STATE_KEY, JSON.stringify({
         device: currentDevice,
+        channel: currentChannel,
         audience: currentAudience,
         lang: currentLang,
         judgments: simState.judgments,
@@ -636,7 +689,7 @@
 
   // -------- Simulator fases (intro -> login -> inbox | mobile) --------
   function showSimPhase(name) {
-    ['intro', 'login', 'inbox', 'mobile'].forEach((p) => {
+    ['intro', 'login', 'inbox', 'mobile', 'chat'].forEach((p) => {
       const el = document.getElementById('sim-phase-' + p);
       if (el) el.hidden = (p !== name);
     });
@@ -739,7 +792,12 @@
       e.preventDefault();
       trackSimulatorStart();
       setDevice(detectDevice());
-      if (currentDevice === 'desktop') {
+      if (isChatChannel()) {
+        // sms/WhatsApp: geen mail-login, direct de chat-skin in het
+        // telefoon-frame (op elk apparaat).
+        showSimPhase('chat');
+        startChatSimulator().catch((err) => console.error(err));
+      } else if (currentDevice === 'desktop') {
         showSimPhase('login');
         runMicrosoftLoginAnimation().catch((err) => console.error(err));
       } else {
@@ -1352,6 +1410,206 @@
     }
   });
 
+  // ================================================================
+  // Chat-simulator (sms / WhatsApp = smishing).
+  // Eén telefoon-frame op elk apparaat (desktop én mobiel). Hergebruikt
+  // simState, /api/inbox (gefilterd op channel), renderBody (zodat
+  // {{link:0}} een tikbare link wordt → waarschuwingsmodal), submitVerdict
+  // en alle feedback-/eindscherm-logica. Alleen de skin verschilt:
+  //   .channel-sms      → grijze/blauwe sms-bubbels, afzender = nummer
+  //   .channel-whatsapp → groene koptekst, witte inkomende bubbels, avatar
+  // De body-klasse wordt door setChannel() gezet en stuurt de CSS.
+
+  async function startChatSimulator(opts) {
+    opts = opts || {};
+    const result = document.getElementById('sim-result');
+    if (result) result.hidden = true;
+    if (!opts.restore) clearPersistedSimState();
+    buildChatSkin();
+    const list = document.getElementById('chat-list-items');
+    if (list) list.innerHTML = '<li class="chat-list-loading"><em>' + escapeHtml(t('sim.ol.loading')) + '</em></li>';
+    try {
+      const messages = applyOrgDomain(await api('/inbox'));
+      const saved = opts.restore ? loadPersistedSimState() : null;
+      let judgments = (saved && saved.judgments) || {};
+      if (enterpriseConfig && !opts.fresh) {
+        try {
+          const progress = await api('/enterprise/progress');
+          if (progress.judgments) judgments = Object.assign({}, judgments, progress.judgments);
+        } catch (_) {}
+      }
+      simState = {
+        messages,
+        judgments,
+        interactions: (saved && saved.interactions) || {},
+        current: (saved && saved.current) || null,
+      };
+      renderChatList();
+      updateProgress();
+      if (messages.length > 0) {
+        let openId = simState.current;
+        if (!openId || !messages.find((m) => m.id === openId)) {
+          const next = messages.find((m) => !simState.judgments[m.id]) || messages[0];
+          openId = next.id;
+        }
+        openChatMessage(openId);
+      } else if (list) {
+        list.innerHTML = '<li class="chat-list-loading"><em>' + escapeHtml(t('sim.ol.noMessages')) + '</em></li>';
+      }
+    } catch (err) {
+      if (list) list.innerHTML = '<li class="chat-list-loading" style="color:#b3261e">' + escapeHtml(t('sim.ol.loadError')) + '</li>';
+    }
+  }
+
+  // Bouwt de chat-app: een koptekst (titel = "Berichten" voor sms,
+  // "WhatsApp" voor WhatsApp), een gesprekkenlijst en een leeg
+  // thread-paneel dat openChatMessage() vult.
+  function buildChatSkin() {
+    const app = document.getElementById('chat-app');
+    if (!app) return;
+    const isWa = currentChannel === 'whatsapp';
+    app.className = 'chat-app ' + (isWa ? 'chat-whatsapp' : 'chat-sms');
+    app.innerHTML =
+      '<header class="chat-topbar">' +
+        '<h1 class="chat-app-title">' + escapeHtml(isWa ? t('sim.chat.whatsapp.title') : t('sim.chat.sms.title')) + '</h1>' +
+      '</header>' +
+      '<ol class="chat-list" id="chat-list-items"></ol>' +
+      '<div class="chat-thread" id="chat-thread" hidden></div>';
+  }
+
+  function renderChatList() {
+    const list = document.getElementById('chat-list-items');
+    if (!list || !simState) return;
+    list.innerHTML = '';
+    const isWa = currentChannel === 'whatsapp';
+    simState.messages.forEach((m) => {
+      const judged = simState.judgments[m.id];
+      const li = document.createElement('li');
+      li.className = 'chat-row' + (judged ? ' judged' : '') + (simState.current === m.id ? ' active' : '');
+      li.setAttribute('role', 'button');
+      li.tabIndex = 0;
+      const statusIco = judged
+        ? (judged.correct ? '<span class="chat-row-status good">✓</span>' : '<span class="chat-row-status bad">✗</span>')
+        : '<span class="chat-row-unread" aria-label="ongelezen"></span>';
+      const avatar = isWa
+        ? '<div class="chat-row-avatar">' + escapeHtml(initials(m.sender_name)) + '</div>'
+        : '<div class="chat-row-avatar chat-row-avatar-sms" aria-hidden="true">💬</div>';
+      li.innerHTML =
+        avatar +
+        '<div class="chat-row-body">' +
+          '<div class="chat-row-top">' +
+            '<span class="chat-row-sender">' + escapeHtml(m.sender_name) + '</span>' +
+            '<span class="chat-row-time">' + escapeHtml(m.received_label || '') + '</span>' +
+          '</div>' +
+          '<div class="chat-row-preview">' +
+            ((m.attachments && m.attachments.length) ? '📎 ' : '') +
+            escapeHtml(m.preview || stripPlaceholders(m.subject) || '') +
+          '</div>' +
+        '</div>' +
+        statusIco;
+      li.addEventListener('click', () => openChatMessage(m.id));
+      li.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openChatMessage(m.id); }
+      });
+      list.appendChild(li);
+    });
+  }
+
+  // Verwijdert {{link:N}}-placeholders uit een preview-tekst.
+  function stripPlaceholders(s) {
+    return String(s || '').replaceAll(/\{\{link:\d+\}\}/g, '').trim();
+  }
+
+  async function openChatMessage(id) {
+    simState.current = id;
+    if (!simState.interactions[id]) simState.interactions[id] = { clicked_link: false };
+    persistSimState();
+    renderChatList();
+    const thread = document.getElementById('chat-thread');
+    if (!thread) return;
+    thread.hidden = false;
+    thread.innerHTML =
+      '<header class="chat-thread-head">' +
+        '<button class="chat-btn chat-btn-back" aria-label="Terug">←</button>' +
+      '</header>' +
+      '<div class="chat-thread-body"><p class="muted" style="padding:14px">' + escapeHtml(t('sim.ol.loading')) + '</p></div>';
+    thread.querySelector('.chat-btn-back').addEventListener('click', closeChatThread);
+    let m;
+    try { m = applyOrgDomain([await api('/inbox/' + id)])[0]; }
+    catch (_) {
+      thread.querySelector('.chat-thread-body').innerHTML =
+        '<p class="error" style="padding:14px">' + escapeHtml(t('sim.ol.msgLoadError')) + '</p>';
+      return;
+    }
+    renderChatThread(m);
+  }
+
+  function renderChatThread(m) {
+    const thread = document.getElementById('chat-thread');
+    if (!thread) return;
+    const isWa = currentChannel === 'whatsapp';
+    const judged = simState.judgments[m.id];
+    const senderName = escapeHtml(m.sender_name);
+    const senderAddr = escapeHtml(m.sender_address || '');
+    const avatar = isWa
+      ? '<div class="chat-thread-avatar">' + escapeHtml(initials(m.sender_name)) + '</div>'
+      : '';
+    // Een sms/WhatsApp-bericht kan uit meerdere alinea's bestaan; we tonen
+    // de hele body als één inkomende bubbel met renderBody zodat {{link:0}}
+    // klikbaar wordt en de bijlage-chips meekomen.
+    const bubble =
+      '<div class="chat-bubble chat-bubble-in">' +
+        '<div class="chat-bubble-text">' + renderBody(m.body, m.links || []) + '</div>' +
+        renderAttachments(m) +
+        '<span class="chat-bubble-time">' + escapeHtml(m.received_label || '') + '</span>' +
+      '</div>';
+    const verdictBlock = judged
+      ? '<div class="chat-verdict judged"><p class="muted">' + escapeHtml(t('sim.reader.alreadyJudged')) + '</p></div>'
+      : '<div class="chat-verdict">' +
+          '<p class="chat-verdict-q">' + escapeHtml(t('sim.reader.verdictQ')) + '</p>' +
+          '<div class="chat-verdict-btns">' +
+            '<button class="btn btn-good" data-verdict="trust">' + escapeHtml(t('sim.reader.verdict.trust')) + '</button>' +
+            '<button class="btn btn-bad" data-verdict="phish">' + escapeHtml(t('sim.reader.verdict.phish')) + '</button>' +
+          '</div>' +
+        '</div>';
+    thread.innerHTML =
+      '<header class="chat-thread-head">' +
+        '<button class="chat-btn chat-btn-back" aria-label="Terug">←</button>' +
+        avatar +
+        '<div class="chat-thread-id">' +
+          '<div class="chat-thread-name">' + senderName + '</div>' +
+          (senderAddr ? '<div class="chat-thread-addr">' + senderAddr + '</div>' : '') +
+        '</div>' +
+      '</header>' +
+      '<div class="chat-thread-body">' +
+        '<div class="chat-day-sep">' + escapeHtml(t('sim.chat.today')) + '</div>' +
+        bubble +
+      '</div>' +
+      verdictBlock;
+    thread.querySelector('.chat-btn-back').addEventListener('click', closeChatThread);
+    wireAttachments(thread, m);
+    thread.querySelectorAll('[data-link-idx]').forEach((a) => {
+      const idx = Number.parseInt(a.dataset.linkIdx, 10);
+      const link = (m.links || [])[idx];
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        simState.interactions[m.id].clicked_link = true;
+        openLinkModal(link);
+      });
+    });
+    thread.querySelectorAll('[data-verdict]').forEach((b) => {
+      b.addEventListener('click', () => submitVerdict(m, b.dataset.verdict));
+    });
+    const body = thread.querySelector('.chat-thread-body');
+    if (body) body.scrollTop = body.scrollHeight;
+  }
+
+  function closeChatThread() {
+    const thread = document.getElementById('chat-thread');
+    if (thread) thread.hidden = true;
+    renderChatList();
+  }
+
   async function openMessage(id) {
     simState.current = id;
     if (!simState.interactions[id]) simState.interactions[id] = { clicked_link: false };
@@ -1530,7 +1788,8 @@
   async function submitVerdict(m, verdict) {
     // Verdict-knoppen disablen — werkt in beide skins omdat iedere
     // verdict-knop het data-verdict attribuut draagt.
-    const activeButtons = document.querySelectorAll((currentDevice === 'desktop' ? '#ol-reader ' : '#mob-reader ') + '[data-verdict]');
+    const readerSel = isChatChannel() ? '#chat-thread ' : (currentDevice === 'desktop' ? '#ol-reader ' : '#mob-reader ');
+    const activeButtons = document.querySelectorAll(readerSel + '[data-verdict]');
     activeButtons.forEach((b) => b.disabled = true);
 
     const interactions = simState.interactions[m.id] || {};
@@ -1568,7 +1827,8 @@
     }
 
     simState.judgments[m.id] = { verdict, correct: res.correct, is_phishing: res.is_phishing, red_flags: res.red_flags || [] };
-    if (currentDevice === 'desktop') renderInboxList();
+    if (isChatChannel()) renderChatList();
+    else if (currentDevice === 'desktop') renderInboxList();
     else renderMobList();
     updateProgress();
     persistSimState();
@@ -1631,12 +1891,16 @@
     if (allJudged()) { finishSimulator(); return; }
     const next = simState.messages.find((m) => !simState.judgments[m.id]);
     if (!next) return;
-    if (currentDevice === 'desktop') openMessage(next.id);
+    if (isChatChannel()) openChatMessage(next.id);
+    else if (currentDevice === 'desktop') openMessage(next.id);
     else openMobMessage(next.id);
   }
 
   function finishSimulator() {
-    if (currentDevice === 'desktop') {
+    if (isChatChannel()) {
+      const thread = document.getElementById('chat-thread');
+      if (thread) thread.hidden = true;
+    } else if (currentDevice === 'desktop') {
       resetReader();
     } else {
       const reader = document.getElementById('mob-reader');
@@ -1728,7 +1992,10 @@
       // van hetzelfde apparaat als daarnet.
       document.body.classList.add('sim-fullscreen');
       result.hidden = true;
-      if (currentDevice === 'desktop') {
+      if (isChatChannel()) {
+        showSimPhase('chat');
+        startChatSimulator({ fresh: true }).catch((err) => console.error(err));
+      } else if (currentDevice === 'desktop') {
         showSimPhase('inbox');
         startSimulator({ fresh: true });
       } else {

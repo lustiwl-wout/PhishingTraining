@@ -280,6 +280,12 @@
             <li data-i18n-html="sim.intro.li4">Uw taak: kiezen of elke e‑mail <strong>vertrouwd</strong> is, of dat het <strong>phishing</strong> is.</li>
             <li data-i18n="sim.intro.li5">Er worden geen logo's of huisstijl van echte bedrijven gebruikt, om auteursrecht en merkrechten te respecteren.</li>
           </ul>
+          <div class="difficulty-toggle" id="sim-channel-toggle">
+            <span class="difficulty-label" data-i18n="sim.channel.label">Kanaal:</span>
+            <button class="difficulty-btn active" data-channel="email" data-i18n="sim.channel.email">E‑mail</button>
+            <button class="difficulty-btn" data-channel="sms" data-i18n="sim.channel.sms">Sms</button>
+            <button class="difficulty-btn" data-channel="whatsapp" data-i18n="sim.channel.whatsapp">WhatsApp</button>
+          </div>
           <div class="difficulty-toggle" id="sim-difficulty-toggle">
             <span class="difficulty-label" data-i18n="sim.difficulty.label">Moeilijkheidsgraad:</span>
             <button class="difficulty-btn active" data-difficulty="normal" data-i18n="sim.difficulty.normal">Normaal</button>
@@ -425,6 +431,28 @@
               </span>
             </div>
             <div id="mob-app" class="mob-app"><!-- gevuld door JS per skin --></div>
+            <div class="device-homebar"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FASE 5: Chat-simulator (sms / WhatsApp = smishing). Eén telefoon-
+           frame op elk apparaat. De skin (grijze sms-bubbels of WhatsApp-
+           groen) wordt bepaald door de body-klassen .channel-sms /
+           .channel-whatsapp die setChannel() zet. -->
+      <div id="sim-phase-chat" class="sim-phase sim-phase-center" hidden>
+        <div id="chat-frame" class="device-frame chat-frame">
+          <div class="device-notch"></div>
+          <div class="device-screen">
+            <div class="device-statusbar">
+              <span class="device-time">09:41</span>
+              <span class="device-status-right">
+                <span class="device-signal">●●●●</span>
+                <span class="device-wifi">🛜</span>
+                <span class="device-battery">🔋</span>
+              </span>
+            </div>
+            <div id="chat-app" class="chat-app"><!-- gevuld door JS --></div>
             <div class="device-homebar"></div>
           </div>
         </div>
