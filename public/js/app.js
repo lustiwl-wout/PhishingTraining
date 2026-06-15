@@ -2260,11 +2260,8 @@
         '<p class="call-golden">' + escapeHtml(t('sim.call.debrief.golden')) + '</p>' +
         '<div class="call-debrief-actions">' +
           nextBtn +
-          '<button class="btn btn-secondary" data-call-action="retry">' + escapeHtml(t('sim.call.retry')) + '</button>' +
         '</div>' +
       '</div>';
-    // Scroll naar de debrief zodat de gebruiker niet zelf hoeft te scrollen.
-    app.scrollIntoView({ behavior: 'smooth', block: 'start' });
     const nextEl = app.querySelector('[data-call-action="next"]');
     if (nextEl) nextEl.addEventListener('click', () => {
       callState.scenarioIndex += 1;
@@ -2276,12 +2273,6 @@
     const doneEl = app.querySelector('[data-call-action="done"]');
     if (doneEl) doneEl.addEventListener('click', () => {
       showSimPhase('intro');
-    });
-    app.querySelector('[data-call-action="retry"]').addEventListener('click', () => {
-      callState.phase = 'incoming';
-      callState.beatId = null;
-      callState.outcomeId = null;
-      renderCallStep();
     });
   }
 

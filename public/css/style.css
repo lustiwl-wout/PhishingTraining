@@ -2881,6 +2881,10 @@ body.channel-whatsapp .chat-bubble-in { background: #fff; }
   border-color: rgba(255,255,255,.4);
 }
 
+/* Bel-frame iets breder dan het standaard mobiele device-frame zodat
+   de nabespreking comfortabel past zonder te scrollen. */
+#call-frame.call-frame { width: min(480px, 96vw); }
+
 /* --- Nabespreking (debrief) --- */
 .call-debrief {
   background: #fff;
