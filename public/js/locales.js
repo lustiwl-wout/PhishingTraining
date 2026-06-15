@@ -60,7 +60,7 @@ window.VO_LOCALES = {
     'leren.ai.onthoud.li2': '✍️ <strong>Perfecte taal bewijst niets</strong> — een foutloos bericht kan juist door AI gemaakt zijn.',
     'leren.ai.onthoud.li3': '⏰ Wees extra alert bij <strong>haast rond geld, wachtwoorden of gegevens</strong>.',
 
-    'ww.h1': 'Wachtwoorden &amp; tweestapsverificatie',
+    'ww.h1': 'Wachtwoorden & tweestapsverificatie',
     'ww.lead': 'Een goed wachtwoord en een tweede stap (MFA) houden oplichters buiten, zelfs als ze uw wachtwoord kennen. Probeer hieronder rustig elk onderdeel.',
     'ww.intro.h': 'Waarom dit belangrijk is',
     'ww.intro.p1': 'Uw wachtwoord is de sleutel tot uw e‑mail, uw bank en uw foto’s. Lekt die sleutel, dan kan een oplichter alles openen. <strong>Een sterk, uniek wachtwoord</strong> en <strong>een tweede stap (MFA)</strong> maken dat veel moeilijker.',
@@ -520,7 +520,7 @@ window.VO_LOCALES = {
     'leren.ai.onthoud.li2': '✍️ <strong>Perfecte taal bewijst niets</strong> — een foutloos bericht kan net door AI gemaakt zijn.',
     'leren.ai.onthoud.li3': '⏰ Wees extra alert bij <strong>haast rond geld, wachtwoorden of gegevens</strong>.',
 
-    'ww.h1': 'Wachtwoorden &amp; tweestapsverificatie',
+    'ww.h1': 'Wachtwoorden & tweestapsverificatie',
     'ww.lead': 'Een goed wachtwoord en een tweede stap (MFA) houden oplichters buiten, zelfs als ze uw wachtwoord kennen. Probeer hieronder rustig elk onderdeel.',
     'ww.intro.h': 'Waarom dit belangrijk is',
     'ww.intro.p1': 'Uw wachtwoord is de sleutel tot uw e‑mail, uw bank en uw foto’s. Lekt die sleutel, dan kan een oplichter alles openen. <strong>Een sterk, uniek wachtwoord</strong> en <strong>een tweede stap (MFA)</strong> maken dat veel moeilijker.',
@@ -980,7 +980,7 @@ window.VO_LOCALES = {
     'leren.ai.onthoud.li2': '✍️ <strong>Perfect language proves nothing</strong> — a flawless message may well have been written by AI.',
     'leren.ai.onthoud.li3': '⏰ Be extra alert to <strong>urgency around money, passwords or data</strong>.',
 
-    'ww.h1': 'Passwords &amp; two-step verification',
+    'ww.h1': 'Passwords & two-step verification',
     'ww.lead': 'A strong password and a second step (MFA) keep criminals out, even if they know your password. Take your time with each part below.',
     'ww.intro.h': 'Why this matters',
     'ww.intro.p1': 'Your password is the key to your email, your bank and your photos. If that key leaks, a criminal can open everything. <strong>A strong, unique password</strong> and <strong>a second step (MFA)</strong> make that much harder.',
@@ -1440,7 +1440,7 @@ window.VO_LOCALES = {
     'leren.ai.onthoud.li2': '✍️ <strong>Une langue parfaite ne prouve rien</strong> — un message irréprochable peut très bien avoir été écrit par une IA.',
     'leren.ai.onthoud.li3': '⏰ Soyez particulièrement vigilant face à <strong>l’urgence concernant l’argent, les mots de passe ou les données</strong>.',
 
-    'ww.h1': 'Mots de passe &amp; vérification en deux étapes',
+    'ww.h1': 'Mots de passe & vérification en deux étapes',
     'ww.lead': 'Un bon mot de passe et une deuxième étape (MFA) tiennent les escrocs à distance, même s’ils connaissent votre mot de passe. Prenez le temps de parcourir chaque partie ci-dessous.',
     'ww.intro.h': 'Pourquoi c’est important',
     'ww.intro.p1': 'Votre mot de passe est la clé de votre messagerie, de votre banque et de vos photos. Si cette clé fuite, un escroc peut tout ouvrir. <strong>Un mot de passe fort et unique</strong> et <strong>une deuxième étape (MFA)</strong> rendent cela bien plus difficile.',
@@ -1901,7 +1901,7 @@ window.VO_LOCALES = {
     'leren.ai.onthoud.li2': '✍️ <strong>Une langue parfaite ne prouve rien</strong> — un message irréprochable peut très bien avoir été écrit par une IA.',
     'leren.ai.onthoud.li3': '⏰ Soyez particulièrement vigilant face à <strong>l’urgence concernant l’argent, les mots de passe ou les données</strong>.',
 
-    'ww.h1': 'Mots de passe &amp; vérification en deux étapes',
+    'ww.h1': 'Mots de passe & vérification en deux étapes',
     'ww.lead': 'Un bon mot de passe et une deuxième étape (MFA) tiennent les escrocs à distance, même s’ils connaissent votre mot de passe. Prenez le temps de parcourir chaque partie ci-dessous.',
     'ww.intro.h': 'Pourquoi c’est important',
     'ww.intro.p1': 'Votre mot de passe est la clé de votre messagerie, de votre banque et de vos photos. Si cette clé fuite, un escroc peut tout ouvrir. <strong>Un mot de passe fort et unique</strong> et <strong>une deuxième étape (MFA)</strong> rendent cela bien plus difficile.',
@@ -2362,7 +2362,7 @@ window.VO_LOCALES = {
     'leren.ai.onthoud.li2': '✍️ <strong>Perfekte Sprache beweist nichts</strong> — eine fehlerfreie Nachricht kann gerade von einer KI stammen.',
     'leren.ai.onthoud.li3': '⏰ Seien Sie besonders wachsam bei <strong>Eile rund um Geld, Passwörter oder Daten</strong>.',
 
-    'ww.h1': 'Passwörter &amp; Zwei-Schritt-Verifizierung',
+    'ww.h1': 'Passwörter & Zwei-Schritt-Verifizierung',
     'ww.lead': 'Ein gutes Passwort und ein zweiter Schritt (MFA) halten Betrüger draußen, selbst wenn sie Ihr Passwort kennen. Gehen Sie die einzelnen Teile unten in Ruhe durch.',
     'ww.intro.h': 'Warum das wichtig ist',
     'ww.intro.p1': 'Ihr Passwort ist der Schlüssel zu Ihrer E‑Mail, Ihrer Bank und Ihren Fotos. Wenn dieser Schlüssel durchsickert, kann ein Betrüger alles öffnen. <strong>Ein starkes, einzigartiges Passwort</strong> und <strong>ein zweiter Schritt (MFA)</strong> machen das viel schwerer.',
