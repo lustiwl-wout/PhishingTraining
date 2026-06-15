@@ -176,6 +176,9 @@
     const audIcon = document.getElementById('audience-switch-icon');
     if (audName) audName.textContent = t('audience.' + currentAudience + '.title');
     if (audIcon) audIcon.textContent = AUDIENCE_ICONS[currentAudience] || '';
+    // Retentie: de "Tip van de week" hangt af van de taal — bij elke
+    // (her)toepassing van i18n opnieuw zetten met de juiste vertaling.
+    if (typeof renderWeeklyTip === 'function') renderWeeklyTip();
   }
 
   function setLanguage(lang) {
@@ -340,6 +343,9 @@
 
     loadEnterpriseConfig().then(() => {
       applyI18n();
+      // Retentie: terugkeer-nudge bij het laden van de welkom-pagina. go()
+      // doet dit ook, maar bij het direct openen van welkom draait go() niet.
+      renderReturnNudge();
       setDifficulty(currentDifficulty);
       // Pickers tonen als er een keuze te maken valt.
       // Bij enterprise zijn de opties al gefilterd door applyEnterpriseConfig();
@@ -561,6 +567,9 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     if (step === 'simulator') showSimPhase('intro');
+    // Retentie: terugkeer-nudge en weektip verversen wanneer we de
+    // welkom-pagina tonen (historie kan ondertussen veranderd zijn).
+    if (step === 'welkom') { renderReturnNudge(); renderWeeklyTip(); }
   }
 
   // -------- Print-versie van de training -----------------------
@@ -686,6 +695,164 @@
   function clearPersistedSimState() {
     try { localStorage.removeItem(SIM_STATE_KEY); } catch (_) {}
   }
+
+  // -------- Retentie: voortgangsgeheugen (anoniem, 100% localStorage) --------
+  // Géén persoonsgegevens: we bewaren alleen een tijdstempel van de laatste
+  // afronding en per bericht-id of het goed/fout beoordeeld werd. Daarmee
+  // kunnen we gemiste berichten later opnieuw aanbieden (spaced repetition)
+  // en een vriendelijke terugkeer-nudge tonen. Net als de bestaande persist-
+  // helpers wikkelen we JSON.parse/stringify in try/catch.
+  const PROGRESS_KEY = 'vo_progress';
+
+  function loadProgress() {
+    try {
+      const raw = localStorage.getItem(PROGRESS_KEY);
+      const p = raw ? JSON.parse(raw) : null;
+      if (p && typeof p === 'object') return p;
+    } catch (_) {}
+    return { lastCompletion: 0, messages: {} };
+  }
+  function saveProgress(p) {
+    try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(p)); } catch (_) {}
+  }
+
+  // Roep aan bij het afronden van een oefening. Bewaart het tijdstip en
+  // per bericht-id of het laatst goed/fout was, plus wanneer het gezien is.
+  function recordCompletion() {
+    if (!simState) return;
+    const p = loadProgress();
+    p.lastCompletion = Date.now();
+    if (!p.messages || typeof p.messages !== 'object') p.messages = {};
+    const now = Date.now();
+    simState.messages.forEach((m) => {
+      const j = simState.judgments[m.id];
+      if (!j) return;
+      p.messages[m.id] = { correct: !!j.correct, seenAt: now };
+    });
+    saveProgress(p);
+  }
+
+  // Bericht-id's die de gebruiker eerder FOUT beoordeelde (om te resurfacen).
+  function getMissedMessageIds() {
+    const p = loadProgress();
+    const ids = [];
+    Object.keys(p.messages || {}).forEach((id) => {
+      if (p.messages[id] && p.messages[id].correct === false) ids.push(id);
+    });
+    return ids;
+  }
+
+  // Tijdstip (ms) van de laatste afronding, of 0 als er nog geen historie is.
+  function getLastCompletion() {
+    return loadProgress().lastCompletion || 0;
+  }
+
+  // -------- Retentie: ISO-weeknummer voor de "Tip van de week" --------
+  // Deterministisch per ISO-week zodat de tip wekelijks verandert en voor
+  // iedereen dezelfde is in die week.
+  function isoWeekNumber(d) {
+    const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    // Donderdag in deze week bepaalt het jaar (ISO-8601).
+    const day = date.getUTCDay() || 7;
+    date.setUTCDate(date.getUTCDate() + 4 - day);
+    const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+    return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+  }
+
+  // Aantal beschikbare tips (tip.1 … tip.N) — losgekoppeld van de taal zodat
+  // de index voor iedereen gelijk is. Houden in sync met locales.js.
+  const WEEKLY_TIP_COUNT = 8;
+  function currentWeeklyTipKey() {
+    const week = isoWeekNumber(new Date());
+    const idx = ((week - 1) % WEEKLY_TIP_COUNT) + 1;
+    return 'tip.' + idx;
+  }
+
+  function renderWeeklyTip() {
+    const el = document.getElementById('weekly-tip-text');
+    if (el) el.textContent = t(currentWeeklyTipKey());
+  }
+
+  // -------- Retentie: terugkeer-nudge op de welkom-pagina --------
+  // Toon een vriendelijke banner als de gebruiker eerder een training afrondde
+  // én het ≥ 30 dagen geleden is. Geen historie of < 30 dagen: verbergen.
+  const RETURN_NUDGE_DAYS = 30;
+  function renderReturnNudge() {
+    const banner = document.getElementById('return-nudge');
+    if (!banner) return;
+    const last = getLastCompletion();
+    const days = last ? (Date.now() - last) / 86400000 : 0;
+    banner.hidden = !(last && days >= RETURN_NUDGE_DAYS);
+  }
+
+  // -------- Retentie: opfris-oefening (spaced repetition) --------
+  // Hergebruikt de bestaande simulator-engine volledig. We halen de normale
+  // /inbox-set op, bouwen een subset van ~5 berichten (eerst eerder-gemiste,
+  // daarna willekeurige niet-recent-geziene), zetten simState en renderen via
+  // de bestaande skin-functies.
+  const REFRESHER_SIZE = 5;
+
+  function pickRefresherMessages(messages) {
+    const p = loadProgress();
+    const missedSet = new Set(getMissedMessageIds());
+    const present = messages.filter((m) => missedSet.has(m.id));
+    const rest = messages.filter((m) => !missedSet.has(m.id));
+    // De rest sorteren op "minst recent gezien eerst" (ongeziene = 0), met
+    // een willekeurige tiebreaker zodat het niet elke keer dezelfde volgorde is.
+    rest.sort((a, b) => {
+      const sa = (p.messages[a.id] && p.messages[a.id].seenAt) || 0;
+      const sb = (p.messages[b.id] && p.messages[b.id].seenAt) || 0;
+      if (sa !== sb) return sa - sb;
+      return Math.random() - 0.5;
+    });
+    const chosen = present.concat(rest).slice(0, REFRESHER_SIZE);
+    return chosen.length ? chosen : messages.slice(0, REFRESHER_SIZE);
+  }
+
+  // Start de opfris-oefening. Geeft de oefening een schone start (verse
+  // simState, geen herstel) zodat een lopende sessie niet wordt vervuild.
+  async function startRefresher() {
+    trackSimulatorStart();
+    refresherMode = true;
+    go('simulator');
+    setDevice(detectDevice());
+    // E-mail blijft het standaardkanaal voor de opfrisser; we forceren niets
+    // wat de gebruiker zelf op het introscherm gekozen had voor een volle run.
+    document.body.classList.add('sim-fullscreen');
+    clearPersistedSimState();
+    try {
+      const all = applyOrgDomain(await api('/inbox'));
+      const messages = pickRefresherMessages(all);
+      simState = { messages, judgments: {}, interactions: {}, current: null };
+      if (isChatChannel()) {
+        showSimPhase('chat');
+        buildChatSkin();
+        renderChatList();
+        if (messages.length) openChatMessage(messages[0].id);
+      } else if (currentDevice === 'desktop') {
+        showSimPhase('inbox');
+        const result = document.getElementById('sim-result');
+        if (result) result.hidden = true;
+        currentFolder = 'inbox';
+        setActiveFolderLi('inbox');
+        renderInboxList();
+        updateProgress();
+        if (messages.length) openMessage(messages[0].id);
+      } else {
+        showSimPhase('mobile');
+        const result = document.getElementById('sim-result');
+        if (result) result.hidden = true;
+        currentMobFolder = 'inbox';
+        buildMobSkin();
+        renderMobList();
+        if (messages.length) openMobMessage(messages[0].id);
+      }
+    } catch (err) {
+      console.error('refresher fetch failed', err);
+      refresherMode = false;
+    }
+  }
+  let refresherMode = false;
 
   // -------- Simulator fases (intro -> login -> inbox | mobile) --------
   function showSimPhase(name) {
@@ -817,6 +984,12 @@
   document.addEventListener('click', (e) => {
     const t = e.target.closest('[data-go]');
     if (t) { e.preventDefault(); go(t.dataset.go); }
+  });
+
+  // Retentie: startknoppen voor de opfris-oefening (welkom-pagina en nudge).
+  document.addEventListener('click', (e) => {
+    const r = e.target.closest('#welkom-refresher, #nudge-refresher');
+    if (r) { e.preventDefault(); startRefresher(); }
   });
 
   // Stappenbalk: een stap aanklikken navigeert naar die pagina. De stappen
@@ -2033,6 +2206,10 @@
     // Persisted state hoeft niet meer — sessie is afgerond. Refresh
     // op de result-pagina laat de gebruiker dan weer fris beginnen.
     clearPersistedSimState();
+    // Retentie: anoniem voortgangsgeheugen bijwerken (tijdstip + per bericht
+    // goed/fout). Geen persoonsgegevens. Voedt de opfris-oefening en de nudge.
+    recordCompletion();
+    refresherMode = false;
     // Verberg alle simulator-fases en verlaat fullscreen zodat
     // het resultaat en de stap-navigatie weer zichtbaar zijn.
     showSimPhase(null);
@@ -2108,9 +2285,13 @@
       missedHtml +
       '<div class="actions">' +
         '<button class="btn btn-primary" id="sim-again">' + escapeHtml(t('sim.final.again')) + '</button>' +
+        '<button class="btn btn-secondary" id="sim-refresher">' + escapeHtml(t('refresher.start')) + '</button>' +
         '<button class="btn btn-secondary" data-go="hulp">' + escapeHtml(t('sim.final.help')) + '</button>' +
       '</div>';
     result.hidden = false;
+    document.getElementById('sim-refresher').addEventListener('click', () => {
+      startRefresher();
+    });
     document.getElementById('sim-again').addEventListener('click', () => {
       // Herstart: sla intro/login over, ga direct terug naar de inbox
       // van hetzelfde apparaat als daarnet.

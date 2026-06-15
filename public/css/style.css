@@ -2601,3 +2601,28 @@ body.channel-whatsapp .chat-bubble-in { background: #fff; }
   .domino-acct { flex-basis: 44%; }
   .pw-sample { flex-basis: 100%; }
 }
+
+/* ==========================================================================
+   Retentie (Fase 5): terugkeer-nudge + tip van de week op de welkom-pagina.
+   Hergebruikt .card / .card.highlight / .btn; alleen wat extra ademruimte.
+   ========================================================================== */
+.return-nudge {
+  margin: 1.2rem 0;
+}
+.return-nudge[hidden] {
+  display: none;
+}
+.return-nudge h2 {
+  margin-top: 0;
+}
+
+.weekly-tip {
+  margin: 1.2rem 0;
+}
+.weekly-tip h2 {
+  margin-top: 0;
+}
+#weekly-tip-text {
+  margin: 0;
+  line-height: 1.55;
+}

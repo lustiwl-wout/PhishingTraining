@@ -145,6 +145,21 @@
         Phishing is een truc van oplichters om uw geld of wachtwoord te stelen.
       </p>
 
+      <!-- Retentie: terugkeer-nudge (verborgen tot ≥30 dagen na laatste oefening) -->
+      <div id="return-nudge" class="card highlight return-nudge" hidden>
+        <h2 data-i18n="nudge.h">Het is alweer een tijdje geleden</h2>
+        <p data-i18n="nudge.p">Tijd voor een korte opfrisser. In een paar minuten bent u weer scherp.</p>
+        <div class="actions">
+          <button class="btn btn-primary" id="nudge-refresher" data-i18n="refresher.start">Opfris‑oefening (5 berichten)</button>
+        </div>
+      </div>
+
+      <!-- Retentie: tip van de week (deterministisch per ISO-week) -->
+      <div class="card weekly-tip">
+        <h2 data-i18n="tip.h">Tip van de week</h2>
+        <p id="weekly-tip-text"></p>
+      </div>
+
       <div class="card big">
         <h2 data-i18n="welkom.whatis.h">Wat is phishing?</h2>
         <p data-i18n-html="welkom.whatis.p1">
@@ -169,6 +184,7 @@
 
       <div class="actions">
         <button class="btn btn-primary big-btn" data-go="leren" data-i18n="welkom.start">Start de training →</button>
+        <button class="btn btn-secondary big-btn" id="welkom-refresher" data-i18n="refresher.start">Opfris‑oefening (5 berichten)</button>
       </div>
     </section>
 
