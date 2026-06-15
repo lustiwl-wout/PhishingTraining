@@ -29,6 +29,7 @@ window.VO_LOCALES = {
     'brand.title': 'Veilig Online',
     'nav.welkom': 'Welkom',
     'nav.simulator': 'Simulator',
+    'nav.kanalen': 'Extra kanalen',
     'nav.hulp': 'Hulp',
 
     'nav.extra.badge': 'Extra leerstof',
@@ -495,6 +496,7 @@ window.VO_LOCALES = {
     'brand.title': 'Veilig Online',
     'nav.welkom': 'Welkom',
     'nav.simulator': 'Simulator',
+    'nav.kanalen': 'Extra kanalen',
     'nav.hulp': 'Hulp',
 
     'nav.extra.badge': 'Extra leerstof',
@@ -961,6 +963,7 @@ window.VO_LOCALES = {
     'brand.title': 'Safe Online',
     'nav.welkom': 'Welcome',
     'nav.simulator': 'Simulator',
+    'nav.kanalen': 'Extra channels',
     'nav.hulp': 'Help',
 
     'nav.extra.badge': 'Extra learning material',
@@ -1427,6 +1430,7 @@ window.VO_LOCALES = {
     'brand.title': 'Sécurité en ligne',
     'nav.welkom': 'Bienvenue',
     'nav.simulator': 'Simulateur',
+    'nav.kanalen': 'Canaux supplémentaires',
     'nav.hulp': 'Aide',
 
     'nav.extra.badge': 'Contenu supplémentaire',
@@ -1894,6 +1898,7 @@ window.VO_LOCALES = {
     'brand.title': 'Sécurité en ligne',
     'nav.welkom': 'Bienvenue',
     'nav.simulator': 'Simulateur',
+    'nav.kanalen': 'Canaux supplémentaires',
     'nav.hulp': 'Aide',
 
     'nav.extra.badge': 'Contenu supplémentaire',
@@ -2361,6 +2366,7 @@ window.VO_LOCALES = {
     'brand.title': 'Sicher Online',
     'nav.welkom': 'Willkommen',
     'nav.simulator': 'Simulator',
+    'nav.kanalen': 'Weitere Kanäle',
     'nav.hulp': 'Hilfe',
 
     'nav.extra.badge': 'Zusatzmaterial',
