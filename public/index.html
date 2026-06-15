@@ -110,8 +110,9 @@
     <ol id="stepbar-list">
       <li data-step="welkom" class="active"><span class="step-num">1</span><span class="step-label" data-i18n="nav.welkom">Welkom</span></li>
       <li data-step="leren"><span class="step-num">2</span><span class="step-label" data-i18n="nav.leren">Leren</span></li>
-      <li data-step="simulator"><span class="step-num">3</span><span class="step-label" data-i18n="nav.simulator">Simulator</span></li>
-      <li data-step="hulp"><span class="step-num">4</span><span class="step-label" data-i18n="nav.hulp">Hulp</span></li>
+      <li data-step="wachtwoord"><span class="step-num">3</span><span class="step-label" data-i18n="nav.wachtwoord">Wachtwoorden</span></li>
+      <li data-step="simulator"><span class="step-num">4</span><span class="step-label" data-i18n="nav.simulator">Simulator</span></li>
+      <li data-step="hulp"><span class="step-num">5</span><span class="step-label" data-i18n="nav.hulp">Hulp</span></li>
     </ol>
   </nav>
 
@@ -260,11 +261,129 @@
 
       <div class="actions">
         <button class="btn btn-secondary" data-go="welkom" data-i18n="common.back">← Terug</button>
-        <button class="btn btn-primary big-btn" data-go="simulator" data-i18n="voorbeelden.sim">Open de simulator →</button>
+        <button class="btn btn-primary big-btn" data-go="wachtwoord" data-i18n="leren.naarww">Verder: wachtwoorden →</button>
       </div>
     </section>
 
-    <!-- 3. SIMULATOR (Outlook-stijl) -->
+    <!-- 3. WACHTWOORDEN & MFA -->
+    <section id="wachtwoord" class="page" aria-labelledby="ww-titel">
+      <h2 id="ww-titel" data-i18n="ww.h1">Wachtwoorden &amp; tweestapsverificatie</h2>
+      <p class="lead" data-i18n="ww.lead">Een goed wachtwoord en een tweede stap (MFA) houden oplichters buiten, zelfs als ze uw wachtwoord kennen. Probeer hieronder rustig elk onderdeel.</p>
+
+      <!-- 1. Intro -->
+      <div class="card big">
+        <h2 data-i18n="ww.intro.h">Waarom dit belangrijk is</h2>
+        <p data-i18n-html="ww.intro.p1">Uw wachtwoord is de sleutel tot uw e‑mail, uw bank en uw foto's. Lekt die sleutel, dan kan een oplichter alles openen. <strong>Een sterk, uniek wachtwoord</strong> en <strong>een tweede stap (MFA)</strong> maken dat veel moeilijker.</p>
+        <p data-i18n="ww.intro.p2">U hoeft hier nooit een echt wachtwoord in te typen. Alle voorbeelden zijn verzonnen — het gaat om het idee.</p>
+      </div>
+
+      <!-- 2. Wachtwoord-hergebruik domino -->
+      <div class="card big" id="ww-domino">
+        <h2 data-i18n="ww.domino.h">Eén wachtwoord voor alles?</h2>
+        <p data-i18n-html="ww.domino.p">Veel mensen gebruiken hetzelfde wachtwoord op meerdere plekken. Handig — tot het op één plek lekt. Dan liggen ze <strong>allemaal</strong> open. Kijk wat er gebeurt:</p>
+        <div class="domino-row" id="domino-row">
+          <div class="domino-acct" data-acct="email"><span class="domino-icon" aria-hidden="true">📧</span><span class="domino-name" data-i18n="ww.domino.email">E‑mail</span><span class="domino-state" data-i18n="ww.domino.safe">veilig</span></div>
+          <div class="domino-acct" data-acct="bank"><span class="domino-icon" aria-hidden="true">🏦</span><span class="domino-name" data-i18n="ww.domino.bank">Bank</span><span class="domino-state" data-i18n="ww.domino.safe">veilig</span></div>
+          <div class="domino-acct" data-acct="shop"><span class="domino-icon" aria-hidden="true">🛒</span><span class="domino-name" data-i18n="ww.domino.shop">Webshop</span><span class="domino-state" data-i18n="ww.domino.safe">veilig</span></div>
+          <div class="domino-acct" data-acct="social"><span class="domino-icon" aria-hidden="true">💬</span><span class="domino-name" data-i18n="ww.domino.social">Sociale media</span><span class="domino-state" data-i18n="ww.domino.safe">veilig</span></div>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" id="domino-trigger" data-i18n="ww.domino.trigger">Wat als dit wachtwoord lekt? 💥</button>
+          <button type="button" class="btn btn-secondary" id="domino-reset" hidden data-i18n="ww.domino.reset">↺ Opnieuw</button>
+        </div>
+        <p class="ww-explain" id="domino-explain" hidden data-i18n-html="ww.domino.explain">💡 Eén lek opende <strong>elk</strong> account, omdat overal hetzelfde wachtwoord stond. Met een <strong>uniek</strong> wachtwoord per account blijft de schade beperkt tot één plek. Een wachtwoordmanager onthoudt ze voor u.</p>
+      </div>
+
+      <!-- 3. Sterk wachtwoord = wachtwoordzin -->
+      <div class="card big" id="ww-strength">
+        <h2 data-i18n="ww.zin.h">Lengte wint van ingewikkeld</h2>
+        <p data-i18n-html="ww.zin.p">Een kort, "ingewikkeld" wachtwoord is vaak sneller te kraken dan een lange <strong>wachtwoordzin</strong>. Vergelijk een paar voorbeelden — klik om de geschatte kraaktijd te zien.</p>
+        <div class="pw-examples" id="pw-examples">
+          <button type="button" class="pw-example" data-pw="weak" aria-expanded="false">
+            <span class="pw-sample mono">Welkom01!</span>
+            <span class="pw-tag bad" data-i18n="ww.zin.tag.weak">zwak</span>
+            <div class="pw-crack" hidden>
+              <div class="pw-bar"><span class="pw-bar-fill bad" style="width:8%"></span></div>
+              <p class="pw-crack-time" data-i18n="ww.zin.weak.time">Gekraakt in: enkele seconden</p>
+              <p class="pw-crack-why" data-i18n="ww.zin.weak.why">Kort en een veelgebruikt patroon. Staat in elke woordenlijst van oplichters.</p>
+            </div>
+          </button>
+          <button type="button" class="pw-example" data-pw="reused" aria-expanded="false">
+            <span class="pw-sample mono">Liverpool2019</span>
+            <span class="pw-tag bad" data-i18n="ww.zin.tag.reused">hergebruikt</span>
+            <div class="pw-crack" hidden>
+              <div class="pw-bar"><span class="pw-bar-fill bad" style="width:20%"></span></div>
+              <p class="pw-crack-time" data-i18n="ww.zin.reused.time">Gekraakt in: minuten — én al bekend uit een eerder lek</p>
+              <p class="pw-crack-why" data-i18n="ww.zin.reused.why">Een naam met een jaartal is voorspelbaar. Als dit ergens lekte, proberen oplichters het overal.</p>
+            </div>
+          </button>
+          <button type="button" class="pw-example" data-pw="strong" aria-expanded="false">
+            <span class="pw-sample mono">paarse-fiets-regen-7</span>
+            <span class="pw-tag good" data-i18n="ww.zin.tag.strong">sterk</span>
+            <div class="pw-crack" hidden>
+              <div class="pw-bar"><span class="pw-bar-fill good" style="width:100%"></span></div>
+              <p class="pw-crack-time" data-i18n="ww.zin.strong.time">Gekraakt in: eeuwen</p>
+              <p class="pw-crack-why" data-i18n="ww.zin.strong.why">Vier willekeurige woorden zijn lang én makkelijk te onthouden. Lengte maakt het verschil.</p>
+            </div>
+          </button>
+        </div>
+        <p class="ww-explain" data-i18n-html="ww.zin.tip">💡 Maak per account een <strong>lange wachtwoordzin</strong> van een paar willekeurige woorden. Onthoudt u ze liever niet allemaal? Gebruik een <strong>wachtwoordmanager</strong> — die maakt en bewaart ze voor u.</p>
+      </div>
+
+      <!-- 4. Wat is MFA -->
+      <div class="card big">
+        <h2 data-i18n="ww.mfa.h">Wat is MFA (tweestapsverificatie)?</h2>
+        <p data-i18n-html="ww.mfa.p1">MFA is een <strong>tweede stap</strong> naast uw wachtwoord. Naast wat u wéét (het wachtwoord) hebt u iets nodig wat u <strong>hebt</strong> of <strong>bent</strong>:</p>
+        <ul class="check-list">
+          <li data-i18n-html="ww.mfa.li1">📱 een <strong>code</strong> in een app of per sms;</li>
+          <li data-i18n-html="ww.mfa.li2">✅ een <strong>melding</strong> die u in een app goedkeurt;</li>
+          <li data-i18n-html="ww.mfa.li3">🔑 een fysieke <strong>sleutel</strong> of uw vingerafdruk.</li>
+        </ul>
+        <p data-i18n-html="ww.mfa.p2">Zo is een <strong>gestolen wachtwoord alleen niet genoeg</strong> om binnen te komen. Zet MFA eerst aan op uw <strong>e‑mail en uw bank</strong> — dat zijn de belangrijkste.</p>
+      </div>
+
+      <!-- 5. MFA-moeheid aanval -->
+      <div class="card big highlight" id="ww-fatigue">
+        <h2 data-i18n="ww.fatigue.h">Oefening: een melding die u niet startte</h2>
+        <p data-i18n-html="ww.fatigue.lead">Soms misbruiken oplichters MFA. Ze hebben uw wachtwoord al en sturen u <strong>steeds weer</strong> goedkeuringsmeldingen, in de hoop dat u uit ergernis op "Goedkeuren" tikt. Dit verschijnt op uw telefoon — wat doet u?</p>
+        <div class="mfa-phone" id="mfa-phone">
+          <div class="mfa-screen">
+            <div class="mfa-push-count" id="mfa-push-count" hidden></div>
+            <div class="mfa-push">
+              <div class="mfa-push-app" data-i18n="ww.fatigue.app">Authenticator</div>
+              <div class="mfa-push-title" data-i18n="ww.fatigue.prompt">Aanmelden goedkeuren?</div>
+              <div class="mfa-push-sub" data-i18n="ww.fatigue.sub">Poging om aan te melden bij uw account</div>
+              <div class="mfa-push-btns">
+                <button type="button" class="mfa-btn mfa-deny" data-mfa="deny" data-i18n="ww.fatigue.deny">Weigeren</button>
+                <button type="button" class="mfa-btn mfa-approve" data-mfa="approve" data-i18n="ww.fatigue.approve">Goedkeuren</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mfa-feedback" id="mfa-feedback" hidden>
+          <div id="mfa-feedback-body"></div>
+          <button type="button" class="btn btn-secondary" id="mfa-restart" data-i18n="ww.fatigue.restart">↺ Probeer opnieuw</button>
+        </div>
+      </div>
+
+      <!-- 6. Samenvatting -->
+      <div class="card highlight">
+        <h2 data-i18n="ww.onthoud.h">Onthoud altijd</h2>
+        <ul class="check-list" >
+          <li data-i18n-html="ww.onthoud.li1">🔑 Een <strong>uniek</strong> wachtwoord per account — één lek besmet dan niet de rest.</li>
+          <li data-i18n-html="ww.onthoud.li2">📏 Een lange <strong>wachtwoordzin</strong> wint van een kort, ingewikkeld wachtwoord.</li>
+          <li data-i18n-html="ww.onthoud.li3">🧰 Een <strong>wachtwoordmanager</strong> maakt en onthoudt ze voor u.</li>
+          <li data-i18n-html="ww.onthoud.li4">✅ Zet <strong>MFA</strong> aan op e‑mail en bank — en keur <strong>nooit</strong> een melding goed die u zelf niet startte.</li>
+        </ul>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-secondary" data-go="leren" data-i18n="common.back">← Terug</button>
+        <button class="btn btn-primary big-btn" data-go="simulator" data-i18n="ww.naarsim">Verder naar de simulator →</button>
+      </div>
+    </section>
+
+    <!-- 4. SIMULATOR (Outlook-stijl) -->
     <section id="simulator" class="page page-wide" aria-labelledby="sim-titel">
       <h2 id="sim-titel" class="sr-only">E‑mailsimulator</h2>
 
@@ -472,7 +591,8 @@
       </dialog>
     </section>
 
-    <!-- 5. HULP -->
+    <!-- 5. HULP --> <!-- noot: stapnummer 5 in de stepbar -->
+
     <section id="hulp" class="page" aria-labelledby="hulp-titel">
       <h2 id="hulp-titel" data-i18n="hulp.h1">Wat moet u doen?</h2>
 

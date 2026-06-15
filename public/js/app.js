@@ -537,7 +537,7 @@
   }
 
   // -------- navigatie tussen pagina's --------
-  const pages = ['welkom', 'leren', 'simulator', 'hulp'];
+  const pages = ['welkom', 'leren', 'wachtwoord', 'simulator', 'hulp'];
 
   function go(step) {
     pages.forEach((p) => {
@@ -819,6 +819,14 @@
     if (t) { e.preventDefault(); go(t.dataset.go); }
   });
 
+  // Stappenbalk: een stap aanklikken navigeert naar die pagina. De stappen
+  // gebruiken data-step (ook door go() gebruikt om de actieve stap te
+  // markeren); we hergebruiken dat hier als navigatie.
+  document.addEventListener('click', (e) => {
+    const li = e.target.closest('#stepbar-list li[data-step]');
+    if (li && pages.includes(li.dataset.step)) { e.preventDefault(); go(li.dataset.step); }
+  });
+
   // -------- "Ik ben erin getrapt — wat nu?" beslisboom (hulp-pagina) --------
   // Geen backend, geen persoonsgegevens: puur tonen/verbergen van panelen.
   // Het antwoordpaneel krijgt dynamisch een data-i18n-html-attribuut, zodat
@@ -848,6 +856,101 @@
     const q = e.target.closest('[data-watnu]');
     if (q) { e.preventDefault(); watnuShow(q.dataset.watnu); return; }
     if (e.target.closest('#watnu-restart')) { e.preventDefault(); watnuReset(); }
+  });
+
+  // -------- Wachtwoord & MFA-module (wachtwoord-pagina) --------
+  // Geen backend, geen invoervelden, geen persoonsgegevens: alles is een
+  // illustratieve demonstratie met tonen/verbergen en CSS-animaties.
+
+  // 1. Hergebruik-domino: één gedeeld wachtwoord lekt, alle accounts vallen.
+  function dominoTrigger() {
+    const row = document.getElementById('domino-row');
+    const trigger = document.getElementById('domino-trigger');
+    const reset = document.getElementById('domino-reset');
+    const explain = document.getElementById('domino-explain');
+    if (!row) return;
+    const accts = row.querySelectorAll('.domino-acct');
+    accts.forEach((el, i) => {
+      // Trapsgewijs: elk account valt iets later, als een rij dominostenen.
+      setTimeout(() => {
+        el.classList.add('hacked');
+        const state = el.querySelector('.domino-state');
+        if (state) {
+          state.setAttribute('data-i18n', 'ww.domino.hacked');
+          applyI18n(state);
+        }
+      }, 250 + i * 450);
+    });
+    if (trigger) trigger.hidden = true;
+    setTimeout(() => {
+      if (reset) reset.hidden = false;
+      if (explain) explain.hidden = false;
+    }, 250 + accts.length * 450);
+  }
+  function dominoReset() {
+    const row = document.getElementById('domino-row');
+    const trigger = document.getElementById('domino-trigger');
+    const reset = document.getElementById('domino-reset');
+    const explain = document.getElementById('domino-explain');
+    if (!row) return;
+    row.querySelectorAll('.domino-acct').forEach((el) => {
+      el.classList.remove('hacked');
+      const state = el.querySelector('.domino-state');
+      if (state) {
+        state.setAttribute('data-i18n', 'ww.domino.safe');
+        applyI18n(state);
+      }
+    });
+    if (trigger) trigger.hidden = false;
+    if (reset) reset.hidden = true;
+    if (explain) explain.hidden = true;
+  }
+
+  // 2. Wachtwoordzin-voorbeelden: klik vouwt de geschatte kraaktijd uit.
+  function pwToggle(btn) {
+    const crack = btn.querySelector('.pw-crack');
+    if (!crack) return;
+    const open = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+    crack.hidden = open;
+  }
+
+  // 3. MFA-moeheid: de gebruiker krijgt een melding die hij niet startte.
+  // Goedkeuren = de aanvaller is binnen; weigeren = juiste keuze.
+  function mfaRespond(choice) {
+    const phone = document.getElementById('mfa-phone');
+    const feedback = document.getElementById('mfa-feedback');
+    const body = document.getElementById('mfa-feedback-body');
+    if (!phone || !feedback || !body) return;
+    feedback.classList.toggle('good', choice === 'deny');
+    feedback.classList.toggle('bad', choice === 'approve');
+    body.setAttribute('data-i18n-html',
+      choice === 'approve' ? 'ww.fatigue.approve.result' : 'ww.fatigue.deny.result');
+    applyI18n(body);
+    phone.hidden = true;
+    feedback.hidden = false;
+    feedback.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  function mfaRestart() {
+    const phone = document.getElementById('mfa-phone');
+    const feedback = document.getElementById('mfa-feedback');
+    const body = document.getElementById('mfa-feedback-body');
+    if (!phone || !feedback || !body) return;
+    body.removeAttribute('data-i18n-html');
+    body.innerHTML = '';
+    feedback.classList.remove('good', 'bad');
+    feedback.hidden = true;
+    phone.hidden = false;
+  }
+
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('#domino-trigger')) { e.preventDefault(); dominoTrigger(); return; }
+    if (e.target.closest('#domino-reset'))   { e.preventDefault(); dominoReset(); return; }
+    const pwBtn = e.target.closest('.pw-example');
+    if (pwBtn) { e.preventDefault(); pwToggle(pwBtn); return; }
+    const mfaBtn = e.target.closest('[data-mfa]');
+    if (mfaBtn) { e.preventDefault(); mfaRespond(mfaBtn.dataset.mfa); return; }
+    if (e.target.closest('#mfa-restart')) { e.preventDefault(); mfaRestart(); }
   });
 
 

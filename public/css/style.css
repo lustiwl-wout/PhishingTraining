@@ -2367,3 +2367,188 @@ body.channel-whatsapp .chat-bubble-in { background: #fff; }
   }
   #sim-phase-chat.sim-phase-center { min-height: calc(100dvh - var(--topbar-h, 52px)); }
 }
+
+/* ================================================================
+   Wachtwoorden & MFA-module (#wachtwoord)
+   Interactieve, illustratieve onderdelen: hergebruik-domino,
+   kraaktijd-balken en de MFA-moeheid-melding. Geen invoervelden,
+   geen persoonsgegevens. Responsief tot < 600px.
+   ================================================================ */
+
+/* Stappenbalk is nu klikbaar — geef niet-actieve stappen een hint. */
+.stepbar li { cursor: pointer; }
+.stepbar li:not(.active):hover { background: var(--bg); color: var(--ink); }
+
+/* Algemene uitleg-regel binnen de module (na een interactie). */
+.ww-explain {
+  margin: .85rem 0 0;
+  padding: .75rem .9rem;
+  background: var(--bg);
+  border-radius: 10px;
+  line-height: 1.5;
+}
+
+/* ---------- 2. Hergebruik-domino ---------- */
+.domino-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+  margin: 1rem 0;
+}
+.domino-acct {
+  flex: 1 1 110px;
+  min-width: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .25rem;
+  padding: .85rem .5rem;
+  border: 2px solid var(--good);
+  background: var(--good-soft);
+  border-radius: var(--radius);
+  text-align: center;
+  transition: background .35s ease, border-color .35s ease, transform .35s ease;
+}
+.domino-icon { font-size: 1.9rem; line-height: 1; }
+.domino-name { font-weight: 700; font-size: .9rem; color: var(--ink); }
+.domino-state {
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--good);
+  text-transform: lowercase;
+}
+.domino-acct.hacked {
+  border-color: var(--bad);
+  background: var(--bad-soft);
+  transform: translateY(2px) rotate(-1deg);
+}
+.domino-acct.hacked .domino-state { color: var(--bad); }
+.domino-acct.hacked .domino-icon::after {
+  content: " 💥";
+}
+
+/* ---------- 3. Wachtwoordzin-voorbeelden + kraaktijd-balken ---------- */
+.pw-examples {
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+  margin: 1rem 0;
+}
+.pw-example {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .6rem;
+  width: 100%;
+  text-align: left;
+  padding: .75rem .9rem;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font: inherit;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.pw-example:hover { border-color: var(--primary); }
+.pw-example[aria-expanded="true"] { box-shadow: var(--shadow); }
+.pw-sample {
+  flex: 1 1 auto;
+  font-size: 1.05rem;
+  word-break: break-all;
+}
+.pw-tag {
+  flex: 0 0 auto;
+  font-size: .78rem;
+  font-weight: 700;
+  padding: .15rem .55rem;
+  border-radius: 999px;
+}
+.pw-tag.bad  { background: var(--bad-soft);  color: var(--bad); }
+.pw-tag.good { background: var(--good-soft); color: var(--good); }
+.pw-crack {
+  flex: 1 1 100%;
+  margin-top: .35rem;
+}
+.pw-bar {
+  height: 12px;
+  border-radius: 999px;
+  background: var(--bg);
+  overflow: hidden;
+  margin-bottom: .4rem;
+}
+.pw-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  transition: width .5s ease;
+}
+.pw-bar-fill.bad  { background: var(--bad); }
+.pw-bar-fill.good { background: var(--good); }
+.pw-crack-time { margin: 0 0 .2rem; font-weight: 700; }
+.pw-crack-why  { margin: 0; color: var(--ink-soft); font-size: .92rem; }
+
+/* ---------- 5. MFA-moeheid (telefoon-melding) ---------- */
+.mfa-phone {
+  max-width: 320px;
+  margin: 1.1rem auto;
+  background: #11151c;
+  border-radius: 28px;
+  padding: 14px;
+  box-shadow: var(--shadow);
+}
+.mfa-screen {
+  background: #1c2530;
+  border-radius: 18px;
+  padding: 1.1rem 1rem 1.3rem;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.mfa-push {
+  background: var(--surface);
+  border-radius: 14px;
+  padding: 1rem;
+  text-align: center;
+}
+.mfa-push-app {
+  font-size: .78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--ink-soft);
+  margin-bottom: .35rem;
+}
+.mfa-push-title { font-size: 1.1rem; font-weight: 700; color: var(--ink); }
+.mfa-push-sub   { font-size: .9rem; color: var(--ink-soft); margin: .25rem 0 .9rem; }
+.mfa-push-btns { display: flex; gap: .5rem; }
+.mfa-btn {
+  flex: 1 1 0;
+  padding: .6rem .5rem;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.mfa-deny    { background: var(--surface); color: var(--ink); }
+.mfa-deny:hover    { background: var(--bg); }
+.mfa-approve { background: var(--primary); color: #fff; border-color: var(--primary); }
+.mfa-approve:hover { background: var(--primary-dark); }
+
+/* Uitkomst na de keuze: groen (weigeren) of rood (goedkeuren). */
+.mfa-feedback {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  line-height: 1.55;
+}
+.mfa-feedback.good { background: var(--good-soft); border-color: var(--good); }
+.mfa-feedback.bad  { background: var(--bad-soft);  border-color: var(--bad); }
+.mfa-feedback #mfa-feedback-body { margin-bottom: .9rem; }
+
+@media (max-width: 600px) {
+  .domino-acct { flex-basis: 44%; }
+  .pw-sample { flex-basis: 100%; }
+}
