@@ -858,6 +858,27 @@
     if (e.target.closest('#watnu-restart')) { e.preventDefault(); watnuReset(); }
   });
 
+  // -------- AI-phishing: "Vroeger vs. nu" vergelijking (leren-pagina) --------
+  // Toont dezelfde phishing-bedoeling als klungelige versie van vroeger of als
+  // foutloze AI-versie van nu. De mail en het onderschrift krijgen dynamisch een
+  // data-i18n-html-attribuut zodat een taalwissel ze automatisch mee-vertaalt.
+  function aiCompareShow(which) {
+    const mail = document.getElementById('ai-compare-mail');
+    const caption = document.getElementById('ai-compare-caption');
+    if (!mail || !caption) return;
+    mail.setAttribute('data-i18n-html', 'leren.ai.compare.' + which);
+    caption.setAttribute('data-i18n-html', 'leren.ai.compare.caption.' + which);
+    applyI18n(mail);
+    applyI18n(caption);
+    document.querySelectorAll('#ai-compare .ai-compare-tab').forEach((el) => {
+      el.classList.toggle('active', el.dataset.aiCompare === which);
+    });
+  }
+  document.addEventListener('click', (e) => {
+    const tab = e.target.closest('[data-ai-compare]');
+    if (tab) { e.preventDefault(); aiCompareShow(tab.dataset.aiCompare); }
+  });
+
   // -------- Wachtwoord & MFA-module (wachtwoord-pagina) --------
   // Geen backend, geen invoervelden, geen persoonsgegevens: alles is een
   // illustratieve demonstratie met tonen/verbergen en CSS-animaties.
