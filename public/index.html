@@ -114,7 +114,8 @@
       <li data-step="welkom" class="active"><span class="step-num">1</span><span class="step-label" data-i18n="nav.welkom">Welkom</span></li>
       <li data-step="simulator"><span class="step-num">2</span><span class="step-label" data-i18n="nav.simulator">Simulator</span></li>
       <li data-step="kanalen"><span class="step-num">3</span><span class="step-label" data-i18n="nav.kanalen">Sms / WhatsApp / Telefoon</span></li>
-      <li data-step="hulp"><span class="step-num">4</span><span class="step-label" data-i18n="nav.hulp">Hulp</span></li>
+      <li data-step="wachtwoord"><span class="step-num">4</span><span class="step-label" data-i18n="nav.wachtwoord">Wachtwoorden</span></li>
+      <li data-step="hulp"><span class="step-num">5</span><span class="step-label" data-i18n="nav.hulp">Hulp</span></li>
     </ol>
   </nav>
 
@@ -186,143 +187,6 @@
 
       <div class="actions">
         <button class="btn btn-primary big-btn" data-go="simulator" data-i18n="welkom.start">Start de training →</button>
-      </div>
-    </section>
-
-    <!-- 2. LEREN -->
-    <section id="leren" class="page" aria-labelledby="leren-titel">
-      <h2 id="leren-titel" data-i18n="leren.h1">7 dingen waar u op let</h2>
-      <p class="lead" data-i18n="leren.lead">Deze 7 punten helpen u om phishing te herkennen. Lees ze rustig door.</p>
-
-      <ol class="learn-list">
-        <li class="card">
-          <div class="learn-num" aria-hidden="true">1</div>
-          <h2 data-i18n="leren.it1.h">Een vreemde of dringende toon</h2>
-          <p data-i18n-html="leren.it1.p">
-            "Uw rekening wordt vandaag geblokkeerd!" of "Laatste waarschuwing!"
-            Oplichters willen dat u in paniek snel iets doet. <strong>Een echte bank doet dat nooit.</strong>
-          </p>
-        </li>
-        <li class="card">
-          <div class="learn-num" aria-hidden="true">2</div>
-          <h2 data-i18n="leren.it2.h">Kijk goed naar het adres na de @</h2>
-          <p data-i18n-html="leren.it2.p1">
-            Een e‑mailadres heeft <strong>twee delen</strong>, met een <strong>@</strong> ertussen.
-            Wat <strong>achter de @</strong> staat, is wie het écht is.
-          </p>
-
-          <div class="addr-card">
-            <div class="addr-line">
-              <span class="addr-name">service</span><span class="addr-at">@</span><span class="addr-domain" data-i18n="leren.addr.example">ing-betaling-secure.com</span>
-            </div>
-            <div class="addr-points">
-              <p><span class="addr-tag good" data-i18n="leren.addr.good.tag">Vóór de @</span> <span data-i18n="leren.addr.good.text">kan iedereen zelf kiezen — dit zegt niets.</span></p>
-              <p><span class="addr-tag bad" data-i18n="leren.addr.bad.tag">Na de @</span> <span data-i18n-html="leren.addr.bad.text">is de echte afzender. Hier staat <strong>ing-betaling-secure.com</strong> — dat is <strong>niet</strong> de ING.</span></p>
-            </div>
-          </div>
-
-          <p data-i18n-html="leren.it2.p2">
-            De echte ING gebruikt altijd <strong class="mono">@ing.nl</strong>. De Belastingdienst altijd
-            <strong class="mono">@belastingdienst.nl</strong>. Staat er iets anders na de @, dan is het
-            <strong>niet</strong> die organisatie — ook al staat de naam wel ergens in het adres.
-          </p>
-
-          <p class="tip-line" data-i18n-html="leren.it2.tip">
-            💡 Vergelijk het met een brief: op de envelop kan iemand <em>"van uw bank"</em> schrijven,
-            maar het echte adres op de achterkant verraadt wie hem heeft gestuurd.
-          </p>
-        </li>
-        <li class="card">
-          <div class="learn-num" aria-hidden="true">3</div>
-          <h2 data-i18n="leren.it6.h">U wordt niet bij naam aangesproken</h2>
-          <p data-i18n-html="leren.it6.p">
-            Staat er "Beste klant", "Geachte gebruiker" of "Geachte heer/mevrouw" in plaats van uw naam?
-            Wees dan extra alert. Uw bank en de overheid weten wie u bent — en spreken u bij naam aan.
-          </p>
-        </li>
-        <li class="card">
-          <div class="learn-num" aria-hidden="true">4</div>
-          <h2 data-i18n="leren.it3.h">Taal die te perfect of juist vreemd aanvoelt</h2>
-          <p data-i18n-html="leren.it3.p">
-            Vroeger zaten er vaak spelfouten in phishing. Nu schrijft AI foutloos — een perfecte
-            tekst bewijst dus niets. Let liever op een toon of schrijfstijl die niet bij de
-            afzender past, of zinnen die net even vreemd aanvoelen.
-          </p>
-        </li>
-        <li class="card">
-          <div class="learn-num" aria-hidden="true">5</div>
-          <h2 data-i18n="leren.it4.h">Een link, knop of bijlage</h2>
-          <p data-i18n-html="leren.it4.p">
-            Klik <strong>niet zomaar</strong> op een link of knop, en open <strong>geen onverwachte bijlagen</strong> —
-            een Word‑bestand of pdf kan schadelijke software bevatten. Ga naar uw bank of de overheid
-            altijd zelf via de browser of de officiële app.
-          </p>
-        </li>
-        <li class="card">
-          <div class="learn-num" aria-hidden="true">6</div>
-          <h2 data-i18n="leren.it5.h">Vragen om geld, code of pincode</h2>
-          <p data-i18n-html="leren.it5.p">
-            Een echte organisatie vraagt <strong>nooit</strong> om uw pincode, wachtwoord, of een code uit uw bank‑app.
-            Krijgt u die vraag? Dan is het altijd phishing.
-          </p>
-        </li>
-        <li class="card">
-          <div class="learn-num" aria-hidden="true">7</div>
-          <h2 data-i18n="leren.it7.h">U verwachtte dit bericht niet</h2>
-          <p data-i18n-html="leren.it7.p">
-            Een pakket aangemeld terwijl u niets besteld hebt? Een factuur voor iets dat u niet kent?
-            Een bericht dat u een prijs gewonnen hebt? Stel uzelf de vraag: <strong>verwacht ik dit?</strong>
-            Bij twijfel: niet klikken, eerst bellen.
-          </p>
-        </li>
-      </ol>
-
-      <!-- AI-phishing: de klassieke verraders verdwijnen. -->
-      <div class="card big highlight ai-phishing" id="ai-phishing">
-        <h2 data-i18n="leren.ai.h">Phishing in het tijdperk van AI</h2>
-        <p data-i18n-html="leren.ai.p1">
-          De bekende verraders verdwijnen. Met AI schrijven oplichters <strong>foutloze berichten</strong> in perfect Nederlands,
-          zonder spel- of grammaticafouten en in de juiste huisstijl. Ze maken het bovendien <strong>persoonlijk op grote schaal</strong>,
-          met openbare informatie van LinkedIn en sociale media — uw naam, uw functie, uw collega's.
-        </p>
-        <p data-i18n-html="leren.ai.p2">
-          Er komen ook nieuwe vormen bij: een <strong>nagemaakte stem</strong> (deepfake-voice) van uw leidinggevende of een familielid aan de telefoon,
-          en zelfs <strong>deepfake-video</strong> in een videogesprek. Een bekende stem of een bekend gezicht is geen bewijs meer.
-        </p>
-        <p data-i18n-html="leren.ai.p3">
-          Daarom verandert uw verdediging: <strong>"slechte taal = nep" gaat niet meer op</strong>.
-          Vertrouw op het <strong>proces, niet op de verzorgdheid</strong> van een bericht. Controleer elk ongebruikelijk of dringend verzoek
-          via een <strong>tweede, onafhankelijk kanaal</strong> — bel terug op een bekend nummer, loop even langs, of gebruik de officiële app —
-          zeker als het om geld, inloggegevens of gegevens gaat.
-        </p>
-
-        <!-- Interactief: Vroeger vs. nu. Dezelfde phishing-bedoeling,
-             eerst klungelig, dan in AI-kwaliteit. -->
-        <div class="ai-compare" id="ai-compare">
-          <h3 data-i18n="leren.ai.compare.h">Vroeger vs. nu — dezelfde oplichting</h3>
-          <div class="ai-compare-tabs" role="tablist">
-            <button type="button" class="ai-compare-tab active" data-ai-compare="old" data-i18n="leren.ai.compare.tab.old">Vroeger (klungelig)</button>
-            <button type="button" class="ai-compare-tab" data-ai-compare="new" data-i18n="leren.ai.compare.tab.new">Nu (met AI)</button>
-          </div>
-          <div class="ai-compare-mail" id="ai-compare-mail" data-i18n-html="leren.ai.compare.old">
-          </div>
-          <p class="ai-compare-caption" id="ai-compare-caption" data-i18n-html="leren.ai.compare.caption.old">
-          </p>
-        </div>
-
-        <div class="ai-remember">
-          <h3 data-i18n="leren.ai.onthoud.h">Onthoud</h3>
-          <ul class="check-list">
-            <li data-i18n-html="leren.ai.onthoud.li1">✅ Controleer een ongebruikelijk verzoek altijd via een <strong>tweede, onafhankelijk kanaal</strong>.</li>
-            <li data-i18n-html="leren.ai.onthoud.li2">✍️ <strong>Perfecte taal bewijst niets</strong> — een foutloos bericht kan juist door AI gemaakt zijn.</li>
-            <li data-i18n-html="leren.ai.onthoud.li3">⏰ Wees extra alert bij <strong>haast rond geld, wachtwoorden of gegevens</strong>.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="actions">
-        <button class="btn btn-secondary" data-go="welkom" data-i18n="common.back">← Terug</button>
-        <button class="btn btn-primary big-btn" data-go="simulator" data-i18n="leren.naarsim">Start de simulator →</button>
       </div>
     </section>
 
@@ -438,6 +302,50 @@
         </ul>
       </div>
 
+      <!-- 7. Phishing in het tijdperk van AI (verplaatst vanuit de oude leren-pagina) -->
+      <!-- AI-phishing: de klassieke verraders verdwijnen. -->
+      <div class="card big highlight ai-phishing" id="ai-phishing">
+        <h2 data-i18n="leren.ai.h">Phishing in het tijdperk van AI</h2>
+        <p data-i18n-html="leren.ai.p1">
+          De bekende verraders verdwijnen. Met AI schrijven oplichters <strong>foutloze berichten</strong> in perfect Nederlands,
+          zonder spel- of grammaticafouten en in de juiste huisstijl. Ze maken het bovendien <strong>persoonlijk op grote schaal</strong>,
+          met openbare informatie van LinkedIn en sociale media — uw naam, uw functie, uw collega's.
+        </p>
+        <p data-i18n-html="leren.ai.p2">
+          Er komen ook nieuwe vormen bij: een <strong>nagemaakte stem</strong> (deepfake-voice) van uw leidinggevende of een familielid aan de telefoon,
+          en zelfs <strong>deepfake-video</strong> in een videogesprek. Een bekende stem of een bekend gezicht is geen bewijs meer.
+        </p>
+        <p data-i18n-html="leren.ai.p3">
+          Daarom verandert uw verdediging: <strong>"slechte taal = nep" gaat niet meer op</strong>.
+          Vertrouw op het <strong>proces, niet op de verzorgdheid</strong> van een bericht. Controleer elk ongebruikelijk of dringend verzoek
+          via een <strong>tweede, onafhankelijk kanaal</strong> — bel terug op een bekend nummer, loop even langs, of gebruik de officiële app —
+          zeker als het om geld, inloggegevens of gegevens gaat.
+        </p>
+
+        <!-- Interactief: Vroeger vs. nu. Dezelfde phishing-bedoeling,
+             eerst klungelig, dan in AI-kwaliteit. -->
+        <div class="ai-compare" id="ai-compare">
+          <h3 data-i18n="leren.ai.compare.h">Vroeger vs. nu — dezelfde oplichting</h3>
+          <div class="ai-compare-tabs" role="tablist">
+            <button type="button" class="ai-compare-tab active" data-ai-compare="old" data-i18n="leren.ai.compare.tab.old">Vroeger (klungelig)</button>
+            <button type="button" class="ai-compare-tab" data-ai-compare="new" data-i18n="leren.ai.compare.tab.new">Nu (met AI)</button>
+          </div>
+          <div class="ai-compare-mail" id="ai-compare-mail" data-i18n-html="leren.ai.compare.old">
+          </div>
+          <p class="ai-compare-caption" id="ai-compare-caption" data-i18n-html="leren.ai.compare.caption.old">
+          </p>
+        </div>
+
+        <div class="ai-remember">
+          <h3 data-i18n="leren.ai.onthoud.h">Onthoud</h3>
+          <ul class="check-list">
+            <li data-i18n-html="leren.ai.onthoud.li1">✅ Controleer een ongebruikelijk verzoek altijd via een <strong>tweede, onafhankelijk kanaal</strong>.</li>
+            <li data-i18n-html="leren.ai.onthoud.li2">✍️ <strong>Perfecte taal bewijst niets</strong> — een foutloos bericht kan juist door AI gemaakt zijn.</li>
+            <li data-i18n-html="leren.ai.onthoud.li3">⏰ Wees extra alert bij <strong>haast rond geld, wachtwoorden of gegevens</strong>.</li>
+          </ul>
+        </div>
+      </div>
+
       <div class="actions">
         <button class="btn btn-secondary" data-go="hulp" data-i18n="common.back">← Terug</button>
       </div>
@@ -450,13 +358,13 @@
       <!-- FASE 1: welkomsscherm vóór de simulatie -->
       <div id="sim-phase-intro" class="sim-phase sim-phase-center">
         <div class="sim-welcome-card">
-          <h2 data-i18n="sim.intro.h">U gaat zo een oefening starten</h2>
-          <p class="lead" data-i18n-html="sim.intro.lead">We openen straks een <strong>nepversie van Outlook</strong>. Alles wat u ziet is voor de oefening gemaakt.</p>
+          <h2 data-i18n="sim.intro.h">Zo werkt de oefening</h2>
+          <p class="lead" data-i18n-html="sim.intro.lead">We openen een <strong>oefenomgeving</strong> met nep-berichten. Alles wat u ziet is voor de training gemaakt.</p>
           <ul class="check-list">
-            <li data-i18n="sim.intro.li1">De e‑mails zien er echt uit, maar zijn niet echt.</li>
+            <li data-i18n="sim.intro.li1">De berichten zien er echt uit — ze zijn het niet.</li>
             <li data-i18n="sim.intro.li2">Niet alle knoppen werken — dat hoeft ook niet, het is maar een oefening.</li>
             <li data-i18n="sim.intro.li3">U kunt niets stukmaken en er wordt niets verzonden.</li>
-            <li data-i18n-html="sim.intro.li4">Uw taak: kiezen of elke e‑mail <strong>vertrouwd</strong> is, of dat het <strong>phishing</strong> is.</li>
+            <li data-i18n-html="sim.intro.li4">Uw taak: beoordelen of elk bericht <strong>betrouwbaar</strong> is, of dat het <strong>phishing</strong> is.</li>
             <li data-i18n="sim.intro.li5">Er worden geen logo's of huisstijl van echte bedrijven gebruikt, om auteursrecht en merkrechten te respecteren.</li>
           </ul>
           <!-- Kanaal-toggle: alleen zichtbaar in extra-modus (stap 4). In de e-mail

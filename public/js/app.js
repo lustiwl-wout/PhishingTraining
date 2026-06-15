@@ -361,7 +361,7 @@
     }
   }
 
-  const ALL_MODULES = ['leren', 'simulator', 'kanalen', 'hulp', 'wachtwoord'];
+  const ALL_MODULES = ['simulator', 'kanalen', 'hulp', 'wachtwoord'];
 
   // Vervang het fictieve interne domein "kestrel.nl/be/de" door het domein
   // van de organisatie zodat de training realistisch aanvoelt voor medewerkers.
@@ -627,7 +627,7 @@
 
   // -------- navigatie tussen pagina's --------
   // 'kanalen' heeft geen eigen DOM-sectie; #simulator wordt actief voor beide sim-stappen.
-  const pages = ['welkom', 'leren', 'simulator', 'kanalen', 'hulp', 'wachtwoord'];
+  const pages = ['welkom', 'simulator', 'kanalen', 'hulp', 'wachtwoord'];
 
   function go(step) {
     pages.forEach((p) => {
@@ -1075,7 +1075,7 @@
     if (q) { e.preventDefault(); watnuShow(q.dataset.watnu); }
   });
 
-  // -------- AI-phishing: "Vroeger vs. nu" vergelijking (leren-pagina) --------
+  // -------- AI-phishing: "Vroeger vs. nu" vergelijking (Extra leerstof-pagina) --------
   // Toont dezelfde phishing-bedoeling als klungelige versie van vroeger of als
   // foutloze AI-versie van nu. De mail en het onderschrift krijgen dynamisch een
   // data-i18n-html-attribuut zodat een taalwissel ze automatisch mee-vertaalt.
@@ -2709,7 +2709,7 @@
     // simulator); verdiepende onderdelen bieden we hier pas aan, zodat
     // beginners niet overspoeld worden. Elke kaart respecteert de
     // enterprise-moduleconfig.
-    const mods = enterpriseConfig?.modules || ['leren', 'simulator', 'kanalen', 'hulp', 'wachtwoord'];
+    const mods = enterpriseConfig?.modules || ['simulator', 'kanalen', 'hulp', 'wachtwoord'];
     let extraHtml = '';
     if (simMode === 'email') {
       const cards = [];
@@ -2763,8 +2763,15 @@
       missedHtml +
       signalsHtml +
       extraHtml +
+      // E-mail sim: opt-in kaarten leiden al naar de vervolgstappen, dus Hulp
+      // als primaire knop. Kanalen-sim (stap 3): geleide knop naar stap 4
+      // (Wachtwoorden/Extra leerstof) als primair, Hulp secundair. Geen harde
+      // auto-doorschakeling — de gebruiker leest eerst rustig zijn score.
       '<div class="actions">' +
-        '<button class="btn btn-primary" data-go="hulp">' + escapeHtml(t('sim.final.help')) + '</button>' +
+        (simMode === 'extra'
+          ? '<button class="btn btn-primary" data-go="wachtwoord">' + escapeHtml(t('sim.final.nextextra')) + '</button>' +
+            '<button class="btn btn-secondary" data-go="hulp">' + escapeHtml(t('sim.final.help')) + '</button>'
+          : '<button class="btn btn-primary" data-go="hulp">' + escapeHtml(t('sim.final.help')) + '</button>') +
       '</div>';
     // Na e-mail simulator: opt-in knop naar extra kanalen (stap 3).
     const extraBtn = document.getElementById('extra-naar-kanalen');

@@ -270,7 +270,7 @@ router.get('/enterprise/config', async (req, res, next) => {
 
     if (!rows[0]) return res.json({ enterprise: false });
     const org = rows[0];
-    const ALL_MODULES  = ['leren','simulator','kanalen','hulp','wachtwoord'];
+    const ALL_MODULES  = ['simulator','kanalen','hulp','wachtwoord'];
     const ALL_CHANNELS = ['sms','whatsapp','phone'];
     res.json({
       enterprise: true,

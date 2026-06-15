@@ -123,7 +123,7 @@ CREATE TABLE IF NOT EXISTS organisations (
 );
 ALTER TABLE organisations ADD COLUMN IF NOT EXISTS email_domain TEXT;
 ALTER TABLE organisations ADD COLUMN IF NOT EXISTS difficulty TEXT NOT NULL DEFAULT 'normal';
-ALTER TABLE organisations ADD COLUMN IF NOT EXISTS modules  TEXT[] NOT NULL DEFAULT ARRAY['leren','simulator','kanalen','hulp','wachtwoord'];
+ALTER TABLE organisations ADD COLUMN IF NOT EXISTS modules  TEXT[] NOT NULL DEFAULT ARRAY['simulator','kanalen','hulp','wachtwoord'];
 ALTER TABLE organisations ADD COLUMN IF NOT EXISTS channels TEXT[] NOT NULL DEFAULT ARRAY['sms','whatsapp','phone'];
 CREATE INDEX IF NOT EXISTS idx_organisations_slug        ON organisations(slug);
 CREATE INDEX IF NOT EXISTS idx_organisations_admin_token ON organisations(admin_token);

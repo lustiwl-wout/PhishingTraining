@@ -79,7 +79,7 @@ router.get('/', requireLogin, async (req, res, next) => {
 const ALL_LOCALES      = ['nl', 'nl-BE', 'en', 'fr', 'fr-BE', 'de'];
 const ALL_AUDIENCES    = ['personal', 'business'];
 const ALL_DIFFICULTIES = ['normal', 'advanced'];
-const ALL_MODULES      = ['leren', 'simulator', 'kanalen', 'hulp', 'wachtwoord'];
+const ALL_MODULES      = ['simulator', 'kanalen', 'hulp', 'wachtwoord'];
 const ALL_CHANNELS     = ['sms', 'whatsapp', 'phone'];
 
 function parseArray(body, key, allowed) {
@@ -456,11 +456,10 @@ const LOCALE_LABELS = [
 const AUDIENCE_LABELS    = [['personal','👤 Privé'],['business','💼 Zakelijk']];
 const DIFFICULTY_LABELS  = [['normal','Normaal'],['advanced','Gevorderd']];
 const MODULE_LABELS      = [
-  ['leren',      '📚 Leermodule (7 tips)'],
   ['simulator',  '📧 E-mail simulator'],
   ['kanalen',    '💬 Extra kanalen (SMS / WhatsApp / Telefoon)'],
-  ['hulp',       '🆘 Hulp bij phishing'],
   ['wachtwoord', '🔑 Wachtwoorden & MFA'],
+  ['hulp',       '🆘 Hulp bij phishing'],
 ];
 const CHANNEL_LABELS     = [
   ['sms',       '📱 SMS-phishing'],
