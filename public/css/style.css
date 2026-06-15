@@ -1950,6 +1950,7 @@ body.device-iphone .device-homebar::after {
   cursor: pointer;
   transition: background .15s, color .15s, border-color .15s;
 }
+.difficulty-toggle[hidden] { display: none; }
 .difficulty-btn[hidden] { display: none; }
 .difficulty-btn:hover {
   background: var(--bg);
