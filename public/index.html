@@ -113,9 +113,9 @@
     <ol id="stepbar-list">
       <li data-step="welkom" class="active"><span class="step-num">1</span><span class="step-label" data-i18n="nav.welkom">Welkom</span></li>
       <li data-step="leren"><span class="step-num">2</span><span class="step-label" data-i18n="nav.leren">Leren</span></li>
-      <li data-step="wachtwoord"><span class="step-num">3</span><span class="step-label" data-i18n="nav.wachtwoord">Wachtwoorden</span></li>
-      <li data-step="simulator"><span class="step-num">4</span><span class="step-label" data-i18n="nav.simulator">Simulator</span></li>
-      <li data-step="hulp"><span class="step-num">5</span><span class="step-label" data-i18n="nav.hulp">Hulp</span></li>
+      <li data-step="simulator"><span class="step-num">3</span><span class="step-label" data-i18n="nav.simulator">Simulator</span></li>
+      <li data-step="hulp"><span class="step-num">4</span><span class="step-label" data-i18n="nav.hulp">Hulp</span></li>
+      <li data-step="wachtwoord" class="step-extra"><span class="step-num">+</span><span class="step-label" data-i18n="nav.extra">Extra</span></li>
     </ol>
   </nav>
 
@@ -323,12 +323,13 @@
 
       <div class="actions">
         <button class="btn btn-secondary" data-go="welkom" data-i18n="common.back">← Terug</button>
-        <button class="btn btn-primary big-btn" data-go="wachtwoord" data-i18n="leren.naarww">Verder: wachtwoorden →</button>
+        <button class="btn btn-primary big-btn" data-go="simulator" data-i18n="leren.naarsim">Start de simulator →</button>
       </div>
     </section>
 
-    <!-- 3. WACHTWOORDEN & MFA -->
+    <!-- 5. EXTRA LEERSTOF (wachtwoorden & MFA) — bereikbaar via stepbar en hulp-pagina -->
     <section id="wachtwoord" class="page" aria-labelledby="ww-titel">
+      <div class="extra-badge" data-i18n="nav.extra.badge">Extra leerstof</div>
       <h2 id="ww-titel" data-i18n="ww.h1">Wachtwoorden &amp; tweestapsverificatie</h2>
       <p class="lead" data-i18n="ww.lead">Een goed wachtwoord en een tweede stap (MFA) houden oplichters buiten, zelfs als ze uw wachtwoord kennen. Probeer hieronder rustig elk onderdeel.</p>
 
@@ -440,8 +441,7 @@
       </div>
 
       <div class="actions">
-        <button class="btn btn-secondary" data-go="leren" data-i18n="common.back">← Terug</button>
-        <button class="btn btn-primary big-btn" data-go="simulator" data-i18n="ww.naarsim">Verder naar de simulator →</button>
+        <button class="btn btn-secondary" data-go="hulp" data-i18n="common.back">← Terug</button>
       </div>
     </section>
 
@@ -694,8 +694,8 @@
         <div class="watnu-answer" id="watnu-answer" hidden>
           <div id="watnu-answer-body"></div>
           <p class="watnu-reassure" data-i18n="watnu.reassure">Schaam u niet — dit overkomt heel veel mensen. Snel handelen beperkt de schade.</p>
-          <button type="button" class="btn btn-secondary" id="watnu-restart" data-i18n="watnu.restart">← Andere situatie</button>
         </div>
+        <!-- Vragen blijven altijd zichtbaar zodat de gebruiker direct van situatie kan wisselen -->
       </div>
 
       <div class="card big highlight">

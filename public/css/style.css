@@ -173,6 +173,26 @@ body {
   background: var(--bg); color: var(--ink); font-weight: 700;
 }
 .stepbar li.active .step-num { background: #fff; color: var(--primary-dark); }
+/* Extra-stap in de stepbar: visueel iets teruggetrokken (optioneel materiaal) */
+.stepbar li.step-extra { opacity: .7; }
+.stepbar li.step-extra.active { opacity: 1; }
+.stepbar li.step-extra .step-num {
+  background: var(--line); color: var(--ink-soft); font-size: .75rem; font-weight: 700;
+}
+.stepbar li.step-extra.active .step-num { background: #fff; color: var(--primary-dark); }
+
+/* Badge die bovenaan de extra-leerstof-pagina verschijnt */
+.extra-badge {
+  display: inline-block;
+  padding: .2rem .65rem;
+  border-radius: 999px;
+  background: var(--warn-soft, #fef3c7);
+  color: var(--warn, #92400e);
+  font-size: .8rem;
+  font-weight: 700;
+  margin-bottom: .75rem;
+  letter-spacing: .02em;
+}
 
 /* ---------- main / pages ---------- */
 main {
@@ -2214,6 +2234,7 @@ body.device-iphone .device-homebar::after {
 }
 .watnu-q:hover { background: var(--bg, #f4f6f9); border-color: var(--primary, #2563eb); }
 .watnu-q:active { transform: translateY(1px); }
+.watnu-q.watnu-active { background: var(--primary-soft, #eff6ff); border-color: var(--primary, #2563eb); color: var(--primary-dark, #1d4ed8); font-weight: 700; }
 .watnu-answer { margin-top: 1rem; }
 .watnu-answer h3 {
   font-size: 1.05rem;

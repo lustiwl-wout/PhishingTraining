@@ -400,8 +400,10 @@
       const needAudience = !localStorage.getItem('vo_audience') || (allowedAudiences && !allowedAudiences.includes(localStorage.getItem('vo_audience')));
       if (needLang && (!allowedLangs || allowedLangs.length > 1)) {
         showLangPicker();
-      } else if (needAudience && (!allowedAudiences || allowedAudiences.length > 1)) {
-        showAudiencePicker();
+      } else if (needAudience) {
+        // Audience nog niet gekozen: stel de eerste toegestane in (geen picker).
+        const firstAllowed = allowedAudiences ? allowedAudiences[0] : 'personal';
+        setAudience(firstAllowed);
       }
 
       // Simulator herstellen NA enterprise config zodat audience/difficulty
@@ -498,7 +500,14 @@
       showLangPicker();
     }
     if (e.target.closest('#audience-switch')) {
-      showAudiencePicker();
+      // Direct switchen tussen privé en zakelijk — geen tussenmenu.
+      const allowed = enterpriseConfig?.audiences || SUPPORTED_AUDIENCES;
+      if (allowed.length > 1) {
+        const next = SUPPORTED_AUDIENCES.find((a) => a !== currentAudience && allowed.includes(a))
+          || allowed[0];
+        setAudience(next);
+        hideAudiencePicker();
+      }
     }
     if (e.target.closest('#simple-switch')) {
       setSimpleMode(!simpleMode);
@@ -598,7 +607,7 @@
   }
 
   // -------- navigatie tussen pagina's --------
-  const pages = ['welkom', 'leren', 'wachtwoord', 'simulator', 'hulp'];
+  const pages = ['welkom', 'leren', 'simulator', 'hulp', 'wachtwoord'];
 
   function go(step) {
     pages.forEach((p) => {
@@ -1126,24 +1135,16 @@
     if (!body || !questions || !answer) return;
     body.setAttribute('data-i18n-html', 'watnu.a.' + key);
     body.innerHTML = replaceDomain(t('watnu.a.' + key));
-    questions.hidden = true;
+    // Actief markeren — werkt ook als antwoord al zichtbaar was (andere vraag kiezen).
+    document.querySelectorAll('[data-watnu]').forEach((btn) => {
+      btn.classList.toggle('watnu-active', btn.dataset.watnu === key);
+    });
     answer.hidden = false;
     answer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
-  function watnuReset() {
-    const body = document.getElementById('watnu-answer-body');
-    const questions = document.getElementById('watnu-questions');
-    const answer = document.getElementById('watnu-answer');
-    if (!body || !questions || !answer) return;
-    body.removeAttribute('data-i18n-html');
-    body.innerHTML = '';
-    answer.hidden = true;
-    questions.hidden = false;
-  }
   document.addEventListener('click', (e) => {
     const q = e.target.closest('[data-watnu]');
-    if (q) { e.preventDefault(); watnuShow(q.dataset.watnu); return; }
-    if (e.target.closest('#watnu-restart')) { e.preventDefault(); watnuReset(); }
+    if (q) { e.preventDefault(); watnuShow(q.dataset.watnu); }
   });
 
   // -------- AI-phishing: "Vroeger vs. nu" vergelijking (leren-pagina) --------
@@ -2262,6 +2263,8 @@
           '<button class="btn btn-secondary" data-call-action="retry">' + escapeHtml(t('sim.call.retry')) + '</button>' +
         '</div>' +
       '</div>';
+    // Scroll naar de debrief zodat de gebruiker niet zelf hoeft te scrollen.
+    app.scrollIntoView({ behavior: 'smooth', block: 'start' });
     const nextEl = app.querySelector('[data-call-action="next"]');
     if (nextEl) nextEl.addEventListener('click', () => {
       callState.scenarioIndex += 1;

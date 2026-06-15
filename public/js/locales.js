@@ -39,7 +39,10 @@ window.VO_LOCALES = {
     'nav.hulp': 'Hulp',
 
     'nav.wachtwoord': 'Wachtwoorden',
+    'nav.extra': 'Extra',
+    'nav.extra.badge': 'Extra leerstof',
     'leren.naarww': 'Verder: wachtwoorden →',
+    'leren.naarsim': 'Start de simulator →',
 
     'leren.ai.h': 'Phishing in het tijdperk van AI',
     'leren.ai.p1': 'De bekende verraders verdwijnen. Met AI schrijven oplichters <strong>foutloze berichten</strong> in perfect Nederlands, zonder spel- of grammaticafouten en in de juiste huisstijl. Ze maken het bovendien <strong>persoonlijk op grote schaal</strong>, met openbare informatie van LinkedIn en sociale media — uw naam, uw functie, uw collega’s.',
@@ -490,7 +493,10 @@ window.VO_LOCALES = {
     'nav.hulp': 'Hulp',
 
     'nav.wachtwoord': 'Wachtwoorden',
+    'nav.extra': 'Extra',
+    'nav.extra.badge': 'Extra leerstof',
     'leren.naarww': 'Verder: wachtwoorden →',
+    'leren.naarsim': 'Start de simulator →',
 
     'leren.ai.h': 'Phishing in het tijdperk van AI',
     'leren.ai.p1': 'De bekende verraders verdwijnen. Met AI schrijven oplichters <strong>foutloze berichten</strong> in perfect Nederlands, zonder spel- of grammaticafouten en in de juiste huisstijl. Ze maken het bovendien <strong>persoonlijk op grote schaal</strong>, met openbare informatie van LinkedIn en sociale media — uw naam, uw functie, uw collega’s.',
@@ -941,7 +947,10 @@ window.VO_LOCALES = {
     'nav.hulp': 'Help',
 
     'nav.wachtwoord': 'Passwords',
+    'nav.extra': 'Extra',
+    'nav.extra.badge': 'Extra learning material',
     'leren.naarww': 'Next: passwords →',
+    'leren.naarsim': 'Start the simulator →',
 
     'leren.ai.h': 'Phishing in the age of AI',
     'leren.ai.p1': 'The familiar tells are disappearing. With AI, scammers write <strong>flawless messages</strong> in perfect, native-quality English, with no spelling or grammar mistakes and in exactly the right house style. They also make them <strong>personal at scale</strong>, using public information from LinkedIn and social media — your name, your job title, your colleagues.',
@@ -1393,6 +1402,9 @@ window.VO_LOCALES = {
 
     'nav.wachtwoord': 'Mots de passe',
     'leren.naarww': 'Suivant : les mots de passe →',
+    'nav.extra': 'Supplément',
+    'nav.extra.badge': 'Contenu supplémentaire',
+    'leren.naarsim': 'Démarrer le simulateur →',
 
     'leren.ai.h': 'Le phishing à l’ère de l’IA',
     'leren.ai.p1': 'Les indices habituels disparaissent. Grâce à l’IA, les escrocs rédigent des <strong>messages irréprochables</strong> dans un français parfait, sans faute d’orthographe ni de grammaire et dans le bon ton. Ils les rendent en plus <strong>personnels à grande échelle</strong>, à partir d’informations publiques tirées de LinkedIn et des réseaux sociaux — votre nom, votre fonction, vos collègues.',
@@ -1845,6 +1857,9 @@ window.VO_LOCALES = {
 
     'nav.wachtwoord': 'Mots de passe',
     'leren.naarww': 'Suivant : les mots de passe →',
+    'nav.extra': 'Supplément',
+    'nav.extra.badge': 'Contenu supplémentaire',
+    'leren.naarsim': 'Démarrer le simulateur →',
 
     'leren.ai.h': 'Le phishing à l’ère de l’IA',
     'leren.ai.p1': 'Les indices habituels disparaissent. Grâce à l’IA, les escrocs rédigent des <strong>messages irréprochables</strong> dans un français parfait, sans faute d’orthographe ni de grammaire et dans le bon ton. Ils les rendent en plus <strong>personnels à grande échelle</strong>, à partir d’informations publiques tirées de LinkedIn et des réseaux sociaux — votre nom, votre fonction, vos collègues.',
@@ -2296,7 +2311,10 @@ window.VO_LOCALES = {
     'nav.hulp': 'Hilfe',
 
     'nav.wachtwoord': 'Passwörter',
+    'nav.extra': 'Extra',
+    'nav.extra.badge': 'Zusatzmaterial',
     'leren.naarww': 'Weiter: Passwörter →',
+    'leren.naarsim': 'Simulator starten →',
 
     'leren.ai.h': 'Phishing im Zeitalter der KI',
     'leren.ai.p1': 'Die bekannten Verräter verschwinden. Mit KI schreiben Betrüger <strong>fehlerfreie Nachrichten</strong> in perfektem Deutsch, ohne Rechtschreib- oder Grammatikfehler und im richtigen Stil. Zudem gestalten sie sie <strong>persönlich im großen Maßstab</strong>, mit öffentlichen Informationen aus LinkedIn und sozialen Medien — Ihrem Namen, Ihrer Funktion, Ihren Kolleginnen und Kollegen.',
