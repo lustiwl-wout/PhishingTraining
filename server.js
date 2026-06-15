@@ -89,6 +89,15 @@ function sendIndex(_req, res) {
   res.set('Cache-Control', 'no-store');
   res.type('html').send(INDEX_HTML);
 }
+
+// Analytics: page_view event — fire-and-forget, never blocks the response.
+app.get('/', (_req, _res, next) => {
+  db.query(
+    `INSERT INTO analytics_events (event) VALUES ('page_view')`
+  ).catch(() => {});
+  next();
+});
+
 app.get(['/', '/index.html'], sendIndex);
 
 // OG-kaart: 1200×630 SVG geserveerd als image/svg+xml.

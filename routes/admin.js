@@ -411,6 +411,7 @@ function overviewPage(orgs) {
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
         <h2 style="margin:0">Alle organisaties</h2>
         <div style="display:flex;gap:.5rem">
+          <a class="btn btn-sm" style="background:#f3f4f6;color:#374151;border:1px solid #d1d5db" href="/admin/stats">📈 Bezoekersanalyse</a>
           <a class="btn btn-sm" style="background:#f3f4f6;color:#374151;border:1px solid #d1d5db" href="/admin/messages">📊 Berichtstatistieken</a>
           <a class="btn btn-sm" href="/admin/orgs/new">+ Nieuw</a>
         </div>
@@ -597,6 +598,109 @@ function orgDetailPage(org, users) {
         <tbody>${userRows}</tbody>
       </table>
     </div>` : ''}`, '/admin');
+}
+
+// GET /admin/stats — visitor analytics dashboard
+router.get('/stats', requireLogin, async (req, res, next) => {
+  try {
+    const [dailyRes, langRes, audienceRes, totalsRes] = await Promise.all([
+      db.query(`
+        SELECT DATE(created_at) AS day, event, COUNT(*)::int AS cnt
+        FROM analytics_events
+        WHERE created_at >= NOW() - INTERVAL '30 days'
+        GROUP BY day, event ORDER BY day DESC, event
+      `),
+      db.query(`
+        SELECT lang, COUNT(*)::int AS cnt FROM analytics_events
+        WHERE event = 'training_start' AND created_at >= NOW() - INTERVAL '30 days'
+        GROUP BY lang ORDER BY cnt DESC
+      `),
+      db.query(`
+        SELECT audience, COUNT(*)::int AS cnt FROM analytics_events
+        WHERE event = 'training_start' AND created_at >= NOW() - INTERVAL '30 days'
+        GROUP BY audience ORDER BY cnt DESC
+      `),
+      db.query(`
+        SELECT
+          COUNT(*) FILTER (WHERE event = 'page_view')::int        AS page_views,
+          COUNT(*) FILTER (WHERE event = 'training_start')::int   AS starts,
+          COUNT(*) FILTER (WHERE event = 'training_complete')::int AS completes
+        FROM analytics_events
+        WHERE created_at >= NOW() - INTERVAL '30 days'
+      `),
+    ]);
+
+    res.type('html').send(statsPage(dailyRes.rows, langRes.rows, audienceRes.rows, totalsRes.rows[0]));
+  } catch (err) { next(err); }
+});
+
+function statsPage(daily, langs, audiences, totals) {
+  const pv   = totals.page_views  || 0;
+  const st   = totals.starts      || 0;
+  const co   = totals.completes   || 0;
+  const rate = st > 0 ? Math.round(co / st * 100) : 0;
+
+  // Build a map: day → { page_view: n, training_start: n, training_complete: n }
+  const dayMap = new Map();
+  for (const row of daily) {
+    const key = String(row.day).slice(0, 10);
+    if (!dayMap.has(key)) dayMap.set(key, { page_view: 0, training_start: 0, training_complete: 0 });
+    dayMap.get(key)[row.event] = (dayMap.get(key)[row.event] || 0) + row.cnt;
+  }
+  const days = [...dayMap.keys()].sort((a, b) => b.localeCompare(a));
+
+  const tableRows = days.map(day => {
+    const d = dayMap.get(day);
+    return `<tr>
+      <td>${e(day)}</td>
+      <td style="text-align:right">${d.page_view || 0}</td>
+      <td style="text-align:right">${d.training_start || 0}</td>
+      <td style="text-align:right">${d.training_complete || 0}</td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="4" style="color:#9ca3af;text-align:center">Geen data</td></tr>';
+
+  const langRows = langs.map(r =>
+    `<tr><td>${e(r.lang || '—')}</td><td style="text-align:right">${r.cnt}</td></tr>`
+  ).join('') || '<tr><td colspan="2" style="color:#9ca3af">Geen data</td></tr>';
+
+  const audRows = audiences.map(r =>
+    `<tr><td>${e(r.audience || '—')}</td><td style="text-align:right">${r.cnt}</td></tr>`
+  ).join('') || '<tr><td colspan="2" style="color:#9ca3af">Geen data</td></tr>';
+
+  return shell('Bezoekersanalyse (30 dagen)', `
+    <div class="stat-grid">
+      <div class="stat"><div class="val">${pv}</div><div class="lbl">Paginaweergaven</div></div>
+      <div class="stat"><div class="val">${st}</div><div class="lbl">Trainingen gestart</div></div>
+      <div class="stat"><div class="val">${co}</div><div class="lbl">Trainingen afgerond</div></div>
+      <div class="stat"><div class="val">${rate}%</div><div class="lbl">Afrondratio</div></div>
+    </div>
+
+    <div class="section">
+      <h2>Gebeurtenissen per dag (laatste 30 dagen)</h2>
+      <div style="overflow-x:auto">
+        <table>
+          <thead><tr><th>Datum</th><th style="text-align:right">Paginaweergaven</th><th style="text-align:right">Gestart</th><th style="text-align:right">Afgerond</th></tr></thead>
+          <tbody>${tableRows}</tbody>
+        </table>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;flex-wrap:wrap">
+      <div class="section">
+        <h2>Taal (trainingen gestart)</h2>
+        <table>
+          <thead><tr><th>Taal</th><th style="text-align:right">Aantal</th></tr></thead>
+          <tbody>${langRows}</tbody>
+        </table>
+      </div>
+      <div class="section">
+        <h2>Doelgroep (trainingen gestart)</h2>
+        <table>
+          <thead><tr><th>Doelgroep</th><th style="text-align:right">Aantal</th></tr></thead>
+          <tbody>${audRows}</tbody>
+        </table>
+      </div>
+    </div>`, '/admin');
 }
 
 // GET /admin/messages — globale berichtstatistieken

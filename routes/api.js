@@ -172,6 +172,16 @@ router.get('/inbox', async (req, res, next) => {
       attachments: (r.attachments || []).map((a) => ({ filename: a.filename, size: a.size })),
     }));
     res.json(rows);
+
+    // Analytics: training_start — once per session, fire-and-forget.
+    if (!req.session.analyticsStarted) {
+      req.session.analyticsStarted = true;
+      req.session.save(() => {});
+      db.query(
+        `INSERT INTO analytics_events (event, lang, audience) VALUES ('training_start', $1, $2)`,
+        [locale, audience]
+      ).catch(() => {});
+    }
   } catch (err) { next(err); }
 });
 
@@ -242,7 +252,7 @@ router.post('/inbox/:id/judge', async (req, res, next) => {
     if (!isUuidLike(session_id)) return res.status(400).json({ error: 'ongeldig session_id' });
 
     const { rows } = await db.query(
-      `SELECT is_phishing, red_flags, green_flags, explanation, sender_note
+      `SELECT is_phishing, red_flags, green_flags, explanation, sender_note, locale, audience
        FROM inbox_messages WHERE id = $1 AND active = TRUE`,
       [id]
     );
@@ -273,6 +283,26 @@ router.post('/inbox/:id/judge', async (req, res, next) => {
       explanation: msg.explanation,
       sender_note: msg.sender_note,
     });
+
+    // Analytics: training_complete — check if all messages for this session are now judged.
+    // Fire-and-forget.
+    db.query(
+      `SELECT
+         (SELECT COUNT(DISTINCT j.message_id)::int
+            FROM inbox_judgments j
+            WHERE j.session_id = $1) AS judged,
+         (SELECT COUNT(*)::int
+            FROM inbox_messages
+            WHERE active = TRUE AND locale = $2 AND audience IN ($3, 'both') AND difficulty = $4) AS total`,
+      [session_id, msg.locale, msg.audience, difficulty]
+    ).then(({ rows: [r] }) => {
+      if (r && r.judged >= r.total && r.total > 0) {
+        db.query(
+          `INSERT INTO analytics_events (event, lang, audience) VALUES ('training_complete', $1, $2)`,
+          [msg.locale, msg.audience]
+        ).catch(() => {});
+      }
+    }).catch(() => {});
   } catch (err) { next(err); }
 });
 
