@@ -262,8 +262,8 @@
       if (!cfg.enterprise) return;
       enterpriseConfig = cfg;
       applyEnterpriseConfig(cfg);
-      // Laad meteen de retentiehistorie zodat de terugkeer-nudge en de
-      // opfrisoefening direct na init de juiste gegevens hebben.
+      // Laad meteen de retentiehistorie zodat de terugkeer-nudge direct
+      // na init het juiste tijdstip van de laatste afronding heeft.
       try {
         const hr = await fetch('/api/enterprise/history');
         if (hr.ok) serverHistory = await hr.json();
@@ -809,24 +809,10 @@
       const p = raw ? JSON.parse(raw) : null;
       if (p && typeof p === 'object') return p;
     } catch (_) {}
-    return { lastCompletion: 0, messages: {} };
+    return { lastCompletion: 0 };
   }
   function saveProgress(p) {
     try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(p)); } catch (_) {}
-  }
-
-  // Bericht-id's die de gebruiker eerder FOUT beoordeelde (om te resurfacen).
-  // Enterprise: uit serverHistory (alle ronden); publiek: uit localStorage.
-  function getMissedMessageIds() {
-    if (enterpriseConfig && serverHistory) {
-      return Array.isArray(serverHistory.missedIds) ? serverHistory.missedIds : [];
-    }
-    const p = loadProgress();
-    const ids = [];
-    Object.keys(p.messages || {}).forEach((id) => {
-      if (p.messages[id] && p.messages[id].correct === false) ids.push(id);
-    });
-    return ids;
   }
 
   // Tijdstip (ms) van de laatste afronding, of 0 als er nog geen historie is.
@@ -847,37 +833,14 @@
           body: JSON.stringify({ total, correct }),
         });
         // Cache bijwerken zodat de terugkeer-nudge direct klopt
-        if (!serverHistory) serverHistory = { lastCompletion: 0, missedIds: [] };
+        if (!serverHistory) serverHistory = { lastCompletion: 0 };
         serverHistory.lastCompletion = Date.now();
-        // Gemiste berichten: berichten waarvoor is_correct=false in deze ronde
-        if (!Array.isArray(serverHistory.missedIds)) serverHistory.missedIds = [];
-        if (simState) {
-          simState.messages.forEach((m) => {
-            const j = simState.judgments[m.id];
-            if (!j) return;
-            const sid = String(m.id);
-            if (!j.correct && !serverHistory.missedIds.includes(sid)) {
-              serverHistory.missedIds.push(sid);
-            } else if (j.correct) {
-              serverHistory.missedIds = serverHistory.missedIds.filter((id) => id !== sid);
-            }
-          });
-        }
       } catch (_) {}
       return;
     }
     // Publiek: localStorage
     const p = loadProgress();
     p.lastCompletion = Date.now();
-    if (!p.messages || typeof p.messages !== 'object') p.messages = {};
-    const now = Date.now();
-    if (simState) {
-      simState.messages.forEach((m) => {
-        const j = simState.judgments[m.id];
-        if (!j) return;
-        p.messages[m.id] = { correct: !!j.correct, seenAt: now };
-      });
-    }
     saveProgress(p);
   }
 
@@ -1219,26 +1182,6 @@
     if (e.target.closest('#mfa-restart')) { e.preventDefault(); mfaRestart(); }
   });
 
-
-  function parseSender(s) {
-    const str = String(s || '').trim();
-    const m = /^(.*?)\s*<\s*(.+?)\s*>\s*$/.exec(str);
-    if (m) return { name: m[1].trim(), addr: m[2].trim() };
-    if (str.includes('@')) return { name: str, addr: str };
-    return { name: str, addr: '' };
-  }
-
-  function annotateText(text, annotations) {
-    let html = escapeHtml(text).replaceAll('\n', '<br>');
-    annotations.forEach((a, i) => {
-      const q = escapeHtml(a.quote);
-      const re = new RegExp(escapeRegExp(q), 'i');
-      if (re.test(html)) {
-        html = html.replace(re, '<mark class="phish-mark">' + q + '<sup class="dot">' + (i + 1) + '</sup></mark>');
-      }
-    });
-    return html;
-  }
 
   // -------- Outlook-simulator --------
   let simState = null;
@@ -2905,15 +2848,9 @@
   });
 
   // -------- utils --------
-  function channelLabel(c) {
-    return c === 'email' ? 'E‑mail' : c === 'sms' ? 'Sms' : 'WhatsApp';
-  }
   function escapeHtml(s) {
     return String(s)
       .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
       .replaceAll('"', '&quot;').replaceAll("'", '&#39;');
-  }
-  function escapeRegExp(s) {
-    return String(s).replaceAll(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 })();

@@ -312,31 +312,20 @@ router.get('/enterprise/progress', async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-// GET /api/enterprise/history — laatste afronding en gemiste berichten.
-// Géén persoonsgegevens: alles gekoppeld aan het anonieme interne org_user_id.
+// GET /api/enterprise/history — tijdstip van de laatste afronding (retentie).
+// Géén persoonsgegevens: gekoppeld aan het anonieme interne org_user_id.
 router.get('/enterprise/history', async (req, res, next) => {
   const orgUserId = req.session?.enterpriseOrgUserId;
   if (!orgUserId) return res.status(401).json({ error: 'unauthorized' });
   try {
-    const [compResult, missedResult] = await Promise.all([
-      db.query(
-        `SELECT EXTRACT(EPOCH FROM completed_at)::float * 1000 AS ts
-           FROM user_completions
-          WHERE org_user_id = $1
-          ORDER BY completed_at DESC LIMIT 1`,
-        [orgUserId]
-      ),
-      db.query(
-        `SELECT DISTINCT j.message_id::text AS mid
-           FROM inbox_judgments j
-          WHERE j.org_user_id = $1 AND j.is_correct = FALSE`,
-        [orgUserId]
-      ),
-    ]);
-    res.json({
-      lastCompletion: compResult.rows[0] ? Number(compResult.rows[0].ts) : 0,
-      missedIds:      missedResult.rows.map((r) => r.mid),
-    });
+    const { rows } = await db.query(
+      `SELECT EXTRACT(EPOCH FROM completed_at)::float * 1000 AS ts
+         FROM user_completions
+        WHERE org_user_id = $1
+        ORDER BY completed_at DESC LIMIT 1`,
+      [orgUserId]
+    );
+    res.json({ lastCompletion: rows[0] ? Number(rows[0].ts) : 0 });
   } catch (err) { next(err); }
 });
 

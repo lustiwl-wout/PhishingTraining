@@ -17,11 +17,6 @@ window.VO_LOCALES = {
     'audience.personal.title': 'Privé',
     'audience.business.title': 'Zakelijk',
 
-    'device.picker.title': 'Kies een apparaat',
-    'device.picker.sub': 'Schakelt meteen over naar de gekozen simulator.',
-    'device.desktop.title': 'Desktop',
-    'device.android.title': 'Android',
-    'device.iphone.title': 'iPhone',
 
     'meta.title': 'Veilig Online — Phishing herkennen',
     'meta.description': 'Leer phishing herkennen in 10 minuten. Gratis training met realistische voorbeelden voor particulieren en bedrijven.',
@@ -33,16 +28,10 @@ window.VO_LOCALES = {
 
     'brand.title': 'Veilig Online',
     'nav.welkom': 'Welkom',
-    'nav.leren': 'Leren',
-    'nav.voorbeelden': 'Voorbeelden',
     'nav.simulator': 'Simulator',
-    'nav.kanalen': 'Meer kanalen',
     'nav.hulp': 'Hulp',
 
-    'nav.wachtwoord': 'Wachtwoorden',
-    'nav.extra': 'Extra',
     'nav.extra.badge': 'Extra leerstof',
-    'leren.naarww': 'Verder: wachtwoorden →',
     'leren.naarsim': 'Start de simulator →',
 
     'leren.ai.h': 'Phishing in het tijdperk van AI',
@@ -75,7 +64,6 @@ window.VO_LOCALES = {
     'ww.domino.safe': 'veilig',
     'ww.domino.hacked': 'gehackt',
     'ww.domino.trigger': 'Wat als dit wachtwoord lekt? 💥',
-    'ww.domino.reset': '↺ Opnieuw',
     'ww.domino.explain': '💡 Eén lek opende <strong>elk</strong> account, omdat overal hetzelfde wachtwoord stond. Met een <strong>uniek</strong> wachtwoord per account blijft de schade beperkt tot één plek. Een wachtwoordmanager onthoudt ze voor u.',
     'ww.zin.h': 'Lengte wint van ingewikkeld',
     'ww.zin.p': 'Een kort, “ingewikkeld” wachtwoord is vaak sneller te kraken dan een lange <strong>wachtwoordzin</strong>. Vergelijk een paar voorbeelden — klik om de geschatte kraaktijd te zien.',
@@ -110,7 +98,6 @@ window.VO_LOCALES = {
     'ww.onthoud.li2': '📏 Een lange <strong>wachtwoordzin</strong> wint van een kort, ingewikkeld wachtwoord.',
     'ww.onthoud.li3': '🧰 Een <strong>wachtwoordmanager</strong> maakt en onthoudt ze voor u.',
     'ww.onthoud.li4': '✅ Zet <strong>MFA</strong> aan op e‑mail en bank — en keur <strong>nooit</strong> een melding goed die u zelf niet startte.',
-    'ww.naarsim': 'Verder naar de simulator →',
 
     'welkom.h1': 'Welkom bij de phishing‑training',
     'welkom.lead': 'In deze korte training leert u <strong>phishing</strong> herkennen. Phishing is een truc van oplichters om uw geld of wachtwoord te stelen.',
@@ -125,7 +112,6 @@ window.VO_LOCALES = {
     'welkom.learn.li4': 'Waar u terecht kunt voor hulp, en wat u doet als u twijfelt of per ongeluk hebt geklikt',
     'welkom.start': 'Start de training →',
     // Retentie: opfris-oefening, terugkeer-nudge en tip van de week
-    'refresher.start': 'Opfris‑oefening (5 berichten)',
     'nudge.h': 'Het is alweer een tijdje geleden',
     'nudge.p': 'Tijd om de training nog eens te doen. In een paar minuten bent u weer scherp.',
     'tip.h': 'Tip van de week',
@@ -168,14 +154,7 @@ window.VO_LOCALES = {
     'leren.it7.h': 'U verwachtte dit bericht niet',
     'leren.it7.p': 'Een pakket aangemeld terwijl u niets besteld hebt? Een factuur voor iets dat u niet kent? Een bericht dat u een prijs gewonnen hebt? Stel uzelf de vraag: <strong>verwacht ik dit?</strong> Bij twijfel: niet klikken. Open de app of website van de afzender zelf — typ het adres in de browser, nooit via de link. Of neem contact op met de organisatie via hun officiële contactgegevens.',
     'leren.it7.p.business': 'Een melding over een document dat een collega gedeeld zou hebben, terwijl u niets verwachtte? Een factuur die u “dringend” moet goedkeuren? Stel uzelf de vraag: <strong>verwacht ik dit?</strong> Bij twijfel: niet klikken. Controleer het direct in de officiële applicatie (SharePoint, uw ERP). Of neem contact op met uw IT‑afdeling of helpdesk.',
-    'leren.examples': 'Bekijk voorbeelden →',
 
-    'voorbeelden.h1': 'Voorbeelden van phishing‑mails',
-    'voorbeelden.lead': 'Hieronder staan drie voorbeelden van phishing via e‑mail. De rode bolletjes wijzen aan waarom het phishing is.',
-    'voorbeelden.sim': 'Open de simulator →',
-    'voorbeelden.loading': 'Bezig met laden…',
-    'voorbeelden.error': 'De voorbeelden konden niet geladen worden. Probeer het later nog eens.',
-    'voorbeelden.to': 'Aan: u',
 
     'sim.intro.h': 'Zo werkt de oefening',
     'sim.intro.lead': 'We openen een <strong>oefenomgeving</strong> met nep-berichten. Alles wat u ziet is voor de training gemaakt.',
@@ -254,7 +233,6 @@ window.VO_LOCALES = {
     'sim.reader.verdict.phish': '⚠️ Melden als phishing',
     'sim.reader.linkTo': 'Gaat naar: {url}',
     'sim.channel.label': 'Kanaal:',
-    'sim.channel.email': 'E‑mail',
     'sim.channel.sms': 'Sms',
     'sim.channel.whatsapp': 'WhatsApp',
     'sim.channel.phone': 'Telefoon',
@@ -271,7 +249,6 @@ window.VO_LOCALES = {
     'sim.call.yourReply': 'Hoe reageert u?',
     'sim.call.next': 'Volgend scenario',
     'sim.call.done': 'Training afronden →',
-    'sim.call.retry': 'Opnieuw proberen',
     'sim.call.debrief.safeH': 'Goed gehandeld',
     'sim.call.debrief.trapH': 'Helaas — dit ging mis',
     'sim.call.debrief.remember': 'Onthoud:',
@@ -416,11 +393,6 @@ window.VO_LOCALES = {
     'sim.final.insight.legit': 'Echte mails: {correct} van {total} correct',
     'sim.final.insight.missed': 'Mails waarbij u in de val trapte:',
 
-    'sim.final.extra.h': 'Meer oefenen?',
-    'sim.final.extra.p': 'Oplichters gebruiken ook WhatsApp en de telefoon. Probeer ook die scenario’s.',
-    'sim.final.extra.whatsapp': '💬 WhatsApp-phishing oefenen',
-    'sim.final.extra.phone': '📞 Telefoongesprekken oefenen',
-    'sim.final.extra.next': 'Ga verder: SMS, WhatsApp & telefoon →',
     'sim.final.optin.h': 'Verder leren (optioneel)',
     'sim.final.optin.kanalen.h': 'Ook oefenen met sms, WhatsApp en telefoon',
     'sim.final.optin.kanalen.p': 'Oplichters bellen en appen ook. Een korte extra oefening.',
@@ -482,7 +454,6 @@ window.VO_LOCALES = {
     'watnu.q.paid': '💳 Ik heb betaald of geld overgemaakt',
     'watnu.q.attachment': '📎 Ik heb een bijlage geopend',
     'watnu.q.unsure': '🤔 Ik twijfel of het phishing is',
-    'watnu.restart': '← Andere situatie',
     'watnu.reassure': 'Schaam u niet — dit overkomt heel veel mensen. Snel handelen beperkt de schade.',
     'watnu.a.clicked': '<h3>U klikte op een link, maar vulde niets in</h3><ol class="check-list numbered"><li>Sluit het tabblad of venster dat openging. Vul er niets in.</li><li>Voer geen inlog- of betaalgegevens in op de pagina die verscheen.</li><li>Alleen klikken is meestal niet meteen schadelijk — blijf alert op vreemde pop-ups of downloads.</li><li>Scan bij twijfel uw apparaat met uw beveiligingssoftware.</li></ol>',
     'watnu.a.credentials': '<h3>U vulde uw gegevens of wachtwoord in</h3><ol class="check-list numbered"><li>Verander <strong>nu</strong> het wachtwoord van dat account — en overal waar u hetzelfde wachtwoord gebruikt.</li><li>Zet tweestapsverificatie (2FA/MFA) aan waar dat kan.</li><li>Gaat het om bankgegevens? Bel <strong>direct</strong> uw bank (nummer op uw bankpas) en laat de rekening beveiligen.</li><li>Meld het bij de betrokken organisatie of uw IT-afdeling.</li></ol>',
@@ -498,7 +469,6 @@ window.VO_LOCALES = {
 
     'common.back': '← Terug',
     'common.close': 'Sluiten',
-    'common.next': 'Volgende →',
   },
 
   // ============================================================
@@ -514,11 +484,6 @@ window.VO_LOCALES = {
     'audience.personal.title': 'Privé',
     'audience.business.title': 'Zakelijk',
 
-    'device.picker.title': 'Kies een apparaat',
-    'device.picker.sub': 'Schakelt meteen over naar de gekozen simulator.',
-    'device.desktop.title': 'Desktop',
-    'device.android.title': 'Android',
-    'device.iphone.title': 'iPhone',
 
     'meta.title': 'Veilig Online — Phishing herkennen',
     'meta.description': 'Leer phishing herkennen in 10 minuten. Gratis training met realistische voorbeelden voor particulieren en bedrijven.',
@@ -530,16 +495,10 @@ window.VO_LOCALES = {
 
     'brand.title': 'Veilig Online',
     'nav.welkom': 'Welkom',
-    'nav.leren': 'Leren',
-    'nav.voorbeelden': 'Voorbeelden',
     'nav.simulator': 'Simulator',
-    'nav.kanalen': 'Meer kanalen',
     'nav.hulp': 'Hulp',
 
-    'nav.wachtwoord': 'Wachtwoorden',
-    'nav.extra': 'Extra',
     'nav.extra.badge': 'Extra leerstof',
-    'leren.naarww': 'Verder: wachtwoorden →',
     'leren.naarsim': 'Start de simulator →',
 
     'leren.ai.h': 'Phishing in het tijdperk van AI',
@@ -572,7 +531,6 @@ window.VO_LOCALES = {
     'ww.domino.safe': 'veilig',
     'ww.domino.hacked': 'gehackt',
     'ww.domino.trigger': 'Wat als dit wachtwoord lekt? 💥',
-    'ww.domino.reset': '↺ Opnieuw',
     'ww.domino.explain': '💡 Eén lek opende <strong>elk</strong> account, omdat overal hetzelfde wachtwoord stond. Met een <strong>uniek</strong> wachtwoord per account blijft de schade beperkt tot één plek. Een wachtwoordmanager onthoudt ze voor u.',
     'ww.zin.h': 'Lengte wint van ingewikkeld',
     'ww.zin.p': 'Een kort, “ingewikkeld” wachtwoord is vaak sneller te kraken dan een lange <strong>wachtwoordzin</strong>. Vergelijk een paar voorbeelden — klik om de geschatte kraaktijd te zien.',
@@ -607,7 +565,6 @@ window.VO_LOCALES = {
     'ww.onthoud.li2': '📏 Een lange <strong>wachtwoordzin</strong> wint van een kort, ingewikkeld wachtwoord.',
     'ww.onthoud.li3': '🧰 Een <strong>wachtwoordmanager</strong> maakt en onthoudt ze voor u.',
     'ww.onthoud.li4': '✅ Zet <strong>MFA</strong> aan op e‑mail en bank — en keur <strong>nooit</strong> een melding goed die u zelf niet startte.',
-    'ww.naarsim': 'Verder naar de simulator →',
 
     'welkom.h1': 'Welkom bij de phishing‑opleiding',
     'welkom.lead': 'In deze korte opleiding leert u <strong>phishing</strong> herkennen. Phishing is een truc van oplichters om uw geld of paswoord te stelen.',
@@ -622,7 +579,6 @@ window.VO_LOCALES = {
     'welkom.learn.li4': 'Waar u terecht kunt voor hulp, en wat u doet als u twijfelt of per ongeluk hebt geklikt',
     'welkom.start': 'Start de opleiding →',
     // Retentie: opfris-oefening, terugkeer-nudge en tip van de week
-    'refresher.start': 'Opfris‑oefening (5 berichten)',
     'nudge.h': 'Het is alweer een tijdje geleden',
     'nudge.p': 'Tijd om de training nog eens te doen. Op een paar minuten bent u weer scherp.',
     'tip.h': 'Tip van de week',
@@ -665,14 +621,7 @@ window.VO_LOCALES = {
     'leren.it7.h': 'U verwachtte dit bericht niet',
     'leren.it7.p': 'Een pakket aangemeld terwijl u niets besteld hebt? Een factuur voor iets dat u niet kent? Een bericht dat u een prijs gewonnen hebt? Stel uzelf de vraag: <strong>verwacht ik dit?</strong> Bij twijfel: niet klikken. Open de app of website van de afzender zelf — typ het adres in de browser, nooit via de link. Of neem contact op met de organisatie via hun officiële contactgegevens.',
     'leren.it7.p.business': 'Een melding over een document dat een collega gedeeld zou hebben, terwijl u niets verwachtte? Een factuur die u “dringend” moet goedkeuren? Stel uzelf de vraag: <strong>verwacht ik dit?</strong> Bij twijfel: niet klikken. Controleer het direct in de officiële applicatie (SharePoint, uw ERP). Of neem contact op met uw IT‑afdeling of helpdesk.',
-    'leren.examples': 'Bekijk voorbeelden →',
 
-    'voorbeelden.h1': 'Voorbeelden van phishing‑mails',
-    'voorbeelden.lead': 'Hieronder staan drie voorbeelden van phishing via e‑mail. De rode bolletjes wijzen aan waarom het phishing is.',
-    'voorbeelden.sim': 'Open de simulator →',
-    'voorbeelden.loading': 'Bezig met laden…',
-    'voorbeelden.error': 'De voorbeelden konden niet geladen worden. Probeer het later nog eens.',
-    'voorbeelden.to': 'Aan: u',
 
     'sim.intro.h': 'Zo werkt de oefening',
     'sim.intro.lead': 'We openen een <strong>oefenomgeving</strong> met nep-berichten. Alles wat u ziet is voor de training gemaakt.',
@@ -751,7 +700,6 @@ window.VO_LOCALES = {
     'sim.reader.verdict.phish': '⚠️ Melden als phishing',
     'sim.reader.linkTo': 'Gaat naar: {url}',
     'sim.channel.label': 'Kanaal:',
-    'sim.channel.email': 'E‑mail',
     'sim.channel.sms': 'Sms',
     'sim.channel.whatsapp': 'WhatsApp',
     'sim.channel.phone': 'Telefoon',
@@ -768,7 +716,6 @@ window.VO_LOCALES = {
     'sim.call.yourReply': 'Hoe reageert u?',
     'sim.call.next': 'Volgend scenario',
     'sim.call.done': 'Training afronden →',
-    'sim.call.retry': 'Opnieuw proberen',
     'sim.call.debrief.safeH': 'Goed gehandeld',
     'sim.call.debrief.trapH': 'Helaas — dit liep verkeerd af',
     'sim.call.debrief.remember': 'Onthoud:',
@@ -913,11 +860,6 @@ window.VO_LOCALES = {
     'sim.final.insight.legit': 'Echte mails: {correct} van {total} correct',
     'sim.final.insight.missed': 'Mails waarbij u in de val getrapt bent:',
 
-    'sim.final.extra.h': 'Meer oefenen?',
-    'sim.final.extra.p': 'Oplichters gebruiken ook WhatsApp en de telefoon. Probeer ook die scenario’s.',
-    'sim.final.extra.whatsapp': '💬 WhatsApp-phishing oefenen',
-    'sim.final.extra.phone': '📞 Telefoongesprekken oefenen',
-    'sim.final.extra.next': 'Ga verder: SMS, WhatsApp & telefoon →',
     'sim.final.optin.h': 'Verder leren (optioneel)',
     'sim.final.optin.kanalen.h': 'Ook oefenen met sms, WhatsApp en telefoon',
     'sim.final.optin.kanalen.p': 'Oplichters bellen en appen ook. Een korte extra oefening.',
@@ -979,7 +921,6 @@ window.VO_LOCALES = {
     'watnu.q.paid': '💳 Ik heb betaald of geld overgemaakt',
     'watnu.q.attachment': '📎 Ik heb een bijlage geopend',
     'watnu.q.unsure': '🤔 Ik twijfel of het phishing is',
-    'watnu.restart': '← Andere situatie',
     'watnu.reassure': 'Schaam u niet — dit overkomt heel veel mensen. Snel handelen beperkt de schade.',
     'watnu.a.clicked': '<h3>U klikte op een link, maar vulde niets in</h3><ol class="check-list numbered"><li>Sluit het tabblad of venster dat openging. Vul er niets in.</li><li>Voer geen inlog- of betaalgegevens in op de pagina die verscheen.</li><li>Alleen klikken is meestal niet meteen schadelijk — blijf alert op vreemde pop-ups of downloads.</li><li>Scan bij twijfel uw apparaat met uw beveiligingssoftware.</li></ol>',
     'watnu.a.credentials': '<h3>U vulde uw gegevens of paswoord in</h3><ol class="check-list numbered"><li>Verander <strong>nu</strong> het paswoord van dat account — en overal waar u hetzelfde paswoord gebruikt.</li><li>Zet tweestapsverificatie (2FA/MFA) aan waar dat kan.</li><li>Gaat het om bankgegevens? Bel <strong>direct</strong> uw bank (nummer op uw bankpas) en laat de rekening beveiligen.</li><li>Meld het bij de betrokken organisatie of uw IT-afdeling.</li></ol>',
@@ -995,7 +936,6 @@ window.VO_LOCALES = {
 
     'common.back': '← Terug',
     'common.close': 'Sluiten',
-    'common.next': 'Volgende →',
   },
 
   // ============================================================
@@ -1011,11 +951,6 @@ window.VO_LOCALES = {
     'audience.personal.title': 'Personal',
     'audience.business.title': 'Work',
 
-    'device.picker.title': 'Choose a device',
-    'device.picker.sub': 'Switches to the chosen simulator straight away.',
-    'device.desktop.title': 'Desktop',
-    'device.android.title': 'Android',
-    'device.iphone.title': 'iPhone',
 
     'meta.title': 'Safe Online — Spot phishing',
     'meta.description': 'Learn to spot phishing in 10 minutes. Free training with realistic examples for individuals and businesses.',
@@ -1027,16 +962,10 @@ window.VO_LOCALES = {
 
     'brand.title': 'Safe Online',
     'nav.welkom': 'Welcome',
-    'nav.leren': 'Learn',
-    'nav.voorbeelden': 'Examples',
     'nav.simulator': 'Simulator',
-    'nav.kanalen': 'More channels',
     'nav.hulp': 'Help',
 
-    'nav.wachtwoord': 'Passwords',
-    'nav.extra': 'Extra',
     'nav.extra.badge': 'Extra learning material',
-    'leren.naarww': 'Next: passwords →',
     'leren.naarsim': 'Start the simulator →',
 
     'leren.ai.h': 'Phishing in the age of AI',
@@ -1069,7 +998,6 @@ window.VO_LOCALES = {
     'ww.domino.safe': 'safe',
     'ww.domino.hacked': 'hacked',
     'ww.domino.trigger': 'What if this password leaks? 💥',
-    'ww.domino.reset': '↺ Reset',
     'ww.domino.explain': '💡 One leak opened <strong>every</strong> account, because the same password was used everywhere. With a <strong>unique</strong> password per account, the damage stays limited to one place. A password manager remembers them for you.',
     'ww.zin.h': 'Length beats complexity',
     'ww.zin.p': 'A short, “complex” password is often cracked faster than a long <strong>passphrase</strong>. Compare a few examples — click to see the estimated cracking time.',
@@ -1104,7 +1032,6 @@ window.VO_LOCALES = {
     'ww.onthoud.li2': '📏 A long <strong>passphrase</strong> beats a short, complex password.',
     'ww.onthoud.li3': '🧰 A <strong>password manager</strong> creates and remembers them for you.',
     'ww.onthoud.li4': '✅ Turn on <strong>MFA</strong> for email and bank — and <strong>never</strong> approve a notification you did not start yourself.',
-    'ww.naarsim': 'Continue to the simulator →',
 
     'welkom.h1': 'Welcome to the phishing training',
     'welkom.lead': 'In this short training you will learn to spot <strong>phishing</strong>. Phishing is a trick used by criminals to steal your money or password.',
@@ -1119,7 +1046,6 @@ window.VO_LOCALES = {
     'welkom.learn.li4': 'Where to get help, and what to do if you are unsure or have accidentally clicked',
     'welkom.start': 'Start the training →',
     // Retention: refresher exercise, return nudge and tip of the week
-    'refresher.start': 'Refresher exercise (5 messages)',
     'nudge.h': 'It has been a while',
     'nudge.p': 'Time to run through the training again. A few minutes is all it takes to stay sharp.',
     'tip.h': 'Tip of the week',
@@ -1162,14 +1088,7 @@ window.VO_LOCALES = {
     'leren.it7.h': 'You weren’t expecting this message',
     'leren.it7.p': 'A parcel notification for something you didn’t order? An invoice for a service you don’t recognise? A message saying you’ve won a prize? Ask yourself: <strong>was I expecting this?</strong> If in doubt, don’t click. Open the sender’s app or website yourself — type the address in your browser, never via the link. Or contact the organisation using their official contact details.',
     'leren.it7.p.business': 'A notification about a document a colleague supposedly shared, out of nowhere? An invoice you “urgently” need to approve? Ask yourself: <strong>was I expecting this?</strong> If in doubt, don’t click. Check directly in the official application (SharePoint, your ERP). Or contact your IT department or helpdesk.',
-    'leren.examples': 'View examples →',
 
-    'voorbeelden.h1': 'Examples of phishing emails',
-    'voorbeelden.lead': 'Below are three examples of phishing by email. The red dots point out why it is phishing.',
-    'voorbeelden.sim': 'Open the simulator →',
-    'voorbeelden.loading': 'Loading…',
-    'voorbeelden.error': 'The examples could not be loaded. Please try again later.',
-    'voorbeelden.to': 'To: you',
 
     'sim.intro.h': 'You’re about to start an exercise',
     'sim.intro.lead': 'We will open a <strong>training environment</strong> with simulated messages. Everything you see was made for this exercise.',
@@ -1248,7 +1167,6 @@ window.VO_LOCALES = {
     'sim.reader.verdict.phish': '⚠️ Report as phishing',
     'sim.reader.linkTo': 'Goes to: {url}',
     'sim.channel.label': 'Channel:',
-    'sim.channel.email': 'Email',
     'sim.channel.sms': 'SMS',
     'sim.channel.whatsapp': 'WhatsApp',
     'sim.channel.phone': 'Phone',
@@ -1265,7 +1183,6 @@ window.VO_LOCALES = {
     'sim.call.yourReply': 'How do you respond?',
     'sim.call.next': 'Next scenario',
     'sim.call.done': 'Finish training →',
-    'sim.call.retry': 'Try again',
     'sim.call.debrief.safeH': 'Well handled',
     'sim.call.debrief.trapH': 'Unfortunately — that went wrong',
     'sim.call.debrief.remember': 'Remember:',
@@ -1410,11 +1327,6 @@ window.VO_LOCALES = {
     'sim.final.insight.legit': 'Legitimate emails: {correct} of {total} correct',
     'sim.final.insight.missed': 'Emails you fell for:',
 
-    'sim.final.extra.h': 'Want more practice?',
-    'sim.final.extra.p': 'Scammers also use WhatsApp and phone calls. Try those scenarios too.',
-    'sim.final.extra.whatsapp': '💬 Practise WhatsApp phishing',
-    'sim.final.extra.phone': '📞 Practise phone calls',
-    'sim.final.extra.next': 'Next: SMS, WhatsApp & phone →',
     'sim.final.optin.h': 'Keep learning (optional)',
     'sim.final.optin.kanalen.h': 'Also practise SMS, WhatsApp and phone',
     'sim.final.optin.kanalen.p': 'Scammers call and message too. A short extra exercise.',
@@ -1476,7 +1388,6 @@ window.VO_LOCALES = {
     'watnu.q.paid': '💳 I paid or transferred money',
     'watnu.q.attachment': '📎 I opened an attachment',
     'watnu.q.unsure': '🤔 I’m not sure if it’s phishing',
-    'watnu.restart': '← Different situation',
     'watnu.reassure': 'Don’t be embarrassed — this happens to a lot of people. Acting quickly limits the damage.',
     'watnu.a.clicked': '<h3>You clicked a link but didn’t enter anything</h3><ol class="check-list numbered"><li>Close the tab or window that opened. Don’t enter anything.</li><li>Do not type any login or payment details on the page that appeared.</li><li>Just clicking is usually not immediately harmful — but stay alert for odd pop-ups or downloads.</li><li>If in doubt, scan your device with your security software.</li></ol>',
     'watnu.a.credentials': '<h3>You entered your details or password</h3><ol class="check-list numbered"><li>Change the password for that account <strong>now</strong> — and everywhere you use the same password.</li><li>Turn on two-step verification (2FA/MFA) wherever you can.</li><li>Bank details involved? Call your bank <strong>immediately</strong> (number on your bank card) and have your account secured.</li><li>Report it to the organisation involved or your IT department.</li></ol>',
@@ -1492,7 +1403,6 @@ window.VO_LOCALES = {
 
     'common.back': '← Back',
     'common.close': 'Close',
-    'common.next': 'Next →',
   },
 
   // ============================================================
@@ -1508,11 +1418,6 @@ window.VO_LOCALES = {
     'audience.personal.title': 'Personnel',
     'audience.business.title': 'Professionnel',
 
-    'device.picker.title': 'Choisissez un appareil',
-    'device.picker.sub': 'Bascule immédiatement vers le simulateur choisi.',
-    'device.desktop.title': 'Desktop',
-    'device.android.title': 'Android',
-    'device.iphone.title': 'iPhone',
 
     'meta.title': 'Sécurité en ligne — Reconnaître le hameçonnage',
     'meta.description': 'Apprenez à reconnaître le hameçonnage en 10 minutes. Formation gratuite avec des exemples réalistes pour particuliers et entreprises.',
@@ -1524,15 +1429,9 @@ window.VO_LOCALES = {
 
     'brand.title': 'Sécurité en ligne',
     'nav.welkom': 'Bienvenue',
-    'nav.leren': 'Apprendre',
-    'nav.voorbeelden': 'Exemples',
     'nav.simulator': 'Simulateur',
-    'nav.kanalen': 'Plus de canaux',
     'nav.hulp': 'Aide',
 
-    'nav.wachtwoord': 'Mots de passe',
-    'leren.naarww': 'Suivant : les mots de passe →',
-    'nav.extra': 'Supplément',
     'nav.extra.badge': 'Contenu supplémentaire',
     'leren.naarsim': 'Démarrer le simulateur →',
 
@@ -1566,7 +1465,6 @@ window.VO_LOCALES = {
     'ww.domino.safe': 'sûr',
     'ww.domino.hacked': 'piraté',
     'ww.domino.trigger': 'Et si ce mot de passe fuite ? 💥',
-    'ww.domino.reset': '↺ Recommencer',
     'ww.domino.explain': '💡 Une seule fuite a ouvert <strong>tous</strong> les comptes, parce que le même mot de passe était utilisé partout. Avec un mot de passe <strong>unique</strong> par compte, les dégâts restent limités à un seul endroit. Un gestionnaire de mots de passe les retient pour vous.',
     'ww.zin.h': 'La longueur l’emporte sur la complexité',
     'ww.zin.p': 'Un mot de passe court et « compliqué » est souvent cassé plus vite qu’une longue <strong>phrase de passe</strong>. Comparez quelques exemples — cliquez pour voir le temps de cassage estimé.',
@@ -1601,7 +1499,6 @@ window.VO_LOCALES = {
     'ww.onthoud.li2': '📏 Une longue <strong>phrase de passe</strong> l’emporte sur un mot de passe court et compliqué.',
     'ww.onthoud.li3': '🧰 Un <strong>gestionnaire de mots de passe</strong> les crée et les retient pour vous.',
     'ww.onthoud.li4': '✅ Activez la <strong>MFA</strong> sur la messagerie et la banque — et n’approuvez <strong>jamais</strong> une notification que vous n’avez pas lancée vous-même.',
-    'ww.naarsim': 'Continuer vers le simulateur →',
 
     'welkom.h1': 'Bienvenue dans la formation anti‑hameçonnage',
     'welkom.lead': 'Dans cette courte formation, vous apprendrez à reconnaître le <strong>hameçonnage</strong> (« phishing »). C’est une ruse d’escrocs pour vous voler votre argent ou votre mot de passe.',
@@ -1616,7 +1513,6 @@ window.VO_LOCALES = {
     'welkom.learn.li4': 'Où obtenir de l’aide, et que faire si vous hésitez ou avez cliqué par accident',
     'welkom.start': 'Commencer la formation →',
     // Rétention : exercice de rappel, invitation au retour et astuce de la semaine
-    'refresher.start': 'Exercice de rappel (5 messages)',
     'nudge.h': 'Cela fait un moment',
     'nudge.p': 'Le moment idéal pour refaire la formation. Quelques minutes suffisent pour rester vigilant.',
     'tip.h': 'Astuce de la semaine',
@@ -1659,14 +1555,7 @@ window.VO_LOCALES = {
     'leren.it7.h': 'Vous n’attendiez pas ce message',
     'leren.it7.p': 'Une livraison annoncée sans avoir rien commandé ? Une facture pour un service que vous ne connaissez pas ? Un message disant que vous avez gagné un prix ? Posez‑vous la question : <strong>est‑ce que j’attendais ce message ?</strong> En cas de doute : ne cliquez pas. Ouvrez vous‑même l’application ou le site de l’expéditeur — tapez l’adresse dans le navigateur, jamais via le lien. Ou contactez l’organisation via ses coordonnées officielles.',
     'leren.it7.p.business': 'Une notification pour un document qu’un collègue aurait partagé, sans que vous l’attendiez ? Une facture à approuver “d’urgence” ? Posez‑vous la question : <strong>est‑ce que j’attendais ce message ?</strong> En cas de doute : ne cliquez pas. Vérifiez directement dans l’application officielle (SharePoint, votre ERP). Ou contactez votre service informatique ou le helpdesk.',
-    'leren.examples': 'Voir les exemples →',
 
-    'voorbeelden.h1': 'Exemples d’e‑mails d’hameçonnage',
-    'voorbeelden.lead': 'Voici trois exemples d’hameçonnage par e‑mail. Les points rouges indiquent pourquoi il s’agit d’hameçonnage.',
-    'voorbeelden.sim': 'Ouvrir le simulateur →',
-    'voorbeelden.loading': 'Chargement…',
-    'voorbeelden.error': 'Les exemples n’ont pas pu être chargés. Veuillez réessayer plus tard.',
-    'voorbeelden.to': 'À : vous',
 
     'sim.intro.h': 'Vous allez commencer un exercice',
     'sim.intro.lead': 'Nous allons ouvrir un <strong>environnement d’entraînement</strong> avec de faux messages. Tout ce que vous voyez a été créé pour cet exercice.',
@@ -1745,7 +1634,6 @@ window.VO_LOCALES = {
     'sim.reader.verdict.phish': '⚠️ Signaler comme hameçonnage',
     'sim.reader.linkTo': 'Mène à : {url}',
     'sim.channel.label': 'Canal :',
-    'sim.channel.email': 'E‑mail',
     'sim.channel.sms': 'SMS',
     'sim.channel.whatsapp': 'WhatsApp',
     'sim.channel.phone': 'Téléphone',
@@ -1762,7 +1650,6 @@ window.VO_LOCALES = {
     'sim.call.yourReply': 'Comment réagissez-vous ?',
     'sim.call.next': 'Scénario suivant',
     'sim.call.done': 'Terminer la formation →',
-    'sim.call.retry': 'Réessayer',
     'sim.call.debrief.safeH': 'Bien joué',
     'sim.call.debrief.trapH': 'Hélas — cela a mal tourné',
     'sim.call.debrief.remember': 'À retenir :',
@@ -1907,11 +1794,6 @@ window.VO_LOCALES = {
     'sim.final.insight.legit': 'E-mails légitimes : {correct} sur {total} corrects',
     'sim.final.insight.missed': 'Messages qui vous ont trompé(e) :',
 
-    'sim.final.extra.h': 'Continuer à s’entraîner ?',
-    'sim.final.extra.p': 'Les escrocs utilisent aussi WhatsApp et le téléphone. Essayez aussi ces scénarios.',
-    'sim.final.extra.whatsapp': '💬 S’entraîner au phishing WhatsApp',
-    'sim.final.extra.phone': '📞 S’entraîner aux appels téléphoniques',
-    'sim.final.extra.next': 'Continuer : SMS, WhatsApp et téléphone →',
     'sim.final.optin.h': 'Continuer à apprendre (facultatif)',
     'sim.final.optin.kanalen.h': 'S’entraîner aussi aux SMS, WhatsApp et au téléphone',
     'sim.final.optin.kanalen.p': 'Les escrocs appellent et écrivent aussi. Un court exercice en plus.',
@@ -1974,7 +1856,6 @@ window.VO_LOCALES = {
     'watnu.q.paid': '💳 J’ai payé ou transféré de l’argent',
     'watnu.q.attachment': '📎 J’ai ouvert une pièce jointe',
     'watnu.q.unsure': '🤔 Je ne suis pas sûr(e) que ce soit de l’hameçonnage',
-    'watnu.restart': '← Autre situation',
     'watnu.reassure': 'N’ayez pas honte — cela arrive à beaucoup de monde. Agir vite limite les dégâts.',
     'watnu.a.clicked': '<h3>Vous avez cliqué sur un lien sans rien saisir</h3><ol class="check-list numbered"><li>Fermez l’onglet ou la fenêtre qui s’est ouvert. Ne saisissez rien.</li><li>N’entrez aucun identifiant ni donnée de paiement sur la page apparue.</li><li>Un simple clic est généralement sans danger immédiat — mais restez attentif aux pop-ups ou téléchargements suspects.</li><li>En cas de doute, analysez votre appareil avec votre logiciel de sécurité.</li></ol>',
     'watnu.a.credentials': '<h3>Vous avez saisi vos données ou votre mot de passe</h3><ol class="check-list numbered"><li>Changez <strong>immédiatement</strong> le mot de passe de ce compte — et partout où vous utilisez le même.</li><li>Activez la validation en deux étapes (2FA/MFA) partout où c’est possible.</li><li>S’agit-il de données bancaires ? Appelez <strong>immédiatement</strong> votre banque (numéro au dos de votre carte) pour faire sécuriser le compte.</li><li>Signalez-le à l’organisation concernée ou à votre service informatique.</li></ol>',
@@ -1990,7 +1871,6 @@ window.VO_LOCALES = {
 
     'common.back': '← Retour',
     'common.close': 'Fermer',
-    'common.next': 'Suivant →',
   },
 
   // ============================================================
@@ -2006,11 +1886,6 @@ window.VO_LOCALES = {
     'audience.personal.title': 'Personnel',
     'audience.business.title': 'Professionnel',
 
-    'device.picker.title': 'Choisissez un appareil',
-    'device.picker.sub': 'Bascule immédiatement vers le simulateur choisi.',
-    'device.desktop.title': 'Desktop',
-    'device.android.title': 'Android',
-    'device.iphone.title': 'iPhone',
 
     'meta.title': 'Sécurité en ligne — Reconnaître le hameçonnage',
     'meta.description': 'Apprenez à reconnaître le hameçonnage en 10 minutes. Formation gratuite avec des exemples réalistes pour particuliers et entreprises.',
@@ -2022,15 +1897,9 @@ window.VO_LOCALES = {
 
     'brand.title': 'Sécurité en ligne',
     'nav.welkom': 'Bienvenue',
-    'nav.leren': 'Apprendre',
-    'nav.voorbeelden': 'Exemples',
     'nav.simulator': 'Simulateur',
-    'nav.kanalen': 'Plus de canaux',
     'nav.hulp': 'Aide',
 
-    'nav.wachtwoord': 'Mots de passe',
-    'leren.naarww': 'Suivant : les mots de passe →',
-    'nav.extra': 'Supplément',
     'nav.extra.badge': 'Contenu supplémentaire',
     'leren.naarsim': 'Démarrer le simulateur →',
 
@@ -2064,7 +1933,6 @@ window.VO_LOCALES = {
     'ww.domino.safe': 'sûr',
     'ww.domino.hacked': 'piraté',
     'ww.domino.trigger': 'Et si ce mot de passe fuite ? 💥',
-    'ww.domino.reset': '↺ Recommencer',
     'ww.domino.explain': '💡 Une seule fuite a ouvert <strong>tous</strong> les comptes, parce que le même mot de passe était utilisé partout. Avec un mot de passe <strong>unique</strong> par compte, les dégâts restent limités à un seul endroit. Un gestionnaire de mots de passe les retient pour vous.',
     'ww.zin.h': 'La longueur l’emporte sur la complexité',
     'ww.zin.p': 'Un mot de passe court et « compliqué » est souvent cassé plus vite qu’une longue <strong>phrase de passe</strong>. Comparez quelques exemples — cliquez pour voir le temps de cassage estimé.',
@@ -2099,7 +1967,6 @@ window.VO_LOCALES = {
     'ww.onthoud.li2': '📏 Une longue <strong>phrase de passe</strong> l’emporte sur un mot de passe court et compliqué.',
     'ww.onthoud.li3': '🧰 Un <strong>gestionnaire de mots de passe</strong> les crée et les retient pour vous.',
     'ww.onthoud.li4': '✅ Activez la <strong>MFA</strong> sur la messagerie et la banque — et n’approuvez <strong>jamais</strong> une notification que vous n’avez pas lancée vous-même.',
-    'ww.naarsim': 'Continuer vers le simulateur →',
 
     'welkom.h1': 'Bienvenue dans la formation anti‑hameçonnage',
     'welkom.lead': 'Dans cette courte formation, vous apprendrez à reconnaître le <strong>hameçonnage</strong> (« phishing »). C’est une ruse d’escrocs pour vous voler votre argent ou votre mot de passe.',
@@ -2114,7 +1981,6 @@ window.VO_LOCALES = {
     'welkom.learn.li4': 'Où obtenir de l’aide, et que faire si vous hésitez ou avez cliqué par accident',
     'welkom.start': 'Commencer la formation →',
     // Rétention : exercice de rappel, invitation au retour et astuce de la semaine
-    'refresher.start': 'Exercice de rappel (5 messages)',
     'nudge.h': 'Cela fait un moment',
     'nudge.p': 'Le moment idéal pour refaire la formation. Quelques minutes suffisent pour rester vigilant.',
     'tip.h': 'Astuce de la semaine',
@@ -2157,14 +2023,7 @@ window.VO_LOCALES = {
     'leren.it7.h': 'Vous n’attendiez pas ce message',
     'leren.it7.p': 'Une livraison annoncée sans avoir rien commandé ? Une facture pour un service que vous ne connaissez pas ? Un message disant que vous avez gagné un prix ? Posez‑vous la question : <strong>est‑ce que j’attendais ce message ?</strong> En cas de doute : ne cliquez pas. Ouvrez vous‑même l’application ou le site de l’expéditeur — tapez l’adresse dans le navigateur, jamais via le lien. Ou contactez l’organisation via ses coordonnées officielles.',
     'leren.it7.p.business': 'Une notification pour un document qu’un collègue aurait partagé, sans que vous l’attendiez ? Une facture à approuver “d’urgence” ? Posez‑vous la question : <strong>est‑ce que j’attendais ce message ?</strong> En cas de doute : ne cliquez pas. Vérifiez directement dans l’application officielle (SharePoint, votre ERP). Ou contactez votre service informatique ou le helpdesk.',
-    'leren.examples': 'Voir les exemples →',
 
-    'voorbeelden.h1': 'Exemples d’e‑mails d’hameçonnage',
-    'voorbeelden.lead': 'Voici trois exemples d’hameçonnage par e‑mail. Les points rouges indiquent pourquoi il s’agit d’hameçonnage.',
-    'voorbeelden.sim': 'Ouvrir le simulateur →',
-    'voorbeelden.loading': 'Chargement…',
-    'voorbeelden.error': 'Les exemples n’ont pas pu être chargés. Veuillez réessayer plus tard.',
-    'voorbeelden.to': 'À : vous',
 
     'sim.intro.h': 'Vous allez commencer un exercice',
     'sim.intro.lead': 'Nous allons ouvrir un <strong>environnement d’entraînement</strong> avec de faux messages. Tout ce que vous voyez a été créé pour cet exercice.',
@@ -2243,7 +2102,6 @@ window.VO_LOCALES = {
     'sim.reader.verdict.phish': '⚠️ Signaler comme hameçonnage',
     'sim.reader.linkTo': 'Mène à : {url}',
     'sim.channel.label': 'Canal :',
-    'sim.channel.email': 'E‑mail',
     'sim.channel.sms': 'SMS',
     'sim.channel.whatsapp': 'WhatsApp',
     'sim.channel.phone': 'Téléphone',
@@ -2260,7 +2118,6 @@ window.VO_LOCALES = {
     'sim.call.yourReply': 'Comment réagissez-vous ?',
     'sim.call.next': 'Scénario suivant',
     'sim.call.done': 'Terminer la formation →',
-    'sim.call.retry': 'Réessayer',
     'sim.call.debrief.safeH': 'Bien joué',
     'sim.call.debrief.trapH': 'Hélas — cela a mal tourné',
     'sim.call.debrief.remember': 'À retenir :',
@@ -2405,11 +2262,6 @@ window.VO_LOCALES = {
     'sim.final.insight.legit': 'E-mails légitimes : {correct} sur {total} corrects',
     'sim.final.insight.missed': 'Messages qui vous ont trompé(e) :',
 
-    'sim.final.extra.h': 'Continuer à s’entraîner ?',
-    'sim.final.extra.p': 'Les escrocs utilisent aussi WhatsApp et le téléphone. Essayez aussi ces scénarios.',
-    'sim.final.extra.whatsapp': '💬 S’entraîner au phishing WhatsApp',
-    'sim.final.extra.phone': '📞 S’entraîner aux appels téléphoniques',
-    'sim.final.extra.next': 'Continuer : SMS, WhatsApp et téléphone →',
     'sim.final.optin.h': 'Continuer à apprendre (facultatif)',
     'sim.final.optin.kanalen.h': 'S’entraîner aussi aux SMS, WhatsApp et au téléphone',
     'sim.final.optin.kanalen.p': 'Les escrocs appellent et écrivent aussi. Un court exercice en plus.',
@@ -2472,7 +2324,6 @@ window.VO_LOCALES = {
     'watnu.q.paid': '💳 J’ai payé ou transféré de l’argent',
     'watnu.q.attachment': '📎 J’ai ouvert une pièce jointe',
     'watnu.q.unsure': '🤔 Je ne suis pas sûr(e) que ce soit de l’hameçonnage',
-    'watnu.restart': '← Autre situation',
     'watnu.reassure': 'N’ayez pas honte — cela arrive à beaucoup de monde. Agir vite limite les dégâts.',
     'watnu.a.clicked': '<h3>Vous avez cliqué sur un lien sans rien saisir</h3><ol class="check-list numbered"><li>Fermez l’onglet ou la fenêtre qui s’est ouvert. Ne saisissez rien.</li><li>N’entrez aucun identifiant ni donnée de paiement sur la page apparue.</li><li>Un simple clic est généralement sans danger immédiat — mais restez attentif aux pop-ups ou téléchargements suspects.</li><li>En cas de doute, analysez votre appareil avec votre logiciel de sécurité.</li></ol>',
     'watnu.a.credentials': '<h3>Vous avez saisi vos données ou votre mot de passe</h3><ol class="check-list numbered"><li>Changez <strong>immédiatement</strong> le mot de passe de ce compte — et partout où vous utilisez le même.</li><li>Activez la validation en deux étapes (2FA/MFA) partout où c’est possible.</li><li>S’agit-il de données bancaires ? Appelez <strong>immédiatement</strong> votre banque (numéro au dos de votre carte) pour faire sécuriser le compte.</li><li>Signalez-le à l’organisation concernée ou à votre service informatique.</li></ol>',
@@ -2488,7 +2339,6 @@ window.VO_LOCALES = {
 
     'common.back': '← Retour',
     'common.close': 'Fermer',
-    'common.next': 'Suivant →',
   },
 
   // ============================================================
@@ -2504,11 +2354,6 @@ window.VO_LOCALES = {
     'audience.personal.title': 'Privat',
     'audience.business.title': 'Beruflich',
 
-    'device.picker.title': 'Gerät wählen',
-    'device.picker.sub': 'Wechselt sofort zum gewählten Simulator.',
-    'device.desktop.title': 'Desktop',
-    'device.android.title': 'Android',
-    'device.iphone.title': 'iPhone',
 
     'meta.title': 'Sicher Online — Phishing erkennen',
     'meta.description': 'Lernen Sie Phishing in 10 Minuten zu erkennen. Kostenloses Training mit realistischen Beispielen für Privatpersonen und Unternehmen.',
@@ -2520,16 +2365,10 @@ window.VO_LOCALES = {
 
     'brand.title': 'Sicher Online',
     'nav.welkom': 'Willkommen',
-    'nav.leren': 'Lernen',
-    'nav.voorbeelden': 'Beispiele',
     'nav.simulator': 'Simulator',
-    'nav.kanalen': 'Mehr Kanäle',
     'nav.hulp': 'Hilfe',
 
-    'nav.wachtwoord': 'Passwörter',
-    'nav.extra': 'Extra',
     'nav.extra.badge': 'Zusatzmaterial',
-    'leren.naarww': 'Weiter: Passwörter →',
     'leren.naarsim': 'Simulator starten →',
 
     'leren.ai.h': 'Phishing im Zeitalter der KI',
@@ -2562,7 +2401,6 @@ window.VO_LOCALES = {
     'ww.domino.safe': 'sicher',
     'ww.domino.hacked': 'gehackt',
     'ww.domino.trigger': 'Was, wenn dieses Passwort durchsickert? 💥',
-    'ww.domino.reset': '↺ Zurücksetzen',
     'ww.domino.explain': '💡 Ein einziges Leck öffnete <strong>jedes</strong> Konto, weil überall dasselbe Passwort stand. Mit einem <strong>einzigartigen</strong> Passwort pro Konto bleibt der Schaden auf eine Stelle begrenzt. Ein Passwort-Manager merkt sie sich für Sie.',
     'ww.zin.h': 'Länge schlägt Komplexität',
     'ww.zin.p': 'Ein kurzes, „kompliziertes“ Passwort ist oft schneller geknackt als eine lange <strong>Passphrase</strong>. Vergleichen Sie ein paar Beispiele — klicken Sie, um die geschätzte Knackzeit zu sehen.',
@@ -2597,7 +2435,6 @@ window.VO_LOCALES = {
     'ww.onthoud.li2': '📏 Eine lange <strong>Passphrase</strong> schlägt ein kurzes, kompliziertes Passwort.',
     'ww.onthoud.li3': '🧰 Ein <strong>Passwort-Manager</strong> erstellt und merkt sie für Sie.',
     'ww.onthoud.li4': '✅ Aktivieren Sie <strong>MFA</strong> für E‑Mail und Bank — und bestätigen Sie <strong>niemals</strong> eine Benachrichtigung, die Sie nicht selbst ausgelöst haben.',
-    'ww.naarsim': 'Weiter zum Simulator →',
 
     'welkom.h1': 'Willkommen zur Phishing‑Schulung',
     'welkom.lead': 'In dieser kurzen Schulung lernen Sie, <strong>Phishing</strong> zu erkennen. Phishing ist ein Trick von Betrügern, um Ihr Geld oder Ihr Passwort zu stehlen.',
@@ -2612,7 +2449,6 @@ window.VO_LOCALES = {
     'welkom.learn.li4': 'Wo Sie Hilfe bekommen und was Sie tun, wenn Sie unsicher sind oder versehentlich geklickt haben',
     'welkom.start': 'Schulung starten →',
     // Wiederholung: Auffrischungsübung, Rückkehr-Hinweis und Tipp der Woche
-    'refresher.start': 'Auffrischungsübung (5 Nachrichten)',
     'nudge.h': 'Es ist schon eine Weile her',
     'nudge.p': 'Zeit, die Schulung noch einmal durchzugehen. Ein paar Minuten genügen, um wieder fit zu sein.',
     'tip.h': 'Tipp der Woche',
@@ -2655,14 +2491,7 @@ window.VO_LOCALES = {
     'leren.it7.h': 'Diese Nachricht haben Sie nicht erwartet',
     'leren.it7.p': 'Eine Paketzustellung, obwohl Sie nichts bestellt haben? Eine Rechnung für einen Dienst, den Sie nicht kennen? Eine Nachricht, dass Sie einen Preis gewonnen haben? Fragen Sie sich: <strong>Habe ich diese Nachricht erwartet?</strong> Im Zweifel: nicht klicken. Öffnen Sie die App oder Website des Absenders selbst — tippen Sie die Adresse im Browser ein, nie über den Link. Oder nehmen Sie über die offiziellen Kontaktdaten Kontakt auf.',
     'leren.it7.p.business': 'Eine Benachrichtigung über ein Dokument, das ein Kollege angeblich geteilt hat, ohne dass Sie es erwarteten? Eine Rechnung, die Sie „dringend“ genehmigen sollen? Fragen Sie sich: <strong>Habe ich diese Nachricht erwartet?</strong> Im Zweifel: nicht klicken. Überprüfen Sie es direkt in der offiziellen Anwendung (SharePoint, Ihr ERP). Oder wenden Sie sich an Ihre IT‑Abteilung oder den Helpdesk.',
-    'leren.examples': 'Beispiele ansehen →',
 
-    'voorbeelden.h1': 'Beispiele für Phishing‑E‑Mails',
-    'voorbeelden.lead': 'Unten sehen Sie drei Beispiele für Phishing per E‑Mail. Die roten Punkte zeigen, warum es Phishing ist.',
-    'voorbeelden.sim': 'Simulator öffnen →',
-    'voorbeelden.loading': 'Wird geladen…',
-    'voorbeelden.error': 'Die Beispiele konnten nicht geladen werden. Bitte versuchen Sie es später erneut.',
-    'voorbeelden.to': 'An: Sie',
 
     'sim.intro.h': 'Sie starten gleich eine Übung',
     'sim.intro.lead': 'Wir öffnen eine <strong>Übungsumgebung</strong> mit simulierten Nachrichten. Alles, was Sie sehen, wurde für die Übung erstellt.',
@@ -2741,7 +2570,6 @@ window.VO_LOCALES = {
     'sim.reader.verdict.phish': '⚠️ Als Phishing melden',
     'sim.reader.linkTo': 'Führt zu: {url}',
     'sim.channel.label': 'Kanal:',
-    'sim.channel.email': 'E‑Mail',
     'sim.channel.sms': 'SMS',
     'sim.channel.whatsapp': 'WhatsApp',
     'sim.channel.phone': 'Telefon',
@@ -2758,7 +2586,6 @@ window.VO_LOCALES = {
     'sim.call.yourReply': 'Wie reagieren Sie?',
     'sim.call.next': 'Nächstes Szenario',
     'sim.call.done': 'Training abschließen →',
-    'sim.call.retry': 'Erneut versuchen',
     'sim.call.debrief.safeH': 'Gut gehandelt',
     'sim.call.debrief.trapH': 'Leider — das ging schief',
     'sim.call.debrief.remember': 'Merken Sie sich:',
@@ -2903,11 +2730,6 @@ window.VO_LOCALES = {
     'sim.final.insight.legit': 'Echte E-Mails: {correct} von {total} korrekt',
     'sim.final.insight.missed': 'E-Mails, auf die Sie hereingefallen sind:',
 
-    'sim.final.extra.h': 'Mehr üben?',
-    'sim.final.extra.p': 'Betrüger nutzen auch WhatsApp und das Telefon. Probieren Sie auch diese Szenarien.',
-    'sim.final.extra.whatsapp': '💬 WhatsApp-Phishing üben',
-    'sim.final.extra.phone': '📞 Telefongespräche üben',
-    'sim.final.extra.next': 'Weiter: SMS, WhatsApp & Telefon →',
     'sim.final.optin.h': 'Weiterlernen (optional)',
     'sim.final.optin.kanalen.h': 'Auch SMS, WhatsApp und Telefon üben',
     'sim.final.optin.kanalen.p': 'Betrüger rufen an und schreiben auch. Eine kurze Zusatzübung.',
@@ -2969,7 +2791,6 @@ window.VO_LOCALES = {
     'watnu.q.paid': '💳 Ich habe bezahlt oder Geld überwiesen',
     'watnu.q.attachment': '📎 Ich habe einen Anhang geöffnet',
     'watnu.q.unsure': '🤔 Ich bin nicht sicher, ob es Phishing ist',
-    'watnu.restart': '← Andere Situation',
     'watnu.reassure': 'Schämen Sie sich nicht — das passiert sehr vielen Menschen. Schnelles Handeln begrenzt den Schaden.',
     'watnu.a.clicked': '<h3>Sie haben auf einen Link geklickt, aber nichts eingegeben</h3><ol class="check-list numbered"><li>Schließen Sie den Tab oder das Fenster, das sich geöffnet hat. Geben Sie nichts ein.</li><li>Geben Sie keine Anmelde- oder Zahlungsdaten auf der erschienenen Seite ein.</li><li>Ein bloßer Klick ist meist nicht sofort schädlich — bleiben Sie aber wachsam bei seltsamen Pop-ups oder Downloads.</li><li>Scannen Sie im Zweifel Ihr Gerät mit Ihrer Sicherheitssoftware.</li></ol>',
     'watnu.a.credentials': '<h3>Sie haben Ihre Daten oder Ihr Passwort eingegeben</h3><ol class="check-list numbered"><li>Ändern Sie <strong>jetzt</strong> das Passwort dieses Kontos — und überall, wo Sie dasselbe Passwort verwenden.</li><li>Aktivieren Sie die Zwei-Faktor-Authentifizierung (2FA/MFA), wo immer möglich.</li><li>Geht es um Bankdaten? Rufen Sie <strong>sofort</strong> Ihre Bank an (Nummer auf Ihrer Bankkarte) und lassen Sie das Konto sichern.</li><li>Melden Sie es der betroffenen Organisation oder Ihrer IT-Abteilung.</li></ol>',
@@ -2985,6 +2806,5 @@ window.VO_LOCALES = {
 
     'common.back': '← Zurück',
     'common.close': 'Schließen',
-    'common.next': 'Weiter →',
   },
 };

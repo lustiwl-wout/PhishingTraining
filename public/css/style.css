@@ -19,7 +19,7 @@
   --radius: 12px;
   --shadow: 0 1px 2px rgba(20,30,50,.06), 0 4px 12px rgba(20,30,50,.06);
 
-  /* Outlook-look tokens — hoisted zodat ook .example-outlook ze kan gebruiken. */
+  /* Outlook-look tokens. */
   --ol-blue: #0f6cbd;
   --ol-blue-dark: #115ea3;
   --ol-blue-light: #e8f1fa;
@@ -173,9 +173,6 @@ body {
   background: var(--bg); color: var(--ink); font-weight: 700;
 }
 .stepbar li.active .step-num { background: #fff; color: var(--primary-dark); }
-/* Extra-stap in de stepbar: zelfde zichtbaarheid als de andere stappen.
-   Alleen het "+"-teken markeert het als optioneel/aanvullend materiaal. */
-.stepbar li.step-extra .step-num { font-size: .9rem; font-weight: 700; }
 
 /* Badge die bovenaan de extra-leerstof-pagina verschijnt */
 .extra-badge {
@@ -244,7 +241,6 @@ h3 { font-size: 1.05rem; margin: 0 0 .35rem; }
   background: #fff8e1;
   border-color: #f1c40f;
 }
-body.high-contrast .card.highlight { background: #2a2400; border-color: var(--focus); }
 
 /* ---------- lists ---------- */
 ul.check-list { padding-left: 0; list-style: none; margin: .15rem 0; }
@@ -322,7 +318,6 @@ ol.check-list.numbered li::before {
   color: #fff;
   font-weight: 700;
 }
-body.high-contrast .ai-compare-tab { background: #111; color: #fff; }
 .ai-compare-mail {
   background: #fff;
   border: 1px solid var(--line);
@@ -330,13 +325,6 @@ body.high-contrast .ai-compare-tab { background: #111; color: #fff; }
   border-radius: 10px;
   padding: 1rem 1.1rem;
 }
-body.high-contrast .ai-compare-mail { background: #111; }
-.ai-compare-mail .eml-meta {
-  font-size: .9rem; color: var(--ink-soft);
-  border-bottom: 1px solid var(--line);
-  padding-bottom: .5rem; margin-bottom: .6rem;
-}
-.ai-compare-mail .eml-meta .mono { font-family: ui-monospace, Menlo, Consolas, monospace; }
 .ai-compare-caption {
   margin: .7rem 0 0;
   font-size: .95rem;
@@ -345,7 +333,6 @@ body.high-contrast .ai-compare-mail { background: #111; }
   border-radius: 8px;
   padding: .6rem .8rem;
 }
-body.high-contrast .ai-compare-caption { background: #111; border-color: #555; }
 .ai-remember { margin-top: 1rem; }
 
 /* ---------- adres-uitleg (na de @) ---------- */
@@ -356,7 +343,6 @@ body.high-contrast .ai-compare-caption { background: #111; border-color: #555; }
   padding: 1rem 1.1rem;
   margin: .75rem 0 .9rem;
 }
-body.high-contrast .addr-card { background: #111; }
 
 .addr-line {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -397,7 +383,6 @@ body.high-contrast .addr-card { background: #111; }
   margin-top: .5rem;
   font-size: 1rem;
 }
-body.high-contrast .tip-line { background: #2a2400; }
 
 /* ---------- buttons ---------- */
 .btn {
@@ -427,17 +412,6 @@ body.high-contrast .tip-line { background: #2a2400; }
 .actions {
   display: flex; flex-wrap: wrap; gap: .6rem; margin-top: .85rem;
 }
-
-/* ---------- examples ---------- */
-.example-grid { display: grid; gap: 1rem; }
-
-.example-head {
-  border-bottom: 1px solid var(--line);
-  padding-bottom: .6rem;
-  margin-bottom: .8rem;
-  display: grid; gap: .25rem;
-}
-.example-head .from, .example-head .subj { font-size: 1rem; color: var(--ink-soft); }
 .badge {
   align-self: start;
   display: inline-block;
@@ -453,56 +427,6 @@ body.high-contrast .tip-line { background: #2a2400; }
 .badge.sms      { background: #fdf3e7; color: #8a4a00; }
 .badge.whatsapp { background: #e6f5ec; color: #075e54; }
 
-.example-body {
-  white-space: pre-wrap;
-  font-size: 1.05rem;
-  background: #fafbfd;
-  border: 1px dashed var(--line);
-  border-radius: 8px;
-  padding: 1rem 1.1rem;
-  line-height: 1.6;
-}
-body.high-contrast .example-body { background: #111; }
-
-mark.phish-mark {
-  background: var(--bad-soft);
-  color: var(--bad);
-  font-weight: 700;
-  padding: 0 .15rem;
-  border-bottom: 2px solid var(--bad);
-}
-mark.phish-mark .dot, .annotation-list .dot {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 1.3rem; height: 1.3rem; border-radius: 50%;
-  background: var(--bad); color: #fff;
-  font-size: .8rem; font-weight: 700;
-  margin-left: .25rem;
-}
-
-.annotation-list {
-  list-style: none; padding: 0; margin: 1rem 0 0;
-}
-.annotation-list li {
-  padding: .45rem 0;
-  border-bottom: 1px dotted var(--line);
-  font-size: 1rem;
-}
-.annotation-list li:last-child { border-bottom: 0; }
-.annotation-list .dot { margin-right: .4rem; vertical-align: middle; }
-
-/* ---------- quiz ---------- */
-.quiz-progress {
-  text-align: center; font-weight: 700; color: var(--primary-dark);
-  margin-bottom: .75rem;
-}
-.quiz-card { padding: 1.25rem 1.4rem; }
-.quiz-choices {
-  display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; margin-top: 1rem;
-}
-@media (max-width: 480px) {
-  .quiz-choices { grid-template-columns: 1fr; }
-}
-
 .feedback {
   border-radius: var(--radius);
   padding: 1.1rem 1.25rem;
@@ -516,17 +440,6 @@ mark.phish-mark .dot, .annotation-list .dot {
 
 .result-card { text-align: center; padding: 1.75rem; }
 .result-card .actions { justify-content: center; }
-.sim-extra-channels {
-  margin: 1.25rem 0 .5rem;
-  padding: 1rem 1.25rem;
-  background: var(--surface, #f8f9fb);
-  border: 1px solid var(--line, #e5e7eb);
-  border-radius: 10px;
-  text-align: left;
-}
-.sim-extra-channels h3 { font-size: 1rem; margin-bottom: .35rem; }
-.sim-extra-channels p { font-size: .9rem; color: var(--ink-soft); margin-bottom: .75rem; }
-.sim-extra-btns { display: flex; gap: .6rem; flex-wrap: wrap; }
 
 /* De 7 signalen als compacte naslag op het resultatenscherm. */
 .sim-signals {
@@ -598,9 +511,7 @@ mark.phish-mark .dot, .annotation-list .dot {
 }
 
 /* ==================================================================
-   VOORBEELDEN in Outlook-stijl (statisch, geannoteerd)
-   ================================================================== */
-.example-outlook {
+   VOORBEELDEN in Outlook-stijl (statisch {
   font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
   background: #fff;
   color: var(--ol-ink);
@@ -610,16 +521,6 @@ mark.phish-mark .dot, .annotation-list .dot {
   box-shadow: var(--shadow);
   margin: 0 0 1.25rem;
 }
-.example-outlook + .example-outlook { margin-top: 0; }
-.example-outlook .ol-msg-subject { font-size: 1.2rem; }
-.example-outlook .ol-msg-body { white-space: pre-wrap; }
-.ol-example-addr {
-  margin-top: .15rem;
-  color: var(--ol-muted);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: .92rem;
-  word-break: break-all;
-}
 .ol-sender-addr-inline {
   color: var(--ol-muted);
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -628,15 +529,6 @@ mark.phish-mark .dot, .annotation-list .dot {
   margin-left: .35rem;
   word-break: break-all;
 }
-
-/* De annotatie-lijst onder een voorbeeld */
-.example-outlook .annotation-list { margin-top: 1rem; padding-top: .75rem; border-top: 1px solid var(--ol-border); }
-
-/* ==================================================================
-   OUTLOOK-SIMULATOR — lijkt op Outlook Web zodat oefening herkenbaar is
-   ================================================================== */
-
-.sim-intro { margin-bottom: 1rem; }
 .sim-progress { color: var(--ink-soft); font-weight: 600; margin: .35rem 0 0; }
 
 .outlook {
@@ -991,10 +883,6 @@ body.sim-fullscreen .outlook {
 /* Doelgroep-picker hergebruikt de styling van de taal-picker; alleen
    het 2-kolomsraster is nieuw. */
 .lang-grid-2 { grid-template-columns: 1fr 1fr; }
-.lang-grid-3 { grid-template-columns: repeat(3, 1fr); }
-@media (max-width: 480px) {
-  .lang-grid-3 { grid-template-columns: 1fr; }
-}
 @media (max-width: 480px) {
   .lang-grid-2 { grid-template-columns: 1fr; }
 }
@@ -1010,16 +898,6 @@ body.sim-fullscreen .outlook {
 }
 .ms-mfa-status { margin: .85rem 0 0; font-size: .9rem; color: #605e5c; }
 .ms-mfa-status .ms-spinner { margin-right: .4rem; vertical-align: -2px; }
-
-/* Persoonlijk- vs zakelijk-keuzevraag + knoppen voor de simulator. */
-.sim-choice-q { margin-top: 1.25rem; margin-bottom: .5rem; font-weight: 600; }
-.actions-choice { flex-direction: column; gap: .6rem; align-items: stretch; }
-.actions-choice .big-btn { width: 100%; text-align: left; padding: .85rem 1rem; line-height: 1.4; }
-.actions-choice .big-btn small { display: block; font-weight: 400; opacity: .85; font-size: .9em; }
-@media (min-width: 640px) {
-  .actions-choice { flex-direction: row; }
-  .actions-choice .big-btn { flex: 1; }
-}
 
 /* Microsoft-login */
 .ms-login {
@@ -1053,7 +931,6 @@ body.sim-fullscreen .outlook {
 .ms-logo .ms-sq-g { background: #7fba00; }
 .ms-logo .ms-sq-b { background: #00a4ef; }
 .ms-logo .ms-sq-y { background: #ffb900; }
-.ms-logo .ms-wordmark { color: #5e5e5e; margin-left: .4rem; font-weight: 600; letter-spacing: -.02em; }
 
 .ms-title { font-size: 1.5rem; font-weight: 600; margin: 0 0 .75rem; color: #1b1b1b; }
 .ms-subtitle { font-size: .95rem; margin: 0 0 1.25rem; color: #5e5e5e; }
@@ -1288,31 +1165,6 @@ body.sim-fullscreen .outlook {
 }
 .ol-share-actions .ol-link:hover .ol-link-label { background: #004e8c; }
 
-/* ========================================================
-   Mobiele simulators — apparaat-keuze en device-frame.
-   ======================================================== */
-
-/* Device-picker op de sim-intropagina: drie knoppen naast elkaar
-   met een groot pictogram bovenaan en de label eronder. */
-.sim-device-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: .6rem;
-  margin-top: .75rem;
-}
-.sim-device-btn {
-  display: flex; flex-direction: column; align-items: center; gap: .25rem;
-  padding: 1rem .5rem;
-  font-size: .95rem;
-}
-.sim-device-btn .sim-device-ico {
-  font-size: 1.9rem;
-  line-height: 1;
-}
-@media (max-width: 480px) {
-  .sim-device-grid { grid-template-columns: 1fr; }
-}
-
 /* Device-frame: wrapper die een fysieke telefoon nabootst. De
    specifieke chrome (notch/statusbar/navbar/home-indicator) wordt
    ingeschakeld door de .device-android of .device-iphone klasse op
@@ -1345,8 +1197,6 @@ body.sim-fullscreen .outlook {
 /* Wanneer er wel een skin actief is, moet mob-app de middenruimte
    pakken tussen statusbar en homebar. */
 .device-screen > .mob-app { flex: 1; min-height: 0; }
-
-/* (de oude .device-exit-btn is verhuisd naar de site-topbar als #sim-exit-btn) */
 
 /* Op een echte telefoon (smal viewport) heeft een telefoon-in-telefoon
    geen zin: laat de mail-client gewoon het volledige scherm vullen.
@@ -1765,7 +1615,6 @@ body.device-iphone .device-homebar::after {
 .mob-gmail .mob-reader-head .mob-btn-back {
   color: #5f6368;
 }
-.mob-gmail .mob-reader-head-spacer { flex: 1; }
 .mob-gmail .mob-reader-content { flex: 1; overflow-y: auto; padding: 16px; }
 .mob-gmail .mob-reader-subject {
   font-size: 1.25rem; font-weight: 400; color: #202124;
@@ -2037,7 +1886,6 @@ body.device-iphone .device-homebar::after {
 .mob-drawer-list li:active { background: #f3f2f1; }
 .mob-drawer-ico { font-size: 1.3rem; line-height: 1; }
 .mob-drawer-label { flex: 1; font-size: .95rem; font-weight: 500; }
-.mob-drawer-count { font-size: .8rem; color: #605e5c; }
 
 /* Skin-specifieke drawer-headers */
 .mob-outlook .mob-drawer-head { background: #0078d4; color: #fff; }
@@ -2166,10 +2014,6 @@ body.device-iphone .device-homebar::after {
   }
   .print-email-meta div { margin-bottom: 2pt; }
   .print-email-meta strong { display: inline-block; min-width: 60pt; }
-  .print-email-subject {
-    font-size: 14pt; font-weight: 700;
-    margin: 0 0 .8em;
-  }
   .print-email-body {
     font-size: 11pt; line-height: 1.5;
   }
@@ -3017,9 +2861,7 @@ body.simple-mode {
   --ink-soft: #33404f;
   --ol-muted: #3a3a3a;
 }
-body.simple-mode .lead,
-body.simple-mode .profile-count,
-body.simple-mode .ol-muted { color: var(--ink-soft); }
+body.simple-mode .lead,body.simple-mode .profile-count { color: var(--ink-soft); }
 
 /* Grotere tikdoelen: knoppen en keuzekaarten ruimer en met meer hoogte. */
 body.simple-mode .btn,
@@ -3033,20 +2875,13 @@ body.simple-mode .lang-card,
 body.simple-mode .audience-card { padding: 1.4rem 1rem; }
 
 /* De simulator-skins (mail / mobiel / chat / bel) leesbaarder maken. Deze
-   onderdelen gebruiken deels kleine, vaste tekstgroottes voor de "echte"
+   onderdelen gebruiken deels kleine,vaste tekstgroottes voor de "echte"
    look; in eenvoudige modus tillen we ze op zonder de lay-out te breken. */
-body.simple-mode .ol-reader-inner,
-body.simple-mode .ol-subject,
-body.simple-mode .eml,
-body.simple-mode .eml p,
-body.simple-mode .eml li { font-size: 1.05rem; line-height: 1.65; }
+body.simple-mode .ol-reader-inner,body.simple-mode .eml,body.simple-mode .eml p,body.simple-mode .eml li { font-size: 1.05rem; line-height: 1.65; }
 body.simple-mode .ol-item-subject { font-size: 1rem; }
 body.simple-mode .chat-bubble,
 body.simple-mode .chat-bubble p { font-size: 1.05rem; line-height: 1.55; }
-body.simple-mode .mob-mail-body,
-body.simple-mode .mob-mail-body p { font-size: 1.05rem; line-height: 1.6; }
-body.simple-mode .call-line,
-body.simple-mode .call-choice { font-size: 1.05rem; }
+body.simple-mode .call-line { font-size: 1.05rem; }
 
 /* Phone-/chat-frames niet laten uitvergroten tot ze van het scherm lopen:
    op smalle schermen blijft de bestaande frame-breedte gelden. */
