@@ -43,10 +43,7 @@ async function initDb({ force = false } = {}) {
 
     // Seed opnieuw draaien wanneer: een tabel die de seed vult leeg is, de
     // seed-inhoud is veranderd (hash wijziging), of wanneer expliciet geforceerd.
-    // LET OP: quiz_questions hoort hier NIET bij — die legacy-tabel wordt door
-    // seed.sql wél getruncate maar bewust niet meer gevuld (de simulator draait
-    // op inbox_messages). Hem meenemen in de leegte-check zorgde ervoor dat
-    // élke boot de volledige seed + bewaar/terugzet-cyclus opnieuw draaide.
+    // We controleren alleen de tabellen die de seed daadwerkelijk vult.
     const { rows: countRows } = await client.query(`
       SELECT
         (SELECT COUNT(*) FROM examples)       AS e,
