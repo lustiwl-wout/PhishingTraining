@@ -1125,7 +1125,7 @@
     const answer = document.getElementById('watnu-answer');
     if (!body || !questions || !answer) return;
     body.setAttribute('data-i18n-html', 'watnu.a.' + key);
-    applyI18n(body);
+    body.innerHTML = replaceDomain(t('watnu.a.' + key));
     questions.hidden = true;
     answer.hidden = false;
     answer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -1154,10 +1154,13 @@
     const mail = document.getElementById('ai-compare-mail');
     const caption = document.getElementById('ai-compare-caption');
     if (!mail || !caption) return;
+    // Attribuut bijhouden zodat taalwissel later alsnog de juiste tekst kiest.
     mail.setAttribute('data-i18n-html', 'leren.ai.compare.' + which);
     caption.setAttribute('data-i18n-html', 'leren.ai.compare.caption.' + which);
-    applyI18n(mail);
-    applyI18n(caption);
+    // Direct vullen: applyI18n(element) zoekt alleen in descendants, niet
+    // op het element zelf — dus innerHTML hier zelf zetten.
+    mail.innerHTML    = replaceDomain(t('leren.ai.compare.' + which));
+    caption.innerHTML = replaceDomain(t('leren.ai.compare.caption.' + which));
     document.querySelectorAll('#ai-compare .ai-compare-tab').forEach((el) => {
       el.classList.toggle('active', el.dataset.aiCompare === which);
     });
@@ -1233,9 +1236,9 @@
     if (!phone || !feedback || !body) return;
     feedback.classList.toggle('good', choice === 'deny');
     feedback.classList.toggle('bad', choice === 'approve');
-    body.setAttribute('data-i18n-html',
-      choice === 'approve' ? 'ww.fatigue.approve.result' : 'ww.fatigue.deny.result');
-    applyI18n(body);
+    const mfaKey = choice === 'approve' ? 'ww.fatigue.approve.result' : 'ww.fatigue.deny.result';
+    body.setAttribute('data-i18n-html', mfaKey);
+    body.innerHTML = replaceDomain(t(mfaKey));
     phone.hidden = true;
     feedback.hidden = false;
     feedback.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
