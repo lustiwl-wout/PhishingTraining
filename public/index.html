@@ -448,6 +448,23 @@
     <section id="hulp" class="page" aria-labelledby="hulp-titel">
       <h2 id="hulp-titel" data-i18n="hulp.h1">Wat moet u doen?</h2>
 
+      <div class="card big highlight watnu" id="watnu">
+        <h2 data-i18n="watnu.h">Ik ben er ingetrapt — wat nu?</h2>
+        <p data-i18n="watnu.lead">Wat is er gebeurd? Kies hieronder, dan ziet u meteen de belangrijkste eerste stappen.</p>
+        <div class="watnu-questions" id="watnu-questions">
+          <button type="button" class="watnu-q" data-watnu="clicked"     data-i18n="watnu.q.clicked">🔗 Ik heb op een link geklikt</button>
+          <button type="button" class="watnu-q" data-watnu="credentials" data-i18n="watnu.q.credentials">🔑 Ik heb mijn gegevens of wachtwoord ingevuld</button>
+          <button type="button" class="watnu-q" data-watnu="paid"        data-i18n="watnu.q.paid">💳 Ik heb betaald of geld overgemaakt</button>
+          <button type="button" class="watnu-q" data-watnu="attachment"  data-i18n="watnu.q.attachment">📎 Ik heb een bijlage geopend</button>
+          <button type="button" class="watnu-q" data-watnu="unsure"      data-i18n="watnu.q.unsure">🤔 Ik twijfel of het phishing is</button>
+        </div>
+        <div class="watnu-answer" id="watnu-answer" hidden>
+          <div id="watnu-answer-body"></div>
+          <p class="watnu-reassure" data-i18n="watnu.reassure">Schaam u niet — dit overkomt heel veel mensen. Snel handelen beperkt de schade.</p>
+          <button type="button" class="btn btn-secondary" id="watnu-restart" data-i18n="watnu.restart">← Andere situatie</button>
+        </div>
+      </div>
+
       <div class="card big highlight">
         <h2 data-i18n="hulp.contacts.h">Bij wie u terecht kunt voor hulp</h2>
         <p data-i18n="hulp.contacts.lead">Drie vaste aanspreekpunten. Noteer ze of print deze pagina, zodat u ze snel bij de hand hebt.</p>

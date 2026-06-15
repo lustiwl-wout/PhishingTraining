@@ -746,6 +746,37 @@
     if (t) { e.preventDefault(); go(t.dataset.go); }
   });
 
+  // -------- "Ik ben erin getrapt — wat nu?" beslisboom (hulp-pagina) --------
+  // Geen backend, geen persoonsgegevens: puur tonen/verbergen van panelen.
+  // Het antwoordpaneel krijgt dynamisch een data-i18n-html-attribuut, zodat
+  // een taalwissel het automatisch mee-vertaalt via applyI18n(document).
+  function watnuShow(key) {
+    const body = document.getElementById('watnu-answer-body');
+    const questions = document.getElementById('watnu-questions');
+    const answer = document.getElementById('watnu-answer');
+    if (!body || !questions || !answer) return;
+    body.setAttribute('data-i18n-html', 'watnu.a.' + key);
+    applyI18n(body);
+    questions.hidden = true;
+    answer.hidden = false;
+    answer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  function watnuReset() {
+    const body = document.getElementById('watnu-answer-body');
+    const questions = document.getElementById('watnu-questions');
+    const answer = document.getElementById('watnu-answer');
+    if (!body || !questions || !answer) return;
+    body.removeAttribute('data-i18n-html');
+    body.innerHTML = '';
+    answer.hidden = true;
+    questions.hidden = false;
+  }
+  document.addEventListener('click', (e) => {
+    const q = e.target.closest('[data-watnu]');
+    if (q) { e.preventDefault(); watnuShow(q.dataset.watnu); return; }
+    if (e.target.closest('#watnu-restart')) { e.preventDefault(); watnuReset(); }
+  });
+
 
   function parseSender(s) {
     const str = String(s || '').trim();

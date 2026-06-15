@@ -2138,3 +2138,45 @@ body.device-iphone .device-homebar::after {
   /* Gewoon zwart-wit, links altijd zichtbaar in URL-vorm. */
   a { color: #000; }
 }
+
+/* ========================================================
+   "Ik ben erin getrapt — wat nu?" interactieve beslisboom
+   ======================================================== */
+.watnu-questions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: .6rem;
+  margin-top: 1rem;
+}
+@media (min-width: 600px) {
+  .watnu-questions { grid-template-columns: 1fr 1fr; }
+}
+.watnu-q {
+  text-align: left;
+  padding: .9rem 1.1rem;
+  border: 1.5px solid var(--line, #d1d5db);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--ink, #1a1a2e);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s, border-color .15s, transform .05s;
+}
+.watnu-q:hover { background: var(--bg, #f4f6f9); border-color: var(--primary, #2563eb); }
+.watnu-q:active { transform: translateY(1px); }
+.watnu-answer { margin-top: 1rem; }
+.watnu-answer h3 {
+  font-size: 1.05rem;
+  margin-bottom: .6rem;
+  color: var(--primary, #2563eb);
+}
+.watnu-reassure {
+  margin-top: 1rem;
+  padding: .7rem .9rem;
+  background: #ecfdf5;
+  border-left: 3px solid #16a34a;
+  border-radius: 6px;
+  font-size: .92rem;
+}
+#watnu-restart { margin-top: 1rem; }
