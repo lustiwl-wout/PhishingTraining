@@ -2778,26 +2778,8 @@
       signalsHtml +
       extraHtml +
       '<div class="actions">' +
-        '<button class="btn btn-primary" id="sim-again">' + escapeHtml(t('sim.final.again')) + '</button>' +
-        '<button class="btn btn-secondary" data-go="hulp">' + escapeHtml(t('sim.final.help')) + '</button>' +
+        '<button class="btn btn-primary" data-go="hulp">' + escapeHtml(t('sim.final.help')) + '</button>' +
       '</div>';
-    result.hidden = false;
-    document.getElementById('sim-again').addEventListener('click', () => {
-      // Herstart: sla intro/login over, ga direct terug naar de inbox
-      // van hetzelfde apparaat als daarnet.
-      document.body.classList.add('sim-fullscreen');
-      result.hidden = true;
-      if (isChatChannel()) {
-        showSimPhase('chat');
-        startChatSimulator({ fresh: true }).catch((err) => console.error(err));
-      } else if (currentDevice === 'desktop') {
-        showSimPhase('inbox');
-        startSimulator({ fresh: true });
-      } else {
-        showSimPhase('mobile');
-        startMobileSimulator({ fresh: true });
-      }
-    });
     // Na e-mail simulator: knop naar extra kanalen (sms/whatsapp/phone).
     const extraBtn = document.getElementById('extra-naar-kanalen');
     if (extraBtn) extraBtn.addEventListener('click', () => { launchExtraChannels(); });
