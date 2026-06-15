@@ -109,10 +109,15 @@
     const inboxPhase = document.getElementById('sim-phase-inbox');
     const mobilePhase = document.getElementById('sim-phase-mobile');
     const chatPhase = document.getElementById('sim-phase-chat');
+    const callPhase = document.getElementById('sim-phase-call');
     // restore: true — taal/doelgroep/niveau/kanaal wisselen mag de voortgang
     // niet wissen. Berichten van een andere taal/kanaal hebben andere id's,
     // dus oordelen blijven netjes per combinatie bewaard.
-    if (chatPhase && !chatPhase.hidden) {
+    if (callPhase && !callPhase.hidden) {
+      // Bel-simulator: teken de huidige stap opnieuw in de nieuwe taal,
+      // zonder het gesprek opnieuw te beginnen.
+      renderCallStep();
+    } else if (chatPhase && !chatPhase.hidden) {
       startChatSimulator({ restore: true }).catch((err) => console.error(err));
     } else if (inboxPhase && !inboxPhase.hidden) {
       startSimulator({ restore: true });
@@ -374,7 +379,12 @@
           }
           setDevice(detectDevice());
           document.body.classList.add('sim-fullscreen');
-          if (isChatChannel()) {
+          if (currentChannel === 'phone') {
+            // De bel-simulator bewaart geen voortgang (efemeer, geen
+            // persoonsgegevens): begin het gesprek opnieuw.
+            showSimPhase('call');
+            startCallSimulator();
+          } else if (isChatChannel()) {
             showSimPhase('chat');
             startChatSimulator({ restore: true }).catch((err) => console.error(err));
           } else if (currentDevice === 'desktop') {
@@ -419,12 +429,15 @@
       // dit kanaal bewaard blijven (oordelen zijn per bericht-id gescheiden).
       const sim = document.getElementById('simulator');
       if (sim && sim.classList.contains('active') && !document.body.classList.contains('sim-fullscreen') === false) {
-        const inExercise = ['inbox', 'mobile', 'chat'].some((p) => {
+        const inExercise = ['inbox', 'mobile', 'chat', 'call'].some((p) => {
           const el = document.getElementById('sim-phase-' + p);
           return el && !el.hidden;
         });
         if (inExercise) {
-          if (isChatChannel()) {
+          if (currentChannel === 'phone') {
+            showSimPhase('call');
+            startCallSimulator();
+          } else if (isChatChannel()) {
             showSimPhase('chat');
             startChatSimulator({ restore: true }).catch((err) => console.error(err));
           } else {
@@ -856,7 +869,7 @@
 
   // -------- Simulator fases (intro -> login -> inbox | mobile) --------
   function showSimPhase(name) {
-    ['intro', 'login', 'inbox', 'mobile', 'chat'].forEach((p) => {
+    ['intro', 'login', 'inbox', 'mobile', 'chat', 'call'].forEach((p) => {
       const el = document.getElementById('sim-phase-' + p);
       if (el) el.hidden = (p !== name);
     });
@@ -959,7 +972,12 @@
       e.preventDefault();
       trackSimulatorStart();
       setDevice(detectDevice());
-      if (isChatChannel()) {
+      if (currentChannel === 'phone') {
+        // Telefoon = vishing: geen postvak, maar een vertakkend
+        // gespreksscript in het telefoon-frame (op elk apparaat).
+        showSimPhase('call');
+        startCallSimulator();
+      } else if (isChatChannel()) {
         // sms/WhatsApp: geen mail-login, direct de chat-skin in het
         // telefoon-frame (op elk apparaat).
         showSimPhase('chat');
@@ -1905,6 +1923,259 @@
     const thread = document.getElementById('chat-thread');
     if (thread) thread.hidden = true;
     renderChatList();
+  }
+
+  // ======================================================================
+  // BEL-SIMULATOR (telefoon = vishing)
+  // ----------------------------------------------------------------------
+  // Een telefoongesprek is geen los vertrouw/phish-bericht, dus dit is GEEN
+  // postvak/oordeel-engine maar een vertakkend gespreksscript: een kleine
+  // toestandsmachine. Elk scenario heeft een 'incoming'-scherm (caller +
+  // accepteren/weigeren) en een reeks 'beats' (de beller zegt iets, de
+  // gebruiker kiest uit 2-3 antwoorden). Elke optie wijst naar de volgende
+  // beat of naar een uitkomst (debrief). Alle zichtbare tekst staat als
+  // i18n-sleutel in locales.js; hier staan alleen sleutels + de structuur.
+  //
+  // node-vorm:
+  //   beats: { <id>: { lineKey, options:[{ labelKey, next?|outcome?, safe? }] } }
+  //   outcomes: { <id>: { safe:bool, resultKey, lessonKeys:[...] } }
+  // ======================================================================
+  const CALL_SCENARIOS = [
+    {
+      id: 'bank',
+      callerNameKey: 'sim.call.bank.caller',
+      callerNumberKey: 'sim.call.bank.number',
+      // Een onbekend/zakelijk ogend nummer; weigeren is hier al een veilige zet.
+      declineOutcome: 'bank.declined',
+      start: 'b1',
+      beats: {
+        b1: {
+          lineKey: 'sim.call.bank.b1.line',
+          options: [
+            { labelKey: 'sim.call.bank.b1.o1', next: 'b2', safe: false },
+            { labelKey: 'sim.call.bank.b1.o2', next: 'b3', safe: true },
+          ],
+        },
+        b2: {
+          lineKey: 'sim.call.bank.b2.line',
+          options: [
+            { labelKey: 'sim.call.bank.b2.o1', outcome: 'bank.code', safe: false },
+            { labelKey: 'sim.call.bank.b2.o2', outcome: 'bank.transfer', safe: false },
+            { labelKey: 'sim.call.bank.b2.o3', outcome: 'bank.hangup', safe: true },
+          ],
+        },
+        b3: {
+          lineKey: 'sim.call.bank.b3.line',
+          options: [
+            { labelKey: 'sim.call.bank.b3.o1', outcome: 'bank.code', safe: false },
+            { labelKey: 'sim.call.bank.b3.o2', outcome: 'bank.hangup', safe: true },
+          ],
+        },
+      },
+      outcomes: {
+        'bank.declined': { safe: true, resultKey: 'sim.call.bank.out.declined', lessonKeys: ['sim.call.rule.callback', 'sim.call.rule.nocodes'] },
+        'bank.hangup':   { safe: true, resultKey: 'sim.call.bank.out.hangup',   lessonKeys: ['sim.call.rule.callback', 'sim.call.rule.nocodes'] },
+        'bank.code':     { safe: false, resultKey: 'sim.call.bank.out.code',     lessonKeys: ['sim.call.rule.nocodes', 'sim.call.rule.callback'] },
+        'bank.transfer': { safe: false, resultKey: 'sim.call.bank.out.transfer', lessonKeys: ['sim.call.rule.nosafeaccount', 'sim.call.rule.callback'] },
+      },
+    },
+    {
+      id: 'tech',
+      callerNameKey: 'sim.call.tech.caller',
+      callerNumberKey: 'sim.call.tech.number',
+      declineOutcome: 'tech.declined',
+      start: 't1',
+      beats: {
+        t1: {
+          lineKey: 'sim.call.tech.t1.line',
+          options: [
+            { labelKey: 'sim.call.tech.t1.o1', next: 't2', safe: false },
+            { labelKey: 'sim.call.tech.t1.o2', outcome: 'tech.hangup', safe: true },
+          ],
+        },
+        t2: {
+          lineKey: 'sim.call.tech.t2.line',
+          options: [
+            { labelKey: 'sim.call.tech.t2.o1', outcome: 'tech.remote', safe: false },
+            { labelKey: 'sim.call.tech.t2.o2', outcome: 'tech.creds', safe: false },
+            { labelKey: 'sim.call.tech.t2.o3', outcome: 'tech.hangup', safe: true },
+          ],
+        },
+      },
+      outcomes: {
+        'tech.declined': { safe: true, resultKey: 'sim.call.tech.out.declined', lessonKeys: ['sim.call.rule.mscold', 'sim.call.rule.noremote'] },
+        'tech.hangup':   { safe: true, resultKey: 'sim.call.tech.out.hangup',   lessonKeys: ['sim.call.rule.mscold', 'sim.call.rule.noremote'] },
+        'tech.remote':   { safe: false, resultKey: 'sim.call.tech.out.remote',   lessonKeys: ['sim.call.rule.noremote', 'sim.call.rule.mscold'] },
+        'tech.creds':    { safe: false, resultKey: 'sim.call.tech.out.creds',    lessonKeys: ['sim.call.rule.nopassword', 'sim.call.rule.mscold'] },
+      },
+    },
+    {
+      id: 'authority',
+      callerNameKey: 'sim.call.authority.caller',
+      callerNumberKey: 'sim.call.authority.number',
+      declineOutcome: 'authority.declined',
+      start: 'a1',
+      beats: {
+        a1: {
+          lineKey: 'sim.call.authority.a1.line',
+          options: [
+            { labelKey: 'sim.call.authority.a1.o1', next: 'a2', safe: false },
+            { labelKey: 'sim.call.authority.a1.o2', outcome: 'authority.verify', safe: true },
+          ],
+        },
+        a2: {
+          lineKey: 'sim.call.authority.a2.line',
+          options: [
+            { labelKey: 'sim.call.authority.a2.o1', outcome: 'authority.paid', safe: false },
+            { labelKey: 'sim.call.authority.a2.o2', outcome: 'authority.data', safe: false },
+            { labelKey: 'sim.call.authority.a2.o3', outcome: 'authority.hangup', safe: true },
+          ],
+        },
+      },
+      outcomes: {
+        'authority.declined': { safe: true, resultKey: 'sim.call.authority.out.declined', lessonKeys: ['sim.call.rule.nopressure', 'sim.call.rule.officialchannel'] },
+        'authority.verify':   { safe: true, resultKey: 'sim.call.authority.out.verify',   lessonKeys: ['sim.call.rule.officialchannel', 'sim.call.rule.nopressure'] },
+        'authority.hangup':   { safe: true, resultKey: 'sim.call.authority.out.hangup',   lessonKeys: ['sim.call.rule.nopressure', 'sim.call.rule.officialchannel'] },
+        'authority.paid':     { safe: false, resultKey: 'sim.call.authority.out.paid',     lessonKeys: ['sim.call.rule.nopressure', 'sim.call.rule.officialchannel'] },
+        'authority.data':     { safe: false, resultKey: 'sim.call.authority.out.data',     lessonKeys: ['sim.call.rule.officialchannel', 'sim.call.rule.nopressure'] },
+      },
+    },
+  ];
+
+  // Toestand van het lopende gesprek. Geen persoonsgegevens; niet opgeslagen.
+  let callState = null;
+
+  function startCallSimulator() {
+    const result = document.getElementById('sim-result');
+    if (result) result.hidden = true;
+    // Begin bij het eerste scenario; de debrief biedt "volgend scenario" aan.
+    callState = { scenarioIndex: 0, phase: 'incoming', beatId: null, outcomeId: null };
+    renderCallStep();
+  }
+
+  function currentScenario() {
+    return CALL_SCENARIOS[callState ? callState.scenarioIndex : 0];
+  }
+
+  // Tekent de huidige toestand opnieuw (gebruikt door taal-/kanaalwissel).
+  function renderCallStep() {
+    const app = document.getElementById('call-app');
+    if (!app || !callState) return;
+    if (callState.phase === 'incoming') renderCallIncoming(app);
+    else if (callState.phase === 'incall') renderCallInCall(app);
+    else if (callState.phase === 'debrief') renderCallDebrief(app);
+  }
+
+  function renderCallIncoming(app) {
+    const sc = currentScenario();
+    app.className = 'call-app call-incoming';
+    app.innerHTML =
+      '<div class="call-incoming-top">' +
+        '<p class="call-incoming-label">' + escapeHtml(t('sim.call.incoming')) + '</p>' +
+        '<div class="call-avatar" aria-hidden="true">📞</div>' +
+        '<h1 class="call-caller-name">' + escapeHtml(t(sc.callerNameKey)) + '</h1>' +
+        '<p class="call-caller-number">' + escapeHtml(t(sc.callerNumberKey)) + '</p>' +
+      '</div>' +
+      '<div class="call-incoming-actions">' +
+        '<button class="call-action call-decline" data-call-action="decline">' +
+          '<span class="call-action-icon" aria-hidden="true">📵</span>' +
+          '<span class="call-action-label">' + escapeHtml(t('sim.call.decline')) + '</span>' +
+        '</button>' +
+        '<button class="call-action call-accept" data-call-action="accept">' +
+          '<span class="call-action-icon" aria-hidden="true">📞</span>' +
+          '<span class="call-action-label">' + escapeHtml(t('sim.call.accept')) + '</span>' +
+        '</button>' +
+      '</div>';
+    app.querySelector('[data-call-action="accept"]').addEventListener('click', () => {
+      callState.phase = 'incall';
+      callState.beatId = currentScenario().start;
+      renderCallStep();
+    });
+    app.querySelector('[data-call-action="decline"]').addEventListener('click', () => {
+      callState.phase = 'debrief';
+      callState.outcomeId = currentScenario().declineOutcome;
+      renderCallStep();
+    });
+  }
+
+  function renderCallInCall(app) {
+    const sc = currentScenario();
+    const beat = sc.beats[callState.beatId];
+    if (!beat) return;
+    app.className = 'call-app call-inprogress';
+    const optsHtml = beat.options.map((o, i) =>
+      '<button class="call-option" data-call-opt="' + i + '">' + escapeHtml(t(o.labelKey)) + '</button>'
+    ).join('');
+    app.innerHTML =
+      '<header class="call-bar">' +
+        '<div class="call-bar-name">' + escapeHtml(t(sc.callerNameKey)) + '</div>' +
+        '<div class="call-bar-status">' + escapeHtml(t('sim.call.connected')) + '</div>' +
+      '</header>' +
+      '<div class="call-convo">' +
+        '<div class="call-line">' +
+          '<div class="call-line-who">' + escapeHtml(t('sim.call.theyText')) + '</div>' +
+          '<p class="call-bubble">' + escapeHtml(t(beat.lineKey)) + '</p>' +
+        '</div>' +
+      '</div>' +
+      '<div class="call-options">' +
+        '<p class="call-options-q">' + escapeHtml(t('sim.call.yourReply')) + '</p>' +
+        optsHtml +
+      '</div>';
+    beat.options.forEach((o, i) => {
+      app.querySelector('[data-call-opt="' + i + '"]').addEventListener('click', () => {
+        if (o.outcome) {
+          callState.phase = 'debrief';
+          callState.outcomeId = o.outcome;
+          renderCallStep();
+        } else if (o.next) {
+          callState.beatId = o.next;
+          renderCallStep();
+        }
+      });
+    });
+  }
+
+  function renderCallDebrief(app) {
+    const sc = currentScenario();
+    const outcome = sc.outcomes[callState.outcomeId];
+    if (!outcome) return;
+    app.className = 'call-app call-debrief ' + (outcome.safe ? 'call-debrief-safe' : 'call-debrief-trap');
+    const lessons = outcome.lessonKeys.map((k) =>
+      '<li>' + escapeHtml(t(k)) + '</li>'
+    ).join('');
+    const isLast = callState.scenarioIndex >= CALL_SCENARIOS.length - 1;
+    const nextBtn = isLast
+      ? ''
+      : '<button class="btn btn-primary" data-call-action="next">' + escapeHtml(t('sim.call.next')) + '</button>';
+    app.innerHTML =
+      '<div class="call-debrief-inner">' +
+        '<div class="call-debrief-icon" aria-hidden="true">' + (outcome.safe ? '✅' : '⚠️') + '</div>' +
+        '<h2 class="call-debrief-h">' + escapeHtml(t(outcome.safe ? 'sim.call.debrief.safeH' : 'sim.call.debrief.trapH')) + '</h2>' +
+        '<p class="call-debrief-result">' + escapeHtml(t(outcome.resultKey)) + '</p>' +
+        '<div class="call-remember">' +
+          '<p class="call-remember-h">' + escapeHtml(t('sim.call.debrief.remember')) + '</p>' +
+          '<ul class="call-remember-list">' + lessons + '</ul>' +
+        '</div>' +
+        '<p class="call-golden">' + escapeHtml(t('sim.call.debrief.golden')) + '</p>' +
+        '<div class="call-debrief-actions">' +
+          nextBtn +
+          '<button class="btn btn-secondary" data-call-action="retry">' + escapeHtml(t('sim.call.retry')) + '</button>' +
+        '</div>' +
+      '</div>';
+    const nextEl = app.querySelector('[data-call-action="next"]');
+    if (nextEl) nextEl.addEventListener('click', () => {
+      callState.scenarioIndex += 1;
+      callState.phase = 'incoming';
+      callState.beatId = null;
+      callState.outcomeId = null;
+      renderCallStep();
+    });
+    app.querySelector('[data-call-action="retry"]').addEventListener('click', () => {
+      callState.phase = 'incoming';
+      callState.beatId = null;
+      callState.outcomeId = null;
+      renderCallStep();
+    });
   }
 
   async function openMessage(id) {

@@ -463,6 +463,7 @@
             <button class="difficulty-btn active" data-channel="email" data-i18n="sim.channel.email">E‑mail</button>
             <button class="difficulty-btn" data-channel="sms" data-i18n="sim.channel.sms">Sms</button>
             <button class="difficulty-btn" data-channel="whatsapp" data-i18n="sim.channel.whatsapp">WhatsApp</button>
+            <button class="difficulty-btn" data-channel="phone" data-i18n="sim.channel.phone">Telefoon</button>
           </div>
           <div class="difficulty-toggle" id="sim-difficulty-toggle">
             <span class="difficulty-label" data-i18n="sim.difficulty.label">Moeilijkheidsgraad:</span>
@@ -631,6 +632,28 @@
               </span>
             </div>
             <div id="chat-app" class="chat-app"><!-- gevuld door JS --></div>
+            <div class="device-homebar"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FASE 6: Bel-simulator (telefoon = vishing). Eén telefoon-frame;
+           een vertakkend gespreksscript (geen postvak/oordeel-engine).
+           De UI (inkomend gesprek / in gesprek / nabespreking) wordt door
+           startCallSimulator() in #call-app gevuld. -->
+      <div id="sim-phase-call" class="sim-phase sim-phase-center" hidden>
+        <div id="call-frame" class="device-frame call-frame">
+          <div class="device-notch"></div>
+          <div class="device-screen">
+            <div class="device-statusbar">
+              <span class="device-time">09:41</span>
+              <span class="device-status-right">
+                <span class="device-signal">●●●●</span>
+                <span class="device-wifi">🛜</span>
+                <span class="device-battery">🔋</span>
+              </span>
+            </div>
+            <div id="call-app" class="call-app"><!-- gevuld door JS --></div>
             <div class="device-homebar"></div>
           </div>
         </div>

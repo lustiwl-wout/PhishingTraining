@@ -2703,3 +2703,210 @@ body.channel-whatsapp .chat-bubble-in { background: #fff; }
   .profile-item { grid-template-columns: 7rem 1fr auto; gap: .45rem; }
   .profile-cat  { font-size: .8rem; }
 }
+
+/* ========================================================
+   FASE 7 — Bel-simulator (vishing).
+   Hergebruikt het telefoon-frame (.device-frame/.device-screen)
+   uit fase 1. #call-app vult de middenruimte van het scherm en
+   kent drie toestanden: inkomend gesprek (.call-incoming),
+   in gesprek (.call-inprogress) en nabespreking (.call-debrief).
+   ======================================================== */
+.call-app {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background: #1b1b1f;
+  color: #fff;
+}
+
+/* --- Inkomend gesprek --- */
+.call-incoming {
+  justify-content: space-between;
+  background: linear-gradient(180deg, #2a2a33 0%, #16161a 100%);
+  text-align: center;
+  padding: 2.5rem 1.25rem 2rem;
+}
+.call-incoming-label {
+  margin: 0;
+  font-size: .9rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.65);
+}
+.call-avatar {
+  width: 96px;
+  height: 96px;
+  margin: 1.5rem auto 1rem;
+  border-radius: 50%;
+  background: rgba(255,255,255,.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.4rem;
+}
+.call-caller-name {
+  margin: .25rem 0 .35rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+.call-caller-number {
+  margin: 0;
+  font-size: 1rem;
+  color: rgba(255,255,255,.7);
+}
+.call-incoming-actions {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-top: auto;
+}
+.call-action {
+  background: none;
+  border: 0;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+  cursor: pointer;
+  font: inherit;
+}
+.call-action-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.7rem;
+  transition: transform .12s ease;
+}
+.call-action:hover .call-action-icon,
+.call-action:focus-visible .call-action-icon { transform: scale(1.06); }
+.call-accept .call-action-icon { background: var(--good, #1a7f37); }
+.call-decline .call-action-icon { background: var(--bad, #b3261e); }
+.call-action-label { font-size: .85rem; color: rgba(255,255,255,.8); }
+
+/* --- In gesprek --- */
+.call-inprogress { background: #16161a; }
+.call-bar {
+  flex-shrink: 0;
+  padding: 1.1rem 1.25rem .9rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.call-bar-name { font-size: 1.15rem; font-weight: 700; }
+.call-bar-status {
+  margin-top: .2rem;
+  font-size: .82rem;
+  color: var(--good, #4ade80);
+  font-variant-numeric: tabular-nums;
+}
+.call-convo {
+  flex: 1;
+  min-height: 0;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.call-line-who {
+  font-size: .78rem;
+  color: rgba(255,255,255,.55);
+  margin-bottom: .35rem;
+}
+.call-bubble {
+  margin: 0;
+  background: #2c2c34;
+  color: #fff;
+  padding: .8rem 1rem;
+  border-radius: 4px 16px 16px 16px;
+  line-height: 1.45;
+  max-width: 92%;
+}
+.call-options {
+  flex-shrink: 0;
+  padding: 1rem 1.25rem 1.25rem;
+  background: #1f1f25;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.call-options-q {
+  margin: 0 0 .65rem;
+  font-size: .85rem;
+  color: rgba(255,255,255,.7);
+}
+.call-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin-bottom: .55rem;
+  padding: .75rem .9rem;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 12px;
+  background: #2a2a33;
+  color: #fff;
+  font: inherit;
+  line-height: 1.35;
+  cursor: pointer;
+  transition: background .12s ease, border-color .12s ease;
+}
+.call-option:last-child { margin-bottom: 0; }
+.call-option:hover,
+.call-option:focus-visible {
+  background: #353541;
+  border-color: rgba(255,255,255,.4);
+}
+
+/* --- Nabespreking (debrief) --- */
+.call-debrief {
+  background: #fff;
+  color: var(--text, #1b1b1f);
+  justify-content: flex-start;
+}
+.call-debrief-inner { padding: 1.5rem 1.25rem 2rem; }
+.call-debrief-icon { font-size: 2.6rem; text-align: center; }
+.call-debrief-h {
+  margin: .5rem 0 .25rem;
+  text-align: center;
+  font-size: 1.35rem;
+}
+.call-debrief-safe .call-debrief-h { color: var(--good, #1a7f37); }
+.call-debrief-trap .call-debrief-h { color: var(--bad, #b3261e); }
+.call-debrief-result {
+  margin: .5rem 0 1.25rem;
+  line-height: 1.5;
+  text-align: center;
+}
+.call-remember {
+  background: var(--good-soft, #eaf6ee);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+}
+.call-debrief-trap .call-remember { background: var(--bad-soft, #fbeaea); }
+.call-remember-h {
+  margin: 0 0 .5rem;
+  font-weight: 700;
+}
+.call-remember-list {
+  margin: 0;
+  padding-left: 1.2rem;
+  line-height: 1.5;
+}
+.call-remember-list li { margin-bottom: .4rem; }
+.call-remember-list li:last-child { margin-bottom: 0; }
+.call-golden {
+  margin: 1.1rem 0 1.25rem;
+  font-size: .9rem;
+  line-height: 1.5;
+  color: var(--muted, #555);
+  font-style: italic;
+}
+.call-debrief-actions {
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+}
+.call-debrief-actions .btn { width: 100%; }
