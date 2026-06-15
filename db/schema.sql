@@ -174,6 +174,30 @@ CREATE TABLE IF NOT EXISTS simulator_starts (
   started_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- Enterprise: voortgangsgeheugen server-side per training-ronde (anoniem, aan org_user_id).
+-- Vervangt de localStorage-aanpak voor zakelijke gebruikers: géén persoonsgegevens,
+-- alleen een anoniem intern ID, tijdstip, totaal/correct en of het een opfrisoefening was.
+CREATE TABLE IF NOT EXISTS user_completions (
+  id              SERIAL PRIMARY KEY,
+  org_user_id     INTEGER     NOT NULL REFERENCES org_users(id) ON DELETE CASCADE,
+  session_id      TEXT        NOT NULL,
+  completed_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  total_messages  INTEGER     NOT NULL DEFAULT 0,
+  correct_count   INTEGER     NOT NULL DEFAULT 0,
+  was_refresher   BOOLEAN     NOT NULL DEFAULT FALSE
+);
+CREATE INDEX IF NOT EXISTS idx_user_completions_org_user ON user_completions(org_user_id);
+
+-- Enterprise: verdiende badges per gebruiker (deduplicaat via UNIQUE).
+CREATE TABLE IF NOT EXISTS user_badges (
+  id            SERIAL PRIMARY KEY,
+  org_user_id   INTEGER     NOT NULL REFERENCES org_users(id) ON DELETE CASCADE,
+  badge         TEXT        NOT NULL,
+  earned_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE(org_user_id, badge)
+);
+CREATE INDEX IF NOT EXISTS idx_user_badges_org_user ON user_badges(org_user_id);
+
 -- Lightweight visitor analytics: no personal data, no cookies beyond existing session.
 CREATE TABLE IF NOT EXISTS analytics_events (
   id         SERIAL PRIMARY KEY,

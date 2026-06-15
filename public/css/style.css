@@ -3015,5 +3015,6 @@ body.simple-mode .call-choice { font-size: 1.05rem; }
 }
 .badge-icon { font-size: 1.15rem; line-height: 1; }
 .badge-label { white-space: nowrap; }
+.badge-chip.badge-new { box-shadow: 0 0 0 2px var(--good); }
 
 body.simple-mode .badge-chip { font-size: 1rem; padding: .45rem .85rem; }

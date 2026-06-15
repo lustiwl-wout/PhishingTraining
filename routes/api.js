@@ -298,6 +298,64 @@ router.get('/enterprise/progress', async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
+// GET /api/enterprise/history — laatste afronding, gemiste berichten, verdiende badges.
+// Géén persoonsgegevens: alles gekoppeld aan het anonieme interne org_user_id.
+router.get('/enterprise/history', async (req, res, next) => {
+  const orgUserId = req.session?.enterpriseOrgUserId;
+  if (!orgUserId) return res.status(401).json({ error: 'unauthorized' });
+  try {
+    const [compResult, badgesResult, missedResult] = await Promise.all([
+      db.query(
+        `SELECT EXTRACT(EPOCH FROM completed_at)::float * 1000 AS ts
+           FROM user_completions
+          WHERE org_user_id = $1
+          ORDER BY completed_at DESC LIMIT 1`,
+        [orgUserId]
+      ),
+      db.query(
+        `SELECT badge FROM user_badges WHERE org_user_id = $1`,
+        [orgUserId]
+      ),
+      db.query(
+        `SELECT DISTINCT j.message_id::text AS mid
+           FROM inbox_judgments j
+          WHERE j.org_user_id = $1 AND j.is_correct = FALSE`,
+        [orgUserId]
+      ),
+    ]);
+    res.json({
+      lastCompletion: compResult.rows[0] ? Number(compResult.rows[0].ts) : 0,
+      badges:         badgesResult.rows.map((r) => r.badge),
+      missedIds:      missedResult.rows.map((r) => r.mid),
+    });
+  } catch (err) { next(err); }
+});
+
+// POST /api/enterprise/complete — sla afronding + verdiende badges op (server-side retentie).
+router.post('/enterprise/complete', async (req, res, next) => {
+  const orgUserId = req.session?.enterpriseOrgUserId;
+  const sessionId = req.session?.enterpriseSessionId;
+  if (!orgUserId || !sessionId) return res.status(401).json({ error: 'unauthorized' });
+  try {
+    const { total = 0, correct = 0, wasRefresher = false, badges = [] } = req.body || {};
+    await db.query(
+      `INSERT INTO user_completions (org_user_id, session_id, total_messages, correct_count, was_refresher)
+       VALUES ($1, $2, $3, $4, $5)`,
+      [orgUserId, sessionId, Number(total) || 0, Number(correct) || 0, !!wasRefresher]
+    );
+    if (Array.isArray(badges) && badges.length > 0) {
+      for (const badge of badges) {
+        if (typeof badge !== 'string' || !badge) continue;
+        await db.query(
+          `INSERT INTO user_badges (org_user_id, badge) VALUES ($1, $2) ON CONFLICT DO NOTHING`,
+          [orgUserId, badge]
+        );
+      }
+    }
+    res.json({ ok: true });
+  } catch (err) { next(err); }
+});
+
 // GET /api/qr-scans?session_id=… — heeft deze sessie de QR-code(s) gescand?
 // Enterprise: sessie uit de cookie. Publiek: session_id-parameter.
 router.get('/qr-scans', async (req, res, next) => {

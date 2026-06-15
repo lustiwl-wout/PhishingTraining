@@ -249,6 +249,8 @@
   // op de welkom-pagina belandt.
   // -------- enterprise config --------
   let enterpriseConfig = null;
+  // Server-side retentiehistorie voor enterprise-gebruikers (null = niet geladen).
+  let serverHistory = null;
 
   async function loadEnterpriseConfig() {
     try {
@@ -258,6 +260,12 @@
       if (!cfg.enterprise) return;
       enterpriseConfig = cfg;
       applyEnterpriseConfig(cfg);
+      // Laad meteen de retentiehistorie zodat de terugkeer-nudge en de
+      // opfrisoefening direct na init de juiste gegevens hebben.
+      try {
+        const hr = await fetch('/api/enterprise/history');
+        if (hr.ok) serverHistory = await hr.json();
+      } catch (_) {}
     } catch (_) { /* non-enterprise: ignore */ }
   }
 
@@ -743,12 +751,10 @@
     try { localStorage.removeItem(SIM_STATE_KEY); } catch (_) {}
   }
 
-  // -------- Retentie: voortgangsgeheugen (anoniem, 100% localStorage) --------
-  // Géén persoonsgegevens: we bewaren alleen een tijdstempel van de laatste
-  // afronding en per bericht-id of het goed/fout beoordeeld werd. Daarmee
-  // kunnen we gemiste berichten later opnieuw aanbieden (spaced repetition)
-  // en een vriendelijke terugkeer-nudge tonen. Net als de bestaande persist-
-  // helpers wikkelen we JSON.parse/stringify in try/catch.
+  // -------- Retentie: voortgangsgeheugen --------
+  // Enterprise-gebruikers: server-side opslag via /api/enterprise/history +
+  // /api/enterprise/complete (anoniem, gekoppeld aan org_user_id, geen PII).
+  // Publieke gebruikers: localStorage (vo_progress) — geen account, geen server.
   const PROGRESS_KEY = 'vo_progress';
 
   function loadProgress() {
@@ -763,28 +769,30 @@
     try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(p)); } catch (_) {}
   }
 
-  // Roep aan bij het afronden van een oefening. Bewaart het tijdstip en
-  // per bericht-id of het laatst goed/fout was, plus wanneer het gezien is.
-  function recordCompletion() {
-    if (!simState) return;
+  // Bericht-id's die de gebruiker eerder FOUT beoordeelde (om te resurfacen).
+  // Enterprise: uit serverHistory (alle ronden); publiek: uit localStorage.
+  function getMissedMessageIds() {
+    if (enterpriseConfig && serverHistory) {
+      return Array.isArray(serverHistory.missedIds) ? serverHistory.missedIds : [];
+    }
     const p = loadProgress();
-    p.lastCompletion = Date.now();
-    if (!p.messages || typeof p.messages !== 'object') p.messages = {};
-    const now = Date.now();
-    simState.messages.forEach((m) => {
-      const j = simState.judgments[m.id];
-      if (!j) return;
-      p.messages[m.id] = { correct: !!j.correct, seenAt: now };
+    const ids = [];
+    Object.keys(p.messages || {}).forEach((id) => {
+      if (p.messages[id] && p.messages[id].correct === false) ids.push(id);
     });
-    saveProgress(p);
+    return ids;
+  }
+
+  // Tijdstip (ms) van de laatste afronding, of 0 als er nog geen historie is.
+  // Enterprise: uit serverHistory; publiek: uit localStorage.
+  function getLastCompletion() {
+    if (enterpriseConfig && serverHistory) return serverHistory.lastCompletion || 0;
+    return loadProgress().lastCompletion || 0;
   }
 
   // -------- Lichte gamification: badges --------
-  // Per-run prestaties, volledig uit simState berekend. Geen backend, geen
-  // persoonsgegevens. Verdiende badge-id's worden (anoniem) in vo_progress
-  // bewaard zodat de verzameling over runs heen kan groeien.
-  // facts = { total, correct, pct, phishTotal, phishCorrect, clicked,
-  //           opened, wasRefresher }.
+  // Per-run prestaties uit simState berekend.
+  // facts = { total, correct, pct, phishTotal, phishCorrect, clicked, opened, wasRefresher }.
   const BADGE_DEFS = [
     { id: 'sharp',     icon: '🎯', earn: (f) => f.total > 0 && f.correct === f.total },
     { id: 'spotter',   icon: '🕵️', earn: (f) => f.phishTotal > 0 && f.phishCorrect === f.phishTotal },
@@ -798,29 +806,55 @@
       try { return b.earn(facts); } catch (_) { return false; }
     });
   }
-  // Verdiende badge-id's bij de verzameling in vo_progress voegen (anoniem).
-  function recordBadges(ids) {
-    if (!ids || !ids.length) return;
+
+  // Server-side opslaan voor enterprise; localStorage voor publiek.
+  async function recordCompletionAndBadges(total, correct, wasRefresher, badges) {
+    if (enterpriseConfig) {
+      try {
+        await fetch('/api/enterprise/complete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ total, correct, wasRefresher, badges: badges.map((b) => b.id) }),
+        });
+        // Cache bijwerken zodat de nudge en opfris-oefening direct kloppen
+        if (!serverHistory) serverHistory = { lastCompletion: 0, badges: [], missedIds: [] };
+        serverHistory.lastCompletion = Date.now();
+        if (!Array.isArray(serverHistory.badges)) serverHistory.badges = [];
+        badges.forEach((b) => {
+          if (!serverHistory.badges.includes(b.id)) serverHistory.badges.push(b.id);
+        });
+        // Gemiste berichten: berichten waarvoor is_correct=false in deze ronde
+        if (!Array.isArray(serverHistory.missedIds)) serverHistory.missedIds = [];
+        if (simState) {
+          simState.messages.forEach((m) => {
+            const j = simState.judgments[m.id];
+            if (!j) return;
+            const sid = String(m.id);
+            if (!j.correct && !serverHistory.missedIds.includes(sid)) {
+              serverHistory.missedIds.push(sid);
+            } else if (j.correct) {
+              serverHistory.missedIds = serverHistory.missedIds.filter((id) => id !== sid);
+            }
+          });
+        }
+      } catch (_) {}
+      return;
+    }
+    // Publiek: localStorage
     const p = loadProgress();
-    const set = Array.isArray(p.badges) ? p.badges : [];
-    ids.forEach((id) => { if (!set.includes(id)) set.push(id); });
-    p.badges = set;
+    p.lastCompletion = Date.now();
+    if (!p.messages || typeof p.messages !== 'object') p.messages = {};
+    const now = Date.now();
+    if (simState) {
+      simState.messages.forEach((m) => {
+        const j = simState.judgments[m.id];
+        if (!j) return;
+        p.messages[m.id] = { correct: !!j.correct, seenAt: now };
+      });
+    }
+    if (!Array.isArray(p.badges)) p.badges = [];
+    badges.forEach((b) => { if (!p.badges.includes(b.id)) p.badges.push(b.id); });
     saveProgress(p);
-  }
-
-  // Bericht-id's die de gebruiker eerder FOUT beoordeelde (om te resurfacen).
-  function getMissedMessageIds() {
-    const p = loadProgress();
-    const ids = [];
-    Object.keys(p.messages || {}).forEach((id) => {
-      if (p.messages[id] && p.messages[id].correct === false) ids.push(id);
-    });
-    return ids;
-  }
-
-  // Tijdstip (ms) van de laatste afronding, of 0 als er nog geen historie is.
-  function getLastCompletion() {
-    return loadProgress().lastCompletion || 0;
   }
 
   // -------- Retentie: ISO-weeknummer voor de "Tip van de week" --------
@@ -2527,7 +2561,7 @@
     else openMobMessage(next.id);
   }
 
-  function finishSimulator() {
+  async function finishSimulator() {
     if (isChatChannel()) {
       const thread = document.getElementById('chat-thread');
       if (thread) thread.hidden = true;
@@ -2540,9 +2574,6 @@
     // Persisted state hoeft niet meer — sessie is afgerond. Refresh
     // op de result-pagina laat de gebruiker dan weer fris beginnen.
     clearPersistedSimState();
-    // Retentie: anoniem voortgangsgeheugen bijwerken (tijdstip + per bericht
-    // goed/fout). Geen persoonsgegevens. Voedt de opfris-oefening en de nudge.
-    recordCompletion();
     // Was dit een opfris-oefening? Bewaren vóór de reset hieronder, want de
     // "Comeback"-badge hangt ervan af.
     const wasRefresher = refresherMode;
@@ -2599,7 +2630,7 @@
       ? '<div class="final-qr-scanned">⚠️ ' + escapeHtml(t('sim.final.openedAttachment', { count: openedCount })) + '</div>'
       : '';
 
-    // Lichte gamification: badges op basis van deze run. Volledig client-side.
+    // Gamification: badges op basis van deze run.
     const badges = earnedBadges({
       total, correct, pct,
       phishTotal: phishingMsgs.length,
@@ -2608,12 +2639,26 @@
       opened: openedCount,
       wasRefresher,
     });
-    recordBadges(badges.map((b) => b.id));
-    const badgesHtml = badges.length > 0 ? (
+    // Retentie: enterprise → server-side; publiek → localStorage.
+    await recordCompletionAndBadges(total, correct, wasRefresher, badges);
+
+    // Toon alle verdiende badges (over alle trainingsronden heen).
+    // Enterprise: uit serverHistory (bijgewerkt door recordCompletionAndBadges).
+    // Publiek: uit de huidige run + localStorage-collectie.
+    let allBadgeIds;
+    if (enterpriseConfig && serverHistory && Array.isArray(serverHistory.badges)) {
+      allBadgeIds = serverHistory.badges;
+    } else {
+      const p = loadProgress();
+      allBadgeIds = Array.isArray(p.badges) ? p.badges : badges.map((b) => b.id);
+    }
+    const allBadges = BADGE_DEFS.filter((b) => allBadgeIds.includes(b.id));
+    const newBadgeIds = new Set(badges.map((b) => b.id));
+    const badgesHtml = allBadges.length > 0 ? (
       '<div class="final-badges">' +
         '<p class="final-badges-h">' + escapeHtml(t('badge.h')) + '</p>' +
-        '<ul class="badge-row">' + badges.map((b) =>
-          '<li class="badge-chip" title="' + escapeHtml(t('badge.' + b.id + '.desc')) + '">' +
+        '<ul class="badge-row">' + allBadges.map((b) =>
+          '<li class="badge-chip' + (newBadgeIds.has(b.id) ? ' badge-new' : '') + '" title="' + escapeHtml(t('badge.' + b.id + '.desc')) + '">' +
             '<span class="badge-icon" aria-hidden="true">' + b.icon + '</span>' +
             '<span class="badge-label">' + escapeHtml(t('badge.' + b.id + '.name')) + '</span>' +
           '</li>'
