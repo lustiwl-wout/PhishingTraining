@@ -2557,8 +2557,8 @@ body.channel-whatsapp .chat-bubble-in { background: #fff; }
    FASE 7 — Bel-simulator (vishing).
    Hergebruikt het telefoon-frame (.device-frame/.device-screen)
    uit fase 1. #call-app vult de middenruimte van het scherm en
-   kent drie toestanden: inkomend gesprek (.call-incoming),
-   in gesprek (.call-inprogress) en nabespreking (.call-debrief).
+   kent twee toestanden: inkomend gesprek (.call-incoming) en
+   in gesprek (.call-inprogress). De nabespreking is een popup (showModal).
    ======================================================== */
 .call-app {
   flex: 1;
@@ -2709,60 +2709,18 @@ body.channel-whatsapp .chat-bubble-in { background: #fff; }
   border-color: rgba(255,255,255,.4);
 }
 
-/* Bel-frame iets breder dan het standaard mobiele device-frame zodat
-   de nabespreking comfortabel past zonder te scrollen. */
-#call-frame.call-frame { width: min(480px, 96vw); }
+/* De nabespreking (debrief) is een popup (showModal), net als de
+   e-mailfeedback — niet langer een vol scherm in het telefoonframe. Het
+   bel-frame houdt daardoor de normale telefoonbreedte (.device-frame). */
 
-/* --- Nabespreking (debrief) --- */
-.call-debrief {
-  background: #fff;
-  color: var(--text, #1b1b1f);
-  justify-content: flex-start;
-}
-.call-debrief-inner { padding: 1.5rem 1.25rem 2rem; }
-.call-debrief-icon { font-size: 2.6rem; text-align: center; }
-.call-debrief-h {
-  margin: .5rem 0 .25rem;
-  text-align: center;
-  font-size: 1.35rem;
-}
-.call-debrief-safe .call-debrief-h { color: var(--good, #1a7f37); }
-.call-debrief-trap .call-debrief-h { color: var(--bad, #b3261e); }
-.call-debrief-result {
-  margin: .5rem 0 1.25rem;
-  line-height: 1.5;
-  text-align: center;
-}
-.call-remember {
-  background: var(--good-soft, #eaf6ee);
-  border-radius: 12px;
-  padding: 1rem 1.1rem;
-}
-.call-debrief-trap .call-remember { background: var(--bad-soft, #fbeaea); }
-.call-remember-h {
-  margin: 0 0 .5rem;
-  font-weight: 700;
-}
-.call-remember-list {
-  margin: 0;
-  padding-left: 1.2rem;
-  line-height: 1.5;
-}
-.call-remember-list li { margin-bottom: .4rem; }
-.call-remember-list li:last-child { margin-bottom: 0; }
+/* Gouden regel onderaan de debrief-popup. */
 .call-golden {
-  margin: 1.1rem 0 1.25rem;
+  margin: 1.1rem 0 .25rem;
   font-size: .9rem;
   line-height: 1.5;
   color: var(--muted, #555);
   font-style: italic;
 }
-.call-debrief-actions {
-  display: flex;
-  flex-direction: column;
-  gap: .6rem;
-}
-.call-debrief-actions .btn { width: 100%; }
 
 /* ===========================================================================
    FASE 8 — Doelgroepvarianten

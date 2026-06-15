@@ -2243,40 +2243,34 @@
     const sc = currentScenario();
     const outcome = sc.outcomes[callState.outcomeId];
     if (!outcome) return;
-    app.className = 'call-app call-debrief ' + (outcome.safe ? 'call-debrief-safe' : 'call-debrief-trap');
     const lessons = outcome.lessonKeys.map((k) =>
       '<li>' + escapeHtml(t(k)) + '</li>'
     ).join('');
     const scenarioCount = (callState.scenarios || CALL_SCENARIOS).length;
     const isLast = callState.scenarioIndex >= scenarioCount - 1;
-    const nextBtn = isLast
-      ? '<button class="btn btn-primary" data-call-action="done">' + escapeHtml(t('sim.call.done')) + '</button>'
-      : '<button class="btn btn-primary" data-call-action="next">' + escapeHtml(t('sim.call.next')) + '</button>';
-    app.innerHTML =
-      '<div class="call-debrief-inner">' +
-        '<div class="call-debrief-icon" aria-hidden="true">' + (outcome.safe ? '✅' : '⚠️') + '</div>' +
-        '<h2 class="call-debrief-h">' + escapeHtml(t(outcome.safe ? 'sim.call.debrief.safeH' : 'sim.call.debrief.trapH')) + '</h2>' +
-        '<p class="call-debrief-result">' + escapeHtml(t(outcome.resultKey)) + '</p>' +
-        '<div class="call-remember">' +
-          '<p class="call-remember-h">' + escapeHtml(t('sim.call.debrief.remember')) + '</p>' +
-          '<ul class="call-remember-list">' + lessons + '</ul>' +
-        '</div>' +
-        '<p class="call-golden">' + escapeHtml(t('sim.call.debrief.golden')) + '</p>' +
-        '<div class="call-debrief-actions">' +
-          nextBtn +
-        '</div>' +
-      '</div>';
-    const nextEl = app.querySelector('[data-call-action="next"]');
-    if (nextEl) nextEl.addEventListener('click', () => {
+    // Nabespreking als popup — net als de e-mailfeedback. Zo hoeft de debrief
+    // niet in het telefoonframe te passen: geen scrollbar, witruimte of te
+    // grote iconen binnen het toestel.
+    const advance = () => {
       callState.scenarioIndex += 1;
       callState.phase = 'incoming';
       callState.beatId = null;
       callState.outcomeId = null;
       renderCallStep();
-    });
-    const doneEl = app.querySelector('[data-call-action="done"]');
-    if (doneEl) doneEl.addEventListener('click', () => {
-      showSimPhase('intro');
+    };
+    showModal({
+      title: t(outcome.safe ? 'sim.call.debrief.safeH' : 'sim.call.debrief.trapH'),
+      variant: outcome.safe ? 'good' : 'bad',
+      bodyHtml:
+        '<p>' + escapeHtml(t(outcome.resultKey)) + '</p>' +
+        '<p><strong>' + escapeHtml(t('sim.call.debrief.remember')) + '</strong></p>' +
+        '<ul class="check-list">' + lessons + '</ul>' +
+        '<p class="call-golden">' + escapeHtml(t('sim.call.debrief.golden')) + '</p>',
+      actions: [
+        isLast
+          ? { label: t('sim.call.done'), primary: true, close: true, onClick: () => showSimPhase('intro') }
+          : { label: t('sim.call.next'), primary: true, close: true, onClick: advance },
+      ],
     });
   }
 
