@@ -196,3 +196,14 @@ CREATE TABLE IF NOT EXISTS simulator_starts (
   ip_address  TEXT,
   started_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- Lightweight visitor analytics: no personal data, no cookies beyond existing session.
+CREATE TABLE IF NOT EXISTS analytics_events (
+  id         SERIAL PRIMARY KEY,
+  event      TEXT        NOT NULL,
+  lang       TEXT        NOT NULL DEFAULT '',
+  audience   TEXT        NOT NULL DEFAULT '',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_analytics_events_created ON analytics_events(created_at);
+CREATE INDEX IF NOT EXISTS idx_analytics_events_event   ON analytics_events(event);
