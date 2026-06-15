@@ -50,9 +50,13 @@ CREATE TABLE IF NOT EXISTS inbox_messages (
 ALTER TABLE inbox_messages ADD COLUMN IF NOT EXISTS locale TEXT NOT NULL DEFAULT 'nl';
 ALTER TABLE inbox_messages ADD COLUMN IF NOT EXISTS audience TEXT NOT NULL DEFAULT 'personal';
 ALTER TABLE inbox_messages ADD COLUMN IF NOT EXISTS difficulty TEXT NOT NULL DEFAULT 'normal';
+-- Kanaal: maakt naast e-mail ook sms/whatsapp (smishing) en telefoon (vishing)
+-- mogelijk binnen dezelfde simulator-engine. Bestaande rijen blijven 'email'.
+ALTER TABLE inbox_messages ADD COLUMN IF NOT EXISTS channel TEXT NOT NULL DEFAULT 'email';
 CREATE INDEX IF NOT EXISTS idx_inbox_messages_locale ON inbox_messages(locale);
 CREATE INDEX IF NOT EXISTS idx_inbox_messages_audience ON inbox_messages(audience);
 CREATE INDEX IF NOT EXISTS idx_inbox_messages_difficulty ON inbox_messages(difficulty);
+CREATE INDEX IF NOT EXISTS idx_inbox_messages_channel ON inbox_messages(channel);
 
 CREATE TABLE IF NOT EXISTS inbox_judgments (
   id              SERIAL PRIMARY KEY,

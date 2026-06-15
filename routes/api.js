@@ -31,6 +31,14 @@ function pickDifficulty(req) {
   return SUPPORTED_DIFFICULTIES.has(q) ? q : 'normal';
 }
 
+// Kanaal van de simulator: e-mail (standaard), sms/whatsapp (smishing) of
+// telefoon (vishing). Onbekende waarde valt terug op 'email'.
+const SUPPORTED_CHANNELS = new Set(['email', 'sms', 'whatsapp', 'phone']);
+function pickChannel(req) {
+  const q = req.query?.channel || '';
+  return SUPPORTED_CHANNELS.has(q) ? q : 'email';
+}
+
 // Voer `queryFn(locale)` uit voor de gevraagde taal en val terug op 'nl'
 // wanneer er nog geen vertaalde rijen bestaan. Zo breekt de UI niet bij
 // een nieuwe locale die nog niet in de seed zit.
@@ -75,13 +83,15 @@ router.get('/inbox', async (req, res, next) => {
     const locale = pickLocale(req);
     const audience = pickAudience(req);
     const difficulty = pickDifficulty(req);
+    const channel = pickChannel(req);
     const result = await withFallback(locale, (loc) => db.query(
-      `SELECT id, sender_name, sender_address, received_label, subject, preview,
+      `SELECT id, channel, sender_name, sender_address, received_label, subject, preview,
               attachments
          FROM inbox_messages
-        WHERE active = TRUE AND locale = $1 AND audience IN ($2, 'both') AND difficulty = $3
+        WHERE active = TRUE AND locale = $1 AND audience IN ($2, 'both')
+          AND difficulty = $3 AND channel = $4
         ORDER BY sort_order, id`,
-      [loc, audience, difficulty]
+      [loc, audience, difficulty, channel]
     ));
     // In de lijst alleen tonen DÁT er een bijlage is (voor de paperclip).
     // Of die gevaarlijk is en de waarschuwing horen pas bij het openen —
@@ -114,14 +124,16 @@ router.get('/print', async (req, res, next) => {
     const locale = pickLocale(req);
     const audience = pickAudience(req);
     const difficulty = pickDifficulty(req);
+    const channel = pickChannel(req);
     const result = await withFallback(locale, (loc) => db.query(
-      `SELECT id, sender_name, sender_address, sender_note, received_label,
+      `SELECT id, channel, sender_name, sender_address, sender_note, received_label,
               subject, body, links, attachments, is_phishing, red_flags, green_flags,
               explanation, sort_order
          FROM inbox_messages
-        WHERE active = TRUE AND locale = $1 AND audience IN ($2, 'both') AND difficulty = $3
+        WHERE active = TRUE AND locale = $1 AND audience IN ($2, 'both')
+          AND difficulty = $3 AND channel = $4
         ORDER BY sort_order, id`,
-      [loc, audience, difficulty]
+      [loc, audience, difficulty, channel]
     ));
     res.json(result.rows);
   } catch (err) { next(err); }
@@ -133,7 +145,7 @@ router.get('/inbox/:id', async (req, res, next) => {
     const id = Number.parseInt(req.params.id, 10);
     if (!Number.isInteger(id)) return res.status(400).json({ error: 'ongeldig id' });
     const { rows } = await db.query(
-      `SELECT id, sender_name, sender_address, received_label, subject, body, links, attachments
+      `SELECT id, channel, sender_name, sender_address, received_label, subject, body, links, attachments
        FROM inbox_messages WHERE id = $1 AND active = TRUE`,
       [id]
     );
@@ -171,7 +183,7 @@ router.post('/inbox/:id/judge', async (req, res, next) => {
     if (!isUuidLike(session_id)) return res.status(400).json({ error: 'ongeldig session_id' });
 
     const { rows } = await db.query(
-      `SELECT is_phishing, red_flags, green_flags, explanation, sender_note, locale, audience
+      `SELECT is_phishing, red_flags, green_flags, explanation, sender_note, locale, audience, channel
        FROM inbox_messages WHERE id = $1 AND active = TRUE`,
       [id]
     );
@@ -209,11 +221,13 @@ router.post('/inbox/:id/judge', async (req, res, next) => {
       `SELECT
          (SELECT COUNT(DISTINCT j.message_id)::int
             FROM inbox_judgments j
-            WHERE j.session_id = $1) AS judged,
+            JOIN inbox_messages m ON m.id = j.message_id
+            WHERE j.session_id = $1 AND m.channel = $5) AS judged,
          (SELECT COUNT(*)::int
             FROM inbox_messages
-            WHERE active = TRUE AND locale = $2 AND audience IN ($3, 'both') AND difficulty = $4) AS total`,
-      [session_id, msg.locale, msg.audience, difficulty]
+            WHERE active = TRUE AND locale = $2 AND audience IN ($3, 'both')
+              AND difficulty = $4 AND channel = $5) AS total`,
+      [session_id, msg.locale, msg.audience, difficulty, msg.channel]
     ).then(({ rows: [r] }) => {
       if (r && r.judged >= r.total && r.total > 0) {
         db.query(

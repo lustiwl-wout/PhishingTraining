@@ -49,6 +49,20 @@
     return 'android';
   }
 
+  // -------- channel (email / sms / whatsapp / phone) --------
+  // E-mail is de klassieke simulator. sms/whatsapp = smishing, phone = vishing.
+  // De engine (lijst, lezen, oordelen) is kanaal-agnostisch; alleen de skin
+  // en de fetch-filter verschillen. Default 'email' houdt bestaand gedrag.
+  const SUPPORTED_CHANNELS = ['email', 'sms', 'whatsapp', 'phone'];
+  let currentChannel = 'email';
+  function setChannel(c) {
+    if (!SUPPORTED_CHANNELS.includes(c)) return;
+    currentChannel = c;
+    document.body.classList.remove(
+      'channel-email', 'channel-sms', 'channel-whatsapp', 'channel-phone');
+    document.body.classList.add('channel-' + c);
+  }
+
   // -------- difficulty (normaal vs gevorderd) --------
   const SUPPORTED_DIFFICULTIES = ['normal', 'advanced'];
   let currentDifficulty = 'normal';
@@ -452,7 +466,8 @@
         const sep = path.includes('?') ? '&' : '?';
         url += sep + 'lang=' + encodeURIComponent(currentLang)
              + '&audience=' + encodeURIComponent(currentAudience)
-             + '&difficulty=' + encodeURIComponent(currentDifficulty);
+             + '&difficulty=' + encodeURIComponent(currentDifficulty)
+             + '&channel=' + encodeURIComponent(currentChannel);
       }
       const res = await fetch(url, Object.assign({
         headers: { 'Content-Type': 'application/json' },
