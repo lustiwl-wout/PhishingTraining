@@ -2738,6 +2738,18 @@
       '</div>'
     ) : '';
 
+    // "Meer oefenen" blok: alleen tonen als de e-mail- of sms-simulator net gedaan is.
+    const extraHtml = (currentChannel === 'email' || currentChannel === 'sms')
+      ? '<div class="sim-extra-channels">' +
+          '<h3>' + escapeHtml(t('sim.final.extra.h')) + '</h3>' +
+          '<p>' + escapeHtml(t('sim.final.extra.p')) + '</p>' +
+          '<div class="sim-extra-btns">' +
+            '<button class="btn btn-secondary" id="extra-whatsapp">' + escapeHtml(t('sim.final.extra.whatsapp')) + '</button>' +
+            '<button class="btn btn-secondary" id="extra-phone">' + escapeHtml(t('sim.final.extra.phone')) + '</button>' +
+          '</div>' +
+        '</div>'
+      : '';
+
     result.innerHTML =
       '<h2>' + escapeHtml(titel) + '</h2>' +
       '<p class="big-text">' + t('sim.final.score', { correct, total, pct }) + '</p>' +
@@ -2749,6 +2761,7 @@
       openedHtml +
       '<div id="final-qr-warning"></div>' +
       missedHtml +
+      extraHtml +
       '<div class="actions">' +
         '<button class="btn btn-primary" id="sim-again">' + escapeHtml(t('sim.final.again')) + '</button>' +
         '<button class="btn btn-secondary" id="sim-refresher">' + escapeHtml(t('refresher.start')) + '</button>' +
@@ -2774,6 +2787,24 @@
         startMobileSimulator({ fresh: true });
       }
     });
+    // Extra kanaal-knoppen: WhatsApp en telefoon als post-training verdieping.
+    const waBtn = document.getElementById('extra-whatsapp');
+    if (waBtn) waBtn.addEventListener('click', () => {
+      result.hidden = true;
+      setChannel('whatsapp');
+      document.body.classList.add('sim-fullscreen');
+      showSimPhase('chat');
+      startChatSimulator({ fresh: true }).catch((err) => console.error(err));
+    });
+    const phBtn = document.getElementById('extra-phone');
+    if (phBtn) phBtn.addEventListener('click', () => {
+      result.hidden = true;
+      setChannel('phone');
+      document.body.classList.add('sim-fullscreen');
+      showSimPhase('call');
+      startCallSimulator();
+    });
+
     result.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     // Heeft de gebruiker tijdens de oefening écht een QR-code gescand

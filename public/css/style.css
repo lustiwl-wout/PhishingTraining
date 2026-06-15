@@ -520,6 +520,17 @@ mark.phish-mark .dot, .annotation-list .dot {
 
 .result-card { text-align: center; padding: 1.75rem; }
 .result-card .actions { justify-content: center; }
+.sim-extra-channels {
+  margin: 1.25rem 0 .5rem;
+  padding: 1rem 1.25rem;
+  background: var(--surface, #f8f9fb);
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 10px;
+  text-align: left;
+}
+.sim-extra-channels h3 { font-size: 1rem; margin-bottom: .35rem; }
+.sim-extra-channels p { font-size: .9rem; color: var(--ink-soft); margin-bottom: .75rem; }
+.sim-extra-btns { display: flex; gap: .6rem; flex-wrap: wrap; }
 
 /* ---------- misc ---------- */
 .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
