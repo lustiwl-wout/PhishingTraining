@@ -41,21 +41,24 @@ async function initDb({ force = false } = {}) {
     );
     const previousHash = metaRows[0] && metaRows[0].value;
 
-    // Seed opnieuw draaien wanneer: tabellen leeg zijn, de seed-inhoud is
-    // veranderd (hash wijziging), of wanneer expliciet geforceerd.
+    // Seed opnieuw draaien wanneer: een tabel die de seed vult leeg is, de
+    // seed-inhoud is veranderd (hash wijziging), of wanneer expliciet geforceerd.
+    // LET OP: quiz_questions hoort hier NIET bij — die legacy-tabel wordt door
+    // seed.sql wél getruncate maar bewust niet meer gevuld (de simulator draait
+    // op inbox_messages). Hem meenemen in de leegte-check zorgde ervoor dat
+    // élke boot de volledige seed + bewaar/terugzet-cyclus opnieuw draaide.
     const { rows: countRows } = await client.query(`
       SELECT
-        (SELECT COUNT(*) FROM quiz_questions) AS q,
         (SELECT COUNT(*) FROM examples)       AS e,
         (SELECT COUNT(*) FROM inbox_messages) AS i
     `);
     const counts = countRows[0];
-    const anyEmpty = Number(counts.q) === 0 || Number(counts.e) === 0 || Number(counts.i) === 0;
+    const anyEmpty = Number(counts.e) === 0 || Number(counts.i) === 0;
     const hashChanged = previousHash !== seedHash;
 
     // Altijd de actuele rij-aantallen loggen, zodat je ook bij een
     // overgeslagen seed ziet hoe vol de content-tabellen zijn.
-    console.log(`[init-db] content-tabellen: quiz_questions=${counts.q} examples=${counts.e} inbox_messages=${counts.i}`);
+    console.log(`[init-db] content-tabellen: examples=${counts.e} inbox_messages=${counts.i}`);
 
     if (force || anyEmpty || hashChanged) {
       let reason;
@@ -65,7 +68,6 @@ async function initDb({ force = false } = {}) {
         // Benoem precies wélke tabel(len) leeg zijn — dat is de info die
         // we nodig hebben om een onverwachte her-seed te debuggen.
         const empty = [];
-        if (Number(counts.q) === 0) empty.push('quiz_questions');
         if (Number(counts.e) === 0) empty.push('examples');
         if (Number(counts.i) === 0) empty.push('inbox_messages');
         reason = `lege tabel: ${empty.join(', ')}`;
