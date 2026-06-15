@@ -91,10 +91,14 @@ function sendIndex(_req, res) {
 }
 
 // Analytics: page_view event — fire-and-forget, never blocks the response.
-app.get('/', (_req, _res, next) => {
-  db.query(
-    `INSERT INTO analytics_events (event) VALUES ('page_view')`
-  ).catch(() => {});
+// Admin-sessies tellen niet mee: het gaat om écht bezoek aan de training,
+// niet om de beheerder die zelf rondklikt.
+app.get('/', (req, _res, next) => {
+  if (!req.session?.admin) {
+    db.query(
+      `INSERT INTO analytics_events (event) VALUES ('page_view')`
+    ).catch(() => {});
+  }
   next();
 });
 
