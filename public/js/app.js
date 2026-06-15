@@ -2246,7 +2246,7 @@
     ).join('');
     const isLast = callState.scenarioIndex >= CALL_SCENARIOS.length - 1;
     const nextBtn = isLast
-      ? ''
+      ? '<button class="btn btn-primary" data-call-action="done">' + escapeHtml(t('sim.call.done')) + '</button>'
       : '<button class="btn btn-primary" data-call-action="next">' + escapeHtml(t('sim.call.next')) + '</button>';
     app.innerHTML =
       '<div class="call-debrief-inner">' +
@@ -2272,6 +2272,10 @@
       callState.beatId = null;
       callState.outcomeId = null;
       renderCallStep();
+    });
+    const doneEl = app.querySelector('[data-call-action="done"]');
+    if (doneEl) doneEl.addEventListener('click', () => {
+      showSimPhase('intro');
     });
     app.querySelector('[data-call-action="retry"]').addEventListener('click', () => {
       callState.phase = 'incoming';
