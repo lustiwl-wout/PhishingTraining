@@ -173,13 +173,9 @@ body {
   background: var(--bg); color: var(--ink); font-weight: 700;
 }
 .stepbar li.active .step-num { background: #fff; color: var(--primary-dark); }
-/* Extra-stap in de stepbar: visueel iets teruggetrokken (optioneel materiaal) */
-.stepbar li.step-extra { opacity: .7; }
-.stepbar li.step-extra.active { opacity: 1; }
-.stepbar li.step-extra .step-num {
-  background: var(--line); color: var(--ink-soft); font-size: .75rem; font-weight: 700;
-}
-.stepbar li.step-extra.active .step-num { background: #fff; color: var(--primary-dark); }
+/* Extra-stap in de stepbar: zelfde zichtbaarheid als de andere stappen.
+   Alleen het "+"-teken markeert het als optioneel/aanvullend materiaal. */
+.stepbar li.step-extra .step-num { font-size: .9rem; font-weight: 700; }
 
 /* Badge die bovenaan de extra-leerstof-pagina verschijnt */
 .extra-badge {

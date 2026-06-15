@@ -1240,10 +1240,10 @@
   // illustratieve demonstratie met tonen/verbergen en CSS-animaties.
 
   // 1. Hergebruik-domino: één gedeeld wachtwoord lekt, alle accounts vallen.
+  // Eenmalige demonstratie: er is geen "opnieuw" — de les is na één keer duidelijk.
   function dominoTrigger() {
     const row = document.getElementById('domino-row');
     const trigger = document.getElementById('domino-trigger');
-    const reset = document.getElementById('domino-reset');
     const explain = document.getElementById('domino-explain');
     if (!row) return;
     const accts = row.querySelectorAll('.domino-acct');
@@ -1260,27 +1260,8 @@
     });
     if (trigger) trigger.hidden = true;
     setTimeout(() => {
-      if (reset) reset.hidden = false;
       if (explain) explain.hidden = false;
     }, 250 + accts.length * 450);
-  }
-  function dominoReset() {
-    const row = document.getElementById('domino-row');
-    const trigger = document.getElementById('domino-trigger');
-    const reset = document.getElementById('domino-reset');
-    const explain = document.getElementById('domino-explain');
-    if (!row) return;
-    row.querySelectorAll('.domino-acct').forEach((el) => {
-      el.classList.remove('hacked');
-      const state = el.querySelector('.domino-state');
-      if (state) {
-        state.setAttribute('data-i18n', 'ww.domino.safe');
-        state.textContent = t('ww.domino.safe');
-      }
-    });
-    if (trigger) trigger.hidden = false;
-    if (reset) reset.hidden = true;
-    if (explain) explain.hidden = true;
   }
 
   // 2. Wachtwoordzin-voorbeelden: klik vouwt de geschatte kraaktijd uit.
@@ -1306,6 +1287,11 @@
     body.innerHTML = replaceDomain(t(mfaKey));
     phone.hidden = true;
     feedback.hidden = false;
+    // "Probeer opnieuw" alleen tonen bij een foute keuze (goedkeuren), zodat
+    // de gebruiker de veilige actie alsnog kan oefenen. Bij weigeren (juist)
+    // is opnieuw proberen overbodig.
+    const restart = document.getElementById('mfa-restart');
+    if (restart) restart.hidden = (choice === 'deny');
     feedback.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
   function mfaRestart() {
@@ -1322,7 +1308,6 @@
 
   document.addEventListener('click', (e) => {
     if (e.target.closest('#domino-trigger')) { e.preventDefault(); dominoTrigger(); return; }
-    if (e.target.closest('#domino-reset'))   { e.preventDefault(); dominoReset(); return; }
     const pwBtn = e.target.closest('.pw-example');
     if (pwBtn) { e.preventDefault(); pwToggle(pwBtn); return; }
     const mfaBtn = e.target.closest('[data-mfa]');
