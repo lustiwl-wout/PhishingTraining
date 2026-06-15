@@ -53,11 +53,25 @@ async function initDb({ force = false } = {}) {
     const anyEmpty = Number(counts.q) === 0 || Number(counts.e) === 0 || Number(counts.i) === 0;
     const hashChanged = previousHash !== seedHash;
 
+    // Altijd de actuele rij-aantallen loggen, zodat je ook bij een
+    // overgeslagen seed ziet hoe vol de content-tabellen zijn.
+    console.log(`[init-db] content-tabellen: quiz_questions=${counts.q} examples=${counts.e} inbox_messages=${counts.i}`);
+
     if (force || anyEmpty || hashChanged) {
       let reason;
-      if (force) reason = 'force';
-      else if (anyEmpty) reason = 'lege tabel';
-      else reason = 'seed-inhoud gewijzigd';
+      if (force) {
+        reason = 'force';
+      } else if (anyEmpty) {
+        // Benoem precies wélke tabel(len) leeg zijn — dat is de info die
+        // we nodig hebben om een onverwachte her-seed te debuggen.
+        const empty = [];
+        if (Number(counts.q) === 0) empty.push('quiz_questions');
+        if (Number(counts.e) === 0) empty.push('examples');
+        if (Number(counts.i) === 0) empty.push('inbox_messages');
+        reason = `lege tabel: ${empty.join(', ')}`;
+      } else {
+        reason = 'seed-inhoud gewijzigd';
+      }
       console.log(`[init-db] seed laden (${reason}). hash: ${previousHash || 'none'} -> ${seedHash}`);
 
       // Bewaar gebruikersdata vóór de seed — sequentieel op dezelfde client.
