@@ -837,16 +837,16 @@
   }
 
   // Afronding server-side opslaan voor enterprise; localStorage voor publiek.
-  // Voedt de terugkeer-nudge, de "gemiste berichten"-opfrissing en retentie.
-  async function recordCompletion(total, correct, wasRefresher) {
+  // Voedt de terugkeer-nudge en retentie.
+  async function recordCompletion(total, correct) {
     if (enterpriseConfig) {
       try {
         await fetch('/api/enterprise/complete', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ total, correct, wasRefresher }),
+          body: JSON.stringify({ total, correct }),
         });
-        // Cache bijwerken zodat de nudge en opfris-oefening direct kloppen
+        // Cache bijwerken zodat de terugkeer-nudge direct klopt
         if (!serverHistory) serverHistory = { lastCompletion: 0, missedIds: [] };
         serverHistory.lastCompletion = Date.now();
         // Gemiste berichten: berichten waarvoor is_correct=false in deze ronde
@@ -919,74 +919,6 @@
     banner.hidden = !(last && days >= RETURN_NUDGE_DAYS);
   }
 
-  // -------- Retentie: opfris-oefening (spaced repetition) --------
-  // Hergebruikt de bestaande simulator-engine volledig. We halen de normale
-  // /inbox-set op, bouwen een subset van ~5 berichten (eerst eerder-gemiste,
-  // daarna willekeurige niet-recent-geziene), zetten simState en renderen via
-  // de bestaande skin-functies.
-  const REFRESHER_SIZE = 5;
-
-  function pickRefresherMessages(messages) {
-    const p = loadProgress();
-    const missedSet = new Set(getMissedMessageIds());
-    const present = messages.filter((m) => missedSet.has(m.id));
-    const rest = messages.filter((m) => !missedSet.has(m.id));
-    // De rest sorteren op "minst recent gezien eerst" (ongeziene = 0), met
-    // een willekeurige tiebreaker zodat het niet elke keer dezelfde volgorde is.
-    rest.sort((a, b) => {
-      const sa = (p.messages[a.id] && p.messages[a.id].seenAt) || 0;
-      const sb = (p.messages[b.id] && p.messages[b.id].seenAt) || 0;
-      if (sa !== sb) return sa - sb;
-      return Math.random() - 0.5;
-    });
-    const chosen = present.concat(rest).slice(0, REFRESHER_SIZE);
-    return chosen.length ? chosen : messages.slice(0, REFRESHER_SIZE);
-  }
-
-  // Start de opfris-oefening. Geeft de oefening een schone start (verse
-  // simState, geen herstel) zodat een lopende sessie niet wordt vervuild.
-  async function startRefresher() {
-    trackSimulatorStart();
-    refresherMode = true;
-    go('simulator');
-    setDevice(detectDevice());
-    // E-mail blijft het standaardkanaal voor de opfrisser; we forceren niets
-    // wat de gebruiker zelf op het introscherm gekozen had voor een volle run.
-    document.body.classList.add('sim-fullscreen');
-    clearPersistedSimState();
-    try {
-      const all = applyOrgDomain(await api('/inbox'));
-      const messages = pickRefresherMessages(all);
-      simState = { messages, judgments: {}, interactions: {}, current: null };
-      if (isChatChannel()) {
-        showSimPhase('chat');
-        buildChatSkin();
-        renderChatList();
-        if (messages.length) openChatMessage(messages[0].id);
-      } else if (currentDevice === 'desktop') {
-        showSimPhase('inbox');
-        const result = document.getElementById('sim-result');
-        if (result) result.hidden = true;
-        currentFolder = 'inbox';
-        setActiveFolderLi('inbox');
-        renderInboxList();
-        updateProgress();
-        if (messages.length) openMessage(messages[0].id);
-      } else {
-        showSimPhase('mobile');
-        const result = document.getElementById('sim-result');
-        if (result) result.hidden = true;
-        currentMobFolder = 'inbox';
-        buildMobSkin();
-        renderMobList();
-        if (messages.length) openMobMessage(messages[0].id);
-      }
-    } catch (err) {
-      console.error('refresher fetch failed', err);
-      refresherMode = false;
-    }
-  }
-  let refresherMode = false;
 
   // -------- Simulator fases (intro -> login -> inbox | mobile) --------
   function showSimPhase(name) {
@@ -1150,12 +1082,6 @@
   document.addEventListener('click', (e) => {
     const t = e.target.closest('[data-go]');
     if (t) { e.preventDefault(); go(t.dataset.go); }
-  });
-
-  // Retentie: startknoppen voor de opfris-oefening (welkom-pagina en nudge).
-  document.addEventListener('click', (e) => {
-    const r = e.target.closest('#welkom-refresher, #nudge-refresher');
-    if (r) { e.preventDefault(); startRefresher(); }
   });
 
   // Stappenbalk: een stap aanklikken navigeert naar die pagina. De stappen
@@ -2713,9 +2639,6 @@
     // Persisted state hoeft niet meer — sessie is afgerond. Refresh
     // op de result-pagina laat de gebruiker dan weer fris beginnen.
     clearPersistedSimState();
-    // Was dit een opfris-oefening? Bewaren vóór de reset hieronder.
-    const wasRefresher = refresherMode;
-    refresherMode = false;
     // Verberg alle simulator-fases en verlaat fullscreen zodat
     // het resultaat en de stap-navigatie weer zichtbaar zijn.
     showSimPhase(null);
@@ -2769,7 +2692,7 @@
       : '';
 
     // Retentie: enterprise → server-side; publiek → localStorage.
-    await recordCompletion(total, correct, wasRefresher);
+    await recordCompletion(total, correct);
 
     // Persoonlijk risicoprofiel: groepeer de beoordeelde berichten per
     // categorie en bereken per categorie het percentage correct. Zo wordt de
@@ -2902,13 +2825,9 @@
       extraHtml +
       '<div class="actions">' +
         '<button class="btn btn-primary" id="sim-again">' + escapeHtml(t('sim.final.again')) + '</button>' +
-        '<button class="btn btn-secondary" id="sim-refresher">' + escapeHtml(t('refresher.start')) + '</button>' +
         '<button class="btn btn-secondary" data-go="hulp">' + escapeHtml(t('sim.final.help')) + '</button>' +
       '</div>';
     result.hidden = false;
-    document.getElementById('sim-refresher').addEventListener('click', () => {
-      startRefresher();
-    });
     document.getElementById('sim-again').addEventListener('click', () => {
       // Herstart: sla intro/login over, ga direct terug naar de inbox
       // van hetzelfde apparaat als daarnet.

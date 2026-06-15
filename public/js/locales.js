@@ -127,7 +127,7 @@ window.VO_LOCALES = {
     // Retentie: opfris-oefening, terugkeer-nudge en tip van de week
     'refresher.start': 'Opfris‑oefening (5 berichten)',
     'nudge.h': 'Het is alweer een tijdje geleden',
-    'nudge.p': 'Tijd voor een korte opfrisser. In een paar minuten bent u weer scherp.',
+    'nudge.p': 'Tijd om de training nog eens te doen. In een paar minuten bent u weer scherp.',
     'tip.h': 'Tip van de week',
     'tip.1': 'Controleer altijd het adres ná de @ — dáár staat wie het écht is.',
     'tip.2': 'Een bank vraagt nooit uw pincode of volledige wachtwoord.',
@@ -624,7 +624,7 @@ window.VO_LOCALES = {
     // Retentie: opfris-oefening, terugkeer-nudge en tip van de week
     'refresher.start': 'Opfris‑oefening (5 berichten)',
     'nudge.h': 'Het is alweer een tijdje geleden',
-    'nudge.p': 'Tijd voor een korte opfrisser. Op een paar minuten bent u weer scherp.',
+    'nudge.p': 'Tijd om de training nog eens te doen. Op een paar minuten bent u weer scherp.',
     'tip.h': 'Tip van de week',
     'tip.1': 'Controleer altijd het adres ná de @ — dáár staat wie het écht is.',
     'tip.2': 'Een bank vraagt nooit uw pincode of volledig wachtwoord.',
@@ -1121,7 +1121,7 @@ window.VO_LOCALES = {
     // Retention: refresher exercise, return nudge and tip of the week
     'refresher.start': 'Refresher exercise (5 messages)',
     'nudge.h': 'It has been a while',
-    'nudge.p': 'Time for a short refresher. A few minutes is all it takes to stay sharp.',
+    'nudge.p': 'Time to run through the training again. A few minutes is all it takes to stay sharp.',
     'tip.h': 'Tip of the week',
     'tip.1': 'Always check the address after the @ — that is who it really is.',
     'tip.2': 'A bank will never ask for your PIN or full password.',
@@ -1618,7 +1618,7 @@ window.VO_LOCALES = {
     // Rétention : exercice de rappel, invitation au retour et astuce de la semaine
     'refresher.start': 'Exercice de rappel (5 messages)',
     'nudge.h': 'Cela fait un moment',
-    'nudge.p': 'Le moment idéal pour un petit rappel. Quelques minutes suffisent pour rester vigilant.',
+    'nudge.p': 'Le moment idéal pour refaire la formation. Quelques minutes suffisent pour rester vigilant.',
     'tip.h': 'Astuce de la semaine',
     'tip.1': 'Vérifiez toujours l’adresse après le @ — c’est elle qui dit qui c’est vraiment.',
     'tip.2': 'Une banque ne demande jamais votre code PIN ni votre mot de passe complet.',
@@ -2116,7 +2116,7 @@ window.VO_LOCALES = {
     // Rétention : exercice de rappel, invitation au retour et astuce de la semaine
     'refresher.start': 'Exercice de rappel (5 messages)',
     'nudge.h': 'Cela fait un moment',
-    'nudge.p': 'Le moment idéal pour un petit rappel. Quelques minutes suffisent pour rester vigilant.',
+    'nudge.p': 'Le moment idéal pour refaire la formation. Quelques minutes suffisent pour rester vigilant.',
     'tip.h': 'Astuce de la semaine',
     'tip.1': 'Vérifiez toujours l’adresse après le @ — c’est elle qui dit qui c’est vraiment.',
     'tip.2': 'Une banque ne demande jamais votre code PIN ni votre mot de passe complet.',
@@ -2614,7 +2614,7 @@ window.VO_LOCALES = {
     // Wiederholung: Auffrischungsübung, Rückkehr-Hinweis und Tipp der Woche
     'refresher.start': 'Auffrischungsübung (5 Nachrichten)',
     'nudge.h': 'Es ist schon eine Weile her',
-    'nudge.p': 'Zeit für eine kurze Auffrischung. Ein paar Minuten genügen, um wieder fit zu sein.',
+    'nudge.p': 'Zeit, die Schulung noch einmal durchzugehen. Ein paar Minuten genügen, um wieder fit zu sein.',
     'tip.h': 'Tipp der Woche',
     'tip.1': 'Prüfen Sie immer die Adresse nach dem @ — dort steht, wer es wirklich ist.',
     'tip.2': 'Eine Bank fragt niemals nach Ihrer PIN oder Ihrem vollständigen Passwort.',
