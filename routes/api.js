@@ -174,7 +174,8 @@ router.get('/inbox', async (req, res, next) => {
     res.json(rows);
 
     // Analytics: training_start — once per session, fire-and-forget.
-    if (!req.session.analyticsStarted) {
+    // Admin-sessies tellen niet mee.
+    if (!req.session.admin && !req.session.analyticsStarted) {
       req.session.analyticsStarted = true;
       req.session.save(() => {});
       db.query(
@@ -285,8 +286,8 @@ router.post('/inbox/:id/judge', async (req, res, next) => {
     });
 
     // Analytics: training_complete — check if all messages for this session are now judged.
-    // Fire-and-forget.
-    db.query(
+    // Admin-sessies tellen niet mee. Fire-and-forget.
+    if (!req.session.admin) db.query(
       `SELECT
          (SELECT COUNT(DISTINCT j.message_id)::int
             FROM inbox_judgments j
