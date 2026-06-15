@@ -29,7 +29,7 @@ window.VO_LOCALES = {
     'brand.title': 'Veilig Online',
     'nav.welkom': 'Welkom',
     'nav.simulator': 'Simulator',
-    'nav.kanalen': 'Extra kanalen',
+    'nav.kanalen': 'Sms / WhatsApp / Telefoon',
     'nav.hulp': 'Hulp',
 
     'nav.extra.badge': 'Extra leerstof',
@@ -496,7 +496,7 @@ window.VO_LOCALES = {
     'brand.title': 'Veilig Online',
     'nav.welkom': 'Welkom',
     'nav.simulator': 'Simulator',
-    'nav.kanalen': 'Extra kanalen',
+    'nav.kanalen': 'Sms / WhatsApp / Telefoon',
     'nav.hulp': 'Hulp',
 
     'nav.extra.badge': 'Extra leerstof',
@@ -963,7 +963,7 @@ window.VO_LOCALES = {
     'brand.title': 'Safe Online',
     'nav.welkom': 'Welcome',
     'nav.simulator': 'Simulator',
-    'nav.kanalen': 'Extra channels',
+    'nav.kanalen': 'Sms / WhatsApp / Phone',
     'nav.hulp': 'Help',
 
     'nav.extra.badge': 'Extra learning material',
@@ -1430,7 +1430,7 @@ window.VO_LOCALES = {
     'brand.title': 'Sécurité en ligne',
     'nav.welkom': 'Bienvenue',
     'nav.simulator': 'Simulateur',
-    'nav.kanalen': 'Canaux supplémentaires',
+    'nav.kanalen': 'Sms / WhatsApp / Téléphone',
     'nav.hulp': 'Aide',
 
     'nav.extra.badge': 'Contenu supplémentaire',
@@ -1898,7 +1898,7 @@ window.VO_LOCALES = {
     'brand.title': 'Sécurité en ligne',
     'nav.welkom': 'Bienvenue',
     'nav.simulator': 'Simulateur',
-    'nav.kanalen': 'Canaux supplémentaires',
+    'nav.kanalen': 'Sms / WhatsApp / Téléphone',
     'nav.hulp': 'Aide',
 
     'nav.extra.badge': 'Contenu supplémentaire',
@@ -2366,7 +2366,7 @@ window.VO_LOCALES = {
     'brand.title': 'Sicher Online',
     'nav.welkom': 'Willkommen',
     'nav.simulator': 'Simulator',
-    'nav.kanalen': 'Weitere Kanäle',
+    'nav.kanalen': 'Sms / WhatsApp / Telefon',
     'nav.hulp': 'Hilfe',
 
     'nav.extra.badge': 'Zusatzmaterial',
