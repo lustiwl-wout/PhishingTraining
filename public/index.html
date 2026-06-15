@@ -69,7 +69,7 @@
       <button id="simple-switch" class="lang-switch" type="button" aria-pressed="false" aria-label="Grote letters aan/uit">
         <span id="simple-switch-icon" aria-hidden="true">🔎</span> <span id="simple-switch-name">Grote letters</span>
       </button>
-      <button id="sim-exit-btn" class="btn btn-secondary sim-exit-btn" type="button" data-go="leren" hidden data-i18n="sim.ol.exit">✕ Sluit oefening</button>
+      <button id="sim-exit-btn" class="btn btn-secondary sim-exit-btn" type="button" data-go="welkom" hidden data-i18n="sim.ol.exit">✕ Sluit oefening</button>
     </div>
   </header>
 
@@ -112,11 +112,8 @@
   <nav class="stepbar" aria-label="Stappen van de training">
     <ol id="stepbar-list">
       <li data-step="welkom" class="active"><span class="step-num">1</span><span class="step-label" data-i18n="nav.welkom">Welkom</span></li>
-      <li data-step="leren"><span class="step-num">2</span><span class="step-label" data-i18n="nav.leren">Leren</span></li>
-      <li data-step="simulator"><span class="step-num">3</span><span class="step-label" data-i18n="nav.simulator">Simulator</span></li>
-      <li data-step="kanalen"><span class="step-num">4</span><span class="step-label" data-i18n="nav.kanalen">Meer kanalen</span></li>
-      <li data-step="hulp"><span class="step-num">5</span><span class="step-label" data-i18n="nav.hulp">Hulp</span></li>
-      <li data-step="wachtwoord" class="step-extra"><span class="step-num">+</span><span class="step-label" data-i18n="nav.extra">Extra</span></li>
+      <li data-step="simulator"><span class="step-num">2</span><span class="step-label" data-i18n="nav.simulator">Simulator</span></li>
+      <li data-step="hulp"><span class="step-num">3</span><span class="step-label" data-i18n="nav.hulp">Hulp</span></li>
     </ol>
   </nav>
 
@@ -187,7 +184,7 @@
       </div>
 
       <div class="actions">
-        <button class="btn btn-primary big-btn" data-go="leren" data-i18n="welkom.start">Start de training →</button>
+        <button class="btn btn-primary big-btn" data-go="simulator" data-i18n="welkom.start">Start de training →</button>
         <button class="btn btn-secondary big-btn" id="welkom-refresher" data-i18n="refresher.start">Opfris‑oefening (5 berichten)</button>
       </div>
     </section>

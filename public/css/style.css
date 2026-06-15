@@ -528,6 +528,29 @@ mark.phish-mark .dot, .annotation-list .dot {
 .sim-extra-channels p { font-size: .9rem; color: var(--ink-soft); margin-bottom: .75rem; }
 .sim-extra-btns { display: flex; gap: .6rem; flex-wrap: wrap; }
 
+/* Opt-in kaarten ná de simulator: verdiepende onderdelen, secundair t.o.v.
+   het resultaat zelf. Klikbare kaarten met icoon + korte uitleg. */
+.sim-optin { margin: 1.5rem 0 .5rem; text-align: left; }
+.sim-optin h3 { font-size: 1rem; margin-bottom: .6rem; }
+.optin-grid { display: grid; gap: .6rem; grid-template-columns: 1fr; }
+@media (min-width: 560px) { .optin-grid { grid-template-columns: 1fr 1fr; } }
+.optin-card {
+  display: flex; align-items: center; gap: .75rem;
+  width: 100%; text-align: left; cursor: pointer;
+  padding: .85rem 1rem;
+  background: var(--surface, #f8f9fb);
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 10px;
+  font: inherit; color: inherit;
+  transition: border-color .15s, background .15s, transform .05s;
+}
+.optin-card:hover { border-color: var(--primary); background: var(--primary-soft, #eef2ff); }
+.optin-card:active { transform: translateY(1px); }
+.optin-icon { font-size: 1.5rem; flex-shrink: 0; }
+.optin-text { display: flex; flex-direction: column; gap: .15rem; }
+.optin-text strong { font-size: .95rem; }
+.optin-text span { font-size: .82rem; color: var(--ink-soft); }
+
 /* ---------- misc ---------- */
 .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
 .muted { color: var(--ink-soft); }

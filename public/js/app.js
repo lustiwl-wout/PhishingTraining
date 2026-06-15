@@ -650,8 +650,8 @@
     const exitBtn = document.getElementById('sim-exit-btn');
     if (exitBtn) {
       exitBtn.hidden = !isSimPage;
-      // E-mail sim → terug naar leren; extra sim → terug naar kanalen intro.
-      exitBtn.dataset.go = step === 'kanalen' ? 'kanalen' : 'leren';
+      // E-mail sim → terug naar welkom; extra sim → terug naar kanalen intro.
+      exitBtn.dataset.go = step === 'kanalen' ? 'kanalen' : 'welkom';
     }
 
     const main = document.getElementById('hoofd');
@@ -2787,16 +2787,38 @@
       '</div>'
     ) : '';
 
-    // Na de e-mail simulator: toon knop naar stap 4 als kanalen-module actief is.
-    // Na de extra simulator (of als kanalen uitgeschakeld): geen extra-sectie.
-    const kanalenEnabled = !enterpriseConfig?.modules || enterpriseConfig.modules.includes('kanalen');
-    const extraHtml = (simMode === 'email' && kanalenEnabled)
-      ? '<div class="sim-extra-channels">' +
-          '<h3>' + escapeHtml(t('sim.final.extra.h')) + '</h3>' +
-          '<p>' + escapeHtml(t('sim.final.extra.p')) + '</p>' +
-          '<button class="btn btn-primary" id="extra-naar-kanalen">' + escapeHtml(t('sim.final.extra.next')) + '</button>' +
-        '</div>'
-      : '';
+    // Opt-in kaarten ná de e-mail simulator. De kern blijft kort (welkom →
+    // simulator); verdiepende onderdelen bieden we hier pas aan, zodat
+    // beginners niet overspoeld worden. Elke kaart respecteert de
+    // enterprise-moduleconfig.
+    const mods = enterpriseConfig?.modules || ['leren', 'simulator', 'kanalen', 'hulp', 'wachtwoord'];
+    let extraHtml = '';
+    if (simMode === 'email') {
+      const cards = [];
+      if (mods.includes('kanalen')) {
+        cards.push(
+          '<button class="optin-card" id="extra-naar-kanalen">' +
+            '<span class="optin-icon" aria-hidden="true">💬</span>' +
+            '<span class="optin-text"><strong>' + escapeHtml(t('sim.final.optin.kanalen.h')) + '</strong>' +
+            '<span>' + escapeHtml(t('sim.final.optin.kanalen.p')) + '</span></span>' +
+          '</button>');
+      }
+      if (mods.includes('wachtwoord')) {
+        cards.push(
+          '<button class="optin-card" data-go="wachtwoord">' +
+            '<span class="optin-icon" aria-hidden="true">🔑</span>' +
+            '<span class="optin-text"><strong>' + escapeHtml(t('sim.final.optin.ww.h')) + '</strong>' +
+            '<span>' + escapeHtml(t('sim.final.optin.ww.p')) + '</span></span>' +
+          '</button>');
+      }
+      if (cards.length) {
+        extraHtml =
+          '<div class="sim-optin">' +
+            '<h3>' + escapeHtml(t('sim.final.optin.h')) + '</h3>' +
+            '<div class="optin-grid">' + cards.join('') + '</div>' +
+          '</div>';
+      }
+    }
 
     result.innerHTML =
       '<h2>' + escapeHtml(titel) + '</h2>' +
