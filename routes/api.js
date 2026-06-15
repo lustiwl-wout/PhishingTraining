@@ -85,7 +85,7 @@ router.get('/inbox', async (req, res, next) => {
     const difficulty = pickDifficulty(req);
     const channel = pickChannel(req);
     const result = await withFallback(locale, (loc) => db.query(
-      `SELECT id, channel, sender_name, sender_address, received_label, subject, preview,
+      `SELECT id, channel, category, sender_name, sender_address, received_label, subject, preview,
               attachments
          FROM inbox_messages
         WHERE active = TRUE AND locale = $1 AND audience IN ($2, 'both')
@@ -145,7 +145,7 @@ router.get('/inbox/:id', async (req, res, next) => {
     const id = Number.parseInt(req.params.id, 10);
     if (!Number.isInteger(id)) return res.status(400).json({ error: 'ongeldig id' });
     const { rows } = await db.query(
-      `SELECT id, channel, sender_name, sender_address, received_label, subject, body, links, attachments
+      `SELECT id, channel, category, sender_name, sender_address, received_label, subject, body, links, attachments
        FROM inbox_messages WHERE id = $1 AND active = TRUE`,
       [id]
     );

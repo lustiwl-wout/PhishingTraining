@@ -2262,6 +2262,65 @@
       ? '<div class="final-qr-scanned">⚠️ ' + escapeHtml(t('sim.final.openedAttachment', { count: openedCount })) + '</div>'
       : '';
 
+    // Persoonlijk risicoprofiel: groepeer de beoordeelde berichten per
+    // categorie en bereken per categorie het percentage correct. Zo wordt de
+    // feedback actiegericht ("Sterk in: bankfraude" / "Let op bij: gezag").
+    // Volledig client-side uit simState; categorie komt uit het berichtobject.
+    const catStats = {};
+    simState.messages.forEach((m) => {
+      const j = simState.judgments[m.id];
+      if (!j) return;
+      const cat = m.category || 'overig';
+      const s = catStats[cat] || (catStats[cat] = { total: 0, correct: 0 });
+      s.total += 1;
+      if (j.correct) s.correct += 1;
+    });
+    const catRows = Object.keys(catStats).map((cat) => {
+      const s = catStats[cat];
+      const cp = Math.round((s.correct / s.total) * 100);
+      const level = cp >= 80 ? 'good' : cp >= 60 ? 'okay' : 'weak';
+      return { cat, total: s.total, correct: s.correct, pct: cp, level };
+    }).sort((a, b) => b.pct - a.pct || b.total - a.total);
+
+    let profileHtml = '';
+    if (catRows.length > 0) {
+      // Kopregel met sterkste en zwakste categorie. De zwakke tip alleen tonen
+      // als die op minstens 2 berichten berust — anders is hij misleidend.
+      const strongest = catRows[0];
+      const weakCandidates = catRows.filter((r) => r.total >= 2);
+      const weakest = weakCandidates.length ? weakCandidates[weakCandidates.length - 1] : null;
+      let headline = '';
+      if (catRows.length < 2 || (weakest && weakest.cat === strongest.cat)) {
+        headline = '<p class="profile-none">' + escapeHtml(t('profile.none')) + '</p>';
+      } else {
+        headline = '<p class="profile-headline">';
+        if (strongest.pct >= 60) {
+          headline += '<span class="profile-strong">' +
+            escapeHtml(t('profile.strong', { cat: t('cat.' + strongest.cat) })) + '</span>';
+        }
+        if (weakest && weakest.pct < 80 && weakest.cat !== strongest.cat) {
+          headline += '<span class="profile-weak">' +
+            escapeHtml(t('profile.weak', { cat: t('cat.' + weakest.cat) })) + '</span>';
+        }
+        headline += '</p>';
+        if (headline === '<p class="profile-headline"></p>') {
+          headline = '<p class="profile-none">' + escapeHtml(t('profile.none')) + '</p>';
+        }
+      }
+      profileHtml =
+        '<div class="risk-profile">' +
+          '<p class="profile-h">' + escapeHtml(t('profile.h')) + '</p>' +
+          headline +
+          '<ul class="profile-list">' + catRows.map((r) =>
+            '<li class="profile-item">' +
+              '<span class="profile-cat">' + escapeHtml(t('cat.' + r.cat)) + '</span>' +
+              '<span class="profile-bar"><span class="profile-bar-fill profile-' + r.level + '" style="width:' + r.pct + '%"></span></span>' +
+              '<span class="profile-count">' + r.correct + '/' + r.total + '</span>' +
+            '</li>'
+          ).join('') + '</ul>' +
+        '</div>';
+    }
+
     const missedHtml = missedPhish.length > 0 ? (
       '<div class="final-missed">' +
         '<p class="final-missed-h">' + escapeHtml(t('sim.final.insight.missed')) + '</p>' +
@@ -2279,6 +2338,7 @@
       '<p class="big-text">' + t('sim.final.score', { correct, total, pct }) + '</p>' +
       '<p>' + escapeHtml(advies) + '</p>' +
       breakdownHtml +
+      profileHtml +
       clickedHtml +
       openedHtml +
       '<div id="final-qr-warning"></div>' +

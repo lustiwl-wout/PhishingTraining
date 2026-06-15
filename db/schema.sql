@@ -53,10 +53,15 @@ ALTER TABLE inbox_messages ADD COLUMN IF NOT EXISTS difficulty TEXT NOT NULL DEF
 -- Kanaal: maakt naast e-mail ook sms/whatsapp (smishing) en telefoon (vishing)
 -- mogelijk binnen dezelfde simulator-engine. Bestaande rijen blijven 'email'.
 ALTER TABLE inbox_messages ADD COLUMN IF NOT EXISTS channel TEXT NOT NULL DEFAULT 'email';
+-- Categorie: thematische groep van het bericht (bank, overheid, bezorger,
+-- account, marktplaats, ceo, familie, overig). Voedt het persoonlijke
+-- risicoprofiel op het resultaatscherm. Bestaande rijen blijven 'overig'.
+ALTER TABLE inbox_messages ADD COLUMN IF NOT EXISTS category TEXT NOT NULL DEFAULT 'overig';
 CREATE INDEX IF NOT EXISTS idx_inbox_messages_locale ON inbox_messages(locale);
 CREATE INDEX IF NOT EXISTS idx_inbox_messages_audience ON inbox_messages(audience);
 CREATE INDEX IF NOT EXISTS idx_inbox_messages_difficulty ON inbox_messages(difficulty);
 CREATE INDEX IF NOT EXISTS idx_inbox_messages_channel ON inbox_messages(channel);
+CREATE INDEX IF NOT EXISTS idx_inbox_messages_category ON inbox_messages(category);
 
 CREATE TABLE IF NOT EXISTS inbox_judgments (
   id              SERIAL PRIMARY KEY,

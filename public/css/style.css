@@ -2626,3 +2626,80 @@ body.channel-whatsapp .chat-bubble-in { background: #fff; }
   margin: 0;
   line-height: 1.55;
 }
+
+/* ==========================================================================
+   Persoonlijk risicoprofiel (Fase 6): per-categorie uitsplitsing op het
+   resultaatscherm van de simulator. Hergebruikt de bestaande
+   kleurvariabelen (--good/--warn/--bad) en sluit aan op .final-* stijlen.
+   ========================================================================== */
+.risk-profile {
+  margin: .9rem 0;
+  padding: .9rem 1rem;
+  background: var(--bg);
+  border: 1px solid var(--border, var(--line));
+  border-radius: var(--radius);
+}
+.risk-profile .profile-h {
+  font-weight: 600;
+  margin: 0 0 .5rem;
+  font-size: .95rem;
+}
+.profile-headline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem .75rem;
+  margin: 0 0 .65rem;
+}
+.profile-headline .profile-strong,
+.profile-headline .profile-weak {
+  font-size: .85rem;
+  font-weight: 600;
+  padding: .15rem .5rem;
+  border-radius: 4px;
+}
+.profile-headline .profile-strong { background: var(--good-soft); color: var(--good); }
+.profile-headline .profile-weak   { background: var(--bad-soft);  color: var(--bad); }
+.profile-none {
+  margin: 0 0 .5rem;
+  font-size: .85rem;
+  color: var(--muted, #666);
+}
+.profile-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+}
+.profile-item {
+  display: grid;
+  grid-template-columns: 9rem 1fr auto;
+  align-items: center;
+  gap: .6rem;
+  font-size: .85rem;
+}
+.profile-cat { font-weight: 500; }
+.profile-bar {
+  height: .55rem;
+  background: var(--border, var(--line));
+  border-radius: 999px;
+  overflow: hidden;
+}
+.profile-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+}
+.profile-bar-fill.profile-good { background: var(--good); }
+.profile-bar-fill.profile-okay { background: var(--warn); }
+.profile-bar-fill.profile-weak { background: var(--bad); }
+.profile-count {
+  font-variant-numeric: tabular-nums;
+  color: var(--muted, #555);
+  white-space: nowrap;
+}
+@media (max-width: 600px) {
+  .profile-item { grid-template-columns: 7rem 1fr auto; gap: .45rem; }
+  .profile-cat  { font-size: .8rem; }
+}
