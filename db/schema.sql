@@ -1,19 +1,10 @@
 -- Schema voor de Veilig Online phishing-training.
 -- Idempotent: kan meermaals worden uitgevoerd.
 
-CREATE TABLE IF NOT EXISTS quiz_questions (
-  id            SERIAL PRIMARY KEY,
-  channel       TEXT        NOT NULL CHECK (channel IN ('email', 'sms', 'whatsapp')),
-  sender        TEXT        NOT NULL,
-  subject       TEXT,
-  body          TEXT        NOT NULL,
-  is_phishing   BOOLEAN     NOT NULL,
-  explanation   TEXT        NOT NULL,
-  signs         JSONB       NOT NULL DEFAULT '[]'::jsonb,
-  difficulty    INTEGER     NOT NULL DEFAULT 1,
-  active        BOOLEAN     NOT NULL DEFAULT TRUE,
-  created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
+-- Legacy quiz-subsysteem opruimen. De oude multiple-choice quiz is vervangen
+-- door de inbox-simulator (inbox_messages). De drie quiz-tabellen werden niet
+-- meer gevuld of door de frontend gebruikt. CASCADE ruimt de FK's mee op.
+DROP TABLE IF EXISTS quiz_answers, quiz_attempts, quiz_questions CASCADE;
 
 CREATE TABLE IF NOT EXISTS examples (
   id            SERIAL PRIMARY KEY,
@@ -32,29 +23,6 @@ ALTER TABLE examples ADD COLUMN IF NOT EXISTS locale TEXT NOT NULL DEFAULT 'nl';
 ALTER TABLE examples ADD COLUMN IF NOT EXISTS audience TEXT NOT NULL DEFAULT 'personal';
 CREATE INDEX IF NOT EXISTS idx_examples_locale ON examples(locale);
 CREATE INDEX IF NOT EXISTS idx_examples_audience ON examples(audience);
-
-CREATE TABLE IF NOT EXISTS quiz_attempts (
-  id            SERIAL PRIMARY KEY,
-  session_id    TEXT        NOT NULL,
-  started_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  finished_at   TIMESTAMPTZ,
-  total         INTEGER     NOT NULL DEFAULT 0,
-  correct       INTEGER     NOT NULL DEFAULT 0
-);
-
-ALTER TABLE quiz_attempts ADD COLUMN IF NOT EXISTS ip_address TEXT;
-CREATE INDEX IF NOT EXISTS idx_quiz_attempts_session ON quiz_attempts(session_id);
-
-CREATE TABLE IF NOT EXISTS quiz_answers (
-  id              SERIAL PRIMARY KEY,
-  attempt_id      INTEGER     NOT NULL REFERENCES quiz_attempts(id) ON DELETE CASCADE,
-  question_id     INTEGER     NOT NULL REFERENCES quiz_questions(id),
-  answered_phishing BOOLEAN   NOT NULL,
-  is_correct      BOOLEAN     NOT NULL,
-  answered_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
-CREATE INDEX IF NOT EXISTS idx_quiz_answers_attempt ON quiz_answers(attempt_id);
 
 -- Outlook-achtige e-mailsimulator: rijkere berichten met knopbare links,
 -- herkenbare afzenders en een expliciete uitleg achteraf.

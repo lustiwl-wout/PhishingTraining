@@ -5,7 +5,7 @@
 -- Verwijder eerst bestaande content zodat seed herhaalbaar is.
 -- Gebruikersdata wordt bewaard door init.js (save/restore rondom deze seed).
 
-TRUNCATE quiz_questions, examples, inbox_messages RESTART IDENTITY CASCADE;
+TRUNCATE examples, inbox_messages RESTART IDENTITY CASCADE;
 
 -- ============ VOORBEELDEN (geannoteerd) ============
 
@@ -30,10 +30,6 @@ FROM (VALUES
  '[{"quote": "info@digid-controle.org", "note": "Kijk na de @: digid-controle.org. Het echte domein is digid.nl — niets anders."}, {"quote": "Geachte heer/mevrouw", "note": "Algemene aanhef. Een echte organisatie kent uw naam."}, {"quote": "log in met uw gebruikersnaam en wachtwoord", "note": "DigiD vraagt NOOIT per e-mail om uw wachtwoord. Altijd phishing."}, {"quote": "http://digid-controle.org/inloggen", "note": "Vreemde link. Open DigiD alleen via digid.nl of de officiële app."}]',
  30)
 ) AS t(sender, subject, body, annotations, sort_order);
-
--- (De `quiz_questions`-tabel blijft in het schema bestaan voor toekomstig
--- gebruik, maar wordt niet meer gevuld: de simulator draait op
--- `inbox_messages`.)
 
 -- ============ OUTLOOK-SIMULATOR BERICHTEN ============
 -- Mix van 5 phishing en 5 echte berichten.
