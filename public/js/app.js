@@ -398,6 +398,10 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
+    // 'kanalen' is geen eigen pagina meer — wis eventuele oude waarde.
+    if (localStorage.getItem('vo_page') === 'kanalen') {
+      try { localStorage.removeItem('vo_page'); } catch (_) {}
+    }
     const savedPage = localStorage.getItem('vo_page');
     if (savedPage && pages.includes(savedPage) && savedPage !== 'welkom') {
       go(savedPage);
@@ -428,7 +432,7 @@
       // al correct zijn ingesteld voordat de eerste fetch plaatsvindt.
       // Het apparaat bepalen we opnieuw: wie op desktop oefende en op een
       // telefoon terugkomt, krijgt gewoon de mobiele weergave.
-      if (savedPage === 'simulator' || savedPage === 'kanalen') {
+      if (savedPage === 'simulator') {
         const saved = loadPersistedSimState();
         if (saved) {
           // Kanaal herstellen zodat een reload de juiste skin (mail of chat)
@@ -436,7 +440,7 @@
           if (saved.channel && SUPPORTED_CHANNELS.includes(saved.channel)) {
             setChannel(saved.channel);
           }
-          simMode = savedPage === 'kanalen' ? 'extra' : 'email';
+          simMode = 'email';
           setDevice(detectDevice());
           document.body.classList.add('sim-fullscreen');
           if (currentChannel === 'phone') {
@@ -626,17 +630,12 @@
   }
 
   // -------- navigatie tussen pagina's --------
-  const pages = ['welkom', 'leren', 'simulator', 'kanalen', 'hulp', 'wachtwoord'];
+  const pages = ['welkom', 'leren', 'simulator', 'hulp', 'wachtwoord'];
 
   function go(step) {
     pages.forEach((p) => {
-      // 'kanalen' heeft geen eigen DOM-sectie; sla het over.
-      // De #simulator sectie wordt hieronder via p='simulator' afgehandeld.
-      if (p === 'kanalen') return;
       const el = document.getElementById(p);
-      // #simulator is actief voor zowel 'simulator' als 'kanalen'.
-      const isActive = p === step || (p === 'simulator' && step === 'kanalen');
-      if (el) el.classList.toggle('active', isActive);
+      if (el) el.classList.toggle('active', p === step);
     });
     document.querySelectorAll('#stepbar-list li').forEach((li) => {
       li.classList.toggle('active', li.dataset.step === step);
@@ -644,14 +643,13 @@
     // Onthoud welke stap actief is, zodat een refresh op dezelfde pagina belandt.
     try { localStorage.setItem('vo_page', step); } catch (_) {}
     // Fullscreen voor de simulator: verberg trainings-chrome, laat Outlook het scherm vullen.
-    const isSimPage = step === 'simulator' || step === 'kanalen';
+    const isSimPage = step === 'simulator';
     document.body.classList.toggle('sim-fullscreen', isSimPage);
     // "Sluit oefening" is alleen zinvol in de simulator.
     const exitBtn = document.getElementById('sim-exit-btn');
     if (exitBtn) {
       exitBtn.hidden = !isSimPage;
-      // E-mail sim → terug naar welkom; extra sim → terug naar kanalen intro.
-      exitBtn.dataset.go = step === 'kanalen' ? 'kanalen' : 'welkom';
+      exitBtn.dataset.go = 'welkom';
     }
 
     const main = document.getElementById('hoofd');
@@ -663,14 +661,27 @@
       setChannel('email');
       showSimPhase('intro');
     }
-    if (step === 'kanalen') {
-      simMode = 'extra';
-      if (currentChannel === 'email') setChannel('sms');
-      showSimPhase('intro');
-    }
     // Retentie: terugkeer-nudge en weektip verversen wanneer we de
     // welkom-pagina tonen (historie kan ondertussen veranderd zijn).
     if (step === 'welkom') { renderReturnNudge(); renderWeeklyTip(); }
+  }
+
+  // Lanceert de extra kanalen (sms/whatsapp/phone) als opt-in na de e-mail sim.
+  // Geen eigen pagina in het routeringssysteem: simMode='extra' geeft de context.
+  function launchExtraChannels() {
+    simMode = 'extra';
+    if (currentChannel === 'email') setChannel('sms');
+    pages.forEach((p) => {
+      const el = document.getElementById(p);
+      if (el) el.classList.toggle('active', p === 'simulator');
+    });
+    document.body.classList.add('sim-fullscreen');
+    const exitBtn = document.getElementById('sim-exit-btn');
+    if (exitBtn) { exitBtn.hidden = false; exitBtn.dataset.go = 'welkom'; }
+    const main = document.getElementById('hoofd');
+    if (main) main.focus();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    showSimPhase('intro');
   }
 
   // -------- Print-versie van de training -----------------------
@@ -2787,9 +2798,9 @@
         startMobileSimulator({ fresh: true });
       }
     });
-    // Na e-mail simulator: knop naar stap 4 meer kanalen.
+    // Na e-mail simulator: knop naar extra kanalen (sms/whatsapp/phone).
     const extraBtn = document.getElementById('extra-naar-kanalen');
-    if (extraBtn) extraBtn.addEventListener('click', () => { go('kanalen'); });
+    if (extraBtn) extraBtn.addEventListener('click', () => { launchExtraChannels(); });
 
     result.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
