@@ -2910,3 +2910,110 @@ body.channel-whatsapp .chat-bubble-in { background: #fff; }
   gap: .6rem;
 }
 .call-debrief-actions .btn { width: 100%; }
+
+/* ===========================================================================
+   FASE 8 — Doelgroepvarianten
+   1) Eenvoudige modus (toegankelijkheid / "grote letters") voor minder-
+      digitale en oudere gebruikers: grotere tekst, meer rust en ruimte,
+      grotere tikdoelen en sterker contrast. Eén body-klasse (.simple-mode)
+      stuurt alles; vo_simple onthoudt de voorkeur.
+   2) Lichte gamification: badges op het resultatenscherm.
+   =========================================================================== */
+
+/* --- 1. Eenvoudige modus ------------------------------------------------- */
+
+/* Hoofdhefboom: schaal de rem-basis mee. De schakelaar zet .simple-mode op
+   <body>; via :has() tillen we de root-fontgrootte op, zodat alle rem-maten
+   (koppen, knoppen, kaarten, e-mail/chat/bel-skins) evenredig meegroeien. */
+html:has(body.simple-mode) { font-size: 19px; }
+
+/* Knop in de bovenbalk krijgt een duidelijke "aan"-staat. */
+#simple-switch[aria-pressed="true"] {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+/* Wat rustiger en luchtiger lezen. */
+body.simple-mode { line-height: 1.7; }
+body.simple-mode p,
+body.simple-mode li,
+body.simple-mode .lead { line-height: 1.7; }
+body.simple-mode .card { padding: 1.25rem 1.35rem; }
+body.simple-mode .check-list li { margin-bottom: .6rem; }
+
+/* Sterker contrast voor zachte/secundaire tekst. */
+body.simple-mode {
+  --ink-soft: #33404f;
+  --ol-muted: #3a3a3a;
+}
+body.simple-mode .lead,
+body.simple-mode .profile-count,
+body.simple-mode .ol-muted { color: var(--ink-soft); }
+
+/* Grotere tikdoelen: knoppen en keuzekaarten ruimer en met meer hoogte. */
+body.simple-mode .btn,
+body.simple-mode .lang-switch,
+body.simple-mode .difficulty-btn,
+body.simple-mode .watnu-q {
+  min-height: 48px;
+  padding: .7rem 1.1rem;
+}
+body.simple-mode .lang-card,
+body.simple-mode .audience-card { padding: 1.4rem 1rem; }
+
+/* De simulator-skins (mail / mobiel / chat / bel) leesbaarder maken. Deze
+   onderdelen gebruiken deels kleine, vaste tekstgroottes voor de "echte"
+   look; in eenvoudige modus tillen we ze op zonder de lay-out te breken. */
+body.simple-mode .ol-reader-inner,
+body.simple-mode .ol-subject,
+body.simple-mode .eml,
+body.simple-mode .eml p,
+body.simple-mode .eml li { font-size: 1.05rem; line-height: 1.65; }
+body.simple-mode .ol-item-subject { font-size: 1rem; }
+body.simple-mode .chat-bubble,
+body.simple-mode .chat-bubble p { font-size: 1.05rem; line-height: 1.55; }
+body.simple-mode .mob-mail-body,
+body.simple-mode .mob-mail-body p { font-size: 1.05rem; line-height: 1.6; }
+body.simple-mode .call-line,
+body.simple-mode .call-choice { font-size: 1.05rem; }
+
+/* Phone-/chat-frames niet laten uitvergroten tot ze van het scherm lopen:
+   op smalle schermen blijft de bestaande frame-breedte gelden. */
+@media (max-width: 600px) {
+  html:has(body.simple-mode) { font-size: 17px; }
+}
+
+/* --- 2. Badges op het resultatenscherm ----------------------------------- */
+.final-badges { margin: .9rem 0 1.1rem; }
+.final-badges-h {
+  font-weight: 600;
+  font-size: .9rem;
+  color: var(--ink-soft);
+  margin: 0 0 .5rem;
+}
+.badge-row {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+.badge-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .35rem .7rem .35rem .55rem;
+  border-radius: 999px;
+  background: var(--good-soft);
+  border: 1px solid var(--good);
+  color: var(--good);
+  font-weight: 600;
+  font-size: .9rem;
+  line-height: 1.2;
+}
+.badge-icon { font-size: 1.15rem; line-height: 1; }
+.badge-label { white-space: nowrap; }
+
+body.simple-mode .badge-chip { font-size: 1rem; padding: .45rem .85rem; }

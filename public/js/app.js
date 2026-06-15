@@ -30,6 +30,35 @@
 
   let currentLang = detectInitialLanguage() || 'nl';
 
+  // -------- eenvoudige modus (toegankelijkheid / grote letters) --------
+  // Een site-brede schakelaar die de hele app groter en rustiger maakt voor
+  // minder-digitale en oudere gebruikers. Puur cosmetisch via één body-klasse;
+  // geen persoonsgegevens, alleen een voorkeur in localStorage (vo_simple).
+  // We lezen en passen de voorkeur meteen toe — nog vóór DOMContentLoaded —
+  // zodat de pagina niet eerst klein verschijnt en dan opspringt.
+  function loadSimpleMode() {
+    try { return localStorage.getItem('vo_simple') === '1'; } catch (_) { return false; }
+  }
+  let simpleMode = loadSimpleMode();
+  function applySimpleMode() {
+    document.body.classList.toggle('simple-mode', simpleMode);
+    const sw = document.getElementById('simple-switch');
+    if (sw) {
+      sw.setAttribute('aria-pressed', simpleMode ? 'true' : 'false');
+      sw.setAttribute('aria-label', t(simpleMode ? 'simple.off' : 'simple.on'));
+    }
+    const nameEl = document.getElementById('simple-switch-name');
+    if (nameEl) nameEl.textContent = t(simpleMode ? 'simple.off' : 'simple.on');
+  }
+  function setSimpleMode(on) {
+    simpleMode = !!on;
+    try { localStorage.setItem('vo_simple', simpleMode ? '1' : '0'); } catch (_) {}
+    applySimpleMode();
+  }
+  // Body-klasse direct zetten (de tekstlabels volgen zodra i18n draait).
+  if (simpleMode && document.body) document.body.classList.add('simple-mode');
+  else if (simpleMode) document.addEventListener('DOMContentLoaded', () => document.body.classList.add('simple-mode'), { once: true });
+
   // -------- device (desktop / android / iphone) --------
   // Auto-bepaald bij start van de simulator op basis van het viewport
   // en het besturingssysteem. Onder 600px is het een telefoon-skin;
@@ -181,6 +210,8 @@
     const audIcon = document.getElementById('audience-switch-icon');
     if (audName) audName.textContent = t('audience.' + currentAudience + '.title');
     if (audIcon) audIcon.textContent = AUDIENCE_ICONS[currentAudience] || '';
+    // Eenvoudige modus: knoplabel + aria-label meevertalen.
+    if (typeof applySimpleMode === 'function') applySimpleMode();
     // Retentie: de "Tip van de week" hangt af van de taal — bij elke
     // (her)toepassing van i18n opnieuw zetten met de juiste vertaling.
     if (typeof renderWeeklyTip === 'function') renderWeeklyTip();
@@ -460,6 +491,9 @@
     }
     if (e.target.closest('#audience-switch')) {
       showAudiencePicker();
+    }
+    if (e.target.closest('#simple-switch')) {
+      setSimpleMode(!simpleMode);
     }
   });
 
@@ -742,6 +776,35 @@
       if (!j) return;
       p.messages[m.id] = { correct: !!j.correct, seenAt: now };
     });
+    saveProgress(p);
+  }
+
+  // -------- Lichte gamification: badges --------
+  // Per-run prestaties, volledig uit simState berekend. Geen backend, geen
+  // persoonsgegevens. Verdiende badge-id's worden (anoniem) in vo_progress
+  // bewaard zodat de verzameling over runs heen kan groeien.
+  // facts = { total, correct, pct, phishTotal, phishCorrect, clicked,
+  //           opened, wasRefresher }.
+  const BADGE_DEFS = [
+    { id: 'sharp',     icon: '🎯', earn: (f) => f.total > 0 && f.correct === f.total },
+    { id: 'spotter',   icon: '🕵️', earn: (f) => f.phishTotal > 0 && f.phishCorrect === f.phishTotal },
+    { id: 'cool',      icon: '🧊', earn: (f) => f.clicked === 0 && f.opened === 0 },
+    { id: 'finisher',  icon: '🏁', earn: (f) => f.total >= 5 },
+    { id: 'comeback',  icon: '🔁', earn: (f) => f.wasRefresher },
+    { id: 'flawless',  icon: '🛡️', earn: (f) => f.total >= 5 && f.correct === f.total && f.clicked === 0 && f.opened === 0 },
+  ];
+  function earnedBadges(facts) {
+    return BADGE_DEFS.filter((b) => {
+      try { return b.earn(facts); } catch (_) { return false; }
+    });
+  }
+  // Verdiende badge-id's bij de verzameling in vo_progress voegen (anoniem).
+  function recordBadges(ids) {
+    if (!ids || !ids.length) return;
+    const p = loadProgress();
+    const set = Array.isArray(p.badges) ? p.badges : [];
+    ids.forEach((id) => { if (!set.includes(id)) set.push(id); });
+    p.badges = set;
     saveProgress(p);
   }
 
@@ -2480,6 +2543,9 @@
     // Retentie: anoniem voortgangsgeheugen bijwerken (tijdstip + per bericht
     // goed/fout). Geen persoonsgegevens. Voedt de opfris-oefening en de nudge.
     recordCompletion();
+    // Was dit een opfris-oefening? Bewaren vóór de reset hieronder, want de
+    // "Comeback"-badge hangt ervan af.
+    const wasRefresher = refresherMode;
     refresherMode = false;
     // Verberg alle simulator-fases en verlaat fullscreen zodat
     // het resultaat en de stap-navigatie weer zichtbaar zijn.
@@ -2532,6 +2598,28 @@
     const openedHtml = openedCount > 0
       ? '<div class="final-qr-scanned">⚠️ ' + escapeHtml(t('sim.final.openedAttachment', { count: openedCount })) + '</div>'
       : '';
+
+    // Lichte gamification: badges op basis van deze run. Volledig client-side.
+    const badges = earnedBadges({
+      total, correct, pct,
+      phishTotal: phishingMsgs.length,
+      phishCorrect,
+      clicked: clickedCount,
+      opened: openedCount,
+      wasRefresher,
+    });
+    recordBadges(badges.map((b) => b.id));
+    const badgesHtml = badges.length > 0 ? (
+      '<div class="final-badges">' +
+        '<p class="final-badges-h">' + escapeHtml(t('badge.h')) + '</p>' +
+        '<ul class="badge-row">' + badges.map((b) =>
+          '<li class="badge-chip" title="' + escapeHtml(t('badge.' + b.id + '.desc')) + '">' +
+            '<span class="badge-icon" aria-hidden="true">' + b.icon + '</span>' +
+            '<span class="badge-label">' + escapeHtml(t('badge.' + b.id + '.name')) + '</span>' +
+          '</li>'
+        ).join('') + '</ul>' +
+      '</div>'
+    ) : '';
 
     // Persoonlijk risicoprofiel: groepeer de beoordeelde berichten per
     // categorie en bereken per categorie het percentage correct. Zo wordt de
@@ -2608,6 +2696,7 @@
       '<h2>' + escapeHtml(titel) + '</h2>' +
       '<p class="big-text">' + t('sim.final.score', { correct, total, pct }) + '</p>' +
       '<p>' + escapeHtml(advies) + '</p>' +
+      badgesHtml +
       breakdownHtml +
       profileHtml +
       clickedHtml +

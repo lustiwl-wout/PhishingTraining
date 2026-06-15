@@ -382,6 +382,24 @@ window.VO_LOCALES = {
     'cat.familie': 'familie & vrienden',
     'cat.overig': 'overige',
 
+    // Eenvoudige modus (toegankelijkheid)
+    'simple.on': 'Grote letters',
+    'simple.off': 'Normale letters',
+    // Lichte gamification: badges op het resultatenscherm
+    'badge.h': 'Verdiende badges',
+    'badge.sharp.name': 'Scherp oog',
+    'badge.sharp.desc': 'Alles goed beoordeeld — geen enkele fout.',
+    'badge.spotter.name': 'Phish-spotter',
+    'badge.spotter.desc': 'Je herkende elke phishing in deze ronde.',
+    'badge.cool.name': 'Nuchter gebleven',
+    'badge.cool.desc': 'Op geen enkele verdachte link of bijlage geklikt.',
+    'badge.finisher.name': 'Volhouder',
+    'badge.finisher.desc': 'Een volledige set berichten afgerond.',
+    'badge.comeback.name': 'Comeback',
+    'badge.comeback.desc': 'Teruggekomen voor een opfris-oefening.',
+    'badge.flawless.name': 'Onverslaanbaar',
+    'badge.flawless.desc': 'Een volledige set foutloos én zonder één misklik.',
+
     'sim.junk.sender': 'Z.K.H. Prins Adewale Ogundimu',
     'sim.junk.senderEmail': 'hrh.ogundimu@central-bank-transfer.info',
     'sim.junk.received': '3 weken geleden',
@@ -814,6 +832,24 @@ window.VO_LOCALES = {
     'cat.ceo': 'CEO-fraude',
     'cat.familie': 'familie & vrienden',
     'cat.overig': 'overige',
+
+    // Eenvoudige modus (toegankelijkheid)
+    'simple.on': 'Grote letters',
+    'simple.off': 'Normale letters',
+    // Lichte gamification: badges op het resultatenscherm
+    'badge.h': 'Verdiende badges',
+    'badge.sharp.name': 'Scherp oog',
+    'badge.sharp.desc': 'Alles goed beoordeeld — geen enkele fout.',
+    'badge.spotter.name': 'Phish-spotter',
+    'badge.spotter.desc': 'Je herkende elke phishing in deze ronde.',
+    'badge.cool.name': 'Nuchter gebleven',
+    'badge.cool.desc': 'Op geen enkele verdachte link of bijlage geklikt.',
+    'badge.finisher.name': 'Volhouder',
+    'badge.finisher.desc': 'Een volledige set berichten afgerond.',
+    'badge.comeback.name': 'Comeback',
+    'badge.comeback.desc': 'Teruggekomen voor een opfris-oefening.',
+    'badge.flawless.name': 'Onverslaanbaar',
+    'badge.flawless.desc': 'Een volledige set foutloos én zonder één misklik.',
 
     'sim.junk.sender': 'Z.K.H. Prins Adewale Ogundimu',
     'sim.junk.senderEmail': 'hrh.ogundimu@central-bank-transfer.info',
@@ -1248,6 +1284,24 @@ window.VO_LOCALES = {
     'cat.familie': 'family & friends',
     'cat.overig': 'other',
 
+    // Simple mode (accessibility)
+    'simple.on': 'Large text',
+    'simple.off': 'Normal text',
+    // Light gamification: badges on the results screen
+    'badge.h': 'Badges earned',
+    'badge.sharp.name': 'Sharp eye',
+    'badge.sharp.desc': 'Everything judged correctly — not a single mistake.',
+    'badge.spotter.name': 'Phish spotter',
+    'badge.spotter.desc': 'You caught every phishing message this round.',
+    'badge.cool.name': 'Kept your cool',
+    'badge.cool.desc': 'Did not click a single suspicious link or attachment.',
+    'badge.finisher.name': 'Finisher',
+    'badge.finisher.desc': 'Completed a full set of messages.',
+    'badge.comeback.name': 'Comeback',
+    'badge.comeback.desc': 'Came back for a refresher exercise.',
+    'badge.flawless.name': 'Flawless',
+    'badge.flawless.desc': 'A full set, perfect score and not one wrong click.',
+
     'sim.junk.sender': 'HRH Prince Adewale Ogundimu',
     'sim.junk.senderEmail': 'hrh.ogundimu@central-bank-transfer.info',
     'sim.junk.received': '3 weeks ago',
@@ -1680,6 +1734,24 @@ window.VO_LOCALES = {
     'cat.ceo': 'fraude au président',
     'cat.familie': 'famille & amis',
     'cat.overig': 'autres',
+
+    // Mode simple (accessibilité)
+    'simple.on': 'Grands caractères',
+    'simple.off': 'Caractères normaux',
+    // Gamification légère : badges sur l’écran de résultats
+    'badge.h': 'Badges obtenus',
+    'badge.sharp.name': 'Œil aiguisé',
+    'badge.sharp.desc': 'Tout jugé correctement — pas une seule erreur.',
+    'badge.spotter.name': 'Repère-hameçon',
+    'badge.spotter.desc': 'Vous avez repéré chaque hameçonnage ce tour-ci.',
+    'badge.cool.name': 'Sang-froid',
+    'badge.cool.desc': 'Aucun clic sur un lien ou une pièce jointe suspecte.',
+    'badge.finisher.name': 'Persévérant',
+    'badge.finisher.desc': 'Une série complète de messages terminée.',
+    'badge.comeback.name': 'Retour gagnant',
+    'badge.comeback.desc': 'Revenu pour un exercice de rappel.',
+    'badge.flawless.name': 'Sans faute',
+    'badge.flawless.desc': 'Une série complète, sans erreur ni clic de trop.',
 
 
     'sim.junk.sender': 'S.A.R. Prince Adewale Ogundimu',
@@ -2115,6 +2187,24 @@ window.VO_LOCALES = {
     'cat.familie': 'famille & amis',
     'cat.overig': 'autres',
 
+    // Mode simple (accessibilité)
+    'simple.on': 'Grands caractères',
+    'simple.off': 'Caractères normaux',
+    // Gamification légère : badges sur l’écran de résultats
+    'badge.h': 'Badges obtenus',
+    'badge.sharp.name': 'Œil aiguisé',
+    'badge.sharp.desc': 'Tout jugé correctement — pas une seule erreur.',
+    'badge.spotter.name': 'Repère-hameçon',
+    'badge.spotter.desc': 'Vous avez repéré chaque hameçonnage ce tour-ci.',
+    'badge.cool.name': 'Sang-froid',
+    'badge.cool.desc': 'Aucun clic sur un lien ou une pièce jointe suspecte.',
+    'badge.finisher.name': 'Persévérant',
+    'badge.finisher.desc': 'Une série complète de messages terminée.',
+    'badge.comeback.name': 'Retour gagnant',
+    'badge.comeback.desc': 'Revenu pour un exercice de rappel.',
+    'badge.flawless.name': 'Sans faute',
+    'badge.flawless.desc': 'Une série complète, sans erreur ni clic de trop.',
+
 
     'sim.junk.sender': 'S.A.R. Prince Adewale Ogundimu',
     'sim.junk.senderEmail': 'hrh.ogundimu@central-bank-transfer.info',
@@ -2548,6 +2638,24 @@ window.VO_LOCALES = {
     'cat.ceo': 'CEO-Betrug',
     'cat.familie': 'Familie & Freunde',
     'cat.overig': 'Sonstiges',
+
+    // Einfacher Modus (Barrierefreiheit)
+    'simple.on': 'Große Schrift',
+    'simple.off': 'Normale Schrift',
+    // Leichte Gamification: Abzeichen auf dem Ergebnisbildschirm
+    'badge.h': 'Erhaltene Abzeichen',
+    'badge.sharp.name': 'Scharfer Blick',
+    'badge.sharp.desc': 'Alles richtig bewertet — kein einziger Fehler.',
+    'badge.spotter.name': 'Phishing-Spürnase',
+    'badge.spotter.desc': 'Sie haben jedes Phishing in dieser Runde erkannt.',
+    'badge.cool.name': 'Cool geblieben',
+    'badge.cool.desc': 'Auf keinen verdächtigen Link und Anhang geklickt.',
+    'badge.finisher.name': 'Durchhalter',
+    'badge.finisher.desc': 'Einen vollständigen Satz Nachrichten abgeschlossen.',
+    'badge.comeback.name': 'Comeback',
+    'badge.comeback.desc': 'Für eine Auffrischungsübung zurückgekehrt.',
+    'badge.flawless.name': 'Makellos',
+    'badge.flawless.desc': 'Ein voller Satz, fehlerfrei und ohne einen Fehlklick.',
 
     'sim.junk.sender': 'S.K.H. Prinz Adewale Ogundimu',
     'sim.junk.senderEmail': 'hrh.ogundimu@central-bank-transfer.info',
