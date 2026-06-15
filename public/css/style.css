@@ -528,6 +528,21 @@ mark.phish-mark .dot, .annotation-list .dot {
 .sim-extra-channels p { font-size: .9rem; color: var(--ink-soft); margin-bottom: .75rem; }
 .sim-extra-btns { display: flex; gap: .6rem; flex-wrap: wrap; }
 
+/* De 7 signalen als compacte naslag op het resultatenscherm. */
+.sim-signals {
+  margin: 1.5rem 0 .5rem; text-align: left;
+  padding: 1rem 1.25rem;
+  background: var(--surface, #f8f9fb);
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 10px;
+}
+.sim-signals h3 { font-size: 1rem; margin-bottom: .6rem; }
+.signals-list { margin: 0; padding-left: 1.4rem; display: grid; gap: .3rem; }
+.signals-list li { font-size: .9rem; }
+@media (min-width: 560px) {
+  .signals-list { grid-template-columns: 1fr 1fr; column-gap: 1.5rem; }
+}
+
 /* Opt-in kaarten ná de simulator: verdiepende onderdelen, secundair t.o.v.
    het resultaat zelf. Klikbare kaarten met icoon + korte uitleg. */
 .sim-optin { margin: 1.5rem 0 .5rem; text-align: left; }

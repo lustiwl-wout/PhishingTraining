@@ -2820,6 +2820,19 @@
       }
     }
 
+    // De 7 signalen als compacte naslag — alleen na de e-mail simulator, want
+    // dit zijn de e-mail-phishingsignalen. Geeft het mentale model één keer,
+    // ná het doen, zonder leesmuur vooraf.
+    const signalsHtml = (simMode === 'email')
+      ? '<div class="sim-signals">' +
+          '<h3>' + escapeHtml(t('sim.final.signals.h')) + '</h3>' +
+          '<ol class="signals-list">' +
+            [1, 2, 3, 4, 5, 6, 7].map((n) =>
+              '<li>' + escapeHtml(t('leren.it' + n + '.h')) + '</li>').join('') +
+          '</ol>' +
+        '</div>'
+      : '';
+
     result.innerHTML =
       '<h2>' + escapeHtml(titel) + '</h2>' +
       '<p class="big-text">' + t('sim.final.score', { correct, total, pct }) + '</p>' +
@@ -2831,6 +2844,7 @@
       openedHtml +
       '<div id="final-qr-warning"></div>' +
       missedHtml +
+      signalsHtml +
       extraHtml +
       '<div class="actions">' +
         '<button class="btn btn-primary" id="sim-again">' + escapeHtml(t('sim.final.again')) + '</button>' +
