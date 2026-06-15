@@ -1190,7 +1190,7 @@
         const state = el.querySelector('.domino-state');
         if (state) {
           state.setAttribute('data-i18n', 'ww.domino.hacked');
-          applyI18n(state);
+          state.textContent = t('ww.domino.hacked');
         }
       }, 250 + i * 450);
     });
@@ -1211,7 +1211,7 @@
       const state = el.querySelector('.domino-state');
       if (state) {
         state.setAttribute('data-i18n', 'ww.domino.safe');
-        applyI18n(state);
+        state.textContent = t('ww.domino.safe');
       }
     });
     if (trigger) trigger.hidden = false;
