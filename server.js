@@ -91,6 +91,52 @@ function sendIndex(_req, res) {
 }
 app.get(['/', '/index.html'], sendIndex);
 
+// OG-kaart: 1200×630 SVG geserveerd als image/svg+xml.
+// Zoekmachines en social-media-crawlers accepteren SVG als og:image.
+app.get('/img/og-card.png', (_req, res) => {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a1a2e"/>
+      <stop offset="100%" stop-color="#16213e"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="0" y="0" width="8" height="630" fill="#2563eb"/>
+  <text x="80" y="220" font-family="system-ui,sans-serif" font-size="80" font-weight="700" fill="#ffffff">🛡️ Veilig Online</text>
+  <text x="80" y="310" font-family="system-ui,sans-serif" font-size="44" fill="#93c5fd">Leer phishing herkennen in 10 minuten</text>
+  <text x="80" y="390" font-family="system-ui,sans-serif" font-size="32" fill="#64748b">Gratis training · NL · EN · FR · DE</text>
+  <rect x="80" y="450" width="260" height="60" rx="8" fill="#2563eb"/>
+  <text x="210" y="489" font-family="system-ui,sans-serif" font-size="26" font-weight="600" fill="#ffffff" text-anchor="middle">Start de training →</text>
+</svg>`;
+  res.setHeader('Cache-Control', 'public, max-age=86400');
+  res.type('image/svg+xml').send(svg);
+});
+
+// robots.txt: vervang __CANONICAL__ net als in index.html
+const ROBOTS_TXT = fs.readFileSync(path.join(PUBLIC_DIR, 'robots.txt'), 'utf8')
+  .replace('__CANONICAL__', CANONICAL);
+app.get('/robots.txt', (_req, res) =>
+  res.type('text/plain').send(ROBOTS_TXT));
+
+// sitemap.xml: éénpagina-SPA met taalvarianten
+app.get('/sitemap.xml', (_req, res) => {
+  if (!CANONICAL) return res.status(404).end();
+  const langs = ['nl', 'nl-BE', 'en', 'fr', 'fr-BE', 'de'];
+  const urls = langs.map(l => `
+  <url>
+    <loc>${CANONICAL}?lang=${l}</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>`).join('');
+  res.type('application/xml').send(
+    `<?xml version="1.0" encoding="UTF-8"?>\n` +
+    `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
+    `  <url><loc>${CANONICAL}</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>` +
+    urls + '\n</urlset>'
+  );
+});
+
 // Statische frontend (CSS/JS/afbeeldingen)
 app.use(express.static(PUBLIC_DIR, {
   extensions: ['html'],
