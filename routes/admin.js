@@ -600,24 +600,41 @@ function orgDetailPage(org, users) {
     </div>` : ''}`, '/admin');
 }
 
-// GET /admin/stats — visitor analytics dashboard
+// Toegestane periodes. De interval-string komt nooit van de gebruiker zelf
+// (alleen de sleutel), dus geen SQL-injectierisico. 'all' = geen filter.
+const STATS_PERIODS = {
+  '7d':  { label: '7 dagen',   interval: "7 days"  },
+  '30d': { label: '30 dagen',  interval: "30 days" },
+  '90d': { label: '90 dagen',  interval: "90 days" },
+  '1y':  { label: '1 jaar',    interval: "1 year"  },
+  'all': { label: 'Alles',     interval: null      },
+};
+
+// GET /admin/stats?period=7d|30d|90d|1y|all
 router.get('/stats', requireLogin, async (req, res, next) => {
   try {
+    const periodKey = STATS_PERIODS[req.query.period] ? req.query.period : '30d';
+    const interval = STATS_PERIODS[periodKey].interval;
+    const where = interval ? `WHERE created_at >= NOW() - INTERVAL '${interval}'` : '';
+    const andStart = interval
+      ? `AND created_at >= NOW() - INTERVAL '${interval}'`
+      : '';
+
     const [dailyRes, langRes, audienceRes, totalsRes] = await Promise.all([
       db.query(`
         SELECT DATE(created_at) AS day, event, COUNT(*)::int AS cnt
         FROM analytics_events
-        WHERE created_at >= NOW() - INTERVAL '30 days'
+        ${where}
         GROUP BY day, event ORDER BY day DESC, event
       `),
       db.query(`
         SELECT lang, COUNT(*)::int AS cnt FROM analytics_events
-        WHERE event = 'training_start' AND created_at >= NOW() - INTERVAL '30 days'
+        WHERE event = 'training_start' ${andStart}
         GROUP BY lang ORDER BY cnt DESC
       `),
       db.query(`
         SELECT audience, COUNT(*)::int AS cnt FROM analytics_events
-        WHERE event = 'training_start' AND created_at >= NOW() - INTERVAL '30 days'
+        WHERE event = 'training_start' ${andStart}
         GROUP BY audience ORDER BY cnt DESC
       `),
       db.query(`
@@ -626,15 +643,17 @@ router.get('/stats', requireLogin, async (req, res, next) => {
           COUNT(*) FILTER (WHERE event = 'training_start')::int   AS starts,
           COUNT(*) FILTER (WHERE event = 'training_complete')::int AS completes
         FROM analytics_events
-        WHERE created_at >= NOW() - INTERVAL '30 days'
+        ${where}
       `),
     ]);
 
-    res.type('html').send(statsPage(dailyRes.rows, langRes.rows, audienceRes.rows, totalsRes.rows[0]));
+    res.type('html').send(
+      statsPage(dailyRes.rows, langRes.rows, audienceRes.rows, totalsRes.rows[0], periodKey)
+    );
   } catch (err) { next(err); }
 });
 
-function statsPage(daily, langs, audiences, totals) {
+function statsPage(daily, langs, audiences, totals, periodKey = '30d') {
   const pv   = totals.page_views  || 0;
   const st   = totals.starts      || 0;
   const co   = totals.completes   || 0;
@@ -667,7 +686,21 @@ function statsPage(daily, langs, audiences, totals) {
     `<tr><td>${e(r.audience || '—')}</td><td style="text-align:right">${r.cnt}</td></tr>`
   ).join('') || '<tr><td colspan="2" style="color:#9ca3af">Geen data</td></tr>';
 
-  return shell('Bezoekersanalyse (30 dagen)', `
+  const periodLabel = (STATS_PERIODS[periodKey] || STATS_PERIODS['30d']).label;
+  const periodTabs = Object.entries(STATS_PERIODS).map(([key, { label }]) => {
+    const active = key === periodKey;
+    return `<a href="/admin/stats?period=${key}" class="btn btn-sm"
+      style="${active
+        ? 'background:#2563eb;color:#fff;border:1px solid #2563eb'
+        : 'background:#fff;color:#374151;border:1px solid #d1d5db'}">${e(label)}</a>`;
+  }).join(' ');
+
+  return shell(`Bezoekersanalyse (${periodLabel})`, `
+    <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.25rem">
+      <span style="align-self:center;color:#6b7280;font-size:.85rem;margin-right:.3rem">Periode:</span>
+      ${periodTabs}
+    </div>
+
     <div class="stat-grid">
       <div class="stat"><div class="val">${pv}</div><div class="lbl">Paginaweergaven</div></div>
       <div class="stat"><div class="val">${st}</div><div class="lbl">Trainingen gestart</div></div>
@@ -676,7 +709,7 @@ function statsPage(daily, langs, audiences, totals) {
     </div>
 
     <div class="section">
-      <h2>Gebeurtenissen per dag (laatste 30 dagen)</h2>
+      <h2>Gebeurtenissen per dag (${periodLabel})</h2>
       <div style="overflow-x:auto">
         <table>
           <thead><tr><th>Datum</th><th style="text-align:right">Paginaweergaven</th><th style="text-align:right">Gestart</th><th style="text-align:right">Afgerond</th></tr></thead>
