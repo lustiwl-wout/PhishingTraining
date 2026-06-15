@@ -2093,6 +2093,7 @@
   const CALL_SCENARIOS = [
     {
       id: 'bank',
+      difficulty: 'normal',
       callerNameKey: 'sim.call.bank.caller',
       callerNumberKey: 'sim.call.bank.number',
       // Een onbekend/zakelijk ogend nummer; weigeren is hier al een veilige zet.
@@ -2131,6 +2132,7 @@
     },
     {
       id: 'tech',
+      difficulty: 'normal',
       callerNameKey: 'sim.call.tech.caller',
       callerNumberKey: 'sim.call.tech.number',
       declineOutcome: 'tech.declined',
@@ -2161,6 +2163,7 @@
     },
     {
       id: 'authority',
+      difficulty: 'normal',
       callerNameKey: 'sim.call.authority.caller',
       callerNumberKey: 'sim.call.authority.number',
       declineOutcome: 'authority.declined',
@@ -2190,21 +2193,128 @@
         'authority.data':     { safe: false, resultKey: 'sim.call.authority.out.data',     lessonKeys: ['sim.call.rule.officialchannel', 'sim.call.rule.nopressure'] },
       },
     },
+
+    // ===================== GEVORDERD (difficulty='advanced') =====================
+    // Subtielere vishing: een gespooft bank-nummer, een deepfake-stem van de
+    // directie, en een 'interne' IT-helpdesk. De tells zijn procesmatig
+    // (verifieer zelf, geen codes/wachtwoorden, ongebruikelijk verzoek), niet
+    // grof. Weigeren/zelf-terugbellen is steeds de veilige route.
+    {
+      id: 'advbank',
+      difficulty: 'advanced',
+      callerNameKey: 'sim.call.advbank.caller',
+      callerNumberKey: 'sim.call.advbank.number',
+      declineOutcome: 'advbank.declined',
+      start: 'b1',
+      beats: {
+        b1: {
+          lineKey: 'sim.call.advbank.b1.line',
+          options: [
+            { labelKey: 'sim.call.advbank.b1.o1', next: 'b2', safe: false },
+            { labelKey: 'sim.call.advbank.b1.o2', outcome: 'advbank.callback', safe: true },
+          ],
+        },
+        b2: {
+          lineKey: 'sim.call.advbank.b2.line',
+          options: [
+            { labelKey: 'sim.call.advbank.b2.o1', outcome: 'advbank.code', safe: false },
+            { labelKey: 'sim.call.advbank.b2.o2', outcome: 'advbank.transfer', safe: false },
+            { labelKey: 'sim.call.advbank.b2.o3', outcome: 'advbank.callback', safe: true },
+          ],
+        },
+      },
+      outcomes: {
+        'advbank.declined': { safe: true, resultKey: 'sim.call.advbank.out.declined', lessonKeys: ['sim.call.rule.spoofing', 'sim.call.rule.callback'] },
+        'advbank.callback': { safe: true, resultKey: 'sim.call.advbank.out.callback', lessonKeys: ['sim.call.rule.spoofing', 'sim.call.rule.callback'] },
+        'advbank.code':     { safe: false, resultKey: 'sim.call.advbank.out.code',     lessonKeys: ['sim.call.rule.nocodes', 'sim.call.rule.spoofing'] },
+        'advbank.transfer': { safe: false, resultKey: 'sim.call.advbank.out.transfer', lessonKeys: ['sim.call.rule.nosafeaccount', 'sim.call.rule.callback'] },
+      },
+    },
+    {
+      id: 'advceo',
+      difficulty: 'advanced',
+      callerNameKey: 'sim.call.advceo.caller',
+      callerNumberKey: 'sim.call.advceo.number',
+      declineOutcome: 'advceo.declined',
+      start: 'b1',
+      beats: {
+        b1: {
+          lineKey: 'sim.call.advceo.b1.line',
+          options: [
+            { labelKey: 'sim.call.advceo.b1.o1', next: 'b2', safe: false },
+            { labelKey: 'sim.call.advceo.b1.o2', outcome: 'advceo.verify', safe: true },
+          ],
+        },
+        b2: {
+          lineKey: 'sim.call.advceo.b2.line',
+          options: [
+            { labelKey: 'sim.call.advceo.b2.o1', outcome: 'advceo.paid', safe: false },
+            { labelKey: 'sim.call.advceo.b2.o2', outcome: 'advceo.verify', safe: true },
+          ],
+        },
+      },
+      outcomes: {
+        'advceo.declined': { safe: true, resultKey: 'sim.call.advceo.out.declined', lessonKeys: ['sim.call.rule.verifyinternal', 'sim.call.rule.newpayee'] },
+        'advceo.verify':   { safe: true, resultKey: 'sim.call.advceo.out.verify',   lessonKeys: ['sim.call.rule.verifyinternal', 'sim.call.rule.newpayee'] },
+        'advceo.paid':     { safe: false, resultKey: 'sim.call.advceo.out.paid',     lessonKeys: ['sim.call.rule.newpayee', 'sim.call.rule.verifyinternal'] },
+      },
+    },
+    {
+      id: 'advtech',
+      difficulty: 'advanced',
+      callerNameKey: 'sim.call.advtech.caller',
+      callerNumberKey: 'sim.call.advtech.number',
+      declineOutcome: 'advtech.declined',
+      start: 'b1',
+      beats: {
+        b1: {
+          lineKey: 'sim.call.advtech.b1.line',
+          options: [
+            { labelKey: 'sim.call.advtech.b1.o1', next: 'b2', safe: false },
+            { labelKey: 'sim.call.advtech.b1.o2', outcome: 'advtech.verify', safe: true },
+          ],
+        },
+        b2: {
+          lineKey: 'sim.call.advtech.b2.line',
+          options: [
+            { labelKey: 'sim.call.advtech.b2.o1', outcome: 'advtech.creds', safe: false },
+            { labelKey: 'sim.call.advtech.b2.o2', outcome: 'advtech.mfa', safe: false },
+            { labelKey: 'sim.call.advtech.b2.o3', outcome: 'advtech.hangup', safe: true },
+          ],
+        },
+      },
+      outcomes: {
+        'advtech.declined': { safe: true, resultKey: 'sim.call.advtech.out.declined', lessonKeys: ['sim.call.rule.verifyinternal', 'sim.call.rule.nopassword'] },
+        'advtech.verify':   { safe: true, resultKey: 'sim.call.advtech.out.verify',   lessonKeys: ['sim.call.rule.verifyinternal', 'sim.call.rule.nopassword'] },
+        'advtech.hangup':   { safe: true, resultKey: 'sim.call.advtech.out.hangup',   lessonKeys: ['sim.call.rule.nopassword', 'sim.call.rule.mfaonlyyou'] },
+        'advtech.creds':    { safe: false, resultKey: 'sim.call.advtech.out.creds',    lessonKeys: ['sim.call.rule.nopassword', 'sim.call.rule.verifyinternal'] },
+        'advtech.mfa':      { safe: false, resultKey: 'sim.call.advtech.out.mfa',      lessonKeys: ['sim.call.rule.mfaonlyyou', 'sim.call.rule.verifyinternal'] },
+      },
+    },
   ];
 
   // Toestand van het lopende gesprek. Geen persoonsgegevens; niet opgeslagen.
   let callState = null;
 
+  // Scenario's voor het gekozen niveau. Valt terug op 'normal' als er voor
+  // 'advanced' (nog) geen scenario's zijn, zodat de bel-simulator nooit leeg is.
+  function activeCallScenarios() {
+    const want = currentDifficulty === 'advanced' ? 'advanced' : 'normal';
+    const list = CALL_SCENARIOS.filter((s) => (s.difficulty || 'normal') === want);
+    return list.length ? list : CALL_SCENARIOS.filter((s) => (s.difficulty || 'normal') === 'normal');
+  }
+
   function startCallSimulator() {
     const result = document.getElementById('sim-result');
     if (result) result.hidden = true;
     // Begin bij het eerste scenario; de debrief biedt "volgend scenario" aan.
-    callState = { scenarioIndex: 0, phase: 'incoming', beatId: null, outcomeId: null };
+    callState = { scenarios: activeCallScenarios(), scenarioIndex: 0, phase: 'incoming', beatId: null, outcomeId: null };
     renderCallStep();
   }
 
   function currentScenario() {
-    return CALL_SCENARIOS[callState ? callState.scenarioIndex : 0];
+    const list = (callState && callState.scenarios) ? callState.scenarios : CALL_SCENARIOS;
+    return list[callState ? callState.scenarioIndex : 0];
   }
 
   // Tekent de huidige toestand opnieuw (gebruikt door taal-/kanaalwissel).
@@ -2293,7 +2403,8 @@
     const lessons = outcome.lessonKeys.map((k) =>
       '<li>' + escapeHtml(t(k)) + '</li>'
     ).join('');
-    const isLast = callState.scenarioIndex >= CALL_SCENARIOS.length - 1;
+    const scenarioCount = (callState.scenarios || CALL_SCENARIOS).length;
+    const isLast = callState.scenarioIndex >= scenarioCount - 1;
     const nextBtn = isLast
       ? '<button class="btn btn-primary" data-call-action="done">' + escapeHtml(t('sim.call.done')) + '</button>'
       : '<button class="btn btn-primary" data-call-action="next">' + escapeHtml(t('sim.call.next')) + '</button>';
