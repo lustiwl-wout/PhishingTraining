@@ -114,7 +114,8 @@
       <li data-step="welkom" class="active"><span class="step-num">1</span><span class="step-label" data-i18n="nav.welkom">Welkom</span></li>
       <li data-step="leren"><span class="step-num">2</span><span class="step-label" data-i18n="nav.leren">Leren</span></li>
       <li data-step="simulator"><span class="step-num">3</span><span class="step-label" data-i18n="nav.simulator">Simulator</span></li>
-      <li data-step="hulp"><span class="step-num">4</span><span class="step-label" data-i18n="nav.hulp">Hulp</span></li>
+      <li data-step="kanalen"><span class="step-num">4</span><span class="step-label" data-i18n="nav.kanalen">Meer kanalen</span></li>
+      <li data-step="hulp"><span class="step-num">5</span><span class="step-label" data-i18n="nav.hulp">Hulp</span></li>
       <li data-step="wachtwoord" class="step-extra"><span class="step-num">+</span><span class="step-label" data-i18n="nav.extra">Extra</span></li>
     </ol>
   </nav>
@@ -461,11 +462,13 @@
             <li data-i18n-html="sim.intro.li4">Uw taak: kiezen of elke e‑mail <strong>vertrouwd</strong> is, of dat het <strong>phishing</strong> is.</li>
             <li data-i18n="sim.intro.li5">Er worden geen logo's of huisstijl van echte bedrijven gebruikt, om auteursrecht en merkrechten te respecteren.</li>
           </ul>
-          <div class="difficulty-toggle" id="sim-channel-toggle">
+          <!-- Kanaal-toggle: alleen zichtbaar in extra-modus (stap 4). In de e-mail
+               simulator (stap 3) is dit blok verborgen via showSimPhase(). -->
+          <div class="difficulty-toggle" id="sim-channel-toggle" hidden>
             <span class="difficulty-label" data-i18n="sim.channel.label">Kanaal:</span>
-            <button class="difficulty-btn active" data-channel="email" data-i18n="sim.channel.email">E‑mail</button>
-            <button class="difficulty-btn" data-channel="sms" data-i18n="sim.channel.sms">Sms</button>
-            <!-- WhatsApp en Telefoon worden na de training aangeboden als extra -->
+            <button class="difficulty-btn active" data-channel="sms" data-i18n="sim.channel.sms">Sms</button>
+            <button class="difficulty-btn" data-channel="whatsapp" data-i18n="sim.channel.whatsapp">WhatsApp</button>
+            <button class="difficulty-btn" data-channel="phone" data-i18n="sim.channel.phone">Telefoon</button>
           </div>
           <div class="difficulty-toggle" id="sim-difficulty-toggle">
             <span class="difficulty-label" data-i18n="sim.difficulty.label">Moeilijkheidsgraad:</span>

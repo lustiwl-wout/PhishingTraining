@@ -84,6 +84,8 @@
   // en de fetch-filter verschillen. Default 'email' houdt bestaand gedrag.
   const SUPPORTED_CHANNELS = ['email', 'sms', 'whatsapp', 'phone'];
   let currentChannel = 'email';
+  // 'email' = stap 3 e-mail simulator; 'extra' = stap 4 sms/whatsapp/telefoon.
+  let simMode = 'email';
   function setChannel(c) {
     if (!SUPPORTED_CHANNELS.includes(c)) return;
     currentChannel = c;
@@ -410,7 +412,7 @@
       // al correct zijn ingesteld voordat de eerste fetch plaatsvindt.
       // Het apparaat bepalen we opnieuw: wie op desktop oefende en op een
       // telefoon terugkomt, krijgt gewoon de mobiele weergave.
-      if (savedPage === 'simulator') {
+      if (savedPage === 'simulator' || savedPage === 'kanalen') {
         const saved = loadPersistedSimState();
         if (saved) {
           // Kanaal herstellen zodat een reload de juiste skin (mail of chat)
@@ -418,6 +420,7 @@
           if (saved.channel && SUPPORTED_CHANNELS.includes(saved.channel)) {
             setChannel(saved.channel);
           }
+          simMode = savedPage === 'kanalen' ? 'extra' : 'email';
           setDevice(detectDevice());
           document.body.classList.add('sim-fullscreen');
           if (currentChannel === 'phone') {
@@ -607,12 +610,17 @@
   }
 
   // -------- navigatie tussen pagina's --------
-  const pages = ['welkom', 'leren', 'simulator', 'hulp', 'wachtwoord'];
+  const pages = ['welkom', 'leren', 'simulator', 'kanalen', 'hulp', 'wachtwoord'];
 
   function go(step) {
     pages.forEach((p) => {
+      // 'kanalen' heeft geen eigen DOM-sectie; sla het over.
+      // De #simulator sectie wordt hieronder via p='simulator' afgehandeld.
+      if (p === 'kanalen') return;
       const el = document.getElementById(p);
-      if (el) el.classList.toggle('active', p === step);
+      // #simulator is actief voor zowel 'simulator' als 'kanalen'.
+      const isActive = p === step || (p === 'simulator' && step === 'kanalen');
+      if (el) el.classList.toggle('active', isActive);
     });
     document.querySelectorAll('#stepbar-list li').forEach((li) => {
       li.classList.toggle('active', li.dataset.step === step);
@@ -620,17 +628,30 @@
     // Onthoud welke stap actief is, zodat een refresh op dezelfde pagina belandt.
     try { localStorage.setItem('vo_page', step); } catch (_) {}
     // Fullscreen voor de simulator: verberg trainings-chrome, laat Outlook het scherm vullen.
-    document.body.classList.toggle('sim-fullscreen', step === 'simulator');
+    const isSimPage = step === 'simulator' || step === 'kanalen';
+    document.body.classList.toggle('sim-fullscreen', isSimPage);
     // "Sluit oefening" is alleen zinvol in de simulator.
-    const inSim = step === 'simulator';
     const exitBtn = document.getElementById('sim-exit-btn');
-    if (exitBtn) exitBtn.hidden = !inSim;
+    if (exitBtn) {
+      exitBtn.hidden = !isSimPage;
+      // E-mail sim → terug naar leren; extra sim → terug naar kanalen intro.
+      exitBtn.dataset.go = step === 'kanalen' ? 'kanalen' : 'leren';
+    }
 
     const main = document.getElementById('hoofd');
     if (main) main.focus();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    if (step === 'simulator') showSimPhase('intro');
+    if (step === 'simulator') {
+      simMode = 'email';
+      setChannel('email');
+      showSimPhase('intro');
+    }
+    if (step === 'kanalen') {
+      simMode = 'extra';
+      if (currentChannel === 'email') setChannel('sms');
+      showSimPhase('intro');
+    }
     // Retentie: terugkeer-nudge en weektip verversen wanneer we de
     // welkom-pagina tonen (historie kan ondertussen veranderd zijn).
     if (step === 'welkom') { renderReturnNudge(); renderWeeklyTip(); }
@@ -979,6 +1000,11 @@
       const el = document.getElementById('sim-phase-' + p);
       if (el) el.hidden = (p !== name);
     });
+    if (name === 'intro') {
+      // Kanaal-toggle alleen tonen in extra-modus (sms/whatsapp/phone).
+      const toggle = document.getElementById('sim-channel-toggle');
+      if (toggle) toggle.hidden = (simMode === 'email');
+    }
   }
 
   async function runMicrosoftLoginAnimation(simOpts) {
@@ -2738,15 +2764,13 @@
       '</div>'
     ) : '';
 
-    // "Meer oefenen" blok: alleen tonen als de e-mail- of sms-simulator net gedaan is.
-    const extraHtml = (currentChannel === 'email' || currentChannel === 'sms')
+    // Na de e-mail simulator: toon een knop naar stap 4 (meer kanalen).
+    // Na de extra simulator: geen extra-sectie, gewoon verder naar hulp.
+    const extraHtml = simMode === 'email'
       ? '<div class="sim-extra-channels">' +
           '<h3>' + escapeHtml(t('sim.final.extra.h')) + '</h3>' +
           '<p>' + escapeHtml(t('sim.final.extra.p')) + '</p>' +
-          '<div class="sim-extra-btns">' +
-            '<button class="btn btn-secondary" id="extra-whatsapp">' + escapeHtml(t('sim.final.extra.whatsapp')) + '</button>' +
-            '<button class="btn btn-secondary" id="extra-phone">' + escapeHtml(t('sim.final.extra.phone')) + '</button>' +
-          '</div>' +
+          '<button class="btn btn-primary" id="extra-naar-kanalen">' + escapeHtml(t('sim.final.extra.next')) + '</button>' +
         '</div>'
       : '';
 
@@ -2787,23 +2811,9 @@
         startMobileSimulator({ fresh: true });
       }
     });
-    // Extra kanaal-knoppen: WhatsApp en telefoon als post-training verdieping.
-    const waBtn = document.getElementById('extra-whatsapp');
-    if (waBtn) waBtn.addEventListener('click', () => {
-      result.hidden = true;
-      setChannel('whatsapp');
-      document.body.classList.add('sim-fullscreen');
-      showSimPhase('chat');
-      startChatSimulator({ fresh: true }).catch((err) => console.error(err));
-    });
-    const phBtn = document.getElementById('extra-phone');
-    if (phBtn) phBtn.addEventListener('click', () => {
-      result.hidden = true;
-      setChannel('phone');
-      document.body.classList.add('sim-fullscreen');
-      showSimPhase('call');
-      startCallSimulator();
-    });
+    // Na e-mail simulator: knop naar stap 4 meer kanalen.
+    const extraBtn = document.getElementById('extra-naar-kanalen');
+    if (extraBtn) extraBtn.addEventListener('click', () => { go('kanalen'); });
 
     result.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
