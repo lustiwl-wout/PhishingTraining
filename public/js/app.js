@@ -836,39 +836,19 @@
     return loadProgress().lastCompletion || 0;
   }
 
-  // -------- Lichte gamification: badges --------
-  // Per-run prestaties uit simState berekend.
-  // facts = { total, correct, pct, phishTotal, phishCorrect, clicked, opened, wasRefresher }.
-  const BADGE_DEFS = [
-    { id: 'sharp',     icon: '🎯', earn: (f) => f.total > 0 && f.correct === f.total },
-    { id: 'spotter',   icon: '🕵️', earn: (f) => f.phishTotal > 0 && f.phishCorrect === f.phishTotal },
-    { id: 'cool',      icon: '🧊', earn: (f) => f.clicked === 0 && f.opened === 0 },
-    { id: 'finisher',  icon: '🏁', earn: (f) => f.total >= 5 },
-    { id: 'comeback',  icon: '🔁', earn: (f) => f.wasRefresher },
-    { id: 'flawless',  icon: '🛡️', earn: (f) => f.total >= 5 && f.correct === f.total && f.clicked === 0 && f.opened === 0 },
-  ];
-  function earnedBadges(facts) {
-    return BADGE_DEFS.filter((b) => {
-      try { return b.earn(facts); } catch (_) { return false; }
-    });
-  }
-
-  // Server-side opslaan voor enterprise; localStorage voor publiek.
-  async function recordCompletionAndBadges(total, correct, wasRefresher, badges) {
+  // Afronding server-side opslaan voor enterprise; localStorage voor publiek.
+  // Voedt de terugkeer-nudge, de "gemiste berichten"-opfrissing en retentie.
+  async function recordCompletion(total, correct, wasRefresher) {
     if (enterpriseConfig) {
       try {
         await fetch('/api/enterprise/complete', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ total, correct, wasRefresher, badges: badges.map((b) => b.id) }),
+          body: JSON.stringify({ total, correct, wasRefresher }),
         });
         // Cache bijwerken zodat de nudge en opfris-oefening direct kloppen
-        if (!serverHistory) serverHistory = { lastCompletion: 0, badges: [], missedIds: [] };
+        if (!serverHistory) serverHistory = { lastCompletion: 0, missedIds: [] };
         serverHistory.lastCompletion = Date.now();
-        if (!Array.isArray(serverHistory.badges)) serverHistory.badges = [];
-        badges.forEach((b) => {
-          if (!serverHistory.badges.includes(b.id)) serverHistory.badges.push(b.id);
-        });
         // Gemiste berichten: berichten waarvoor is_correct=false in deze ronde
         if (!Array.isArray(serverHistory.missedIds)) serverHistory.missedIds = [];
         if (simState) {
@@ -898,8 +878,6 @@
         p.messages[m.id] = { correct: !!j.correct, seenAt: now };
       });
     }
-    if (!Array.isArray(p.badges)) p.badges = [];
-    badges.forEach((b) => { if (!p.badges.includes(b.id)) p.badges.push(b.id); });
     saveProgress(p);
   }
 
@@ -2735,8 +2713,7 @@
     // Persisted state hoeft niet meer — sessie is afgerond. Refresh
     // op de result-pagina laat de gebruiker dan weer fris beginnen.
     clearPersistedSimState();
-    // Was dit een opfris-oefening? Bewaren vóór de reset hieronder, want de
-    // "Comeback"-badge hangt ervan af.
+    // Was dit een opfris-oefening? Bewaren vóór de reset hieronder.
     const wasRefresher = refresherMode;
     refresherMode = false;
     // Verberg alle simulator-fases en verlaat fullscreen zodat
@@ -2791,41 +2768,8 @@
       ? '<div class="final-qr-scanned">⚠️ ' + escapeHtml(t('sim.final.openedAttachment', { count: openedCount })) + '</div>'
       : '';
 
-    // Gamification: badges op basis van deze run.
-    const badges = earnedBadges({
-      total, correct, pct,
-      phishTotal: phishingMsgs.length,
-      phishCorrect,
-      clicked: clickedCount,
-      opened: openedCount,
-      wasRefresher,
-    });
     // Retentie: enterprise → server-side; publiek → localStorage.
-    await recordCompletionAndBadges(total, correct, wasRefresher, badges);
-
-    // Toon alle verdiende badges (over alle trainingsronden heen).
-    // Enterprise: uit serverHistory (bijgewerkt door recordCompletionAndBadges).
-    // Publiek: uit de huidige run + localStorage-collectie.
-    let allBadgeIds;
-    if (enterpriseConfig && serverHistory && Array.isArray(serverHistory.badges)) {
-      allBadgeIds = serverHistory.badges;
-    } else {
-      const p = loadProgress();
-      allBadgeIds = Array.isArray(p.badges) ? p.badges : badges.map((b) => b.id);
-    }
-    const allBadges = BADGE_DEFS.filter((b) => allBadgeIds.includes(b.id));
-    const newBadgeIds = new Set(badges.map((b) => b.id));
-    const badgesHtml = allBadges.length > 0 ? (
-      '<div class="final-badges">' +
-        '<p class="final-badges-h">' + escapeHtml(t('badge.h')) + '</p>' +
-        '<ul class="badge-row">' + allBadges.map((b) =>
-          '<li class="badge-chip' + (newBadgeIds.has(b.id) ? ' badge-new' : '') + '" title="' + escapeHtml(t('badge.' + b.id + '.desc')) + '">' +
-            '<span class="badge-icon" aria-hidden="true">' + b.icon + '</span>' +
-            '<span class="badge-label">' + escapeHtml(t('badge.' + b.id + '.name')) + '</span>' +
-          '</li>'
-        ).join('') + '</ul>' +
-      '</div>'
-    ) : '';
+    await recordCompletion(total, correct, wasRefresher);
 
     // Persoonlijk risicoprofiel: groepeer de beoordeelde berichten per
     // categorie en bereken per categorie het percentage correct. Zo wordt de
@@ -2948,7 +2892,6 @@
       '<h2>' + escapeHtml(titel) + '</h2>' +
       '<p class="big-text">' + t('sim.final.score', { correct, total, pct }) + '</p>' +
       '<p>' + escapeHtml(advies) + '</p>' +
-      badgesHtml +
       breakdownHtml +
       profileHtml +
       clickedHtml +

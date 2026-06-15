@@ -190,15 +190,8 @@ CREATE TABLE IF NOT EXISTS user_completions (
 );
 CREATE INDEX IF NOT EXISTS idx_user_completions_org_user ON user_completions(org_user_id);
 
--- Enterprise: verdiende badges per gebruiker (deduplicaat via UNIQUE).
-CREATE TABLE IF NOT EXISTS user_badges (
-  id            SERIAL PRIMARY KEY,
-  org_user_id   INTEGER     NOT NULL REFERENCES org_users(id) ON DELETE CASCADE,
-  badge         TEXT        NOT NULL,
-  earned_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  UNIQUE(org_user_id, badge)
-);
-CREATE INDEX IF NOT EXISTS idx_user_badges_org_user ON user_badges(org_user_id);
+-- Het badge-/gamificationsysteem is verwijderd; ruim de oude tabel op.
+DROP TABLE IF EXISTS user_badges;
 
 -- Lightweight visitor analytics: no personal data, no cookies beyond existing session.
 CREATE TABLE IF NOT EXISTS analytics_events (

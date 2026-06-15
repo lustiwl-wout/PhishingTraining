@@ -3054,37 +3054,3 @@ body.simple-mode .call-choice { font-size: 1.05rem; }
   html:has(body.simple-mode) { font-size: 17px; }
 }
 
-/* --- 2. Badges op het resultatenscherm ----------------------------------- */
-.final-badges { margin: .9rem 0 1.1rem; }
-.final-badges-h {
-  font-weight: 600;
-  font-size: .9rem;
-  color: var(--ink-soft);
-  margin: 0 0 .5rem;
-}
-.badge-row {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: .5rem;
-}
-.badge-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: .4rem;
-  padding: .35rem .7rem .35rem .55rem;
-  border-radius: 999px;
-  background: var(--good-soft);
-  border: 1px solid var(--good);
-  color: var(--good);
-  font-weight: 600;
-  font-size: .9rem;
-  line-height: 1.2;
-}
-.badge-icon { font-size: 1.15rem; line-height: 1; }
-.badge-label { white-space: nowrap; }
-.badge-chip.badge-new { box-shadow: 0 0 0 2px var(--good); }
-
-body.simple-mode .badge-chip { font-size: 1rem; padding: .45rem .85rem; }
