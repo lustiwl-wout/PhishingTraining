@@ -345,7 +345,23 @@
       logoutForm.innerHTML = '<button type="submit" style="background:none;border:none;cursor:pointer;font-size:.85rem;color:var(--ink-soft)">Uitloggen</button>';
       nav.appendChild(logoutForm);
     }
+
+    // Modules: verberg uitgeschakelde stappen in de stepbar en navigatieknoppen.
+    if (cfg.modules) {
+      document.querySelectorAll('#stepbar-list [data-step]').forEach(li => {
+        if (!cfg.modules.includes(li.dataset.step)) li.hidden = true;
+      });
+      // Verberg data-go knoppen die verwijzen naar uitgeschakelde modules.
+      const moduleSet = new Set(cfg.modules);
+      document.querySelectorAll('[data-go]').forEach(btn => {
+        if (ALL_MODULES.includes(btn.dataset.go) && !moduleSet.has(btn.dataset.go)) {
+          btn.hidden = true;
+        }
+      });
+    }
   }
+
+  const ALL_MODULES = ['leren', 'simulator', 'kanalen', 'hulp', 'wachtwoord'];
 
   // Vervang het fictieve interne domein "kestrel.nl/be/de" door het domein
   // van de organisatie zodat de training realistisch aanvoelt voor medewerkers.
@@ -1003,7 +1019,29 @@
     if (name === 'intro') {
       // Kanaal-toggle alleen tonen in extra-modus (sms/whatsapp/phone).
       const toggle = document.getElementById('sim-channel-toggle');
-      if (toggle) toggle.hidden = (simMode === 'email');
+      if (toggle) {
+        if (simMode === 'email') {
+          toggle.hidden = true;
+        } else {
+          // In extra-modus: filter kanalen op basis van enterprise-config.
+          const allowedCh = enterpriseConfig?.channels || ['sms', 'whatsapp', 'phone'];
+          let visibleCount = 0;
+          toggle.querySelectorAll('[data-channel]').forEach(btn => {
+            const show = allowedCh.includes(btn.dataset.channel);
+            btn.hidden = !show;
+            if (show) visibleCount++;
+          });
+          // Als maar één kanaal beschikbaar: toggle verbergen en direct instellen.
+          if (visibleCount <= 1) {
+            toggle.hidden = true;
+            if (allowedCh.length > 0) setChannel(allowedCh[0]);
+          } else {
+            toggle.hidden = false;
+            // Zorg dat het actieve kanaal binnen de toegestane set valt.
+            if (!allowedCh.includes(currentChannel)) setChannel(allowedCh[0]);
+          }
+        }
+      }
     }
   }
 
@@ -2764,9 +2802,10 @@
       '</div>'
     ) : '';
 
-    // Na de e-mail simulator: toon een knop naar stap 4 (meer kanalen).
-    // Na de extra simulator: geen extra-sectie, gewoon verder naar hulp.
-    const extraHtml = simMode === 'email'
+    // Na de e-mail simulator: toon knop naar stap 4 als kanalen-module actief is.
+    // Na de extra simulator (of als kanalen uitgeschakeld): geen extra-sectie.
+    const kanalenEnabled = !enterpriseConfig?.modules || enterpriseConfig.modules.includes('kanalen');
+    const extraHtml = (simMode === 'email' && kanalenEnabled)
       ? '<div class="sim-extra-channels">' +
           '<h3>' + escapeHtml(t('sim.final.extra.h')) + '</h3>' +
           '<p>' + escapeHtml(t('sim.final.extra.p')) + '</p>' +

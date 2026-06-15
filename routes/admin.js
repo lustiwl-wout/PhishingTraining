@@ -76,9 +76,11 @@ router.get('/', requireLogin, async (req, res, next) => {
 
 // ── Org management ──────────────────────────────────────────────────────────
 
-const ALL_LOCALES    = ['nl', 'nl-BE', 'en', 'fr', 'fr-BE', 'de'];
-const ALL_AUDIENCES  = ['personal', 'business'];
+const ALL_LOCALES      = ['nl', 'nl-BE', 'en', 'fr', 'fr-BE', 'de'];
+const ALL_AUDIENCES    = ['personal', 'business'];
 const ALL_DIFFICULTIES = ['normal', 'advanced'];
+const ALL_MODULES      = ['leren', 'simulator', 'kanalen', 'hulp', 'wachtwoord'];
+const ALL_CHANNELS     = ['sms', 'whatsapp', 'phone'];
 
 function parseArray(body, key, allowed) {
   const val = body[key];
@@ -99,6 +101,8 @@ router.post('/orgs', requireLogin, async (req, res, next) => {
     const locales      = parseArray(req.body, 'locales', ALL_LOCALES);
     const audiences    = parseArray(req.body, 'audiences', ALL_AUDIENCES);
     const difficulties = parseArray(req.body, 'difficulties', ALL_DIFFICULTIES);
+    const modules      = parseArray(req.body, 'modules', ALL_MODULES);
+    const channels     = parseArray(req.body, 'channels', ALL_CHANNELS);
     const difficulty   = ALL_DIFFICULTIES.includes(req.body.difficulty) ? req.body.difficulty : 'normal';
 
     if (!name || !slug || !valid_until)
@@ -107,15 +111,17 @@ router.post('/orgs', requireLogin, async (req, res, next) => {
       return res.type('html').send(orgFormPage('Slug mag alleen kleine letters, cijfers en koppeltekens bevatten.'));
     if (locales.length === 0 || audiences.length === 0 || difficulties.length === 0)
       return res.type('html').send(orgFormPage('Selecteer minimaal één taal, één doelgroep en één moeilijkheidsgraad.'));
+    if (modules.length === 0)
+      return res.type('html').send(orgFormPage('Selecteer minimaal één trainingsmodule.'));
 
     const admin_token = crypto.randomBytes(24).toString('hex');
     const maxU = Math.max(1, Math.min(5000, parseInt(max_users, 10) || 50));
     const domain = email_domain ? email_domain.trim().toLowerCase().replace(/^@/, '') : null;
 
     const { rows } = await db.query(
-      `INSERT INTO organisations (name, slug, email_domain, locales, audiences, difficulties, difficulty, max_users, valid_until, admin_token)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING id`,
-      [name.trim(), slug.trim(), domain, locales, audiences, difficulties, difficulty, maxU, valid_until, admin_token]
+      `INSERT INTO organisations (name, slug, email_domain, locales, audiences, difficulties, difficulty, modules, channels, max_users, valid_until, admin_token)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING id`,
+      [name.trim(), slug.trim(), domain, locales, audiences, difficulties, difficulty, modules, channels, maxU, valid_until, admin_token]
     );
     res.redirect(`/admin/orgs/${rows[0].id}`);
   } catch (err) {
@@ -153,17 +159,20 @@ router.post('/orgs/:id', requireLogin, async (req, res, next) => {
     const locales      = parseArray(req.body, 'locales', ALL_LOCALES);
     const audiences    = parseArray(req.body, 'audiences', ALL_AUDIENCES);
     const difficulties = parseArray(req.body, 'difficulties', ALL_DIFFICULTIES);
+    const modules      = parseArray(req.body, 'modules', ALL_MODULES);
+    const channels     = parseArray(req.body, 'channels', ALL_CHANNELS);
     const difficulty   = ALL_DIFFICULTIES.includes(req.body.difficulty) ? req.body.difficulty : (org.difficulty || 'normal');
 
-    if (locales.length === 0 || audiences.length === 0 || difficulties.length === 0)
+    if (locales.length === 0 || audiences.length === 0 || difficulties.length === 0 || modules.length === 0)
       return res.redirect(`/admin/orgs/${org.id}?err=Selecteer+minimaal+%C3%A9%C3%A9n+optie+per+categorie.`);
 
     const orgName = (name || '').trim() || org.name;
     const domain  = email_domain ? email_domain.trim().toLowerCase().replace(/^@/, '') : null;
 
     await db.query(
-      `UPDATE organisations SET name=$1, locales=$2, audiences=$3, difficulties=$4, difficulty=$5, valid_until=$6, max_users=$7, email_domain=$8 WHERE id=$9`,
-      [orgName, locales, audiences, difficulties, difficulty, valid_until || org.valid_until,
+      `UPDATE organisations SET name=$1, locales=$2, audiences=$3, difficulties=$4, difficulty=$5, modules=$6, channels=$7, valid_until=$8, max_users=$9, email_domain=$10 WHERE id=$11`,
+      [orgName, locales, audiences, difficulties, difficulty, modules, channels,
+       valid_until || org.valid_until,
        Math.max(1, Math.min(5000, parseInt(max_users, 10) || org.max_users)), domain, org.id]
     );
     res.redirect(`/admin/orgs/${org.id}`);
@@ -444,8 +453,20 @@ const LOCALE_LABELS = [
   ['nl','🇳🇱 Nederlands'],['nl-BE','🇧🇪 Nederlands (BE)'],['en','🇬🇧 English'],
   ['fr','🇫🇷 Français'],['fr-BE','🇧🇪 Français (BE)'],['de','🇩🇪 Deutsch'],
 ];
-const AUDIENCE_LABELS = [['personal','👤 Privé'],['business','💼 Zakelijk']];
-const DIFFICULTY_LABELS = [['normal','Normaal'],['advanced','Gevorderd']];
+const AUDIENCE_LABELS    = [['personal','👤 Privé'],['business','💼 Zakelijk']];
+const DIFFICULTY_LABELS  = [['normal','Normaal'],['advanced','Gevorderd']];
+const MODULE_LABELS      = [
+  ['leren',      '📚 Leermodule (7 tips)'],
+  ['simulator',  '📧 E-mail simulator'],
+  ['kanalen',    '💬 Extra kanalen (SMS / WhatsApp / Telefoon)'],
+  ['hulp',       '🆘 Hulp bij phishing'],
+  ['wachtwoord', '🔑 Wachtwoorden & MFA'],
+];
+const CHANNEL_LABELS     = [
+  ['sms',       '📱 SMS-phishing'],
+  ['whatsapp',  '💬 WhatsApp-phishing'],
+  ['phone',     '📞 Telefoongesprekken (vishing)'],
+];
 
 function orgFormPage(error = '') {
   const tomorrow = new Date(Date.now() + 365 * 86400000).toISOString().slice(0, 10);
@@ -476,6 +497,16 @@ function orgFormPage(error = '') {
           Training geldt als afgerond als de deelnemer alle berichten van dit niveau heeft beoordeeld.
         </p>
         ${radioGroup('difficulty', DIFFICULTY_LABELS, 'normal')}
+        <label style="margin-top:1rem">Trainingsmodules</label>
+        <p style="font-size:.8rem;color:#6b7280;margin:.2rem 0 .5rem">
+          Schakel stappen uit die niet relevant zijn voor deze organisatie.
+        </p>
+        ${checkboxGroup('modules', MODULE_LABELS, ALL_MODULES)}
+        <label style="margin-top:.75rem">Extra kanalen (binnen stap 4)</label>
+        <p style="font-size:.8rem;color:#6b7280;margin:.2rem 0 .5rem">
+          Alleen zichtbaar als de module "Extra kanalen" actief is.
+        </p>
+        ${checkboxGroup('channels', CHANNEL_LABELS, ALL_CHANNELS)}
         <br>
         <button class="btn" type="submit">Aanmaken</button>
       </form>
@@ -483,9 +514,11 @@ function orgFormPage(error = '') {
 }
 
 function orgDetailPage(org, users) {
-  const locales     = org.locales     || ALL_LOCALES;
-  const audiences   = org.audiences   || ALL_AUDIENCES;
+  const locales      = org.locales      || ALL_LOCALES;
+  const audiences    = org.audiences    || ALL_AUDIENCES;
   const difficulties = org.difficulties || ALL_DIFFICULTIES;
+  const modules      = org.modules      || ALL_MODULES;
+  const channels     = org.channels     || ALL_CHANNELS;
   const expired = new Date(org.valid_until) < new Date();
 
   const userRows = users.map(u => `<tr>
@@ -526,6 +559,16 @@ function orgDetailPage(org, users) {
           Training geldt als afgerond als de deelnemer alle berichten van dit niveau heeft beoordeeld.
         </p>
         ${radioGroup('difficulty', DIFFICULTY_LABELS, org.difficulty || 'normal')}
+        <label style="margin-top:1rem">Trainingsmodules</label>
+        <p style="font-size:.8rem;color:#6b7280;margin:.2rem 0 .5rem">
+          Schakel stappen uit die niet relevant zijn voor deze organisatie.
+        </p>
+        ${checkboxGroup('modules', MODULE_LABELS, modules)}
+        <label style="margin-top:.75rem">Extra kanalen (binnen stap 4)</label>
+        <p style="font-size:.8rem;color:#6b7280;margin:.2rem 0 .5rem">
+          Alleen zichtbaar als de module "Extra kanalen" actief is.
+        </p>
+        ${checkboxGroup('channels', CHANNEL_LABELS, channels)}
         <br>
         <button class="btn" type="submit">Opslaan</button>
       </form>

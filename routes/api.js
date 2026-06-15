@@ -252,7 +252,7 @@ router.get('/enterprise/config', async (req, res, next) => {
     if (!orgUserId) return res.json({ enterprise: false });
 
     const { rows } = await db.query(`
-      SELECT o.name, o.slug, o.locales, o.audiences, o.difficulties, o.email_domain
+      SELECT o.name, o.slug, o.locales, o.audiences, o.difficulties, o.email_domain, o.modules, o.channels
       FROM org_users u
       JOIN organisations o ON o.id = u.org_id
       WHERE u.id = $1
@@ -260,6 +260,8 @@ router.get('/enterprise/config', async (req, res, next) => {
 
     if (!rows[0]) return res.json({ enterprise: false });
     const org = rows[0];
+    const ALL_MODULES  = ['leren','simulator','kanalen','hulp','wachtwoord'];
+    const ALL_CHANNELS = ['sms','whatsapp','phone'];
     res.json({
       enterprise: true,
       orgName: org.name,
@@ -268,6 +270,8 @@ router.get('/enterprise/config', async (req, res, next) => {
       audiences: org.audiences,
       difficulties: org.difficulties,
       emailDomain: org.email_domain || null,
+      modules:  org.modules  || ALL_MODULES,
+      channels: org.channels || ALL_CHANNELS,
     });
   } catch (err) { next(err); }
 });
