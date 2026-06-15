@@ -135,7 +135,7 @@ app.get('/robots.txt', (_req, res) =>
 // sitemap.xml: éénpagina-SPA met taalvarianten
 app.get('/sitemap.xml', (_req, res) => {
   if (!CANONICAL) return res.status(404).end();
-  const langs = ['nl', 'nl-BE', 'en', 'fr', 'fr-BE', 'de'];
+  const langs = ['nl', 'nl-BE', 'en', 'en-US', 'fr', 'fr-BE', 'de'];
   const urls = langs.map(l => `
   <url>
     <loc>${CANONICAL}?lang=${l}</loc>

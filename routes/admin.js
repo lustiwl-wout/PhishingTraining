@@ -76,7 +76,7 @@ router.get('/', requireLogin, async (req, res, next) => {
 
 // ── Org management ──────────────────────────────────────────────────────────
 
-const ALL_LOCALES      = ['nl', 'nl-BE', 'en', 'fr', 'fr-BE', 'de'];
+const ALL_LOCALES      = ['nl', 'nl-BE', 'en', 'en-US', 'fr', 'fr-BE', 'de'];
 const ALL_AUDIENCES    = ['personal', 'business'];
 const ALL_DIFFICULTIES = ['normal', 'advanced'];
 const ALL_MODULES      = ['simulator', 'kanalen', 'hulp', 'wachtwoord'];
@@ -450,7 +450,7 @@ function radioGroup(name, options, selected) {
 }
 
 const LOCALE_LABELS = [
-  ['nl','🇳🇱 Nederlands'],['nl-BE','🇧🇪 Nederlands (BE)'],['en','🇬🇧 English'],
+  ['nl','🇳🇱 Nederlands'],['nl-BE','🇧🇪 Nederlands (BE)'],['en','🇬🇧 English'],['en-US','🇺🇸 English (US)'],
   ['fr','🇫🇷 Français'],['fr-BE','🇧🇪 Français (BE)'],['de','🇩🇪 Deutsch'],
 ];
 const AUDIENCE_LABELS    = [['personal','👤 Privé'],['business','💼 Zakelijk']];

@@ -5,10 +5,10 @@
   'use strict';
 
   // -------- i18n --------
-  const SUPPORTED_LANGS = ['nl', 'nl-BE', 'en', 'fr', 'fr-BE', 'de'];
+  const SUPPORTED_LANGS = ['nl', 'nl-BE', 'en', 'en-US', 'fr', 'fr-BE', 'de'];
   const LANG_FLAGS = {
     'nl': '🇳🇱', 'nl-BE': '🇧🇪',
-    'en': '🇬🇧',
+    'en': '🇬🇧', 'en-US': '🇺🇸',
     'fr': '🇫🇷', 'fr-BE': '🇧🇪',
     'de': '🇩🇪',
   };

@@ -113,7 +113,7 @@ CREATE TABLE IF NOT EXISTS organisations (
   name         TEXT        NOT NULL,
   slug         TEXT        NOT NULL UNIQUE,
   email_domain TEXT,
-  locales      TEXT[]      NOT NULL DEFAULT ARRAY['nl','nl-BE','en','fr','fr-BE','de'],
+  locales      TEXT[]      NOT NULL DEFAULT ARRAY['nl','nl-BE','en','en-US','fr','fr-BE','de'],
   audiences    TEXT[]      NOT NULL DEFAULT ARRAY['personal','business'],
   difficulties TEXT[]      NOT NULL DEFAULT ARRAY['normal','advanced'],
   max_users    INTEGER     NOT NULL DEFAULT 50,

@@ -13,11 +13,15 @@ function isUuidLike(s) {
   return typeof s === 'string' && /^[a-zA-Z0-9_-]{8,64}$/.test(s);
 }
 
-const SUPPORTED_LOCALES = new Set(['nl', 'nl-BE', 'en', 'fr', 'fr-BE', 'de']);
+const SUPPORTED_LOCALES = new Set(['nl', 'nl-BE', 'en', 'en-US', 'fr', 'fr-BE', 'de']);
 function pickLocale(req) {
   const q = req.query?.lang || '';
   return SUPPORTED_LOCALES.has(q) ? q : 'nl';
 }
+
+// Sommige locales hebben (nog) geen eigen DB-inhoud en lenen die van een
+// basistaal: en-US gebruikt de Engelse (en) e-mails/berichten.
+const LOCALE_BASE = { 'en-US': 'en' };
 
 const SUPPORTED_AUDIENCES = new Set(['personal', 'business']);
 function pickAudience(req) {
@@ -45,6 +49,12 @@ function pickChannel(req) {
 async function withFallback(locale, queryFn) {
   const primary = await queryFn(locale);
   if (primary.rowCount > 0 || locale === 'nl') return primary;
+  // Eerst de basistaal proberen (en-US → en), dan pas terugvallen op 'nl'.
+  const base = LOCALE_BASE[locale];
+  if (base) {
+    const baseRes = await queryFn(base);
+    if (baseRes.rowCount > 0 || base === 'nl') return baseRes;
+  }
   return queryFn('nl');
 }
 
@@ -58,7 +68,7 @@ router.get('/health', async (_req, res) => {
   }
 });
 
-// GET /api/examples?lang=nl|nl-BE|en|fr|fr-BE|de&audience=personal|business
+// GET /api/examples?lang=nl|nl-BE|en|en-US|fr|fr-BE|de&audience=personal|business
 router.get('/examples', async (req, res, next) => {
   try {
     const locale = pickLocale(req);
@@ -76,7 +86,7 @@ router.get('/examples', async (req, res, next) => {
 
 // ======== INBOX-SIMULATOR ========
 
-// GET /api/inbox?lang=nl|nl-BE|en|fr|fr-BE|de&audience=personal|business&difficulty=normal|advanced
+// GET /api/inbox?lang=nl|nl-BE|en|en-US|fr|fr-BE|de&audience=personal|business&difficulty=normal|advanced
 // — lijst berichten zonder spoilers, gefilterd op taal, doelgroep en moeilijkheid.
 router.get('/inbox', async (req, res, next) => {
   try {
