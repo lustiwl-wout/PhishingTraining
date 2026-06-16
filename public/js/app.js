@@ -351,6 +351,9 @@
       document.querySelectorAll('#stepbar-list [data-step]').forEach(li => {
         if (!cfg.modules.includes(li.dataset.step)) li.hidden = true;
       });
+      const anyOptional = ['kanalen','wachtwoord','hulp'].some(m => cfg.modules.includes(m));
+      const divider = document.querySelector('#stepbar-list .step-divider');
+      if (divider) divider.hidden = !anyOptional;
       // Verberg data-go knoppen die verwijzen naar uitgeschakelde modules.
       const moduleSet = new Set(cfg.modules);
       document.querySelectorAll('[data-go]').forEach(btn => {

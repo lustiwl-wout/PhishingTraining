@@ -2277,6 +2277,14 @@ body.channel-whatsapp .chat-bubble-in { background: #fff; }
 /* Stappenbalk is nu klikbaar — geef niet-actieve stappen een hint. */
 .stepbar li { cursor: pointer; }
 .stepbar li:not(.active):hover { background: var(--bg); color: var(--ink); }
+.stepbar .step-divider {
+  cursor: default; padding: 0 .1rem; background: transparent !important;
+  color: var(--ink-soft); font-weight: 400; font-size: .75rem; align-self: center;
+}
+.stepbar .step-divider:hover { background: transparent !important; }
+.step-divider-label {
+  opacity: .55; letter-spacing: .04em; text-transform: uppercase; font-size: .7rem;
+}
 
 /* Algemene uitleg-regel binnen de module (na een interactie). */
 .ww-explain {
