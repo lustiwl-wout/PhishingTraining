@@ -2745,6 +2745,7 @@
         '</div>'
       : '';
 
+    result.hidden = false;
     result.innerHTML =
       '<h2>' + escapeHtml(titel) + '</h2>' +
       '<p class="big-text">' + t('sim.final.score', { correct, total, pct }) + '</p>' +
