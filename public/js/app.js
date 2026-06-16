@@ -2331,11 +2331,10 @@
   }
 
   function renderBody(text, links) {
-    // Als de body met HTML begint (bv. een SharePoint/OneDrive share-kaart
-    // uit de seed) dan trust'en we de markup — de seed is onder onze
-    // controle, dus geen XSS-risico. Anders: platte-tekst rendering met
-    // HTML-escaping en \n -> <br>.
-    const isHtml = /^\s*<[a-z][\s\S]*>/i.test(text);
+    // Als de body HTML-tags bevat (bv. een SharePoint-kaart of <strong> inline)
+    // dan trust'en we de markup — de seed is onder onze controle, dus geen
+    // XSS-risico. Anders: platte-tekst rendering met HTML-escaping en \n -> <br>.
+    const isHtml = /<[a-z][^>]*>/i.test(text);
     let html = isHtml ? text : escapeHtml(text).replaceAll('\n', '<br>');
     // QR-afbeeldingen krijgen de sessie en taal mee zodat een echte scan
     // met de telefoon herleidbaar is naar deze trainingssessie én de
