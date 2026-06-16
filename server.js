@@ -135,17 +135,19 @@ app.get('/robots.txt', (_req, res) =>
 // sitemap.xml: éénpagina-SPA met taalvarianten
 app.get('/sitemap.xml', (_req, res) => {
   if (!CANONICAL) return res.status(404).end();
+  const lastmod = new Date().toISOString().slice(0, 10);
   const langs = ['nl', 'nl-BE', 'en', 'en-US', 'fr', 'fr-BE', 'de'];
   const urls = langs.map(l => `
   <url>
     <loc>${CANONICAL}?lang=${l}</loc>
+    <lastmod>${lastmod}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>`).join('');
   res.type('application/xml').send(
     `<?xml version="1.0" encoding="UTF-8"?>\n` +
     `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
-    `  <url><loc>${CANONICAL}</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>` +
+    `  <url><loc>${CANONICAL}</loc><lastmod>${lastmod}</lastmod><changefreq>monthly</changefreq><priority>1.0</priority></url>` +
     urls + '\n</urlset>'
   );
 });
