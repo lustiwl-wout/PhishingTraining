@@ -1889,6 +1889,7 @@ body.device-iphone .device-homebar::after {
   transition: background .15s, color .15s, border-color .15s;
 }
 .difficulty-toggle[hidden] { display: none; }
+.btn[hidden] { display: none; }
 .difficulty-btn[hidden] { display: none; }
 .difficulty-btn:hover {
   background: var(--bg);
