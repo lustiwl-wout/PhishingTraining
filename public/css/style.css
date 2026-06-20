@@ -815,18 +815,67 @@ body.sim-fullscreen .outlook {
   margin: 0 0 .5rem;
   color: var(--primary-dark);
 }
-/* Persona-kaart: "wie bent u" vóór de oefening. Lichte highlight zodat het
-   opvalt zonder de check-list te overstemmen. */
+/* Persona-kaart: wie bent u vóór de e-mailsimulator. */
 .sim-persona {
-  background: var(--bg);
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  background: var(--surface);
   border: 1px solid var(--line);
   border-left: 4px solid var(--primary);
   border-radius: 10px;
-  padding: .75rem .9rem;
+  padding: .65rem .9rem;
   margin: .25rem 0 1rem;
-  line-height: 1.5;
 }
 .sim-persona[hidden] { display: none; }
+
+.persona-avatar {
+  flex-shrink: 0;
+  width: 54px; height: 54px;
+  border-radius: 50%;
+  background: var(--ol-blue-light);
+  display: flex; align-items: flex-end; justify-content: center;
+  overflow: hidden;
+}
+.persona-avatar svg { width: 100%; height: 100%; }
+
+.persona-info {
+  display: flex;
+  flex-direction: column;
+  gap: .18rem;
+  min-width: 0;
+}
+
+.persona-name {
+  font-weight: 700;
+  font-size: .97rem;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+.persona-meta {
+  font-size: .82rem;
+  color: var(--ink-soft);
+}
+
+.persona-email-row {
+  align-items: center;
+  gap: .3rem;
+  font-size: .8rem;
+  color: var(--ink-soft);
+  font-family: monospace, monospace;
+}
+
+/* Show/hide biz vs. privé elements based on data-audience on #sim-persona */
+.persona-biz { display: none; }
+.persona-personal { display: none; }
+#sim-persona[data-audience="business"] .persona-biz.persona-meta { display: block; }
+#sim-persona[data-audience="business"] .persona-biz.persona-email-row { display: flex; }
+#sim-persona[data-audience="personal"] .persona-personal.persona-email-row { display: flex; }
+
+@media (max-width: 420px) {
+  .persona-avatar { width: 44px; height: 44px; }
+}
 .sim-welcome-card .lead { margin-bottom: 1rem; }
 .sim-welcome-card .actions { justify-content: center; margin-top: 1.25rem; }
 

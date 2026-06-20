@@ -217,6 +217,10 @@
     // Retentie: de "Tip van de week" hangt af van de taal — bij elke
     // (her)toepassing van i18n opnieuw zetten met de juiste vertaling.
     if (typeof renderWeeklyTip === 'function') renderWeeklyTip();
+    // Persona-kaart: audience als data-attribuut bijhouden zodat CSS
+    // de juiste elementen (zakelijk vs. privé) zichtbaar maakt.
+    const personaCard = document.getElementById('sim-persona');
+    if (personaCard) personaCard.dataset.audience = currentAudience;
   }
 
   function setLanguage(lang) {

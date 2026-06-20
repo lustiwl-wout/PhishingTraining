@@ -365,7 +365,29 @@
         <div class="sim-welcome-card">
           <h2 data-i18n="sim.intro.h">Zo werkt de oefening</h2>
           <p class="lead" data-i18n-html="sim.intro.lead">We openen een <strong>oefenomgeving</strong> met nep-berichten. Alles wat u ziet is voor de training gemaakt.</p>
-          <div class="sim-persona" id="sim-persona" data-i18n-html="sim.intro.persona">In deze oefening bent u <strong>Johanna Janssen</strong>. De e‑mails hieronder komen binnen op uw eigen mailbox (<strong>janssen@hotmail.com</strong>).</div>
+          <div class="sim-persona" id="sim-persona">
+            <div class="persona-avatar" aria-hidden="true">
+              <svg viewBox="0 0 64 72" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                <path d="M12 40 Q11 10 32 8 Q53 10 52 40 Q46 32 32 32 Q18 32 12 40Z" fill="var(--primary)" opacity=".5"/>
+                <ellipse cx="32" cy="47" rx="14" ry="17" fill="none" stroke="var(--primary)" stroke-width="2.5" opacity=".8"/>
+                <path d="M4 72 Q4 60 32 57 Q60 60 60 72Z" fill="var(--primary)" opacity=".4"/>
+              </svg>
+            </div>
+            <div class="persona-info">
+              <div class="persona-name" data-i18n="user.name">Johanna Janssen</div>
+              <div class="persona-biz persona-meta">
+                <span data-i18n="user.role">Financieel medewerker</span><span aria-hidden="true"> · </span><span data-i18n="user.company">Kestrel</span>
+              </div>
+              <div class="persona-biz persona-email-row">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+                <span data-i18n="user.email.business">j.janssen@kestrel.nl</span>
+              </div>
+              <div class="persona-personal persona-email-row">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+                <span data-i18n="user.email">janssen@hotmail.com</span>
+              </div>
+            </div>
+          </div>
           <ul class="check-list">
             <li data-i18n="sim.intro.li1">De berichten zien er echt uit — ze zijn het niet.</li>
             <li data-i18n="sim.intro.li2">Niet alle knoppen werken — dat hoeft ook niet, het is maar een oefening.</li>

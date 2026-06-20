@@ -22,6 +22,9 @@ window.VO_LOCALES = {
     'meta.description': 'Leer phishing herkennen in 10 minuten. Gratis training met realistische voorbeelden voor particulieren en bedrijven.',
     'skip.main': 'Ga naar de inhoud',
 
+    'user.name': 'Johanna Janssen',
+    'user.role': 'Financieel medewerker',
+    'user.company': 'Kestrel',
     'user.email': 'janssen@hotmail.com',
     'user.email.business': 'j.janssen@kestrel.nl',
     'sim.intro.persona': 'In deze oefening bent u <strong>Johanna Janssen</strong>. De e‑mails hieronder komen binnen op uw privé-mailbox (<strong>janssen@hotmail.com</strong>).',
@@ -469,6 +472,9 @@ window.VO_LOCALES = {
     'meta.description': 'Leer phishing herkennen in 10 minuten. Gratis training met realistische voorbeelden voor particulieren en bedrijven.',
     'skip.main': 'Ga naar de inhoud',
 
+    'user.name': 'Petra Peeters',
+    'user.role': 'Financieel medewerker',
+    'user.company': 'Kestrel',
     'user.email': 'peeters@hotmail.com',
     'user.email.business': 'p.peeters@kestrel.be',
     'sim.intro.persona': 'In deze oefening bent u <strong>Petra Peeters</strong>. De e‑mails hieronder komen binnen op uw privé-mailbox (<strong>peeters@hotmail.com</strong>).',
@@ -916,6 +922,9 @@ window.VO_LOCALES = {
     'meta.description': 'Learn to spot phishing in 10 minutes. Free training with realistic examples for individuals and businesses.',
     'skip.main': 'Skip to main content',
 
+    'user.name': 'Jane Smith',
+    'user.role': 'Finance Officer',
+    'user.company': 'Kestrel',
     'user.email': 'smith@hotmail.com',
     'user.email.business': 'j.smith@kestrel.co.uk',
     'sim.intro.persona': 'In this exercise you are <strong>Jane Smith</strong>. The emails below arrive in your personal mailbox (<strong>smith@hotmail.com</strong>).',
@@ -1363,6 +1372,9 @@ window.VO_LOCALES = {
     'meta.description': 'Learn to spot phishing in 10 minutes. Free training with realistic examples for individuals and businesses.',
     'skip.main': 'Skip to main content',
 
+    'user.name': 'Jane Smith',
+    'user.role': 'Finance Officer',
+    'user.company': 'Kestrel',
     'user.email': 'smith@hotmail.com',
     'user.email.business': 'j.smith@kestrel.com',
     'sim.intro.persona': 'In this exercise you are <strong>Jane Smith</strong>. The emails below arrive in your personal mailbox (<strong>smith@hotmail.com</strong>).',
@@ -1810,6 +1822,9 @@ window.VO_LOCALES = {
     'meta.description': 'Apprenez à reconnaître le hameçonnage en 10 minutes. Formation gratuite avec des exemples réalistes pour particuliers et entreprises.',
     'skip.main': 'Aller au contenu principal',
 
+    'user.name': 'Pauline Dupont',
+    'user.role': 'Chargée de finance',
+    'user.company': 'Kestrel',
     'user.email': 'dupont@hotmail.com',
     'user.email.business': 'p.dupont@kestrel.fr',
     'sim.intro.persona': 'Dans cet exercice, vous êtes <strong>Pauline Dupont</strong>. Les e‑mails ci-dessous arrivent dans votre boîte personnelle (<strong>dupont@hotmail.com</strong>).',
@@ -2258,6 +2273,9 @@ window.VO_LOCALES = {
     'meta.description': 'Apprenez à reconnaître le hameçonnage en 10 minutes. Formation gratuite avec des exemples réalistes pour particuliers et entreprises.',
     'skip.main': 'Aller au contenu principal',
 
+    'user.name': 'Pauline Dubois',
+    'user.role': 'Chargée de finance',
+    'user.company': 'Kestrel',
     'user.email': 'dubois@hotmail.com',
     'user.email.business': 'p.dubois@kestrel.be',
     'sim.intro.persona': 'Dans cet exercice, vous êtes <strong>Pauline Dubois</strong>. Les e‑mails ci-dessous arrivent dans votre boîte personnelle (<strong>dubois@hotmail.com</strong>).',
@@ -2706,6 +2724,9 @@ window.VO_LOCALES = {
     'meta.description': 'Lernen Sie Phishing in 10 Minuten zu erkennen. Kostenloses Training mit realistischen Beispielen für Privatpersonen und Unternehmen.',
     'skip.main': 'Zum Hauptinhalt springen',
 
+    'user.name': 'Martina Müller',
+    'user.role': 'Finanzreferentin',
+    'user.company': 'Kestrel',
     'user.email': 'mueller@hotmail.com',
     'user.email.business': 'm.mueller@kestrel.de',
     'sim.intro.persona': 'In dieser Übung sind Sie <strong>Martina Müller</strong>. Die E‑Mails unten kommen in Ihrem privaten Postfach an (<strong>mueller@hotmail.com</strong>).',
