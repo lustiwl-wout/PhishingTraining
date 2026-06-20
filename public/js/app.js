@@ -890,6 +890,10 @@
       if (el) el.hidden = (p !== name);
     });
     if (name === 'intro') {
+      // Persona-kaart (wie ben ik + werkmail) alleen in de e-mailsimulator;
+      // in extra-modus (sms/whatsapp/telefoon) is de werkmail niet relevant.
+      const persona = document.getElementById('sim-persona');
+      if (persona) persona.hidden = (simMode !== 'email');
       // Kanaal-toggle alleen tonen in extra-modus (sms/whatsapp/phone).
       const toggle = document.getElementById('sim-channel-toggle');
       if (toggle) {

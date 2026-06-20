@@ -24,6 +24,8 @@ window.VO_LOCALES = {
 
     'user.email': 'janssen@hotmail.com',
     'user.email.business': 'j.janssen@kestrel.nl',
+    'sim.intro.persona': 'In deze oefening bent u <strong>Johanna Janssen</strong>. De e‑mails hieronder komen binnen op uw privé-mailbox (<strong>janssen@hotmail.com</strong>).',
+    'sim.intro.persona.business': 'In deze oefening bent u <strong>Johanna Janssen</strong> en u werkt bij <strong>Kestrel</strong> op de financiële afdeling. De e‑mails komen binnen op uw werkmail (<strong>j.janssen@kestrel.nl</strong>).',
     'user.avatar': 'J',
 
     'brand.title': 'Veilig Online',
@@ -469,6 +471,8 @@ window.VO_LOCALES = {
 
     'user.email': 'peeters@hotmail.com',
     'user.email.business': 'p.peeters@kestrel.be',
+    'sim.intro.persona': 'In deze oefening bent u <strong>Petra Peeters</strong>. De e‑mails hieronder komen binnen op uw privé-mailbox (<strong>peeters@hotmail.com</strong>).',
+    'sim.intro.persona.business': 'In deze oefening bent u <strong>Petra Peeters</strong> en u werkt bij <strong>Kestrel</strong> op de financiële afdeling. De e‑mails komen binnen op uw werkmail (<strong>p.peeters@kestrel.be</strong>).',
     'user.avatar': 'P',
 
     'brand.title': 'Veilig Online',
@@ -914,6 +918,8 @@ window.VO_LOCALES = {
 
     'user.email': 'smith@hotmail.com',
     'user.email.business': 'j.smith@kestrel.co.uk',
+    'sim.intro.persona': 'In this exercise you are <strong>Jane Smith</strong>. The emails below arrive in your personal mailbox (<strong>smith@hotmail.com</strong>).',
+    'sim.intro.persona.business': 'In this exercise you are <strong>Jane Smith</strong> and you work at <strong>Kestrel</strong> in the finance team. The emails arrive in your work mailbox (<strong>j.smith@kestrel.co.uk</strong>).',
     'user.avatar': 'S',
 
     'brand.title': 'Safe Online',
@@ -1358,7 +1364,9 @@ window.VO_LOCALES = {
     'skip.main': 'Skip to main content',
 
     'user.email': 'smith@hotmail.com',
-    'user.email.business': 'j.smith@kestrel.co.uk',
+    'user.email.business': 'j.smith@kestrel.com',
+    'sim.intro.persona': 'In this exercise you are <strong>Jane Smith</strong>. The emails below arrive in your personal mailbox (<strong>smith@hotmail.com</strong>).',
+    'sim.intro.persona.business': 'In this exercise you are <strong>Jane Smith</strong> and you work at <strong>Kestrel</strong> on the finance team. The emails arrive in your work mailbox (<strong>j.smith@kestrel.com</strong>).',
     'user.avatar': 'S',
 
     'brand.title': 'Safe Online',
@@ -1804,6 +1812,8 @@ window.VO_LOCALES = {
 
     'user.email': 'dupont@hotmail.com',
     'user.email.business': 'p.dupont@kestrel.fr',
+    'sim.intro.persona': 'Dans cet exercice, vous êtes <strong>Pauline Dupont</strong>. Les e‑mails ci-dessous arrivent dans votre boîte personnelle (<strong>dupont@hotmail.com</strong>).',
+    'sim.intro.persona.business': 'Dans cet exercice, vous êtes <strong>Pauline Dupont</strong> et vous travaillez chez <strong>Kestrel</strong> au service financier. Les e‑mails arrivent dans votre boîte professionnelle (<strong>p.dupont@kestrel.fr</strong>).',
     'user.avatar': 'D',
 
     'brand.title': 'Sécurité en ligne',
@@ -2250,6 +2260,8 @@ window.VO_LOCALES = {
 
     'user.email': 'dubois@hotmail.com',
     'user.email.business': 'p.dubois@kestrel.be',
+    'sim.intro.persona': 'Dans cet exercice, vous êtes <strong>Pauline Dubois</strong>. Les e‑mails ci-dessous arrivent dans votre boîte personnelle (<strong>dubois@hotmail.com</strong>).',
+    'sim.intro.persona.business': 'Dans cet exercice, vous êtes <strong>Pauline Dubois</strong> et vous travaillez chez <strong>Kestrel</strong> au service financier. Les e‑mails arrivent dans votre boîte professionnelle (<strong>p.dubois@kestrel.be</strong>).',
     'user.avatar': 'D',
 
     'brand.title': 'Sécurité en ligne',
@@ -2696,6 +2708,8 @@ window.VO_LOCALES = {
 
     'user.email': 'mueller@hotmail.com',
     'user.email.business': 'm.mueller@kestrel.de',
+    'sim.intro.persona': 'In dieser Übung sind Sie <strong>Martina Müller</strong>. Die E‑Mails unten kommen in Ihrem privaten Postfach an (<strong>mueller@hotmail.com</strong>).',
+    'sim.intro.persona.business': 'In dieser Übung sind Sie <strong>Martina Müller</strong> und arbeiten bei <strong>Kestrel</strong> in der Finanzabteilung. Die E‑Mails kommen in Ihrem dienstlichen Postfach an (<strong>m.mueller@kestrel.de</strong>).',
     'user.avatar': 'M',
 
     'brand.title': 'Sicher Online',

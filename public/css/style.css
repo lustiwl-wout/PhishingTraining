@@ -815,6 +815,18 @@ body.sim-fullscreen .outlook {
   margin: 0 0 .5rem;
   color: var(--primary-dark);
 }
+/* Persona-kaart: "wie bent u" vóór de oefening. Lichte highlight zodat het
+   opvalt zonder de check-list te overstemmen. */
+.sim-persona {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--primary);
+  border-radius: 10px;
+  padding: .75rem .9rem;
+  margin: .25rem 0 1rem;
+  line-height: 1.5;
+}
+.sim-persona[hidden] { display: none; }
 .sim-welcome-card .lead { margin-bottom: 1rem; }
 .sim-welcome-card .actions { justify-content: center; margin-top: 1.25rem; }
 
