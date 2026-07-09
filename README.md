@@ -19,7 +19,7 @@ een korte oefenquiz.
 ├── db/
 │   ├── index.js        ← pg-pool
 │   ├── schema.sql      ← tabellen
-│   └── seed.sql        ← Nederlandse voorbeeld- en quizdata
+│   └── seed/           ← seed-data in genummerde sectie-bestanden
 ├── scripts/init-db.js  ← past schema toe en zaait data
 ├── server.js           ← Express server
 ├── render.yaml         ← Render Blueprint
@@ -34,8 +34,9 @@ cp .env.example .env       # vul DATABASE_URL in (Neon)
 npm run dev                # http://localhost:3000
 ```
 
-De server draait bij elke start automatisch `schema.sql` en zaait `seed.sql`
-wanneer er nog geen vragen in de DB staan, dus aparte init is niet nodig.
+De server draait bij elke start automatisch `schema.sql` en zaait `db/seed/`
+(genummerde sectie-bestanden, in bestandsnaamvolgorde) wanneer er nog geen
+vragen in de DB staan, dus aparte init is niet nodig.
 (Wil je expliciet zaaien of forceren: `npm run db:init` resp.
 `node scripts/init-db.js --force-seed`.)
 
@@ -80,7 +81,7 @@ wanneer er nog geen vragen in de DB staan, dus aparte init is niet nodig.
 Render Free heeft twee beperkingen die we hebben opgevangen:
 
 1. **Geen Shell-toegang.** Daarom draait de server bij iedere boot zelf
-   `schema.sql` (idempotent met `IF NOT EXISTS`) en zaait `seed.sql` alléén
+   `schema.sql` (idempotent met `IF NOT EXISTS`) en zaait `db/seed/` alléén
    wanneer `quiz_questions` leeg is. Je hoeft dus niets handmatig te doen.
    - Wil je toch handmatig herzaaien? Draai het lokaal tegen je Neon-DB:
      `DATABASE_URL=... npm run db:init`

@@ -1,5 +1,6 @@
 /**
- * Past schema.sql toe en zaait seed.sql wanneer er nog geen vragen zijn.
+ * Past schema.sql toe en zaait de seed (db/seed/*.sql, in bestandsnaamvolgorde
+ * geconcateneerd) wanneer er nog geen vragen zijn.
  * Idempotent: veilig om bij elke serverstart aan te roepen.
  *
  * Reden: op Render Free is er geen Shell, dus kunnen we `npm run db:init`
@@ -11,7 +12,18 @@ const crypto = require('node:crypto');
 const db = require('./index');
 
 const SCHEMA_PATH = path.join(__dirname, 'schema.sql');
-const SEED_PATH = path.join(__dirname, 'seed.sql');
+const SEED_DIR = path.join(__dirname, 'seed');
+
+// De seed is opgesplitst in genummerde sectie-bestanden (01-basis-nl.sql, …).
+// De volgorde is betekenisvol: latere secties bevatten UPDATEs op eerdere en
+// de en-US-generatie moet als laatste. Daarom sorteren op bestandsnaam.
+function readSeed() {
+  return fs.readdirSync(SEED_DIR)
+    .filter((f) => f.endsWith('.sql'))
+    .sort()
+    .map((f) => fs.readFileSync(path.join(SEED_DIR, f), 'utf8'))
+    .join('');
+}
 
 async function initDb({ force = false } = {}) {
   if (!process.env.DATABASE_URL) {
@@ -19,7 +31,7 @@ async function initDb({ force = false } = {}) {
   }
 
   const schema = fs.readFileSync(SCHEMA_PATH, 'utf8');
-  const seed = fs.readFileSync(SEED_PATH, 'utf8');
+  const seed = readSeed();
   const seedHash = crypto.createHash('sha256').update(seed).digest('hex').slice(0, 16);
 
   const client = await db.pool.connect();
