@@ -74,7 +74,17 @@ async function initDb({ force = false } = {}) {
       console.log(`[init-db] seed laden (${reason}). hash: ${previousHash || 'none'} -> ${seedHash}`);
 
       // Bewaar gebruikersdata vóór de seed — sequentieel op dezelfde client.
-      const judgments  = await client.query('SELECT * FROM inbox_judgments').catch(() => ({ rows: [] }));
+      // Oordelen krijgen de slug van hun bericht mee (ter plekke berekend,
+      // zodat dit ook werkt op databases van vóór de slug-kolom). Na de seed
+      // her-koppelen we via die slug: serial-id's verschuiven wanneer
+      // berichten midden in de seed worden toegevoegd, de slug niet.
+      const judgments  = await client.query(
+        `SELECT j.*,
+                m.locale || ':' || m.channel || ':' || m.audience || ':' ||
+                m.difficulty || ':' || m.sort_order AS msg_slug
+           FROM inbox_judgments j
+           JOIN inbox_messages m ON m.id = j.message_id`
+      ).catch(() => ({ rows: [] }));
       const eggs       = await client.query('SELECT * FROM easter_egg_views').catch(() => ({ rows: [] }));
       const simStarts  = await client.query('SELECT * FROM simulator_starts').catch(() => ({ rows: [] }));
       const orgs       = await client.query('SELECT * FROM organisations').catch(() => ({ rows: [] }));
@@ -84,8 +94,17 @@ async function initDb({ force = false } = {}) {
 
       await client.query(seed);
 
-      // Zet gebruikersdata terug. message_id-referenties zijn geldig zolang de
-      // seed dezelfde berichten in dezelfde volgorde invoegt (RESTART IDENTITY).
+      // Slugs berekenen voor alle verse berichten. De combinatie
+      // locale:channel:audience:difficulty:sort_order is de stabiele,
+      // door de auteur toegekende identiteit van een bericht.
+      await client.query(`
+        UPDATE inbox_messages
+           SET slug = locale || ':' || channel || ':' || audience || ':' ||
+                      difficulty || ':' || sort_order
+      `);
+
+      // Zet gebruikersdata terug. Oordelen worden via de slug aan het juiste
+      // (mogelijk verschoven) bericht gekoppeld.
       // Organisations first (org_users + org_sessions depend on them)
       if (orgs.rows.length > 0) {
         for (const r of orgs.rows) {
@@ -125,20 +144,29 @@ async function initDb({ force = false } = {}) {
       }
 
       if (judgments.rows.length > 0) {
+        let restored = 0;
         for (const r of judgments.rows) {
-          await client.query(
+          // message_id via de slug opzoeken: het bericht kan door een
+          // seed-wijziging een andere serial-id hebben gekregen. Bestaat de
+          // slug niet meer (bericht verwijderd/hernummerd), dan vervalt het
+          // oordeel — beter dan het stilletjes aan het verkeerde bericht hangen.
+          const res = await client.query(
             `INSERT INTO inbox_judgments
                (id, session_id, message_id, verdict, is_correct, clicked_link,
                 revealed_sender, ip_address, difficulty, org_user_id, answered_at)
-             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
+             SELECT $1, $2, m.id, $3, $4, $5, $6, $7, $8, $9, $10
+               FROM inbox_messages m WHERE m.slug = $11
              ON CONFLICT DO NOTHING`,
-            [r.id, r.session_id, r.message_id, r.verdict, r.is_correct,
+            [r.id, r.session_id, r.verdict, r.is_correct,
              r.clicked_link, r.revealed_sender, r.ip_address,
-             r.difficulty ?? 'normal', r.org_user_id ?? null, r.answered_at]
+             r.difficulty ?? 'normal', r.org_user_id ?? null, r.answered_at,
+             r.msg_slug]
           );
+          restored += res.rowCount;
         }
         await client.query(`SELECT setval('inbox_judgments_id_seq', MAX(id)) FROM inbox_judgments`);
-        console.log(`[init-db] ${judgments.rows.length} oordelen teruggezet.`);
+        const dropped = judgments.rows.length - restored;
+        console.log(`[init-db] ${restored} oordelen teruggezet via slug${dropped > 0 ? ` (${dropped} vervallen: bericht bestaat niet meer)` : ''}.`);
       }
       if (eggs.rows.length > 0) {
         for (const r of eggs.rows) {
@@ -171,6 +199,16 @@ async function initDb({ force = false } = {}) {
       );
     } else {
       console.log(`[init-db] seed al actueel (hash ${seedHash}) — overgeslagen.`);
+      // Backfill voor databases die de slug-kolom nog niet gevuld hebben
+      // (bv. net gemigreerd) terwijl de seed niet opnieuw hoeft te draaien.
+      await client.query(`
+        UPDATE inbox_messages
+           SET slug = locale || ':' || channel || ':' || audience || ':' ||
+                      difficulty || ':' || sort_order
+         WHERE slug IS NULL
+      `).catch((err) => {
+        console.warn(`[init-db] slug-backfill overgeslagen: ${err.message}`);
+      });
     }
   } finally {
     client.release();

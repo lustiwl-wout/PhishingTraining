@@ -5447,7 +5447,7 @@ INSERT INTO inbox_messages
  'Dit is smishing. Proximus verstuurt factuurmeldingen via e-mail of Mijn Proximus — nooit als betaallink in een sms. Log altijd zelf in via mijnproximus.be.',
  364),
 
--- NL-BE / SMS D — Colruyt legitimate (sort 365)
+-- NL-BE / SMS D — Colruyt legitimate (sort 367; 365/366 waren al bezet)
 ('nl-BE','sms','both','advanced',
  'Colruyt','Colruyt',
  'Colruyt stuurt loyaliteitsberichten als u daarvoor toestemming gaf. Geen link, geen betaling.',
@@ -5459,7 +5459,7 @@ INSERT INTO inbox_messages
  '[]'::jsonb,
  '["Geen link in het bericht — doorverwijzing naar de officiële app of website","Geen verzoek om te betalen of in te loggen","Alleen informatie over uw eigen puntensaldo","Consistent met wat u bij aanmelding heeft opgegeven"]'::jsonb,
  'Dit is een echt sms-bericht van Colruyt. Géén link, géén betaling gevraagd — alleen een saldo-update. Twijfelt u? Open de Xtra-app zelf.',
- 365),
+ 367),
 
 -- NL-BE / WhatsApp E — "ben jij dit?" phishing (sort 370)
 ('nl-BE','whatsapp','both','advanced',

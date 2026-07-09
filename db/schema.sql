@@ -57,6 +57,11 @@ ALTER TABLE inbox_messages ADD COLUMN IF NOT EXISTS channel TEXT NOT NULL DEFAUL
 -- account, marktplaats, ceo, familie, overig). Voedt het persoonlijke
 -- risicoprofiel op het resultaatscherm. Bestaande rijen blijven 'overig'.
 ALTER TABLE inbox_messages ADD COLUMN IF NOT EXISTS category TEXT NOT NULL DEFAULT 'overig';
+-- Stabiele natuurlijke sleutel per bericht: locale:channel:audience:difficulty:sort_order.
+-- Serial-id's verschuiven wanneer berichten midden in de seed worden toegevoegd;
+-- de slug niet. init-db berekent hem na elke seed en her-koppelt er oordelen mee.
+ALTER TABLE inbox_messages ADD COLUMN IF NOT EXISTS slug TEXT;
+CREATE UNIQUE INDEX IF NOT EXISTS uq_inbox_messages_slug ON inbox_messages(slug);
 CREATE INDEX IF NOT EXISTS idx_inbox_messages_locale ON inbox_messages(locale);
 CREATE INDEX IF NOT EXISTS idx_inbox_messages_audience ON inbox_messages(audience);
 CREATE INDEX IF NOT EXISTS idx_inbox_messages_difficulty ON inbox_messages(difficulty);
