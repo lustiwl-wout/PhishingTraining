@@ -9,6 +9,7 @@ const apiRouter = require('./routes/api');
 const adminRouter = require('./routes/admin');
 const { loginRouter: enterpriseRouter, portalRouter } = require('./routes/enterprise');
 const { initDbWithRetry } = require('./db/init');
+const { migrateFromOldDb } = require('./db/migrate');
 const db = require('./db');
 
 const app = express();
@@ -367,7 +368,20 @@ app.listen(PORT, () => {
     console.log('[server] SKIP_DB_INIT=1 — database-init overgeslagen.');
     return;
   }
-  initDbWithRetry().catch((err) => {
+  (async () => {
+    // Eenmalige migratie oude → nieuwe Neon-database. Draait alleen wanneer
+    // OLD_DATABASE_URL is gezet en de nieuwe DB nog niet gemigreerd is.
+    // Mislukt de migratie, dan draait init-db alsnog (app blijft werken) en
+    // wordt de migratie bij de volgende start opnieuw geprobeerd.
+    if (process.env.OLD_DATABASE_URL) {
+      try {
+        await migrateFromOldDb();
+      } catch (err) {
+        console.error('[migrate] migratie mislukt — wordt bij volgende start opnieuw geprobeerd:', err.message);
+      }
+    }
+    await initDbWithRetry();
+  })().catch((err) => {
     console.error('[server] init-db onverwachte fout:', err);
   });
 });
