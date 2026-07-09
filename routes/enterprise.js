@@ -156,7 +156,7 @@ portalRouter.get('/:token', async (req, res) => {
   if (!org) return notFound(res);
 
   const total = await countActiveMessages(org);
-  const [{ rows: userRows }, { rows: msgRows }] = await Promise.all([
+  const [{ rows: userRows }, { rows: msgRows }, { rows: catRows }, { rows: chanRows }] = await Promise.all([
     db.query(`
       SELECT
         u.id, u.numeric_id, u.allow_retrain,
@@ -191,9 +191,33 @@ portalRouter.get('/:token', async (req, res) => {
         m.is_phishing DESC,
         COUNT(j.id) DESC
     `, [org.id]),
+    // Risicoprofiel per thema: waar gaat het binnen de organisatie mis?
+    // "Phishing gemist" is de gevaarlijke fout (echte aanval niet herkend).
+    db.query(`
+      SELECT m.category,
+             COUNT(j.id)::int                                                    AS judged_count,
+             COUNT(j.id) FILTER (WHERE j.is_correct)::int                        AS correct_count,
+             COUNT(j.id) FILTER (WHERE m.is_phishing AND NOT j.is_correct)::int  AS missed_phish
+      FROM inbox_judgments j
+      JOIN inbox_messages m ON m.id = j.message_id
+      JOIN org_users u ON u.id = j.org_user_id AND u.org_id = $1
+      GROUP BY m.category
+      ORDER BY (COUNT(j.id) FILTER (WHERE j.is_correct)::float / NULLIF(COUNT(j.id), 0)) ASC
+    `, [org.id]),
+    db.query(`
+      SELECT m.channel,
+             COUNT(j.id)::int                                                    AS judged_count,
+             COUNT(j.id) FILTER (WHERE j.is_correct)::int                        AS correct_count,
+             COUNT(j.id) FILTER (WHERE m.is_phishing AND NOT j.is_correct)::int  AS missed_phish
+      FROM inbox_judgments j
+      JOIN inbox_messages m ON m.id = j.message_id
+      JOIN org_users u ON u.id = j.org_user_id AND u.org_id = $1
+      GROUP BY m.channel
+      ORDER BY (COUNT(j.id) FILTER (WHERE j.is_correct)::float / NULLIF(COUNT(j.id), 0)) ASC
+    `, [org.id]),
   ]);
 
-  res.type('html').send(portalPage(org, userRows, total, req.params.token, msgRows));
+  res.type('html').send(portalPage(org, userRows, total, req.params.token, msgRows, catRows, chanRows));
 });
 
 // POST /portal/:token/toggle/:userId
@@ -318,7 +342,7 @@ function completedPage(org) {
 </html>`;
 }
 
-function portalPage(org, users, totalMessages, token, msgStats = []) {
+function portalPage(org, users, totalMessages, token, msgStats = [], catStats = [], chanStats = []) {
   const isDone = (r) => r.done_count >= totalMessages && totalMessages > 0;
   const score  = (r) => r.done_count > 0 ? Math.round(r.correct_count / r.done_count * 100) + '%' : '—';
 
@@ -348,6 +372,41 @@ function portalPage(org, users, totalMessages, token, msgStats = []) {
   const done   = users.filter(r => isDone(r)).length;
   const busy   = users.filter(r => !isDone(r) && r.done_count > 0).length;
   const notyet = users.filter(r => r.done_count === 0).length;
+
+  // Organisatiebrede KPI's: gemiddelde score en het aantal keer dat iemand
+  // op een link in een oefenbericht klikte (het gevaarlijke gedrag).
+  const totJudged  = users.reduce((s, r) => s + r.done_count, 0);
+  const totCorrect = users.reduce((s, r) => s + r.correct_count, 0);
+  const totClicked = users.reduce((s, r) => s + r.clicked_count, 0);
+  const avgScore   = totJudged > 0 ? Math.round(totCorrect / totJudged * 100) + '%' : '—';
+
+  const CATEGORY_LABELS = {
+    bank: '🏦 Bank & betalen', overheid: '🏛️ Overheid', bezorger: '📦 Pakketten & bezorging',
+    account: '🔐 Accounts & inloggen', marktplaats: '🛒 Marktplaats & webshops',
+    ceo: '💼 CEO-/facturenfraude', familie: '👪 Familie & bekenden', overig: '✉️ Overig',
+  };
+  const CHANNEL_LABELS = { email: '📧 E-mail', sms: '💬 Sms', whatsapp: '🟢 WhatsApp', phone: '📞 Telefoon' };
+
+  const breakdownRows = (rows, labels) => rows.map(r => {
+    const key = r.category || r.channel;
+    const p = r.judged_count > 0 ? Math.round(r.correct_count / r.judged_count * 100) : 0;
+    const color = p >= 80 ? '#16a34a' : p >= 60 ? '#d97706' : '#dc2626';
+    return `
+    <tr>
+      <td>${esc(labels[key] || key)}</td>
+      <td style="text-align:right">${r.judged_count}</td>
+      <td style="text-align:right">${r.missed_phish > 0
+        ? `<span class="badge red">⚠️ ${r.missed_phish}×</span>` : '<span class="badge grey">0</span>'}</td>
+      <td style="width:40%">
+        <div style="display:flex;align-items:center;gap:.6rem">
+          <div style="flex:1;height:8px;background:#f3f4f6;border-radius:4px;overflow:hidden">
+            <div style="width:${p}%;height:100%;background:${color}"></div>
+          </div>
+          <span style="color:${color};font-weight:600;font-size:.85rem;min-width:3ch">${p}%</span>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
 
   const pct = (r) => r.judged_count > 0
     ? Math.round(r.correct_count / r.judged_count * 100) + '%' : '—';
@@ -425,7 +484,33 @@ function portalPage(org, users, totalMessages, token, msgStats = []) {
     <div class="stat"><div class="val">${done}</div><div class="lbl">Afgerond</div></div>
     <div class="stat"><div class="val">${busy}</div><div class="lbl">Bezig</div></div>
     <div class="stat"><div class="val">${notyet}</div><div class="lbl">Nog niet gestart</div></div>
+    <div class="stat"><div class="val">${avgScore}</div><div class="lbl">Gemiddelde score</div></div>
+    <div class="stat"><div class="val"${totClicked > 0 ? ' style="color:#dc2626"' : ''}>${totClicked}</div><div class="lbl" title="Aantal keer dat een deelnemer op een link in een oefenbericht klikte">Phishing-kliks</div></div>
   </div>
+
+  ${catStats.length > 0 ? `
+  <div class="section" style="margin-bottom:1.5rem">
+    <h2>Waar gaat het mis? <span style="font-size:.8rem;font-weight:400;color:#9ca3af">— herkenning per thema (zwakste eerst)</span></h2>
+    <table>
+      <thead><tr>
+        <th>Thema</th><th style="text-align:right">Beoordeeld</th>
+        <th style="text-align:right" title="Phishing die ten onrechte als betrouwbaar werd beoordeeld — de gevaarlijke fout">Phishing gemist</th>
+        <th>Correct</th>
+      </tr></thead>
+      <tbody>${breakdownRows(catStats, CATEGORY_LABELS)}</tbody>
+    </table>
+  </div>
+
+  <div class="section" style="margin-bottom:1.5rem">
+    <h2>Herkenning per kanaal</h2>
+    <table>
+      <thead><tr>
+        <th>Kanaal</th><th style="text-align:right">Beoordeeld</th>
+        <th style="text-align:right">Phishing gemist</th><th>Correct</th>
+      </tr></thead>
+      <tbody>${breakdownRows(chanStats, CHANNEL_LABELS)}</tbody>
+    </table>
+  </div>` : ''}
 
   <div class="section">
     <h2>Resultaten per deelnemer</h2>
